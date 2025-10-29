@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluation Difficulties</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            position: relative;
+            padding: 25px 40px;
+        }
+        
+        .header {
+            margin-bottom: 18px;
+        }
+        
+        .part-label {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .challenge-note {
+            background: #FFF3E0;
+            border: 2px solid #FF9800;
+            border-radius: 8px;
+            padding: 12px 18px;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .note-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        
+        .note-text {
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .metrics-table {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 18px;
+        }
+        
+        .table-header {
+            background: #1E64C8;
+            color: white;
+            display: grid;
+            grid-template-columns: 2fr 3fr 2fr 2fr;
+            gap: 2px;
+            padding: 14px 0;
+        }
+        
+        .header-cell {
+            padding: 0 16px;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .table-body {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            background: #E3F2FD;
+            padding: 2px;
+        }
+        
+        .table-row {
+            display: grid;
+            grid-template-columns: 2fr 3fr 2fr 2fr;
+            gap: 2px;
+            background: white;
+        }
+        
+        .table-row.highlight {
+            background: #FFF9E6;
+        }
+        
+        .cell {
+            padding: 12px 16px;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            background: white;
+        }
+        
+        .cell.name {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .cell.description {
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .cell.rating {
+            justify-content: center;
+        }
+        
+        .rating-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .rating-badge.high {
+            background: #E8F5E9;
+            color: #4CAF50;
+            border: 1px solid #4CAF50;
+        }
+        
+        .rating-badge.medium {
+            background: #FFF3E0;
+            color: #FF9800;
+            border: 1px solid #FF9800;
+        }
+        
+        .rating-badge.low {
+            background: #FFEBEE;
+            color: #FF6B6B;
+            border: 1px solid #FF6B6B;
+        }
+        
+        .bottom-section {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .info-card {
+            flex: 1;
+            border-radius: 10px;
+            padding: 14px 18px;
+        }
+        
+        .info-card.gold {
+            background: #FFF9E6;
+            border: 2px solid #FFC107;
+        }
+        
+        .info-card.challenge {
+            background: #FFEBEE;
+            border: 2px solid #FF6B6B;
+        }
+        
+        .info-card.cost {
+            background: #F5F9FF;
+            border: 2px solid #1E64C8;
+        }
+        
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .card-title.gold {
+            color: #F57C00;
+        }
+        
+        .card-title.challenge {
+            color: #FF6B6B;
+        }
+        
+        .card-title.cost {
+            color: #1E64C8;
+        }
+        
+        .card-text {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="part-label">Part 4/6: Key Challenges</div>
+            <div class="title">Evaluation Difficulties</div>
+        </div>
+        
+        <div class="challenge-note">
+            <span class="note-icon">⚠️</span>
+            <span class="note-text">No single metric captures generation quality completely</span>
+        </div>
+        
+        <div class="metrics-table">
+            <div class="table-header">
+                <div class="header-cell">Metric</div>
+                <div class="header-cell">What It Measures</div>
+                <div class="header-cell">Quality</div>
+                <div class="header-cell">Diversity</div>
+            </div>
+            
+            <div class="table-body">
+                <div class="table-row">
+                    <div class="cell name">Inception Score (IS)</div>
+                    <div class="cell description">Quality and diversity via classifier confidence</div>
+                    <div class="cell rating">
+                        <span class="rating-badge high">High</span>
+                    </div>
+                    <div class="cell rating">
+                        <span class="rating-badge high">High</span>
+                    </div>
+                </div>
+                
+                <div class="table-row">
+                    <div class="cell name">Fréchet Inception Distance (FID)</div>
+                    <div class="cell description">Distribution similarity between real and generated</div>
+                    <div class="cell rating">
+                        <span class="rating-badge high">High</span>
+                    </div>
+                    <div class="cell rating">
+                        <span class="rating-badge high">High</span>
+                    </div>
+                </div>
+                
+                <div class="table-row">
+                    <div class="cell name">Precision</div>
+                    <div class="cell description">Quality of generated samples (realism)</div>
+                    <div class="cell rating">
+                        <span class="rating-badge high">High</span>
+                    </div>
+                    <div class="cell rating">
+                        <span class="rating-badge low">Low</span>
+                    </div>
+                </div>
+                
+                <div class="table-row">
+                    <div class="cell name">Recall</div>
+                    <div class="cell description">Coverage of real data modes</div>
+                    <div class="cell rating">
+                        <span class="rating-badge low">Low</span>
+                    </div>
+                    <div class="cell rating">
+                        <span class="rating-badge high">High</span>
+                    </div>
+                </div>
+                
+                <div class="table-row highlight">
+                    <div class="cell name">Human Evaluation</div>
+                    <div class="cell description">Subjective assessment by human raters</div>
+                    <div class="cell rating">
+                        <span class="rating-badge high">High</span>
+                    </div>
+                    <div class="cell rating">
+                        <span class="rating-badge high">High</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bottom-section">
+            <div class="info-card gold">
+                <div class="card-title gold">
+                    <span>🏆</span>
+                    <span>Gold Standard</span>
+                </div>
+                <div class="card-text">
+                    Human evaluation remains the most reliable method despite being time-consuming and subjective
+                </div>
+            </div>
+            
+            <div class="info-card challenge">
+                <div class="card-title challenge">
+                    <span>⚠</span>
+                    <span>Key Challenge</span>
+                </div>
+                <div class="card-text">
+                    Mode coverage assessment is difficult - metrics may miss partial collapse
+                </div>
+            </div>
+            
+            <div class="info-card cost">
+                <div class="card-title cost">
+                    <span>💻</span>
+                    <span>Computational Cost</span>
+                </div>
+                <div class="card-text">
+                    Most metrics require running large pre-trained models, making evaluation expensive
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

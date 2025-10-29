@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Differentiation and Partial Derivatives</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: #ffffff;
+            position: relative;
+            padding: 25px 35px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 18px;
+        }
+        
+        .header-title {
+            font-size: 20px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            flex: 1;
+        }
+        
+        .left-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .concept-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .concept-card:hover {
+            background: #f0f7ff;
+            transform: translateX(3px);
+        }
+        
+        .concept-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .concept-formula {
+            font-size: 16px;
+            color: #333;
+            font-family: 'Courier New', monospace;
+            background: #f8fafb;
+            padding: 6px 10px;
+            border-radius: 4px;
+            margin-top: 4px;
+        }
+        
+        .concept-desc {
+            font-size: 16px;
+            color: #555;
+            margin-top: 6px;
+            line-height: 1.4;
+        }
+        
+        .right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .gradient-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 15px;
+            flex: 1;
+        }
+        
+        .gradient-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .gradient-formula {
+            background: #f0f7ff;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 16px;
+            color: #1E64C8;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .gradient-components {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        
+        .component-item {
+            background: #f8fafb;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 16px;
+            color: #333;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+        }
+        
+        .visual-example {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        
+        .example-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .example-content {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.6;
+            text-align: center;
+        }
+        
+        .chain-rule-box {
+            background: #f8fafb;
+            padding: 10px 12px;
+            border-radius: 4px;
+            margin-top: 8px;
+            font-size: 16px;
+            color: #333;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+        }
+        
+        .ml-application {
+            background: #1E64C8;
+            color: white;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        
+        .ml-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .ml-content {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .ml-item {
+            margin: 4px 0;
+            padding-left: 15px;
+            position: relative;
+        }
+        
+        .ml-item::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+        }
+        
+        .derivative-visual {
+            position: relative;
+            height: 100px;
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .curve-container {
+            position: relative;
+            width: 180px;
+            height: 80px;
+        }
+        
+        .curve {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .curve-path {
+            stroke: #1E64C8;
+            stroke-width: 2;
+            fill: none;
+        }
+        
+        .tangent-line {
+            stroke: #1E64C8;
+            stroke-width: 2;
+            stroke-dasharray: 5, 5;
+            opacity: 0.6;
+        }
+        
+        .point {
+            fill: #1E64C8;
+        }
+        
+        .arrow-indicator {
+            position: absolute;
+            font-size: 14px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-title">Differentiation and Partial Derivatives</div>
+        </div>
+        
+        <div class="main-grid">
+            <div class="left-panel">
+                <div class="concept-card">
+                    <div class="concept-title">Derivative f'(x)</div>
+                    <div class="concept-formula">f'(x) = lim[h→0] (f(x+h) - f(x))/h</div>
+                    <div class="concept-desc">Rate of change at a point</div>
+                </div>
+                
+                <div class="concept-card">
+                    <div class="concept-title">Partial Derivative ∂f/∂x</div>
+                    <div class="concept-formula">∂f/∂xᵢ = lim[h→0] (f(x+heᵢ) - f(x))/h</div>
+                    <div class="concept-desc">Derivative w.r.t. one variable, holding others constant</div>
+                </div>
+                
+                <div class="concept-card">
+                    <div class="concept-title">Chain Rule</div>
+                    <div class="concept-formula">d/dx f(g(x)) = f'(g(x)) · g'(x)</div>
+                    <div class="concept-desc">Essential for backpropagation</div>
+                </div>
+                
+                <div class="concept-card">
+                    <div class="concept-title">Product Rule</div>
+                    <div class="concept-formula">(fg)' = f'g + fg'</div>
+                </div>
+                
+                <div class="concept-card">
+                    <div class="concept-title">Quotient Rule</div>
+                    <div class="concept-formula">(f/g)' = (f'g - fg')/g²</div>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <div class="gradient-box">
+                    <div class="gradient-title">Gradient ∇f(x)</div>
+                    <div class="gradient-formula">∇f(x) = [∂f/∂x₁, ∂f/∂x₂, ..., ∂f/∂xₙ]ᵀ</div>
+                    <div style="font-size: 16px; color: #555; text-align: center;">
+                        Vector of all partial derivatives
+                    </div>
+                    <div class="gradient-components">
+                        <div class="component-item">Points in direction of steepest ascent</div>
+                        <div class="component-item">Magnitude = rate of increase</div>
+                    </div>
+                </div>
+                
+                <div class="visual-example">
+                    <div class="example-title">Hessian Matrix H(f)</div>
+                    <div class="chain-rule-box">
+                        Hᵢⱼ = ∂²f/∂xᵢ∂xⱼ
+                    </div>
+                    <div class="example-content" style="margin-top: 10px;">
+                        Matrix of second derivatives<br>
+                        Captures curvature of function
+                    </div>
+                </div>
+                
+                <div class="visual-example">
+                    <div class="example-title">Optimization Condition</div>
+                    <div class="example-content">
+                        At minimum/maximum:<br>
+                        <strong style="color: #1E64C8;">∇f(x*) = 0</strong>
+                    </div>
+                </div>
+                
+                <div class="ml-application">
+                    <div class="ml-title">ML Applications</div>
+                    <div class="ml-content">
+                        <div class="ml-item">Gradient descent optimization</div>
+                        <div class="ml-item">Finding regression coefficients</div>
+                        <div class="ml-item">Minimizing loss functions</div>
+                        <div class="ml-item">∂L/∂β = 0 solves for optimal β</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

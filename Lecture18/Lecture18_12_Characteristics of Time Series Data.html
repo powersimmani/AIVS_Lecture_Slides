@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Characteristics of Time Series Data</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: grid;
+            grid-template-columns: 1fr 1.3fr;
+            gap: 25px;
+            padding: 25px;
+        }
+        
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .definition-box {
+            background: #f0f6ff;
+            border: 2px solid #1E64C8;
+            border-radius: 12px;
+            padding: 20px;
+        }
+        
+        .def-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .def-icon {
+            font-size: 24px;
+        }
+        
+        .def-text {
+            font-size: 17px;
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .challenges-section {
+            flex: 1;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .challenge-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .challenge-item {
+            background: white;
+            border-left: 3px solid #f44336;
+            padding: 10px 14px;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+        }
+        
+        .challenge-text {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .highlight {
+            color: #f44336;
+            font-weight: 600;
+        }
+        
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .examples-container {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            flex: 1;
+        }
+        
+        .examples-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        
+        .ts-examples {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        
+        .ts-example {
+            background: white;
+            border-radius: 8px;
+            padding: 14px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .ts-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .ts-viz {
+            height: 50px;
+            background: white;
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ts-line {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+        }
+        
+        .line-path {
+            stroke: #1E64C8;
+            stroke-width: 2;
+            fill: none;
+        }
+        
+        .line-shifted {
+            stroke: #ff9800;
+            stroke-width: 2;
+            fill: none;
+            stroke-dasharray: 4, 4;
+        }
+        
+        .line-noisy {
+            stroke: #f44336;
+            stroke-width: 2;
+            fill: none;
+        }
+        
+        .applications-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .app-badge {
+            background: #e8f4ff;
+            color: #1E64C8;
+            padding: 8px 16px;
+            border-radius: 18px;
+            font-size: 16px;
+            font-weight: 600;
+            border: 2px solid #1E64C8;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .considerations-box {
+            background: #fff8f0;
+            border: 2px solid #ff9800;
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin-top: 12px;
+        }
+        
+        .considerations-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #ff9800;
+            margin-bottom: 8px;
+        }
+        
+        .considerations-list {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .consideration-tag {
+            background: white;
+            color: #ff9800;
+            padding: 5px 12px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 500;
+            border: 1px solid #ff9800;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left-section">
+            <div class="definition-box">
+                <div class="def-title">
+                    <span class="def-icon">📊</span>
+                    Time Series Data
+                </div>
+                <div class="def-text">
+                    Sequential data with temporal dependencies and ordering
+                </div>
+            </div>
+            
+            <div class="challenges-section">
+                <div class="section-title">Key Challenges</div>
+                <div class="challenge-list">
+                    <div class="challenge-item">
+                        <div class="challenge-text">
+                            <span class="highlight">Variable lengths:</span> Different time durations
+                        </div>
+                    </div>
+                    
+                    <div class="challenge-item">
+                        <div class="challenge-text">
+                            <span class="highlight">Sampling rates:</span> Inconsistent frequencies
+                        </div>
+                    </div>
+                    
+                    <div class="challenge-item">
+                        <div class="challenge-text">
+                            <span class="highlight">Phase shifts:</span> Time warping between patterns
+                        </div>
+                    </div>
+                    
+                    <div class="challenge-item">
+                        <div class="challenge-text">
+                            <span class="highlight">Noise:</span> Random fluctuations & outliers
+                        </div>
+                    </div>
+                    
+                    <div class="challenge-item">
+                        <div class="challenge-text">
+                            <span class="highlight">Euclidean distance:</span> Inadequate for alignment
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="applications-section">
+                <div class="app-badge">💰 Finance</div>
+                <div class="app-badge">📡 IoT Sensors</div>
+                <div class="app-badge">🏥 Healthcare</div>
+            </div>
+        </div>
+        
+        <div class="right-section">
+            <div class="examples-container">
+                <div class="examples-title">Time Series Characteristics</div>
+                <div class="ts-examples">
+                    <div class="ts-example">
+                        <div class="ts-label">📈 Trend & Seasonality</div>
+                        <div class="ts-viz">
+                            <svg class="ts-line" viewBox="0 0 300 50" preserveAspectRatio="none">
+                                <path class="line-path" d="M 0,40 Q 30,30 60,35 T 120,25 T 180,20 T 240,15 T 300,10"/>
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <div class="ts-example">
+                        <div class="ts-label">🔄 Phase Shift (Time Warping)</div>
+                        <div class="ts-viz">
+                            <svg class="ts-line" viewBox="0 0 300 50" preserveAspectRatio="none">
+                                <path class="line-path" d="M 0,25 Q 40,10 80,25 Q 120,40 160,25 Q 200,10 240,25 Q 280,40 300,25"/>
+                                <path class="line-shifted" d="M 20,25 Q 60,10 100,25 Q 140,40 180,25 Q 220,10 260,25 Q 300,40 300,25"/>
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <div class="ts-example">
+                        <div class="ts-label">⚠️ Noisy Signal</div>
+                        <div class="ts-viz">
+                            <svg class="ts-line" viewBox="0 0 300 50" preserveAspectRatio="none">
+                                <path class="line-noisy" d="M 0,25 L 10,22 L 20,28 L 30,24 L 40,26 L 50,20 L 60,30 L 70,25 L 80,23 L 90,29 L 100,24 L 110,27 L 120,21 L 130,31 L 140,25 L 150,22 L 160,28 L 170,24 L 180,26 L 190,20 L 200,30 L 210,25 L 220,23 L 230,29 L 240,24 L 250,27 L 260,21 L 270,31 L 280,25 L 290,22 L 300,28"/>
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <div class="ts-example">
+                        <div class="ts-label">📏 Different Lengths</div>
+                        <div class="ts-viz">
+                            <svg class="ts-line" viewBox="0 0 300 50" preserveAspectRatio="none">
+                                <path class="line-path" d="M 0,30 Q 50,15 100,30 Q 150,45 200,30" stroke="#4CAF50"/>
+                                <path class="line-path" d="M 0,30 Q 30,15 60,30 Q 90,45 120,30 Q 150,15 180,30 Q 210,45 240,30 Q 270,15 300,30"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="considerations-box">
+                <div class="considerations-title">🎯 Key Considerations</div>
+                <div class="considerations-list">
+                    <div class="consideration-tag">Seasonality</div>
+                    <div class="consideration-tag">Trends</div>
+                    <div class="consideration-tag">Outliers</div>
+                    <div class="consideration-tag">Alignment-invariant metrics</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

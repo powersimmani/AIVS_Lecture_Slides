@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Stabilization Techniques</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 30px;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .techniques-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            flex: 1;
+        }
+        
+        .technique-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .technique-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .technique-icon {
+            font-size: 24px;
+        }
+        
+        .technique-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .technique-description {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .highlight {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .formula-box {
+            background: #f0f7ff;
+            border-radius: 6px;
+            padding: 10px 12px;
+            margin-top: 4px;
+        }
+        
+        .formula {
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #1E64C8;
+            font-weight: 600;
+            line-height: 1.5;
+            word-break: break-all;
+        }
+        
+        .detail-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 4px;
+        }
+        
+        .detail-item {
+            display: flex;
+            align-items: start;
+            gap: 8px;
+        }
+        
+        .detail-icon {
+            font-size: 14px;
+            margin-top: 2px;
+            flex-shrink: 0;
+            color: #16a34a;
+        }
+        
+        .detail-text {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.3;
+        }
+        
+        .warmup-card {
+            grid-column: 1 / -1;
+            background: #fff9f0;
+            border-color: #f59e0b;
+        }
+        
+        .warmup-card .technique-header {
+            border-color: #f59e0b;
+        }
+        
+        .warmup-card .technique-title {
+            color: #d97700;
+        }
+        
+        .warmup-card .formula-box {
+            background: white;
+        }
+        
+        .warmup-card .formula {
+            color: #d97700;
+        }
+        
+        .summary-box {
+            grid-column: 1 / -1;
+            background: #f0fdf4;
+            border: 2px solid #16a34a;
+            border-radius: 8px;
+            padding: 12px 18px;
+            text-align: center;
+        }
+        
+        .summary-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #16a34a;
+            margin-bottom: 6px;
+        }
+        
+        .summary-text {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .summary-highlight {
+            font-weight: 600;
+            color: #16a34a;
+        }
+        
+        .value-badge {
+            display: inline-block;
+            background: white;
+            border: 1px solid #1E64C8;
+            border-radius: 4px;
+            padding: 2px 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin: 0 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Learning Stabilization Techniques</div>
+        
+        <div class="techniques-grid">
+            <div class="technique-card warmup-card">
+                <div class="technique-header">
+                    <div class="technique-icon">🔥</div>
+                    <div class="technique-title">Learning Rate Warmup</div>
+                </div>
+                
+                <div class="technique-description">
+                    <span class="highlight">Gradually increase learning rate</span> initially to stabilize training
+                </div>
+                
+                <div class="formula-box">
+                    <div class="formula">
+                        lr = d_model^(-0.5) × min(step^(-0.5), step × warmup^(-1.5))
+                    </div>
+                </div>
+            </div>
+            
+            <div class="technique-card">
+                <div class="technique-header">
+                    <div class="technique-icon">🎯</div>
+                    <div class="technique-title">Label Smoothing</div>
+                </div>
+                
+                <div class="technique-description">
+                    Reduces <span class="highlight">overconfidence</span> in predictions
+                </div>
+                
+                <div class="detail-list">
+                    <div class="detail-item">
+                        <div class="detail-icon">✓</div>
+                        <div class="detail-text">
+                            Typical value: <span class="highlight">ε = 0.1</span>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-icon">✓</div>
+                        <div class="detail-text">
+                            Improves generalization
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="technique-card">
+                <div class="technique-header">
+                    <div class="technique-icon">✂️</div>
+                    <div class="technique-title">Gradient Clipping</div>
+                </div>
+                
+                <div class="technique-description">
+                    Prevents <span class="highlight">exploding gradients</span> during training
+                </div>
+                
+                <div class="detail-list">
+                    <div class="detail-item">
+                        <div class="detail-icon">✓</div>
+                        <div class="detail-text">
+                            Caps gradient norm at threshold
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-icon">✓</div>
+                        <div class="detail-text">
+                            Ensures training stability
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="technique-card">
+                <div class="technique-header">
+                    <div class="technique-icon">💧</div>
+                    <div class="technique-title">Dropout</div>
+                </div>
+                
+                <div class="technique-description">
+                    Regularization through random neuron dropout
+                </div>
+                
+                <div class="detail-list">
+                    <div class="detail-item">
+                        <div class="detail-icon">✓</div>
+                        <div class="detail-text">
+                            Applied to <span class="highlight">attention weights</span>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-icon">✓</div>
+                        <div class="detail-text">
+                            Applied to <span class="highlight">FFN outputs</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="technique-card">
+                <div class="technique-header">
+                    <div class="technique-icon">⚖️</div>
+                    <div class="technique-title">Weight Initialization</div>
+                </div>
+                
+                <div class="technique-description">
+                    Proper initialization for stable gradients
+                </div>
+                
+                <div class="detail-list">
+                    <div class="detail-item">
+                        <div class="detail-icon">✓</div>
+                        <div class="detail-text">
+                            <span class="highlight">Xavier</span> initialization
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-icon">✓</div>
+                        <div class="detail-text">
+                            <span class="highlight">He</span> initialization
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="technique-card">
+                <div class="technique-header">
+                    <div class="technique-icon">⚡</div>
+                    <div class="technique-title">Mixed Precision Training</div>
+                </div>
+                
+                <div class="technique-description">
+                    Uses <span class="highlight">FP16</span> for faster computation
+                </div>
+                
+                <div class="detail-list">
+                    <div class="detail-item">
+                        <div class="detail-icon">✓</div>
+                        <div class="detail-text">
+                            Reduces memory usage
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-icon">✓</div>
+                        <div class="detail-text">
+                            Speeds up training
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="summary-box">
+                <div class="summary-title">🎓 Training Best Practices</div>
+                <div class="summary-text">
+                    Combine these techniques for <span class="summary-highlight">stable and efficient training</span> of Transformer models
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyclical Learning Rates</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 30px;
+            background: #ffffff;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .main-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .content-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            height: 440px;
+        }
+        
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .concept-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.3);
+        }
+        
+        .concept-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .concept-desc {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .policies-box {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 18px;
+        }
+        
+        .policies-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .policy-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .policy-item {
+            background: #e8f1fd;
+            border-left: 4px solid #1E64C8;
+            padding: 10px 12px;
+            border-radius: 4px;
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+        
+        .params-box {
+            background: #f0f8ff;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 16px 18px;
+        }
+        
+        .params-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+        }
+        
+        .param-item {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.6;
+            margin-bottom: 6px;
+        }
+        
+        .param-value {
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .onecycle-box {
+            background: linear-gradient(135deg, #e8f1fd 0%, #f0f8ff 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 16px 18px;
+            flex: 1;
+        }
+        
+        .onecycle-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .onecycle-desc {
+            font-size: 16px;
+            color: #2c3e50;
+            text-align: center;
+            line-height: 1.5;
+        }
+        
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .visual-box {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 18px;
+        }
+        
+        .visual-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .cycle-visual {
+            background: white;
+            border-radius: 6px;
+            padding: 15px;
+            height: 140px;
+            position: relative;
+        }
+        
+        .cycle-curve {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        
+        .curve-line {
+            position: absolute;
+            bottom: 20px;
+            left: 10px;
+            right: 10px;
+            height: calc(100% - 20px);
+            border-left: 2px solid #666;
+            border-bottom: 2px solid #666;
+        }
+        
+        .cycle-path {
+            position: absolute;
+            left: 10px;
+            bottom: 20px;
+            width: calc(100% - 20px);
+            height: calc(100% - 30px);
+            background: repeating-linear-gradient(
+                to right,
+                #1E64C8 0%,
+                #1E64C8 2%,
+                transparent 2%,
+                transparent 4%
+            );
+            clip-path: polygon(
+                0% 50%,
+                5% 30%,
+                10% 10%,
+                15% 30%,
+                20% 50%,
+                25% 30%,
+                30% 10%,
+                35% 30%,
+                40% 50%,
+                45% 30%,
+                50% 10%,
+                55% 30%,
+                60% 50%,
+                65% 30%,
+                70% 10%,
+                75% 30%,
+                80% 50%,
+                85% 30%,
+                90% 10%,
+                95% 30%,
+                100% 50%,
+                100% 100%,
+                0% 100%
+            );
+            opacity: 0.6;
+        }
+        
+        .bounds-label {
+            position: absolute;
+            font-size: 14px;
+            color: #666;
+            left: 15px;
+        }
+        
+        .label-max { top: 10px; }
+        .label-min { bottom: 25px; }
+        
+        .axis-label {
+            position: absolute;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .x-label { bottom: 0; right: 5px; }
+        
+        .benefits-box {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 18px;
+            flex: 1;
+        }
+        
+        .benefits-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+        }
+        
+        .benefit-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .benefit-icon {
+            background: #28a745;
+            color: white;
+            min-width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .benefit-text {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+        
+        .usage-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            color: white;
+            padding: 16px 18px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.3);
+        }
+        
+        .usage-icon {
+            font-size: 24px;
+            margin-bottom: 6px;
+        }
+        
+        .usage-text {
+            font-size: 17px;
+            font-weight: 600;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="main-title">Cyclical Learning Rates</div>
+            <div class="subtitle">Oscillating Between Bounds for Better Exploration</div>
+        </div>
+        
+        <div class="content-layout">
+            <div class="left-section">
+                <div class="concept-box">
+                    <div class="concept-title">🔄 Core Concept</div>
+                    <div class="concept-desc">
+                        Learning rate varies cyclically<br>
+                        between minimum and maximum values
+                    </div>
+                </div>
+                
+                <div class="policies-box">
+                    <div class="policies-title">Range Policies</div>
+                    <div class="policy-list">
+                        <div class="policy-item">
+                            <strong>Triangular:</strong> Linear increase/decrease
+                        </div>
+                        <div class="policy-item">
+                            <strong>Triangular2:</strong> Range halves each cycle
+                        </div>
+                        <div class="policy-item">
+                            <strong>Exponential:</strong> Exponential variation
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="params-box">
+                    <div class="params-title">⚙️ Parameters</div>
+                    <div class="param-item">
+                        <span class="param-value">Cycle Length:</span> Typically 2-10 epochs per cycle
+                    </div>
+                </div>
+                
+                <div class="onecycle-box">
+                    <div class="onecycle-title">🎯 1cycle Policy</div>
+                    <div class="onecycle-desc">
+                        Single cycle including<br>
+                        warm-up and cool-down phases
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-section">
+                <div class="visual-box">
+                    <div class="visual-title">Cyclical Pattern Visualization</div>
+                    <div class="cycle-visual">
+                        <div class="cycle-curve">
+                            <div class="curve-line"></div>
+                            <div class="cycle-path"></div>
+                            <div class="bounds-label label-max">max_lr</div>
+                            <div class="bounds-label label-min">min_lr</div>
+                            <div class="axis-label x-label">Iterations</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="benefits-box">
+                    <div class="benefits-title">✨ Key Benefits</div>
+                    <div class="benefit-list">
+                        <div class="benefit-item">
+                            <div class="benefit-icon">✓</div>
+                            <div class="benefit-text">
+                                Escape saddle points & explore loss landscape
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-icon">✓</div>
+                            <div class="benefit-text">
+                                Better generalization performance
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-icon">✓</div>
+                            <div class="benefit-text">
+                                Faster convergence
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-icon">✓</div>
+                            <div class="benefit-text">
+                                Regularization effect
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-icon">✓</div>
+                            <div class="benefit-text">
+                                Find better local minima through exploration
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="usage-box">
+                    <div class="usage-icon">🚀</div>
+                    <div class="usage-text">
+                        Successfully used in<br>
+                        fast.ai training methodology
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

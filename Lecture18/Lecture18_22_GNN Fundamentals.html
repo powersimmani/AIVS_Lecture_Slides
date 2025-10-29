@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNN Fundamentals</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            padding: 25px;
+            gap: 18px;
+        }
+        
+        .header {
+            text-align: center;
+        }
+        
+        .main-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 18px;
+            flex: 1;
+        }
+        
+        .message-passing-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .mp-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 14px;
+            text-align: center;
+        }
+        
+        .graph-visual {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            flex: 1;
+            position: relative;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .node {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 16px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .node:hover {
+            transform: scale(1.1);
+        }
+        
+        .node-label {
+            font-size: 18px;
+            margin-bottom: 2px;
+        }
+        
+        .node-feature {
+            font-size: 11px;
+            opacity: 0.9;
+        }
+        
+        .central-node {
+            background: #1E64C8;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70px;
+            height: 70px;
+            font-size: 18px;
+            z-index: 10;
+        }
+        
+        .neighbor-node {
+            background: #4CAF50;
+            width: 50px;
+            height: 50px;
+            font-size: 14px;
+        }
+        
+        .neighbor-1 {
+            top: 10%;
+            left: 30%;
+        }
+        
+        .neighbor-2 {
+            top: 10%;
+            right: 30%;
+        }
+        
+        .neighbor-3 {
+            bottom: 10%;
+            left: 25%;
+        }
+        
+        .neighbor-4 {
+            bottom: 10%;
+            right: 25%;
+        }
+        
+        .message-arrow {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .arrow-line {
+            position: absolute;
+            height: 3px;
+            background: #ff9800;
+            transform-origin: left center;
+        }
+        
+        .arrow-head {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 10px solid #ff9800;
+            border-top: 6px solid transparent;
+            border-bottom: 6px solid transparent;
+        }
+        
+        .message-label {
+            position: absolute;
+            background: #fff8f0;
+            color: #ff9800;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid #ff9800;
+            z-index: 5;
+        }
+        
+        .operations-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 12px;
+        }
+        
+        .op-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .op-number {
+            background: #1E64C8;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        
+        .op-content {
+            flex: 1;
+        }
+        
+        .op-name {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 3px;
+        }
+        
+        .op-desc {
+            font-size: 15px;
+            color: #555;
+        }
+        
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .flow-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 16px;
+        }
+        
+        .flow-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .flow-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .flow-step {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            transition: all 0.3s ease;
+        }
+        
+        .flow-step:hover {
+            background: #f0f6ff;
+        }
+        
+        .flow-arrow {
+            text-align: center;
+            color: #1E64C8;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .properties-section {
+            background: white;
+            border: 2px solid #9C27B0;
+            border-radius: 12px;
+            padding: 14px 16px;
+        }
+        
+        .prop-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #9C27B0;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .prop-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .prop-item {
+            background: #f3e5f5;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 16px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .prop-icon {
+            color: #9C27B0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .foundation-box {
+            background: #e8f5e9;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            padding: 14px 16px;
+            text-align: center;
+        }
+        
+        .foundation-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #4CAF50;
+            margin-bottom: 6px;
+        }
+        
+        .foundation-text {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="main-title">Graph Neural Networks (GNN) Fundamentals</div>
+            <div class="subtitle">Deep Learning on Graph-Structured Data</div>
+        </div>
+        
+        <div class="content-grid">
+            <div class="message-passing-section">
+                <div class="mp-title">Message Passing Mechanism</div>
+                
+                <div class="graph-visual">
+                    <!-- Central node -->
+                    <div class="node central-node">
+                        <div class="node-label">v</div>
+                        <div class="node-feature">target</div>
+                    </div>
+                    
+                    <!-- Neighbor nodes -->
+                    <div class="node neighbor-node neighbor-1">
+                        <div class="node-label">u₁</div>
+                    </div>
+                    <div class="node neighbor-node neighbor-2">
+                        <div class="node-label">u₂</div>
+                    </div>
+                    <div class="node neighbor-node neighbor-3">
+                        <div class="node-label">u₃</div>
+                    </div>
+                    <div class="node neighbor-node neighbor-4">
+                        <div class="node-label">u₄</div>
+                    </div>
+                    
+                    <!-- Message arrows -->
+                    <div class="arrow-line" style="top: 25%; left: 35%; width: 80px; transform: rotate(30deg);"></div>
+                    <div class="arrow-head" style="top: 38%; left: 44%; transform: rotate(30deg);"></div>
+                    <div class="message-label" style="top: 22%; left: 42%;">m₁</div>
+                    
+                    <div class="arrow-line" style="top: 25%; right: 35%; width: 80px; transform: rotate(-30deg);"></div>
+                    <div class="arrow-head" style="top: 38%; right: 44%; transform: rotate(-30deg);"></div>
+                    <div class="message-label" style="top: 22%; right: 42%;">m₂</div>
+                    
+                    <div class="arrow-line" style="bottom: 25%; left: 33%; width: 90px; transform: rotate(-35deg);"></div>
+                    <div class="arrow-head" style="bottom: 38%; left: 45%; transform: rotate(-35deg);"></div>
+                    <div class="message-label" style="bottom: 22%; left: 38%;">m₃</div>
+                    
+                    <div class="arrow-line" style="bottom: 25%; right: 33%; width: 90px; transform: rotate(35deg);"></div>
+                    <div class="arrow-head" style="bottom: 38%; right: 45%; transform: rotate(35deg);"></div>
+                    <div class="message-label" style="bottom: 22%; right: 38%;">m₄</div>
+                </div>
+                
+                <div class="operations-section">
+                    <div class="op-card">
+                        <div class="op-number">1</div>
+                        <div class="op-content">
+                            <div class="op-name">Aggregation</div>
+                            <div class="op-desc">Collect neighbor messages</div>
+                        </div>
+                    </div>
+                    
+                    <div class="op-card">
+                        <div class="op-number">2</div>
+                        <div class="op-content">
+                            <div class="op-name">Transformation</div>
+                            <div class="op-desc">Apply neural network</div>
+                        </div>
+                    </div>
+                    
+                    <div class="op-card">
+                        <div class="op-number">3</div>
+                        <div class="op-content">
+                            <div class="op-name">Update</div>
+                            <div class="op-desc">Compute new representation</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-section">
+                <div class="flow-section">
+                    <div class="flow-title">GNN Pipeline</div>
+                    <div class="flow-steps">
+                        <div class="flow-step">Node Features</div>
+                        <div class="flow-arrow">↓</div>
+                        <div class="flow-step">Hidden Representations</div>
+                        <div class="flow-arrow">↓</div>
+                        <div class="flow-step">Predictions</div>
+                    </div>
+                </div>
+                
+                <div class="properties-section">
+                    <div class="prop-title">
+                        <span>✓</span>
+                        <span>Key Properties</span>
+                    </div>
+                    <div class="prop-list">
+                        <div class="prop-item">
+                            <span class="prop-icon">🔄</span>
+                            <span>Permutation invariant</span>
+                        </div>
+                        <div class="prop-item">
+                            <span class="prop-icon">🧮</span>
+                            <span>Learn node embeddings</span>
+                        </div>
+                        <div class="prop-item">
+                            <span class="prop-icon">🏗️</span>
+                            <span>Preserve graph structure</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="foundation-box">
+                    <div class="foundation-title">🚀 Foundation</div>
+                    <div class="foundation-text">
+                        Basis for modern graph machine learning methods
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

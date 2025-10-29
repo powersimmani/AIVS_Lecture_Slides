@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Training Process Overview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            position: relative;
+            padding: 25px 40px;
+        }
+        
+        .header {
+            margin-bottom: 20px;
+        }
+        
+        .part-label {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .main-content {
+            display: flex;
+            gap: 25px;
+        }
+        
+        .left-panel {
+            flex: 1.3;
+        }
+        
+        .training-loop {
+            background: #F5F9FF;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 20px;
+            height: 100%;
+        }
+        
+        .loop-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 18px;
+        }
+        
+        .training-cycle {
+            position: relative;
+            padding: 15px;
+        }
+        
+        .cycle-step {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin-bottom: 14px;
+            position: relative;
+        }
+        
+        .cycle-step.discriminator {
+            border-color: #1E64C8;
+            background: #1E64C8;
+            color: white;
+        }
+        
+        .cycle-step.generator {
+            border-color: #FF6B6B;
+            background: #FF6B6B;
+            color: white;
+        }
+        
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+        
+        .step-number {
+            background: white;
+            color: #1E64C8;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 15px;
+            flex-shrink: 0;
+        }
+        
+        .cycle-step.generator .step-number {
+            color: #FF6B6B;
+        }
+        
+        .step-title {
+            font-size: 17px;
+            font-weight: 600;
+        }
+        
+        .step-iterations {
+            font-size: 14px;
+            opacity: 0.85;
+            margin-left: auto;
+            font-style: italic;
+        }
+        
+        .step-desc {
+            font-size: 15px;
+            opacity: 0.9;
+            line-height: 1.4;
+            margin-left: 40px;
+        }
+        
+        .arrow-cycle {
+            text-align: center;
+            color: #1E64C8;
+            font-size: 20px;
+            margin: 8px 0;
+        }
+        
+        .loop-indicator {
+            position: absolute;
+            right: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 40px;
+            color: #1E64C8;
+            opacity: 0.3;
+        }
+        
+        .right-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .strategy-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 16px 20px;
+        }
+        
+        .strategy-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+        }
+        
+        .strategy-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin: 8px 0;
+            font-size: 15px;
+            color: #333;
+        }
+        
+        .bullet {
+            color: #1E64C8;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .optimization-box {
+            background: #F5F9FF;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 16px 20px;
+            flex: 1;
+        }
+        
+        .opt-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+        }
+        
+        .opt-item {
+            background: white;
+            border-radius: 6px;
+            padding: 10px 14px;
+            margin-bottom: 8px;
+        }
+        
+        .opt-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+        
+        .opt-value {
+            font-size: 15px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .monitoring-box {
+            background: #1E64C8;
+            color: white;
+            border-radius: 10px;
+            padding: 14px 18px;
+        }
+        
+        .monitoring-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .monitoring-text {
+            font-size: 15px;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="part-label">Part 3/6: Training Algorithm</div>
+            <div class="title">Training Process Overview</div>
+        </div>
+        
+        <div class="main-content">
+            <div class="left-panel">
+                <div class="training-loop">
+                    <div class="loop-title">Alternating Optimization Loop</div>
+                    <div class="training-cycle">
+                        <div class="loop-indicator">⟲</div>
+                        
+                        <div class="cycle-step discriminator">
+                            <div class="step-header">
+                                <div class="step-number">1</div>
+                                <div class="step-title">Update Discriminator</div>
+                                <div class="step-iterations">k steps</div>
+                            </div>
+                            <div class="step-desc">
+                                Train D to distinguish real from fake samples
+                            </div>
+                        </div>
+                        
+                        <div class="arrow-cycle">↓</div>
+                        
+                        <div class="cycle-step generator">
+                            <div class="step-header">
+                                <div class="step-number">2</div>
+                                <div class="step-title">Update Generator</div>
+                                <div class="step-iterations">1 step</div>
+                            </div>
+                            <div class="step-desc">
+                                Train G to generate realistic samples
+                            </div>
+                        </div>
+                        
+                        <div class="arrow-cycle">↓</div>
+                        
+                        <div style="text-align: center; font-size: 15px; color: #1E64C8; font-weight: 600; margin-top: 12px; padding: 10px; background: white; border-radius: 6px;">
+                            Repeat until convergence
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <div class="strategy-box">
+                    <div class="strategy-title">Strategy Details</div>
+                    <div class="strategy-item">
+                        <span class="bullet">•</span>
+                        <span>k = 1 typically in practice</span>
+                    </div>
+                    <div class="strategy-item">
+                        <span class="bullet">•</span>
+                        <span>Mini-batch SGD</span>
+                    </div>
+                    <div class="strategy-item">
+                        <span class="bullet">•</span>
+                        <span>Separate optimizers for G and D</span>
+                    </div>
+                </div>
+                
+                <div class="optimization-box">
+                    <div class="opt-title">Optimization Setup</div>
+                    <div class="opt-item">
+                        <div class="opt-label">Learning Rate</div>
+                        <div class="opt-value">Scheduling required</div>
+                    </div>
+                    <div class="opt-item">
+                        <div class="opt-label">Batch Size</div>
+                        <div class="opt-value">Mini-batch based</div>
+                    </div>
+                    <div class="opt-item">
+                        <div class="opt-label">Optimizers</div>
+                        <div class="opt-value">Adam (typical)</div>
+                    </div>
+                </div>
+                
+                <div class="monitoring-box">
+                    <div class="monitoring-title">📊 Stability Monitoring</div>
+                    <div class="monitoring-text">
+                        Track loss curves, gradient norms, and output quality metrics
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

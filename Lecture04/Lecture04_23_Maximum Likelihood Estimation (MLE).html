@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maximum Likelihood Estimation (MLE)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px;
+            position: relative;
+        }
+        
+        .title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .content-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            height: calc(100% - 50px);
+        }
+        
+        .goal-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            border-radius: 10px;
+            padding: 18px 24px;
+            color: white;
+            text-align: center;
+        }
+        
+        .goal-label {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            opacity: 0.95;
+        }
+        
+        .goal-text {
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+        
+        .formula-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .formula-step {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s;
+        }
+        
+        .formula-step:hover {
+            background: #f8fbff;
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.15);
+        }
+        
+        .step-number {
+            width: 36px;
+            height: 36px;
+            background: #1E64C8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 17px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .step-label {
+            font-size: 16px;
+            color: #666;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        
+        .step-formula {
+            font-size: 18px;
+            color: #1E64C8;
+            font-weight: 600;
+            font-style: italic;
+        }
+        
+        .log-step {
+            border-color: #28a745;
+        }
+        
+        .log-step .step-number {
+            background: #28a745;
+        }
+        
+        .log-step .step-formula {
+            color: #28a745;
+        }
+        
+        .binary-step {
+            border-color: #9c27b0;
+        }
+        
+        .binary-step .step-number {
+            background: #9c27b0;
+        }
+        
+        .binary-step .step-formula {
+            color: #9c27b0;
+        }
+        
+        .transformation-box {
+            background: linear-gradient(135deg, #ffc107 0%, #ffb300 100%);
+            border-radius: 10px;
+            padding: 16px 20px;
+            color: white;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .transform-text {
+            font-size: 17px;
+            font-weight: 600;
+        }
+        
+        .transform-arrow {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .insight-section {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .insight-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-left: 5px solid #1E64C8;
+            border-radius: 8px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .insight-icon {
+            width: 32px;
+            height: 32px;
+            background: #1E64C8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        
+        .insight-text {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+            flex: 1;
+        }
+        
+        .connection-card {
+            background: #e8f5e9;
+            border-color: #28a745;
+            border-left-color: #28a745;
+        }
+        
+        .connection-card .insight-icon {
+            background: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Maximum Likelihood Estimation (MLE)</div>
+        
+        <div class="content-layout">
+            <!-- Goal -->
+            <div class="goal-box">
+                <div class="goal-label">Goal:</div>
+                <div class="goal-text">
+                    Find parameters that maximize likelihood of observed data
+                </div>
+            </div>
+            
+            <!-- Formula Flow -->
+            <div class="formula-flow">
+                <div class="formula-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <div class="step-label">Likelihood Function:</div>
+                        <div class="step-formula">L(w,b) = ∏ P(yᵢ|xᵢ)</div>
+                    </div>
+                </div>
+                
+                <div class="formula-step log-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <div class="step-label">Log-Likelihood (easier to optimize):</div>
+                        <div class="step-formula">ℓ = ∑ log P(yᵢ|xᵢ)</div>
+                    </div>
+                </div>
+                
+                <div class="formula-step binary-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <div class="step-label">For Binary Classification:</div>
+                        <div class="step-formula">ℓ = ∑[yᵢ log(p) + (1-yᵢ)log(1-p)]</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Transformation -->
+            <div class="transformation-box">
+                <div class="transform-text">Maximizing log-likelihood</div>
+                <div class="transform-arrow">=</div>
+                <div class="transform-text">Minimizing negative log-likelihood</div>
+            </div>
+            
+            <!-- Insights -->
+            <div class="insight-section">
+                <div class="insight-card">
+                    <div class="insight-icon">?</div>
+                    <div class="insight-text">
+                        <strong>Why MLE?</strong><br>
+                        Principled probabilistic approach
+                    </div>
+                </div>
+                
+                <div class="insight-card connection-card">
+                    <div class="insight-icon">🔗</div>
+                    <div class="insight-text">
+                        <strong>Connection:</strong><br>
+                        Links to cross-entropy loss function
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

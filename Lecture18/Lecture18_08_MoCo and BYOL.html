@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoCo vs BYOL Comparison</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            padding: 25px;
+            gap: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .main-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            flex: 1;
+        }
+        
+        .method-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+        
+        .method-section:hover {
+            border-color: #1E64C8;
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.15);
+        }
+        
+        .method-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 3px solid #1E64C8;
+        }
+        
+        .method-icon {
+            font-size: 32px;
+        }
+        
+        .method-title {
+            flex: 1;
+        }
+        
+        .method-name {
+            font-size: 19px;
+            font-weight: 600;
+            color: #1E64C8;
+            line-height: 1.2;
+        }
+        
+        .method-full {
+            font-size: 15px;
+            color: #666;
+            margin-top: 2px;
+        }
+        
+        .architecture-diagram {
+            background: white;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border: 1px solid #e0e0e0;
+            min-height: 160px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 12px;
+        }
+        
+        .arch-flow {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 15px;
+        }
+        
+        .arch-box {
+            background: #e8f4ff;
+            border: 2px solid #1E64C8;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            flex: 1;
+            font-size: 15px;
+        }
+        
+        .arch-special {
+            background: #fff3e0;
+            border-color: #ff9800;
+            color: #ff9800;
+        }
+        
+        .arch-arrow {
+            color: #1E64C8;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .key-features {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            background: white;
+            padding: 10px 12px;
+            border-radius: 6px;
+            border-left: 3px solid #1E64C8;
+        }
+        
+        .feature-icon {
+            font-size: 18px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+        
+        .feature-text {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .highlight {
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .performance-badge {
+            background: #4CAF50;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: auto;
+        }
+        
+        .queue-indicator {
+            background: #ffebee;
+            border: 1px dashed #f44336;
+            border-radius: 6px;
+            padding: 8px;
+            text-align: center;
+            font-size: 14px;
+            color: #f44336;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="main-title">Advanced Self-Supervised Methods</div>
+            <div class="subtitle">Architecture Comparison: MoCo vs BYOL</div>
+        </div>
+        
+        <div class="comparison-grid">
+            <!-- MoCo Section -->
+            <div class="method-section">
+                <div class="method-header">
+                    <div class="method-icon">🔄</div>
+                    <div class="method-title">
+                        <div class="method-name">MoCo</div>
+                        <div class="method-full">Momentum Contrast</div>
+                    </div>
+                </div>
+                
+                <div class="architecture-diagram">
+                    <div class="arch-flow">
+                        <div class="arch-box">Query Encoder</div>
+                        <div class="arch-arrow">→</div>
+                        <div class="arch-box">Query</div>
+                    </div>
+                    <div class="arch-flow">
+                        <div class="arch-box arch-special">Momentum Encoder</div>
+                        <div class="arch-arrow">→</div>
+                        <div class="arch-box">Key</div>
+                    </div>
+                    <div class="queue-indicator">📦 Queue of Negative Samples</div>
+                </div>
+                
+                <div class="key-features">
+                    <div class="feature-item">
+                        <div class="feature-icon">📚</div>
+                        <div class="feature-text">
+                            <span class="highlight">Queue-based:</span> Maintains large dictionary of negatives
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="feature-icon">⚡</div>
+                        <div class="feature-text">
+                            <span class="highlight">Momentum update:</span> Consistent representations over time
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="feature-icon">➖</div>
+                        <div class="feature-text">
+                            <span class="highlight">Contrastive:</span> Uses negative pairs
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="performance-badge">✓ Excellent ImageNet Performance</div>
+            </div>
+            
+            <!-- BYOL Section -->
+            <div class="method-section">
+                <div class="method-header">
+                    <div class="method-icon">🎯</div>
+                    <div class="method-title">
+                        <div class="method-name">BYOL</div>
+                        <div class="method-full">Bootstrap Your Own Latent</div>
+                    </div>
+                </div>
+                
+                <div class="architecture-diagram">
+                    <div class="arch-flow">
+                        <div class="arch-box">Online Network</div>
+                        <div class="arch-arrow">→</div>
+                        <div class="arch-box arch-special">Predictor</div>
+                    </div>
+                    <div class="arch-flow">
+                        <div class="arch-box">Target Network</div>
+                        <div class="arch-arrow">→</div>
+                        <div class="arch-box">Projection</div>
+                    </div>
+                    <div style="text-align: center; font-size: 15px; color: #9C27B0; font-weight: 600; margin-top: 8px;">
+                        🛑 Stop-Gradient
+                    </div>
+                </div>
+                
+                <div class="key-features">
+                    <div class="feature-item">
+                        <div class="feature-icon">🚫</div>
+                        <div class="feature-text">
+                            <span class="highlight">No negatives:</span> Only positive pairs needed
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="feature-icon">🔮</div>
+                        <div class="feature-text">
+                            <span class="highlight">Predictor network:</span> Asymmetric architecture
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="feature-icon">🛡️</div>
+                        <div class="feature-text">
+                            <span class="highlight">Stop-gradient:</span> Prevents collapse
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="performance-badge">✓ Excellent ImageNet Performance</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

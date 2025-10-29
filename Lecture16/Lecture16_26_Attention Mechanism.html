@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attention Mechanism</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .title {
+            font-size: 26px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .attention-types {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .attention-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border: 3px solid #1E64C8;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .attention-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(30, 100, 200, 0.2);
+        }
+        
+        .cross-attention-card {
+            border-color: #9B59B6;
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        
+        .card-icon {
+            font-size: 32px;
+        }
+        
+        .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1E64C8;
+        }
+        
+        .cross-attention-card .card-title {
+            color: #9B59B6;
+        }
+        
+        .qkv-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        
+        .qkv-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 10px 15px;
+            text-align: center;
+            flex: 1;
+        }
+        
+        .qkv-label {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+        }
+        
+        .arrow-small {
+            font-size: 20px;
+            color: #1E64C8;
+            margin: 0 8px;
+        }
+        
+        .card-desc {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.5;
+        }
+        
+        .cross-qkv .qkv-box:first-child {
+            border-color: #9B59B6;
+        }
+        
+        .cross-qkv .qkv-label:first-child {
+            color: #9B59B6;
+        }
+        
+        .features-section {
+            background: linear-gradient(135deg, #e6f2ff 0%, #f0f8ff 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 12px;
+            padding: 18px 22px;
+            margin-bottom: 15px;
+        }
+        
+        .features-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        
+        .feature-item {
+            background: white;
+            border-radius: 8px;
+            padding: 10px 12px;
+            text-align: center;
+        }
+        
+        .feature-icon {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+        
+        .feature-label {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 3px;
+        }
+        
+        .feature-value {
+            font-size: 15px;
+            color: #555;
+        }
+        
+        .impact-box {
+            background: linear-gradient(135deg, #27AE60 0%, #2ECC71 100%);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(39, 174, 96, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        
+        .impact-icon {
+            font-size: 24px;
+        }
+        
+        .impact-text {
+            font-size: 17px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">Attention Mechanism</div>
+            <div class="subtitle">Part 5/7: Architecture</div>
+        </div>
+        
+        <div class="attention-types">
+            <!-- Self-Attention -->
+            <div class="attention-card">
+                <div class="card-header">
+                    <div class="card-icon">🔍</div>
+                    <div class="card-title">Self-Attention</div>
+                </div>
+                
+                <div class="qkv-flow">
+                    <div class="qkv-box">
+                        <div class="qkv-label">Q</div>
+                    </div>
+                    <div class="qkv-box">
+                        <div class="qkv-label">K</div>
+                    </div>
+                    <div class="qkv-box">
+                        <div class="qkv-label">V</div>
+                    </div>
+                </div>
+                
+                <div class="card-desc">
+                    Models long-range dependencies in image. Applied at 16×16, 32×32 resolutions.
+                </div>
+            </div>
+            
+            <!-- Cross-Attention -->
+            <div class="attention-card cross-attention-card">
+                <div class="card-header">
+                    <div class="card-icon">🔗</div>
+                    <div class="card-title">Cross-Attention</div>
+                </div>
+                
+                <div class="qkv-flow cross-qkv">
+                    <div class="qkv-box">
+                        <div class="qkv-label">Text Q</div>
+                    </div>
+                    <div class="arrow-small">→</div>
+                    <div class="qkv-box">
+                        <div class="qkv-label">Image K,V</div>
+                    </div>
+                </div>
+                
+                <div class="card-desc">
+                    For text conditioning. Text→Image attention enables controllable generation.
+                </div>
+            </div>
+        </div>
+        
+        <div class="features-section">
+            <div class="features-title">⚙️ Key Properties</div>
+            
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">🧠</div>
+                    <div class="feature-label">Multi-Head</div>
+                    <div class="feature-value">Multiple patterns</div>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">📍</div>
+                    <div class="feature-label">Spatial Attention</div>
+                    <div class="feature-value">Different locations</div>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">⚡</div>
+                    <div class="feature-label">Complexity</div>
+                    <div class="feature-value">O(n²)</div>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">📐</div>
+                    <div class="feature-label">Mechanism</div>
+                    <div class="feature-value">Standard transformer</div>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">📏</div>
+                    <div class="feature-label">Location</div>
+                    <div class="feature-value">Low resolution</div>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">🎯</div>
+                    <div class="feature-label">Dependencies</div>
+                    <div class="feature-value">Long-range</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="impact-box">
+            <div class="impact-icon">✨</div>
+            <div class="impact-text">Impact: Crucial for coherent, high-quality generation</div>
+        </div>
+    </div>
+</body>
+</html>

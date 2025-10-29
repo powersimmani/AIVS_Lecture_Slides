@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Correlation Heatmap & Matrix</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #FFFFFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            padding: 25px 35px;
+        }
+        
+        .title-section {
+            text-align: center;
+            margin-bottom: 14px;
+        }
+        
+        .main-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .subtitle {
+            font-size: 17px;
+            color: #666666;
+        }
+        
+        .content-wrapper {
+            display: flex;
+            gap: 18px;
+            flex: 1;
+        }
+        
+        .left-panel {
+            flex: 1.5;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        /* Heatmap Container */
+        .heatmap-container {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .heatmap-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .heatmap-wrapper {
+            flex: 1;
+            display: flex;
+            gap: 8px;
+        }
+        
+        /* Dendrogram */
+        .dendrogram {
+            width: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            padding: 5px 0;
+        }
+        
+        .dendrogram svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        /* Heatmap Grid */
+        .heatmap-grid-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .heatmap-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            grid-template-rows: repeat(7, 1fr);
+            gap: 2px;
+            flex: 1;
+        }
+        
+        .heatmap-cell {
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .heatmap-cell:hover {
+            transform: scale(1.15);
+            z-index: 10;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        
+        /* Correlation color scale */
+        .corr-1 { background: #0D47A1; }
+        .corr-09 { background: #1565C0; }
+        .corr-08 { background: #1976D2; }
+        .corr-07 { background: #1E88E5; }
+        .corr-06 { background: #2196F3; }
+        .corr-05 { background: #42A5F5; }
+        .corr-04 { background: #64B5F6; }
+        .corr-03 { background: #90CAF9; }
+        .corr-02 { background: #BBDEFB; }
+        .corr-01 { background: #E3F2FD; color: #666; }
+        .corr-0 { background: #FFFFFF; color: #666; border: 1px solid #E0E0E0; }
+        .corr-n01 { background: #FFEBEE; color: #666; }
+        .corr-n02 { background: #FFCDD2; }
+        .corr-n03 { background: #EF9A9A; }
+        .corr-n04 { background: #E57373; }
+        .corr-n05 { background: #EF5350; }
+        .corr-n06 { background: #F44336; }
+        .corr-n07 { background: #E53935; }
+        .corr-n08 { background: #D32F2F; }
+        .corr-n09 { background: #C62828; }
+        .corr-n1 { background: #B71C1C; }
+        
+        /* Labels */
+        .labels-row {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            margin-top: 4px;
+        }
+        
+        .label {
+            font-size: 10px;
+            font-weight: 600;
+            color: #666;
+            text-align: center;
+        }
+        
+        .labels-column {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 60px;
+            padding: 5px 0;
+        }
+        
+        .label-vertical {
+            font-size: 10px;
+            font-weight: 600;
+            color: #666;
+            text-align: right;
+            padding-right: 8px;
+        }
+        
+        /* Color Scale Legend */
+        .color-scale {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 8px;
+            justify-content: center;
+        }
+        
+        .scale-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #666;
+        }
+        
+        .scale-gradient {
+            width: 200px;
+            height: 20px;
+            background: linear-gradient(to right, 
+                #B71C1C 0%, 
+                #F44336 25%, 
+                #FFFFFF 50%, 
+                #2196F3 75%, 
+                #0D47A1 100%);
+            border-radius: 4px;
+            border: 1px solid #E0E0E0;
+        }
+        
+        .right-panel {
+            flex: 0.5;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .interpretation-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .interp-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 15px;
+            color: #333;
+            line-height: 1.3;
+            margin-bottom: 8px;
+            padding: 6px 8px;
+            background: #F8FBFF;
+            border-radius: 4px;
+        }
+        
+        .interp-icon {
+            flex-shrink: 0;
+            font-weight: bold;
+        }
+        
+        .icon-pos { color: #0D47A1; }
+        .icon-neg { color: #B71C1C; }
+        .icon-zero { color: #999; }
+        
+        .usage-card {
+            background: #FFF9E6;
+            border: 2px solid #FFC107;
+            border-radius: 10px;
+            padding: 14px;
+        }
+        
+        .usage-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .usage-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 15px;
+            color: #333;
+            margin-bottom: 6px;
+        }
+        
+        .usage-icon {
+            color: #F57C00;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .tips-card {
+            background: #E8F5E9;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            padding: 14px;
+        }
+        
+        .tips-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2E7D32;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .tip-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 15px;
+            color: #333;
+            margin-bottom: 6px;
+        }
+        
+        .check-icon {
+            color: #4CAF50;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .heatmap-container, .interpretation-card, .usage-card, .tips-card {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        .heatmap-container { animation-delay: 0.1s; }
+        .interpretation-card { animation-delay: 0.2s; }
+        .usage-card { animation-delay: 0.3s; }
+        .tips-card { animation-delay: 0.4s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Correlation Heatmap & Matrix</div>
+            <div class="subtitle">Visualizing Pairwise Relationships Between Variables</div>
+        </div>
+        
+        <div class="content-wrapper">
+            <div class="left-panel">
+                <div class="heatmap-container">
+                    <div class="heatmap-title">Correlation Matrix with Hierarchical Clustering</div>
+                    <div class="heatmap-wrapper">
+                        <!-- Dendrogram -->
+                        <div class="dendrogram">
+                            <svg viewBox="0 0 60 200">
+                                <!-- Hierarchical clustering tree -->
+                                <line x1="50" y1="20" x2="35" y2="20" stroke="#1E64C8" stroke-width="2"/>
+                                <line x1="35" y1="20" x2="35" y2="45" stroke="#1E64C8" stroke-width="2"/>
+                                <line x1="35" y1="45" x2="50" y2="45" stroke="#1E64C8" stroke-width="2"/>
+                                
+                                <line x1="50" y1="70" x2="35" y2="70" stroke="#1E64C8" stroke-width="2"/>
+                                <line x1="35" y1="70" x2="35" y2="95" stroke="#1E64C8" stroke-width="2"/>
+                                <line x1="35" y1="95" x2="50" y2="95" stroke="#1E64C8" stroke-width="2"/>
+                                
+                                <line x1="35" y1="32" x2="20" y2="32" stroke="#1E64C8" stroke-width="2"/>
+                                <line x1="20" y1="32" x2="20" y2="82" stroke="#1E64C8" stroke-width="2"/>
+                                <line x1="20" y1="82" x2="35" y2="82" stroke="#1E64C8" stroke-width="2"/>
+                                
+                                <line x1="50" y1="120" x2="35" y2="120" stroke="#1E64C8" stroke-width="2"/>
+                                <line x1="35" y1="120" x2="35" y2="145" stroke="#1E64C8" stroke-width="2"/>
+                                <line x1="35" y1="145" x2="50" y2="145" stroke="#1E64C8" stroke-width="2"/>
+                                
+                                <line x1="50" y1="170" x2="20" y2="170" stroke="#1E64C8" stroke-width="2"/>
+                                
+                                <line x1="20" y1="57" x2="10" y2="57" stroke="#1E64C8" stroke-width="2"/>
+                                <line x1="10" y1="57" x2="10" y2="145" stroke="#1E64C8" stroke-width="2"/>
+                                <line x1="10" y1="145" x2="20" y2="145" stroke="#1E64C8" stroke-width="2"/>
+                            </svg>
+                        </div>
+                        
+                        <div style="display: flex; flex: 1;">
+                            <!-- Labels Column -->
+                            <div class="labels-column">
+                                <div class="label-vertical">Age</div>
+                                <div class="label-vertical">Income</div>
+                                <div class="label-vertical">Credit</div>
+                                <div class="label-vertical">Balance</div>
+                                <div class="label-vertical">Spending</div>
+                                <div class="label-vertical">Savings</div>
+                                <div class="label-vertical">Debt</div>
+                            </div>
+                            
+                            <!-- Heatmap Grid -->
+                            <div class="heatmap-grid-wrapper">
+                                <div class="heatmap-grid">
+                                    <!-- Row 1: Age -->
+                                    <div class="heatmap-cell corr-1">1.0</div>
+                                    <div class="heatmap-cell corr-07">0.7</div>
+                                    <div class="heatmap-cell corr-05">0.5</div>
+                                    <div class="heatmap-cell corr-02">0.2</div>
+                                    <div class="heatmap-cell corr-03">0.3</div>
+                                    <div class="heatmap-cell corr-04">0.4</div>
+                                    <div class="heatmap-cell corr-n02">-0.2</div>
+                                    
+                                    <!-- Row 2: Income -->
+                                    <div class="heatmap-cell corr-07">0.7</div>
+                                    <div class="heatmap-cell corr-1">1.0</div>
+                                    <div class="heatmap-cell corr-06">0.6</div>
+                                    <div class="heatmap-cell corr-04">0.4</div>
+                                    <div class="heatmap-cell corr-05">0.5</div>
+                                    <div class="heatmap-cell corr-08">0.8</div>
+                                    <div class="heatmap-cell corr-n04">-0.4</div>
+                                    
+                                    <!-- Row 3: Credit -->
+                                    <div class="heatmap-cell corr-05">0.5</div>
+                                    <div class="heatmap-cell corr-06">0.6</div>
+                                    <div class="heatmap-cell corr-1">1.0</div>
+                                    <div class="heatmap-cell corr-03">0.3</div>
+                                    <div class="heatmap-cell corr-04">0.4</div>
+                                    <div class="heatmap-cell corr-07">0.7</div>
+                                    <div class="heatmap-cell corr-n05">-0.5</div>
+                                    
+                                    <!-- Row 4: Balance -->
+                                    <div class="heatmap-cell corr-02">0.2</div>
+                                    <div class="heatmap-cell corr-04">0.4</div>
+                                    <div class="heatmap-cell corr-03">0.3</div>
+                                    <div class="heatmap-cell corr-1">1.0</div>
+                                    <div class="heatmap-cell corr-n01">-0.1</div>
+                                    <div class="heatmap-cell corr-02">0.2</div>
+                                    <div class="heatmap-cell corr-09">0.9</div>
+                                    
+                                    <!-- Row 5: Spending -->
+                                    <div class="heatmap-cell corr-03">0.3</div>
+                                    <div class="heatmap-cell corr-05">0.5</div>
+                                    <div class="heatmap-cell corr-04">0.4</div>
+                                    <div class="heatmap-cell corr-n01">-0.1</div>
+                                    <div class="heatmap-cell corr-1">1.0</div>
+                                    <div class="heatmap-cell corr-06">0.6</div>
+                                    <div class="heatmap-cell corr-n03">-0.3</div>
+                                    
+                                    <!-- Row 6: Savings -->
+                                    <div class="heatmap-cell corr-04">0.4</div>
+                                    <div class="heatmap-cell corr-08">0.8</div>
+                                    <div class="heatmap-cell corr-07">0.7</div>
+                                    <div class="heatmap-cell corr-02">0.2</div>
+                                    <div class="heatmap-cell corr-06">0.6</div>
+                                    <div class="heatmap-cell corr-1">1.0</div>
+                                    <div class="heatmap-cell corr-n06">-0.6</div>
+                                    
+                                    <!-- Row 7: Debt -->
+                                    <div class="heatmap-cell corr-n02">-0.2</div>
+                                    <div class="heatmap-cell corr-n04">-0.4</div>
+                                    <div class="heatmap-cell corr-n05">-0.5</div>
+                                    <div class="heatmap-cell corr-09">0.9</div>
+                                    <div class="heatmap-cell corr-n03">-0.3</div>
+                                    <div class="heatmap-cell corr-n06">-0.6</div>
+                                    <div class="heatmap-cell corr-1">1.0</div>
+                                </div>
+                                
+                                <!-- Bottom Labels -->
+                                <div class="labels-row">
+                                    <div class="label">Age</div>
+                                    <div class="label">Income</div>
+                                    <div class="label">Credit</div>
+                                    <div class="label">Balance</div>
+                                    <div class="label">Spend</div>
+                                    <div class="label">Savings</div>
+                                    <div class="label">Debt</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Color Scale Legend -->
+                    <div class="color-scale">
+                        <span class="scale-label">-1.0</span>
+                        <div class="scale-gradient"></div>
+                        <span class="scale-label">+1.0</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <div class="interpretation-card">
+                    <div class="card-title">
+                        <span>📊</span>
+                        Interpretation
+                    </div>
+                    <div class="interp-item">
+                        <span class="interp-icon icon-pos">🔵</span>
+                        <span>Positive: Variables move together</span>
+                    </div>
+                    <div class="interp-item">
+                        <span class="interp-icon icon-neg">🔴</span>
+                        <span>Negative: Inverse relationship</span>
+                    </div>
+                    <div class="interp-item">
+                        <span class="interp-icon icon-zero">⚪</span>
+                        <span>Zero: No linear relationship</span>
+                    </div>
+                    <div class="interp-item">
+                        <span class="interp-icon" style="color: #1E64C8;">🌳</span>
+                        <span>Dendrogram groups similar features</span>
+                    </div>
+                </div>
+                
+                <div class="usage-card">
+                    <div class="usage-title">📋 When to Use</div>
+                    <div class="usage-item">
+                        <span class="usage-icon">▸</span>
+                        <span>EDA phase</span>
+                    </div>
+                    <div class="usage-item">
+                        <span class="usage-icon">▸</span>
+                        <span>Feature selection</span>
+                    </div>
+                    <div class="usage-item">
+                        <span class="usage-icon">▸</span>
+                        <span>Multicollinearity detection</span>
+                    </div>
+                    <div class="usage-item">
+                        <span class="usage-icon">▸</span>
+                        <span>Feature engineering</span>
+                    </div>
+                </div>
+                
+                <div class="tips-card">
+                    <div class="tips-title">✓ Best Practices</div>
+                    <div class="tip-item">
+                        <span class="check-icon">✓</span>
+                        <span>Use diverging colormap</span>
+                    </div>
+                    <div class="tip-item">
+                        <span class="check-icon">✓</span>
+                        <span>Show upper/lower triangle only</span>
+                    </div>
+                    <div class="tip-item">
+                        <span class="check-icon">✓</span>
+                        <span>Cluster similar variables</span>
+                    </div>
+                    <div class="tip-item">
+                        <span class="check-icon">✓</span>
+                        <span>Identify redundant features</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

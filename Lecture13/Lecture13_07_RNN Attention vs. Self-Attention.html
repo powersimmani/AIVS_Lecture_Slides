@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RNN Attention vs Self-Attention</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 30px;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .comparison-table {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .table-header {
+            display: flex;
+            background: #1E64C8;
+            color: white;
+        }
+        
+        .header-cell {
+            flex: 1;
+            padding: 14px 20px;
+            font-size: 19px;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .header-cell:first-child {
+            background: #155091;
+        }
+        
+        .table-row {
+            display: flex;
+            border-top: 1px solid #d0d0d0;
+            min-height: 70px;
+        }
+        
+        .row-label {
+            flex: 1;
+            padding: 14px 20px;
+            background: #f0f7ff;
+            font-weight: 600;
+            font-size: 17px;
+            color: #1E64C8;
+            display: flex;
+            align-items: center;
+            border-right: 2px solid #1E64C8;
+        }
+        
+        .row-content {
+            flex: 1;
+            padding: 14px 20px;
+            font-size: 16px;
+            color: #333;
+            line-height: 1.5;
+            display: flex;
+            align-items: center;
+            background: white;
+        }
+        
+        .row-content.rnn {
+            background: #fff9f9;
+        }
+        
+        .row-content.self {
+            background: #f0fff4;
+        }
+        
+        .highlight {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .highlight.green {
+            color: #16a34a;
+        }
+        
+        .highlight.red {
+            color: #dc3545;
+        }
+        
+        .advantage-box {
+            margin-top: auto;
+            padding: 12px 20px;
+            background: #f0f7ff;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .advantage-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .advantage-text {
+            font-size: 16px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">RNN Attention vs. Self-Attention</div>
+        
+        <div class="comparison-table">
+            <div class="table-header">
+                <div class="header-cell">Aspect</div>
+                <div class="header-cell">RNN Attention</div>
+                <div class="header-cell">Self-Attention</div>
+            </div>
+            
+            <div class="table-row">
+                <div class="row-label">📍 Source</div>
+                <div class="row-content rnn">
+                    Query from <span class="highlight">decoder</span><br>
+                    Keys/Values from <span class="highlight">encoder</span>
+                </div>
+                <div class="row-content self">
+                    All from the <span class="highlight green">same sequence</span>
+                </div>
+            </div>
+            
+            <div class="table-row">
+                <div class="row-label">⚙️ Processing</div>
+                <div class="row-content rnn">
+                    <span class="highlight red">Sequential</span> processing
+                </div>
+                <div class="row-content self">
+                    <span class="highlight green">Parallel</span> processing
+                </div>
+            </div>
+            
+            <div class="table-row">
+                <div class="row-label">🔗 Relationships</div>
+                <div class="row-content rnn">
+                    Limited to current step
+                </div>
+                <div class="row-content self">
+                    Captures relationships between <span class="highlight green">all positions</span>
+                </div>
+            </div>
+            
+            <div class="table-row">
+                <div class="row-label">⏱️ Complexity</div>
+                <div class="row-content rnn">
+                    <span class="highlight">O(n)</span> per step
+                </div>
+                <div class="row-content self">
+                    <span class="highlight">O(n²)</span> total
+                </div>
+            </div>
+            
+            <div class="table-row">
+                <div class="row-label">📊 Gradients</div>
+                <div class="row-content rnn">
+                    Degradation over long sequences
+                </div>
+                <div class="row-content self">
+                    <span class="highlight green">Better gradient flow</span> for long sequences
+                </div>
+            </div>
+        </div>
+        
+        <div class="advantage-box">
+            <div class="advantage-title">⚡ Key Advantage</div>
+            <div class="advantage-text">Self-attention enables parallelization and better long-range dependency modeling</div>
+        </div>
+    </div>
+</body>
+</html>

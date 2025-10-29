@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exploring the Limitations of RNNs</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #ffffff;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 40px;
+            position: relative;
+        }
+        
+        .main-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 40px;
+        }
+        
+        .limitations-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            height: calc(100% - 60px);
+        }
+        
+        .limitation-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 24px;
+            border-top: 4px solid #1E64C8;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+        
+        .limitation-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(30, 100, 200, 0.15);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .icon {
+            width: 40px;
+            height: 40px;
+            background: #1E64C8;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .card-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .visual-demo {
+            flex: 1;
+            background: white;
+            border-radius: 6px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .gradient-demo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+        }
+        
+        .gradient-box {
+            flex: 1;
+            height: 50px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: white;
+            font-weight: 500;
+        }
+        
+        .box-1 { background: #1E64C8; }
+        .box-2 { background: #5088d4; }
+        .box-3 { background: #82ace0; }
+        .box-4 { background: #b4d0ec; }
+        .box-5 { background: #e6f0f8; color: #666; }
+        
+        .arrow-right {
+            width: 16px;
+            height: 2px;
+            background: #999;
+            position: relative;
+        }
+        
+        .arrow-right::after {
+            content: '';
+            position: absolute;
+            right: -4px;
+            top: -3px;
+            width: 0;
+            height: 0;
+            border-left: 6px solid #999;
+            border-top: 4px solid transparent;
+            border-bottom: 4px solid transparent;
+        }
+        
+        .dependency-demo {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+        }
+        
+        .sequence-line {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        
+        .seq-box {
+            width: 50px;
+            height: 40px;
+            background: #1E64C8;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: white;
+            font-weight: 500;
+        }
+        
+        .connection-line {
+            flex: 1;
+            height: 2px;
+            background: linear-gradient(to right, #1E64C8, #e6f0f8);
+            position: relative;
+        }
+        
+        .weak-connection {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .description {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.5;
+        }
+        
+        .problem-item {
+            display: flex;
+            align-items: start;
+            gap: 8px;
+            font-size: 16px;
+            color: #555;
+        }
+        
+        .bullet {
+            color: #1E64C8;
+            font-weight: bold;
+            margin-top: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-title">Key Limitations of Standard RNNs</div>
+        
+        <div class="limitations-grid">
+            <!-- Vanishing Gradient Problem -->
+            <div class="limitation-card">
+                <div class="card-header">
+                    <div class="icon">∇</div>
+                    <div class="card-title">Vanishing Gradient Problem</div>
+                </div>
+                <div class="card-content">
+                    <div class="visual-demo">
+                        <div class="gradient-demo">
+                            <div class="gradient-box box-1">t₁</div>
+                            <div class="arrow-right"></div>
+                            <div class="gradient-box box-2">t₂</div>
+                            <div class="arrow-right"></div>
+                            <div class="gradient-box box-3">t₃</div>
+                            <div class="arrow-right"></div>
+                            <div class="gradient-box box-4">t₄</div>
+                            <div class="arrow-right"></div>
+                            <div class="gradient-box box-5">t₅</div>
+                        </div>
+                    </div>
+                    <div class="problem-item">
+                        <span class="bullet">•</span>
+                        <span>Gradients diminish exponentially during backpropagation</span>
+                    </div>
+                    <div class="problem-item">
+                        <span class="bullet">•</span>
+                        <span>Early time steps receive negligible weight updates</span>
+                    </div>
+                    <div class="problem-item">
+                        <span class="bullet">•</span>
+                        <span>Hinders learning from distant past information</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Long-term Dependencies -->
+            <div class="limitation-card">
+                <div class="card-header">
+                    <div class="icon">⟷</div>
+                    <div class="card-title">Long-term Dependencies</div>
+                </div>
+                <div class="card-content">
+                    <div class="visual-demo">
+                        <div class="dependency-demo">
+                            <div class="sequence-line">
+                                <div class="seq-box">t₁</div>
+                                <div class="connection-line">
+                                    <span class="weak-connection">weak</span>
+                                </div>
+                                <div class="seq-box" style="opacity: 0.5;">t₁₀</div>
+                            </div>
+                            <div style="text-align: center; font-size: 14px; color: #999;">
+                                Information decays over long sequences
+                            </div>
+                        </div>
+                    </div>
+                    <div class="problem-item">
+                        <span class="bullet">•</span>
+                        <span>Difficulty capturing dependencies across long sequences</span>
+                    </div>
+                    <div class="problem-item">
+                        <span class="bullet">•</span>
+                        <span>Context from early tokens gets lost or diluted</span>
+                    </div>
+                    <div class="problem-item">
+                        <span class="bullet">•</span>
+                        <span>Limits performance on tasks requiring long-range context</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Exploding Gradient -->
+            <div class="limitation-card">
+                <div class="card-header">
+                    <div class="icon">↗</div>
+                    <div class="card-title">Exploding Gradient Problem</div>
+                </div>
+                <div class="card-content">
+                    <div class="visual-demo">
+                        <div class="gradient-demo">
+                            <div class="gradient-box" style="background: #b4d0ec; color: #666; height: 30px;">t₁</div>
+                            <div class="arrow-right"></div>
+                            <div class="gradient-box" style="background: #82ace0; height: 40px;">t₂</div>
+                            <div class="arrow-right"></div>
+                            <div class="gradient-box" style="background: #5088d4; height: 50px;">t₃</div>
+                            <div class="arrow-right"></div>
+                            <div class="gradient-box" style="background: #1E64C8; height: 60px;">t₄</div>
+                            <div class="arrow-right"></div>
+                            <div class="gradient-box" style="background: #0d3d7a; height: 70px;">t₅</div>
+                        </div>
+                    </div>
+                    <div class="problem-item">
+                        <span class="bullet">•</span>
+                        <span>Gradients grow exponentially during backpropagation</span>
+                    </div>
+                    <div class="problem-item">
+                        <span class="bullet">•</span>
+                        <span>Causes numerical instability and training divergence</span>
+                    </div>
+                    <div class="problem-item">
+                        <span class="bullet">•</span>
+                        <span>Requires gradient clipping to stabilize training</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sequential Processing -->
+            <div class="limitation-card">
+                <div class="card-header">
+                    <div class="icon">⏱</div>
+                    <div class="card-title">Sequential Processing Bottleneck</div>
+                </div>
+                <div class="card-content">
+                    <div class="visual-demo">
+                        <div style="display: flex; flex-direction: column; gap: 8px; width: 100%;">
+                            <div style="display: flex; gap: 8px;">
+                                <div class="seq-box" style="width: 40px; height: 35px; font-size: 12px;">t₁</div>
+                                <div style="font-size: 20px; color: #999;">→</div>
+                                <div class="seq-box" style="width: 40px; height: 35px; font-size: 12px;">t₂</div>
+                                <div style="font-size: 20px; color: #999;">→</div>
+                                <div class="seq-box" style="width: 40px; height: 35px; font-size: 12px;">t₃</div>
+                                <div style="font-size: 20px; color: #999;">→</div>
+                                <div class="seq-box" style="width: 40px; height: 35px; font-size: 12px;">t₄</div>
+                            </div>
+                            <div style="text-align: center; font-size: 14px; color: #999;">
+                                Cannot parallelize ⚠
+                            </div>
+                        </div>
+                    </div>
+                    <div class="problem-item">
+                        <span class="bullet">•</span>
+                        <span>Must process sequence step-by-step sequentially</span>
+                    </div>
+                    <div class="problem-item">
+                        <span class="bullet">•</span>
+                        <span>Cannot leverage parallel computation effectively</span>
+                    </div>
+                    <div class="problem-item">
+                        <span class="bullet">•</span>
+                        <span>Slow training and inference on long sequences</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Head Attention Architecture</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 30px;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .architecture {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            flex: 1;
+        }
+        
+        .layer {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .layer-label {
+            width: 100px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: right;
+        }
+        
+        .input-box {
+            flex: 1;
+            background: #f0f7ff;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .heads-container {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 8px;
+        }
+        
+        .head-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 6px;
+            padding: 12px 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        
+        .head-number {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .head-detail {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+            line-height: 1.2;
+        }
+        
+        .concat-box {
+            flex: 1;
+            background: #fff9f0;
+            border: 2px solid #f59e0b;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+            font-size: 17px;
+            font-weight: 600;
+            color: #d97700;
+        }
+        
+        .output-box {
+            flex: 1;
+            background: #f0fdf4;
+            border: 2px solid #16a34a;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+            font-size: 17px;
+            font-weight: 600;
+            color: #16a34a;
+        }
+        
+        .arrow-down {
+            text-align: center;
+            color: #1E64C8;
+            font-size: 20px;
+            height: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 100px;
+        }
+        
+        .info-section {
+            display: flex;
+            gap: 12px;
+            margin-top: auto;
+        }
+        
+        .info-card {
+            flex: 1;
+            background: #f0f7ff;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 16px;
+        }
+        
+        .info-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .info-text {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.3;
+        }
+        
+        .formula-box {
+            background: white;
+            border: 1px solid #1E64C8;
+            border-radius: 4px;
+            padding: 8px 12px;
+            margin-top: 6px;
+            text-align: center;
+        }
+        
+        .formula {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .highlight {
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .dimension-text {
+            font-size: 13px;
+            color: #666;
+            margin-top: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Multi-Head Attention Architecture</div>
+        
+        <div class="architecture">
+            <div class="layer">
+                <div class="layer-label">Input</div>
+                <div class="input-box">
+                    Q, K, V<br>
+                    <span class="dimension-text">(d_model)</span>
+                </div>
+            </div>
+            
+            <div class="arrow-down">↓</div>
+            
+            <div class="layer">
+                <div class="layer-label">Parallel<br>Heads</div>
+                <div class="heads-container">
+                    <div class="head-box">
+                        <div class="head-number">H₁</div>
+                        <div class="head-detail">W_Q₁<br>W_K₁<br>W_V₁</div>
+                    </div>
+                    <div class="head-box">
+                        <div class="head-number">H₂</div>
+                        <div class="head-detail">W_Q₂<br>W_K₂<br>W_V₂</div>
+                    </div>
+                    <div class="head-box">
+                        <div class="head-number">H₃</div>
+                        <div class="head-detail">W_Q₃<br>W_K₃<br>W_V₃</div>
+                    </div>
+                    <div class="head-box">
+                        <div class="head-number">H₄</div>
+                        <div class="head-detail">W_Q₄<br>W_K₄<br>W_V₄</div>
+                    </div>
+                    <div class="head-box">
+                        <div class="head-number">H₅</div>
+                        <div class="head-detail">W_Q₅<br>W_K₅<br>W_V₅</div>
+                    </div>
+                    <div class="head-box">
+                        <div class="head-number">H₆</div>
+                        <div class="head-detail">W_Q₆<br>W_K₆<br>W_V₆</div>
+                    </div>
+                    <div class="head-box">
+                        <div class="head-number">H₇</div>
+                        <div class="head-detail">W_Q₇<br>W_K₇<br>W_V₇</div>
+                    </div>
+                    <div class="head-box">
+                        <div class="head-number">H₈</div>
+                        <div class="head-detail">W_Q₈<br>W_K₈<br>W_V₈</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="arrow-down">↓</div>
+            
+            <div class="layer">
+                <div class="layer-label">Concatenate</div>
+                <div class="concat-box">
+                    Concat(head₁, head₂, ..., head₈)<br>
+                    <span class="dimension-text">(h × d_k = d_model)</span>
+                </div>
+            </div>
+            
+            <div class="arrow-down">↓</div>
+            
+            <div class="layer">
+                <div class="layer-label">Output</div>
+                <div class="output-box">
+                    Final Linear Projection (W_O)<br>
+                    <span class="dimension-text">(d_model)</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="info-section">
+            <div class="info-card">
+                <div class="info-title">🔢 Configuration</div>
+                <div class="info-text">
+                    Typically <span class="highlight">h = 8</span> heads<br>
+                    Head dimension: <span class="highlight">d_k = d_model / h</span>
+                </div>
+            </div>
+            
+            <div class="info-card">
+                <div class="info-title">⚡ Parameters</div>
+                <div class="info-text">
+                    Each head: separate W_Q, W_K, W_V<br>
+                    Total params ≈ single large head
+                </div>
+            </div>
+            
+            <div class="info-card">
+                <div class="info-title">📐 Formula</div>
+                <div class="formula-box">
+                    <div class="formula">MultiHead(Q,K,V) =</div>
+                    <div class="formula">Concat(head₁,...,head_h)W_O</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

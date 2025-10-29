@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internal Covariate Shift</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: #ffffff;
+            padding: 20px 40px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 25px;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            height: 450px;
+        }
+        
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .problem-visual {
+            flex: 1;
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border: 2px solid #ff9800;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .visual-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #e65100;
+            text-align: center;
+        }
+        
+        .layer-flow {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .layer-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .layer-rect {
+            width: 80px;
+            height: 60px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        }
+        
+        .layer-1 {
+            background: linear-gradient(135deg, #1E64C8 0%, #2E74D8 100%);
+        }
+        
+        .layer-2 {
+            background: linear-gradient(135deg, #1E64C8 0%, #2E74D8 100%);
+        }
+        
+        .layer-3 {
+            background: linear-gradient(135deg, #1E64C8 0%, #2E74D8 100%);
+        }
+        
+        .distribution {
+            font-size: 11px;
+            margin-top: 4px;
+            opacity: 0.9;
+        }
+        
+        .shift-indicator {
+            font-size: 12px;
+            color: #e65100;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .arrow {
+            font-size: 24px;
+            color: #1E64C8;
+        }
+        
+        .shift-wave {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            width: 100%;
+            height: 60px;
+            background: white;
+            border-radius: 8px;
+            padding: 10px;
+        }
+        
+        .wave-bar {
+            width: 12px;
+            background: #ff9800;
+            border-radius: 6px 6px 0 0;
+            animation: waveMove 2s ease-in-out infinite;
+        }
+        
+        .wave-bar:nth-child(1) { height: 30%; animation-delay: 0s; }
+        .wave-bar:nth-child(2) { height: 50%; animation-delay: 0.2s; }
+        .wave-bar:nth-child(3) { height: 70%; animation-delay: 0.4s; }
+        .wave-bar:nth-child(4) { height: 90%; animation-delay: 0.6s; }
+        .wave-bar:nth-child(5) { height: 60%; animation-delay: 0.8s; }
+        .wave-bar:nth-child(6) { height: 40%; animation-delay: 1s; }
+        .wave-bar:nth-child(7) { height: 55%; animation-delay: 1.2s; }
+        
+        @keyframes waveMove {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+        
+        .impact-box {
+            background: #ffebee;
+            border: 2px solid #ff4444;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .impact-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #c62828;
+            margin-bottom: 8px;
+        }
+        
+        .impact-text {
+            font-size: 15px;
+            color: #2c3e50;
+        }
+        
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .section-header {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 5px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .problem-card {
+            background: #f8f9fb;
+            border-left: 4px solid #ff9800;
+            padding: 14px 16px;
+            border-radius: 6px;
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.5;
+            transition: all 0.3s ease;
+        }
+        
+        .problem-card:hover {
+            background: #fff3e0;
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(255, 152, 0, 0.2);
+        }
+        
+        .highlight {
+            font-weight: 600;
+            color: #e65100;
+        }
+        
+        .solution-box {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border: 2px solid #4caf50;
+            border-radius: 10px;
+            padding: 16px;
+            margin-top: 10px;
+        }
+        
+        .solution-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #2e7d32;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .solution-text {
+            font-size: 16px;
+            color: #2c3e50;
+            text-align: center;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Internal Covariate Shift</div>
+        
+        <div class="main-content">
+            <div class="left-section">
+                <div class="problem-visual">
+                    <div class="visual-title">Distribution Shifts During Training</div>
+                    
+                    <div class="layer-flow">
+                        <div class="layer-box">
+                            <div class="layer-rect layer-1">
+                                Layer 1
+                                <div class="distribution">μ₁, σ₁</div>
+                            </div>
+                        </div>
+                        
+                        <div class="arrow">→</div>
+                        
+                        <div class="layer-box">
+                            <div class="layer-rect layer-2">
+                                Layer 2
+                                <div class="distribution">μ₂, σ₂</div>
+                            </div>
+                            <div class="shift-indicator">Shifts!</div>
+                        </div>
+                        
+                        <div class="arrow">→</div>
+                        
+                        <div class="layer-box">
+                            <div class="layer-rect layer-3">
+                                Layer 3
+                                <div class="distribution">μ₃, σ₃</div>
+                            </div>
+                            <div class="shift-indicator">Shifts!</div>
+                        </div>
+                    </div>
+                    
+                    <div class="shift-wave">
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                    </div>
+                </div>
+                
+                <div class="impact-box">
+                    <div class="impact-title">⚠️ Training Impact</div>
+                    <div class="impact-text">Requires lower learning rates for stable training</div>
+                </div>
+            </div>
+            
+            <div class="right-section">
+                <div class="section-header">Key Problems</div>
+                
+                <div class="problem-card">
+                    <span class="highlight">Distribution changes</span> as previous layers update during training
+                </div>
+                
+                <div class="problem-card">
+                    Forces layers to <span class="highlight">continuously adapt</span> to new distributions
+                </div>
+                
+                <div class="problem-card">
+                    <span class="highlight">Slows down training</span> and reduces stability
+                </div>
+                
+                <div class="problem-card">
+                    More <span class="highlight">pronounced in deeper</span> networks
+                </div>
+                
+                <div class="solution-box">
+                    <div class="solution-title">✓ Solution</div>
+                    <div class="solution-text">
+                        <strong>Normalization techniques</strong> address this problem directly by stabilizing distributions
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

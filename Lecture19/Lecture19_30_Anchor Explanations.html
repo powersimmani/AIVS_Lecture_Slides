@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anchor Explanations</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+            padding: 25px 35px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 18px;
+        }
+        
+        .title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            font-size: 15px;
+            color: #666;
+            font-style: italic;
+        }
+        
+        /* Main content */
+        .content {
+            display: flex;
+            gap: 20px;
+            flex: 1;
+        }
+        
+        /* Example section */
+        .example-section {
+            flex: 1.5;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        /* Anchor rule box */
+        .rule-box {
+            background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+            border: 3px solid #4CAF50;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+        }
+        
+        .rule-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: #2E7D32;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .rule-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 18px;
+            line-height: 1.5;
+        }
+        
+        .rule-if {
+            color: #1565C0;
+            font-weight: 700;
+        }
+        
+        .rule-condition {
+            background: white;
+            padding: 8px 14px;
+            border-radius: 6px;
+            color: #333;
+            font-weight: 600;
+            border: 2px solid #81C784;
+        }
+        
+        .rule-and {
+            color: #1565C0;
+            font-weight: 700;
+        }
+        
+        .rule-then {
+            color: #D84315;
+            font-weight: 700;
+        }
+        
+        .rule-prediction {
+            background: white;
+            padding: 8px 14px;
+            border-radius: 6px;
+            color: #2E7D32;
+            font-weight: 700;
+            border: 2px solid #4CAF50;
+        }
+        
+        /* Metrics */
+        .metrics-container {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .metric-card {
+            flex: 1;
+            background: white;
+            border: 2px solid #E5E7EB;
+            border-radius: 10px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .metric-card:hover {
+            border-color: #1E64C8;
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.15);
+            transform: translateY(-4px);
+        }
+        
+        .metric-label {
+            font-size: 14px;
+            font-weight: 700;
+            color: #666;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .metric-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .metric-bar {
+            width: 100%;
+            height: 12px;
+            background: #E5E7EB;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 6px;
+        }
+        
+        .metric-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #1E64C8 0%, #4A94E5 100%);
+            transition: width 0.5s;
+        }
+        
+        .metric-desc {
+            font-size: 11px;
+            color: #666;
+            text-align: center;
+            line-height: 1.3;
+        }
+        
+        /* Visualization */
+        .visualization-box {
+            flex: 1;
+            background: white;
+            border: 2px solid #E5E7EB;
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .viz-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .viz-canvas {
+            flex: 1;
+            background: #FAFAFA;
+            border-radius: 8px;
+            padding: 15px;
+            position: relative;
+        }
+        
+        .feature-space {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        
+        .axis-label-x {
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            font-weight: 600;
+            color: #666;
+        }
+        
+        .axis-label-y {
+            position: absolute;
+            left: 5px;
+            top: 50%;
+            transform: translateY(-50%) rotate(-90deg);
+            font-size: 12px;
+            font-weight: 600;
+            color: #666;
+        }
+        
+        .anchor-region {
+            position: absolute;
+            background: rgba(76, 175, 80, 0.2);
+            border: 3px solid #4CAF50;
+            border-radius: 8px;
+            top: 20%;
+            right: 15%;
+            width: 45%;
+            height: 50%;
+        }
+        
+        .anchor-label {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #4CAF50;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+        
+        .data-points {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .point {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        
+        .point-in {
+            background: #4CAF50;
+            border: 2px solid #2E7D32;
+        }
+        
+        .point-out {
+            background: #E0E0E0;
+            border: 2px solid #9E9E9E;
+        }
+        
+        /* Info section */
+        .info-section {
+            flex: 0.5;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .section-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .advantages-box {
+            background: linear-gradient(135deg, #F0F7FF 0%, #E5F1FF 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px;
+        }
+        
+        .advantages-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 10px;
+        }
+        
+        .advantage-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .advantage-icon {
+            color: #4CAF50;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .info-card {
+            background: #F8FAFC;
+            border-left: 4px solid #1E64C8;
+            border-radius: 8px;
+            padding: 10px 12px;
+            transition: all 0.2s;
+        }
+        
+        .info-card:hover {
+            background: #F0F7FF;
+            transform: translateX(4px);
+        }
+        
+        .info-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 3px;
+        }
+        
+        .info-desc {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.3;
+        }
+        
+        /* Implementation */
+        .implementation-box {
+            background: white;
+            border: 2px solid #E5E7EB;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: auto;
+        }
+        
+        .impl-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .impl-content {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="title">Anchor Explanations</div>
+            <div class="subtitle">Sufficient Conditions with High Precision</div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="content">
+            <!-- Example Section -->
+            <div class="example-section">
+                <!-- Anchor Rule -->
+                <div class="rule-box">
+                    <div class="rule-label">⚓ Anchor Rule Example</div>
+                    <div class="rule-content">
+                        <span class="rule-if">IF</span>
+                        <span class="rule-condition">Age > 30</span>
+                        <span class="rule-and">AND</span>
+                        <span class="rule-condition">Income > 50K</span>
+                        <span class="rule-then">THEN</span>
+                        <span class="rule-prediction">Approve</span>
+                    </div>
+                </div>
+                
+                <!-- Metrics -->
+                <div class="metrics-container">
+                    <div class="metric-card">
+                        <div class="metric-label">Precision</div>
+                        <div class="metric-value">0.95</div>
+                        <div class="metric-bar">
+                            <div class="metric-fill" style="width: 95%;"></div>
+                        </div>
+                        <div class="metric-desc">Accuracy when rule applies</div>
+                    </div>
+                    
+                    <div class="metric-card">
+                        <div class="metric-label">Coverage</div>
+                        <div class="metric-value">0.30</div>
+                        <div class="metric-bar">
+                            <div class="metric-fill" style="width: 30%;"></div>
+                        </div>
+                        <div class="metric-desc">Fraction of instances covered</div>
+                    </div>
+                </div>
+                
+                <!-- Visualization -->
+                <div class="visualization-box">
+                    <div class="viz-title">Covered Region Visualization</div>
+                    <div class="viz-canvas">
+                        <div class="feature-space">
+                            <div class="axis-label-x">Income →</div>
+                            <div class="axis-label-y">Age →</div>
+                            
+                            <!-- Anchor region -->
+                            <div class="anchor-region">
+                                <div class="anchor-label">Anchor Region</div>
+                            </div>
+                            
+                            <!-- Data points -->
+                            <div class="data-points">
+                                <!-- Points inside anchor -->
+                                <div class="point point-in" style="left: 65%; top: 25%;"></div>
+                                <div class="point point-in" style="left: 70%; top: 35%;"></div>
+                                <div class="point point-in" style="left: 75%; top: 28%;"></div>
+                                <div class="point point-in" style="left: 68%; top: 45%;"></div>
+                                <div class="point point-in" style="left: 80%; top: 40%;"></div>
+                                <div class="point point-in" style="left: 72%; top: 50%;"></div>
+                                <div class="point point-in" style="left: 78%; top: 30%;"></div>
+                                
+                                <!-- Points outside anchor -->
+                                <div class="point point-out" style="left: 25%; top: 35%;"></div>
+                                <div class="point point-out" style="left: 35%; top: 60%;"></div>
+                                <div class="point point-out" style="left: 45%; top: 70%;"></div>
+                                <div class="point point-out" style="left: 20%; top: 50%;"></div>
+                                <div class="point point-out" style="left: 30%; top: 75%;"></div>
+                                <div class="point point-out" style="left: 50%; top: 80%;"></div>
+                                <div class="point point-out" style="left: 40%; top: 45%;"></div>
+                                <div class="point point-out" style="left: 75%; top: 75%;"></div>
+                                <div class="point point-out" style="left: 85%; top: 65%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Info Section -->
+            <div class="info-section">
+                <div class="section-title">Key Features</div>
+                
+                <div class="advantages-box">
+                    <div class="advantages-title">Advantages</div>
+                    <div class="advantage-item">
+                        <span class="advantage-icon">✓</span>
+                        <span>More stable than LIME</span>
+                    </div>
+                    <div class="advantage-item">
+                        <span class="advantage-icon">✓</span>
+                        <span>Human-readable rules</span>
+                    </div>
+                    <div class="advantage-item">
+                        <span class="advantage-icon">✓</span>
+                        <span>High confidence regions</span>
+                    </div>
+                    <div class="advantage-item">
+                        <span class="advantage-icon">✓</span>
+                        <span>Less perturbation-sensitive</span>
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-title">Sufficient Conditions</div>
+                    <div class="info-desc">Rules that guarantee prediction</div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-title">Precision Metric</div>
+                    <div class="info-desc">Rule accuracy on samples</div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-title">Coverage Metric</div>
+                    <div class="info-desc">Fraction where rule applies</div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-title">Beam Search</div>
+                    <div class="info-desc">Finds optimal anchor rules</div>
+                </div>
+                
+                <!-- Implementation -->
+                <div class="implementation-box">
+                    <div class="impl-title">Implementation</div>
+                    <div class="impl-content">
+                        <strong>Python:</strong> anchor package<br>
+                        (integrated with Alibi library)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

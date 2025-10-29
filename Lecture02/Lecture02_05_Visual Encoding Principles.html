@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual Encoding Hierarchy</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #FFFFFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 40px;
+            position: relative;
+        }
+        
+        .title-section {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+        
+        .main-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .subtitle {
+            font-size: 18px;
+            color: #666666;
+        }
+        
+        .hierarchy-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .encoding-item {
+            display: flex;
+            align-items: center;
+            background: #FFFFFF;
+            border-radius: 10px;
+            padding: 16px 24px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .encoding-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            background: #1E64C8;
+            transition: width 0.3s ease;
+        }
+        
+        .encoding-item.rank-1::before { width: 100%; }
+        .encoding-item.rank-2::before { width: 85%; }
+        .encoding-item.rank-3::before { width: 70%; }
+        .encoding-item.rank-4::before { width: 55%; }
+        .encoding-item.rank-5::before { width: 40%; }
+        .encoding-item.rank-6::before { width: 28%; }
+        .encoding-item.rank-7::before { width: 18%; }
+        
+        .encoding-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 4px 15px rgba(30, 100, 200, 0.2);
+        }
+        
+        .rank-badge {
+            font-size: 20px;
+            font-weight: 700;
+            color: #FFFFFF;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #1E64C8;
+            border-radius: 50%;
+            margin-right: 20px;
+            z-index: 2;
+            flex-shrink: 0;
+            border: 3px solid #FFFFFF;
+            box-shadow: 0 2px 8px rgba(30, 100, 200, 0.3);
+        }
+        
+        .encoding-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 2;
+        }
+        
+        .encoding-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .encoding-name {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .encoding-description {
+            font-size: 16px;
+            color: #666666;
+        }
+        
+        .effectiveness-bar {
+            width: 120px;
+            height: 8px;
+            background: rgba(30, 100, 200, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-left: 20px;
+        }
+        
+        .effectiveness-fill {
+            height: 100%;
+            background: #1E64C8;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        
+        .rank-1 .effectiveness-fill { width: 100%; }
+        .rank-2 .effectiveness-fill { width: 85%; }
+        .rank-3 .effectiveness-fill { width: 70%; }
+        .rank-4 .effectiveness-fill { width: 55%; }
+        .rank-5 .effectiveness-fill { width: 40%; }
+        .rank-6 .effectiveness-fill { width: 28%; }
+        .rank-7 .effectiveness-fill { width: 18%; }
+        
+        .accuracy-label {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            font-size: 16px;
+            color: #999999;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .arrow-down {
+            color: #1E64C8;
+            font-size: 20px;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .encoding-item {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        .encoding-item:nth-child(1) { animation-delay: 0.1s; }
+        .encoding-item:nth-child(2) { animation-delay: 0.2s; }
+        .encoding-item:nth-child(3) { animation-delay: 0.3s; }
+        .encoding-item:nth-child(4) { animation-delay: 0.4s; }
+        .encoding-item:nth-child(5) { animation-delay: 0.5s; }
+        .encoding-item:nth-child(6) { animation-delay: 0.6s; }
+        .encoding-item:nth-child(7) { animation-delay: 0.7s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Visual Encoding Hierarchy</div>
+            <div class="subtitle">Effectiveness Ranking from Most to Least Accurate</div>
+        </div>
+        
+        <div class="accuracy-label">
+            <span>Most Accurate</span>
+            <span class="arrow-down">↓</span>
+        </div>
+        
+        <div class="hierarchy-container">
+            <!-- Rank 1: Position -->
+            <div class="encoding-item rank-1">
+                <div class="rank-badge">1</div>
+                <div class="encoding-content">
+                    <div class="encoding-info">
+                        <div class="encoding-name">Position</div>
+                        <div class="encoding-description">Most accurate encoding for quantitative data</div>
+                    </div>
+                    <div class="effectiveness-bar">
+                        <div class="effectiveness-fill"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Rank 2: Length -->
+            <div class="encoding-item rank-2">
+                <div class="rank-badge">2</div>
+                <div class="encoding-content">
+                    <div class="encoding-info">
+                        <div class="encoding-name">Length</div>
+                        <div class="encoding-description">Effective for comparing magnitudes</div>
+                    </div>
+                    <div class="effectiveness-bar">
+                        <div class="effectiveness-fill"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Rank 3: Angle -->
+            <div class="encoding-item rank-3">
+                <div class="rank-badge">3</div>
+                <div class="encoding-content">
+                    <div class="encoding-info">
+                        <div class="encoding-name">Angle</div>
+                        <div class="encoding-description">Less accurate but useful for proportions</div>
+                    </div>
+                    <div class="effectiveness-bar">
+                        <div class="effectiveness-fill"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Rank 4: Area -->
+            <div class="encoding-item rank-4">
+                <div class="rank-badge">4</div>
+                <div class="encoding-content">
+                    <div class="encoding-info">
+                        <div class="encoding-name">Area</div>
+                        <div class="encoding-description">Can be misleading, use with caution</div>
+                    </div>
+                    <div class="effectiveness-bar">
+                        <div class="effectiveness-fill"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Rank 5: Color -->
+            <div class="encoding-item rank-5">
+                <div class="rank-badge">5</div>
+                <div class="encoding-content">
+                    <div class="encoding-info">
+                        <div class="encoding-name">Color</div>
+                        <div class="encoding-description">Excellent for categories and gradients</div>
+                    </div>
+                    <div class="effectiveness-bar">
+                        <div class="effectiveness-fill"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Rank 6: Shape -->
+            <div class="encoding-item rank-6">
+                <div class="rank-badge">6</div>
+                <div class="encoding-content">
+                    <div class="encoding-info">
+                        <div class="encoding-name">Shape</div>
+                        <div class="encoding-description">Best for distinguishing categories</div>
+                    </div>
+                    <div class="effectiveness-bar">
+                        <div class="effectiveness-fill"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Rank 7: Texture -->
+            <div class="encoding-item rank-7">
+                <div class="rank-badge">7</div>
+                <div class="encoding-content">
+                    <div class="encoding-info">
+                        <div class="encoding-name">Texture</div>
+                        <div class="encoding-description">Secondary encoding, limited perceptual range</div>
+                    </div>
+                    <div class="effectiveness-bar">
+                        <div class="effectiveness-fill"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conditional Generation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .title {
+            font-size: 26px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .goal-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #4A90E2 100%);
+            color: white;
+            padding: 16px 25px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(30, 100, 200, 0.2);
+        }
+        
+        .goal-text {
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .goal-icon {
+            font-size: 20px;
+            margin-right: 10px;
+        }
+        
+        .method-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 12px;
+            padding: 20px 25px;
+            margin-bottom: 18px;
+        }
+        
+        .method-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .classifier-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .flow-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 15px 20px;
+            text-align: center;
+            min-width: 140px;
+            box-shadow: 0 2px 8px rgba(30, 100, 200, 0.1);
+        }
+        
+        .flow-label {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+        
+        .flow-content {
+            font-size: 15px;
+            color: #666;
+        }
+        
+        .arrow {
+            font-size: 28px;
+            color: #1E64C8;
+            margin: 0 10px;
+        }
+        
+        .formulas-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .formula-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 12px 15px;
+        }
+        
+        .formula-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .formula-text {
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            color: #333;
+        }
+        
+        .pros-cons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .pc-card {
+            border-radius: 8px;
+            padding: 15px 18px;
+        }
+        
+        .pros-card {
+            background: linear-gradient(135deg, #f0fff4 0%, #ffffff 100%);
+            border: 2px solid #27AE60;
+        }
+        
+        .cons-card {
+            background: linear-gradient(135deg, #fff5f5 0%, #ffffff 100%);
+            border: 2px solid #E74C3C;
+        }
+        
+        .pc-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .pc-icon {
+            font-size: 20px;
+        }
+        
+        .pc-title {
+            font-size: 17px;
+            font-weight: 700;
+        }
+        
+        .pros-card .pc-title {
+            color: #27AE60;
+        }
+        
+        .cons-card .pc-title {
+            color: #E74C3C;
+        }
+        
+        .pc-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .pc-item {
+            font-size: 16px;
+            color: #555;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        
+        .pc-bullet {
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .pros-card .pc-bullet {
+            color: #27AE60;
+        }
+        
+        .cons-card .pc-bullet {
+            color: #E74C3C;
+        }
+        
+        .application-box {
+            background: linear-gradient(135deg, #9B59B6 0%, #8E44AD 100%);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(155, 89, 182, 0.25);
+        }
+        
+        .application-text {
+            font-size: 17px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">Conditional Generation</div>
+            <div class="subtitle">Part 4/7: Sampling</div>
+        </div>
+        
+        <div class="goal-box">
+            <span class="goal-icon">🎯</span>
+            <span class="goal-text">Goal: Generate samples conditioned on class, text, or image</span>
+        </div>
+        
+        <div class="method-section">
+            <div class="method-title">🔍 Classifier Guidance Method</div>
+            
+            <div class="classifier-flow">
+                <div class="flow-box">
+                    <div class="flow-label">Base Score</div>
+                    <div class="flow-content">s (original)</div>
+                </div>
+                
+                <div class="arrow">+</div>
+                
+                <div class="flow-box">
+                    <div class="flow-label">Classifier Gradient</div>
+                    <div class="flow-content">w · ∇_x log p(y|x_t)</div>
+                </div>
+                
+                <div class="arrow">=</div>
+                
+                <div class="flow-box" style="border-color: #27AE60; border-width: 3px;">
+                    <div class="flow-label" style="color: #27AE60;">Modified Score</div>
+                    <div class="flow-content">s̃</div>
+                </div>
+            </div>
+            
+            <div class="formulas-grid">
+                <div class="formula-card">
+                    <div class="formula-title">Modified Score Formula</div>
+                    <div class="formula-text">s̃ = s + w·∇_x log p(y|x_t)</div>
+                </div>
+                
+                <div class="formula-card">
+                    <div class="formula-title">Guidance Scale</div>
+                    <div class="formula-text">w controls conditioning strength</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="pros-cons">
+            <div class="pc-card pros-card">
+                <div class="pc-header">
+                    <div class="pc-icon">✅</div>
+                    <div class="pc-title">Applications</div>
+                </div>
+                <div class="pc-list">
+                    <div class="pc-item">
+                        <span class="pc-bullet">•</span>
+                        <span>Class-conditional ImageNet generation</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="pc-card cons-card">
+                <div class="pc-header">
+                    <div class="pc-icon">⚠️</div>
+                    <div class="pc-title">Limitations</div>
+                </div>
+                <div class="pc-list">
+                    <div class="pc-item">
+                        <span class="pc-bullet">•</span>
+                        <span>Requires trained classifier</span>
+                    </div>
+                    <div class="pc-item">
+                        <span class="pc-bullet">•</span>
+                        <span>Less flexible</span>
+                    </div>
+                    <div class="pc-item">
+                        <span class="pc-bullet">•</span>
+                        <span>Need separate classifier for each type</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="application-box">
+            <div class="application-text">💡 Key Insight: Use classifier gradients to guide generation toward desired conditions</div>
+        </div>
+    </div>
+</body>
+</html>

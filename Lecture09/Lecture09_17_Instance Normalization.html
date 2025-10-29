@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instance Normalization</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: #ffffff;
+            padding: 20px 40px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 25px;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 25px;
+            height: 450px;
+        }
+        
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        
+        .visual-box {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 12px;
+            padding: 20px;
+            flex: 1;
+        }
+        
+        .visual-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .instance-demo {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .sample-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .sample-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .channels-container {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .channel-map {
+            width: 60px;
+            height: 80px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+            color: white;
+            border: 3px solid;
+            position: relative;
+        }
+        
+        .channel-r {
+            background: linear-gradient(135deg, #ef5350 0%, #e53935 100%);
+            border-color: #c62828;
+        }
+        
+        .channel-g {
+            background: linear-gradient(135deg, #66bb6a 0%, #4caf50 100%);
+            border-color: #2e7d32;
+        }
+        
+        .channel-b {
+            background: linear-gradient(135deg, #42a5f5 0%, #1e88e5 100%);
+            border-color: #1565c0;
+        }
+        
+        .channel-label {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        
+        .norm-indicator {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 24px;
+            height: 24px;
+            background: #4caf50;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            border: 2px solid white;
+        }
+        
+        .independence-note {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            font-size: 15px;
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+        
+        .note-highlight {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .style-box {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border: 2px solid #ff9800;
+            border-radius: 8px;
+            padding: 14px;
+        }
+        
+        .style-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #e65100;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .style-items {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+        }
+        
+        .style-item {
+            text-align: center;
+        }
+        
+        .style-icon {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        
+        .style-label {
+            font-size: 14px;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .section-header {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 5px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .feature-card {
+            background: #f8f9fb;
+            border-left: 4px solid #1E64C8;
+            padding: 13px 16px;
+            border-radius: 6px;
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.5;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            background: #eef3fb;
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(30, 100, 200, 0.15);
+        }
+        
+        .highlight {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .usage-box {
+            background: #e8f5e9;
+            border: 2px solid #4caf50;
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin-top: 10px;
+        }
+        
+        .usage-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #4caf50;
+            margin-bottom: 8px;
+        }
+        
+        .usage-text {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Instance Normalization</div>
+        
+        <div class="main-content">
+            <div class="left-section">
+                <div class="visual-box">
+                    <div class="visual-title">Normalizes Per Instance, Per Channel</div>
+                    
+                    <div class="instance-demo">
+                        <div class="sample-box">
+                            <div class="sample-label">Sample 1</div>
+                            <div class="channels-container">
+                                <div class="channel-map channel-r">
+                                    <div class="channel-label">R</div>
+                                    <div class="norm-indicator">✓</div>
+                                </div>
+                                <div class="channel-map channel-g">
+                                    <div class="channel-label">G</div>
+                                    <div class="norm-indicator">✓</div>
+                                </div>
+                                <div class="channel-map channel-b">
+                                    <div class="channel-label">B</div>
+                                    <div class="norm-indicator">✓</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="sample-box">
+                            <div class="sample-label">Sample 2</div>
+                            <div class="channels-container">
+                                <div class="channel-map channel-r">
+                                    <div class="channel-label">R</div>
+                                    <div class="norm-indicator">✓</div>
+                                </div>
+                                <div class="channel-map channel-g">
+                                    <div class="channel-label">G</div>
+                                    <div class="norm-indicator">✓</div>
+                                </div>
+                                <div class="channel-map channel-b">
+                                    <div class="channel-label">B</div>
+                                    <div class="norm-indicator">✓</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="independence-note">
+                        Each <span class="note-highlight">spatial map</span> normalized <span class="note-highlight">separately</span>
+                    </div>
+                </div>
+                
+                <div class="style-box">
+                    <div class="style-title">Style vs Content</div>
+                    <div class="style-items">
+                        <div class="style-item">
+                            <div class="style-icon">🎨</div>
+                            <div class="style-label">Normalizes<br>Style</div>
+                        </div>
+                        <div class="style-item">
+                            <div class="style-icon">📄</div>
+                            <div class="style-label">Preserves<br>Content</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-section">
+                <div class="section-header">Key Features</div>
+                
+                <div class="feature-card">
+                    Normalizes each sample and channel <span class="highlight">independently</span>
+                </div>
+                
+                <div class="feature-card">
+                    Removes <span class="highlight">instance-specific contrast</span> information
+                </div>
+                
+                <div class="feature-card">
+                    <span class="highlight">Preserves content</span> while normalizing style
+                </div>
+                
+                <div class="feature-card">
+                    Better than Batch Norm for <span class="highlight">style-related tasks</span>
+                </div>
+                
+                <div class="usage-box">
+                    <div class="usage-title">✓ Primary Applications</div>
+                    <div class="usage-text">
+                        Used in <strong>Style Transfer</strong> and <strong>GANs</strong> for image generation tasks
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

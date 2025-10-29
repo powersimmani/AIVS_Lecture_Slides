@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Role of Activation Functions</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Aptos', 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 40px;
+        }
+        
+        .main-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            flex: 1;
+        }
+        
+        .comparison-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .comparison-box {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            border: 2px solid #1E64C8;
+            flex: 1;
+        }
+        
+        .box-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .box-content {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.5;
+        }
+        
+        .without-box {
+            border-color: #d32f2f;
+        }
+        
+        .without-box .box-title {
+            color: #d32f2f;
+        }
+        
+        .with-box {
+            border-color: #4caf50;
+        }
+        
+        .with-box .box-title {
+            color: #4caf50;
+        }
+        
+        .formula {
+            background: white;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+        }
+        
+        .graph-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .graph-container {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            border: 2px solid #1E64C8;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .graph-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .graph-canvas {
+            flex: 1;
+            position: relative;
+            background: white;
+            border-radius: 4px;
+        }
+        
+        canvas {
+            width: 100%;
+            height: 100%;
+            border-radius: 4px;
+        }
+        
+        .key-roles {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        
+        .role-card {
+            background: #e3f2fd;
+            border-left: 4px solid #1E64C8;
+            padding: 12px;
+            border-radius: 4px;
+        }
+        
+        .role-number {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            background: #1E64C8;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 24px;
+            font-weight: 600;
+            font-size: 14px;
+            margin-right: 8px;
+        }
+        
+        .role-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+        
+        .role-text {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-title">Role of Activation Functions</div>
+        
+        <div class="content-grid">
+            <!-- Comparison Section -->
+            <div class="comparison-section">
+                <div class="comparison-box without-box">
+                    <div class="box-title">❌ Without Activation</div>
+                    <div class="box-content">
+                        <div class="formula">y = W₂(W₁x + b₁) + b₂</div>
+                        <div class="formula">y = W'x + b'</div>
+                        <p style="margin-top: 10px; font-size: 16px;">
+                            Multiple layers collapse into a single linear transformation. No advantage over logistic regression!
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="comparison-box with-box">
+                    <div class="box-title">✓ With Activation</div>
+                    <div class="box-content">
+                        <div class="formula">y = σ(W₂σ(W₁x + b₁) + b₂)</div>
+                        <p style="margin-top: 10px; font-size: 16px;">
+                            Non-linear transformations enable learning complex patterns and hierarchical representations.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Graph Section -->
+            <div class="graph-section">
+                <div class="graph-container">
+                    <div class="graph-title">Common Activation Functions</div>
+                    <div class="graph-canvas">
+                        <canvas id="activationCanvas"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Key Roles Section -->
+            <div class="key-roles">
+                <div class="role-card">
+                    <div class="role-title">
+                        <span class="role-number">1</span>Non-linearity
+                    </div>
+                    <div class="role-text">
+                        Introduce non-linear transformations to learn complex patterns
+                    </div>
+                </div>
+                
+                <div class="role-card">
+                    <div class="role-title">
+                        <span class="role-number">2</span>Gradient Flow
+                    </div>
+                    <div class="role-text">
+                        Enable backpropagation by providing differentiable functions
+                    </div>
+                </div>
+                
+                <div class="role-card">
+                    <div class="role-title">
+                        <span class="role-number">3</span>Expressiveness
+                    </div>
+                    <div class="role-text">
+                        Increase model capacity to approximate complex functions
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Draw activation functions
+        const canvas = document.getElementById('activationCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        function resizeCanvas() {
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * window.devicePixelRatio;
+            canvas.height = rect.height * window.devicePixelRatio;
+            ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+            drawActivations();
+        }
+        
+        function drawActivations() {
+            const width = canvas.width / window.devicePixelRatio;
+            const height = canvas.height / window.devicePixelRatio;
+            const centerX = width / 2;
+            const centerY = height / 2;
+            const scale = 30;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, width, height);
+            
+            // Draw axes
+            ctx.strokeStyle = '#ccc';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(0, centerY);
+            ctx.lineTo(width, centerY);
+            ctx.moveTo(centerX, 0);
+            ctx.lineTo(centerX, height);
+            ctx.stroke();
+            
+            // Draw activation functions
+            const functions = [
+                {
+                    name: 'Sigmoid',
+                    color: '#1E64C8',
+                    fn: (x) => 1 / (1 + Math.exp(-x))
+                },
+                {
+                    name: 'Tanh',
+                    color: '#4caf50',
+                    fn: (x) => Math.tanh(x)
+                },
+                {
+                    name: 'ReLU',
+                    color: '#ff9800',
+                    fn: (x) => Math.max(0, x)
+                }
+            ];
+            
+            functions.forEach((func, idx) => {
+                ctx.strokeStyle = func.color;
+                ctx.lineWidth = 2.5;
+                ctx.beginPath();
+                
+                for (let x = -width / 2; x < width / 2; x += 1) {
+                    const inputX = x / scale;
+                    const outputY = func.fn(inputX);
+                    const canvasX = centerX + x;
+                    const canvasY = centerY - outputY * scale;
+                    
+                    if (x === -width / 2) {
+                        ctx.moveTo(canvasX, canvasY);
+                    } else {
+                        ctx.lineTo(canvasX, canvasY);
+                    }
+                }
+                ctx.stroke();
+                
+                // Draw legend
+                const legendX = 15;
+                const legendY = 20 + idx * 20;
+                ctx.fillStyle = func.color;
+                ctx.fillRect(legendX, legendY - 8, 20, 3);
+                ctx.fillStyle = '#333';
+                ctx.font = '13px Aptos, Segoe UI, sans-serif';
+                ctx.fillText(func.name, legendX + 25, legendY);
+            });
+        }
+        
+        window.addEventListener('load', resizeCanvas);
+        window.addEventListener('resize', resizeCanvas);
+    </script>
+</body>
+</html>

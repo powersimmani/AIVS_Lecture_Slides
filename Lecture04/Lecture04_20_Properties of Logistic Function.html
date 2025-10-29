@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Properties of Logistic Function</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px;
+            position: relative;
+        }
+        
+        .title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .content-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            height: calc(100% - 50px);
+        }
+        
+        .properties-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        
+        .property-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            transition: all 0.3s;
+        }
+        
+        .property-card:hover {
+            background: #f8fbff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.15);
+        }
+        
+        .property-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .property-icon {
+            width: 28px;
+            height: 28px;
+            background: #1E64C8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .property-name {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .property-desc {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.4;
+            padding-left: 36px;
+        }
+        
+        .special-card {
+            background: #fff8e6;
+            border-color: #ffc107;
+        }
+        
+        .special-card .property-icon {
+            background: #ffc107;
+        }
+        
+        .special-card .property-name {
+            color: #f57c00;
+        }
+        
+        .key-formulas {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .formula-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 14px 16px;
+            text-align: center;
+        }
+        
+        .formula-label {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .formula-text {
+            font-size: 17px;
+            color: #1E64C8;
+            font-weight: 600;
+            font-style: italic;
+        }
+        
+        .derivative-box {
+            background: #e8f5e9;
+            border-color: #28a745;
+        }
+        
+        .derivative-box .formula-text {
+            color: #28a745;
+        }
+        
+        .derivative-note {
+            font-size: 13px;
+            color: #28a745;
+            margin-top: 4px;
+            font-weight: 500;
+        }
+        
+        .comparison-section {
+            background: white;
+            border: 2px solid #6c757d;
+            border-radius: 10px;
+            padding: 16px 18px;
+        }
+        
+        .comparison-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .comparison-row {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .function-visual {
+            flex: 1;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .function-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 8px;
+        }
+        
+        .visual-box {
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .sigmoid-visual svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .sigmoid-curve-path {
+            stroke: #1E64C8;
+            stroke-width: 2.5;
+            fill: none;
+        }
+        
+        .step-visual svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .step-path {
+            stroke: #dc3545;
+            stroke-width: 2.5;
+            fill: none;
+        }
+        
+        .vs-label {
+            font-size: 20px;
+            font-weight: 700;
+            color: #6c757d;
+        }
+        
+        .comparison-note {
+            text-align: center;
+            font-size: 15px;
+            color: #666;
+            margin-top: 8px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Properties of Logistic Function</div>
+        
+        <div class="content-layout">
+            <!-- Properties Grid -->
+            <div class="properties-grid">
+                <div class="property-card">
+                    <div class="property-header">
+                        <div class="property-icon">⚖</div>
+                        <div class="property-name">Symmetry</div>
+                    </div>
+                    <div class="property-desc">
+                        σ(z) + σ(-z) = 1
+                    </div>
+                </div>
+                
+                <div class="property-card">
+                    <div class="property-header">
+                        <div class="property-icon">↗</div>
+                        <div class="property-name">Monotonic</div>
+                    </div>
+                    <div class="property-desc">
+                        Always increasing, never decreases
+                    </div>
+                </div>
+                
+                <div class="property-card">
+                    <div class="property-header">
+                        <div class="property-icon">∿</div>
+                        <div class="property-name">Smooth</div>
+                    </div>
+                    <div class="property-desc">
+                        Differentiable everywhere (no jumps)
+                    </div>
+                </div>
+                
+                <div class="property-card">
+                    <div class="property-header">
+                        <div class="property-icon">[ ]</div>
+                        <div class="property-name">Bounded</div>
+                    </div>
+                    <div class="property-desc">
+                        Output always in (0,1), never exactly 0 or 1
+                    </div>
+                </div>
+                
+                <div class="property-card special-card">
+                    <div class="property-header">
+                        <div class="property-icon">💡</div>
+                        <div class="property-name">Interpretable</div>
+                    </div>
+                    <div class="property-desc">
+                        Steepness indicates confidence
+                    </div>
+                </div>
+                
+                <div class="property-card">
+                    <div class="property-header">
+                        <div class="property-icon">d/dz</div>
+                        <div class="property-name">Derivative</div>
+                    </div>
+                    <div class="property-desc">
+                        Simple form for optimization
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Key Formulas -->
+            <div class="key-formulas">
+                <div class="formula-box">
+                    <div class="formula-label">Symmetry Property:</div>
+                    <div class="formula-text">σ(z) + σ(-z) = 1</div>
+                </div>
+                
+                <div class="formula-box derivative-box">
+                    <div class="formula-label">Derivative:</div>
+                    <div class="formula-text">σ'(z) = σ(z)(1 - σ(z))</div>
+                    <div class="derivative-note">(useful for gradient descent)</div>
+                </div>
+            </div>
+            
+            <!-- Comparison -->
+            <div class="comparison-section">
+                <div class="comparison-title">Comparison to Step Function</div>
+                <div class="comparison-row">
+                    <div class="function-visual sigmoid-visual">
+                        <div class="function-name">Logistic (Smooth)</div>
+                        <div class="visual-box">
+                            <svg viewBox="0 0 120 60">
+                                <path d="M 10,55 Q 30,50 45,35 Q 60,20 75,10 Q 90,5 110,5" 
+                                      class="sigmoid-curve-path"/>
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <div class="vs-label">vs</div>
+                    
+                    <div class="function-visual step-visual">
+                        <div class="function-name">Step (Hard Threshold)</div>
+                        <div class="visual-box">
+                            <svg viewBox="0 0 120 60">
+                                <path d="M 10,55 L 60,55 L 60,5 L 110,5" 
+                                      class="step-path"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="comparison-note">Smooth transition vs. Abrupt change</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

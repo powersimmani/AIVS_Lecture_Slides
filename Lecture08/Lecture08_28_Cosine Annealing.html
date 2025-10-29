@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cosine Annealing</title>
+    <style>* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: Aptos, 'Segoe UI', sans-serif; background: #ffffff; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+.container { width: 960px; height: 540px; padding: 30px; background: #ffffff; }
+.header { text-align: center; margin-bottom: 20px; }
+.main-title { font-size: 20px; font-weight: 600; color: #1E64C8; margin-bottom: 6px; }
+.subtitle { font-size: 16px; color: #666; }
+.content-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; height: 440px; }
+.left-section, .right-section { display: flex; flex-direction: column; gap: 15px; }
+.concept-box { background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%); color: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 12px rgba(30, 100, 200, 0.3); }
+.concept-title { font-size: 18px; font-weight: 600; margin-bottom: 10px; }
+.concept-desc { font-size: 16px; line-height: 1.6; }
+        .formula-box { background: #f0f8ff; border: 3px solid #1E64C8; border-radius: 10px; padding: 18px; }
+        .formula-title { font-size: 17px; font-weight: 600; color: #1E64C8; margin-bottom: 12px; text-align: center; }
+        .formula { background: white; border: 2px dashed #1E64C8; border-radius: 8px; padding: 12px; text-align: center; font-size: 16px; color: #1E64C8; font-weight: 600; margin-bottom: 10px; line-height: 1.6; }
+        .formula-note { font-size: 16px; color: #2c3e50; line-height: 1.5; text-align: center; }
+        .behavior-box { background: #f8f9fa; border: 2px solid #1E64C8; border-radius: 8px; padding: 16px; flex: 1; }
+        .behavior-title { font-size: 17px; font-weight: 600; color: #1E64C8; margin-bottom: 12px; text-align: center; }
+        .behavior-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .behavior-item { background: #e8f1fd; border: 2px solid #1E64C8; border-radius: 6px; padding: 12px; text-align: center; }
+        .behavior-label { font-size: 16px; font-weight: 600; color: #1E64C8; margin-bottom: 6px; }
+        .behavior-desc { font-size: 16px; color: #2c3e50; line-height: 1.4; }
+        .visual-box { background: #f8f9fa; border: 2px solid #1E64C8; border-radius: 8px; padding: 18px; }
+        .visual-title { font-size: 17px; font-weight: 600; color: #1E64C8; margin-bottom: 12px; text-align: center; }
+        .advantages-box { background: #f8f9fa; border: 2px solid #1E64C8; border-radius: 8px; padding: 18px; flex: 1; }
+        .advantages-title { font-size: 17px; font-weight: 600; color: #1E64C8; margin-bottom: 12px; }
+        .advantage-list { display: flex; flex-direction: column; gap: 8px; }
+        .advantage-item { display: flex; align-items: flex-start; gap: 10px; }
+        .advantage-icon { background: #28a745; color: white; min-width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0; margin-top: 2px; }
+        .advantage-text { font-size: 16px; color: #2c3e50; line-height: 1.5; }
+        .sgdr-box { background: #e8f1fd; border: 2px solid #1E64C8; border-radius: 8px; padding: 14px 16px; }
+        .sgdr-title { font-size: 16px; font-weight: 600; color: #1E64C8; margin-bottom: 6px; }
+        .sgdr-desc { font-size: 16px; color: #2c3e50; line-height: 1.4; }
+        .usage-box { background: linear-gradient(135deg, #e8f1fd 0%, #f0f8ff 100%); border: 2px solid #1E64C8; border-radius: 8px; padding: 14px 16px; }
+        .usage-title { font-size: 16px; font-weight: 600; color: #1E64C8; margin-bottom: 8px; text-align: center; }
+        .usage-list { display: flex; justify-content: space-around; gap: 10px; }
+        .usage-item { background: white; padding: 8px 14px; border-radius: 6px; font-size: 16px; color: #2c3e50; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="main-title">Cosine Annealing</div>
+            <div class="subtitle">Smooth Learning Rate Scheduling with Cosine Function</div>
+        </div>
+        
+        <div class="content-layout">
+            <div class="left-section">
+                <div class="concept-box">
+                    <div class="concept-title">🔍 Core Concept</div>
+                    <div class="concept-desc">
+                        Learning rate follows a cosine function<br>
+                        from maximum to minimum value
+                    </div>
+                </div>
+                
+                <div class="formula-box">
+                    <div class="formula-title">Formula</div>
+                    <div class="formula">
+                        LR = min_lr + (max_lr - min_lr)<br>
+                        × (1 + cos(πt/T)) / 2
+                    </div>
+                    <div class="formula-note">
+                        t: current epoch, T: total epochs
+                    </div>
+                </div>
+                
+                <div class="behavior-box">
+                    <div class="behavior-title">Decay Behavior</div>
+                    <div class="behavior-grid">
+                        <div class="behavior-item">
+                            <div class="behavior-label">Early Phase</div>
+                            <div class="behavior-desc">
+                                Fast reduction
+                            </div>
+                        </div>
+                        <div class="behavior-item">
+                            <div class="behavior-label">Late Phase</div>
+                            <div class="behavior-desc">
+                                Slow reduction<br>(Fine-tuning)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-section">
+                <div class="visual-box">
+                    <div class="visual-title">Cosine Curve Visualization</div>
+                    <div style="background: white; border-radius: 6px; padding: 15px; height: 140px;">
+                        <div style="font-size: 14px; color: #666; text-align: center;">Smooth cosine decay from max_lr to min_lr</div>
+                    </div>
+                </div>
+                
+                <div class="advantages-box">
+                    <div class="advantages-title">✨ Key Advantages</div>
+                    <div class="advantage-list">
+                        <div class="advantage-item">
+                            <div class="advantage-icon">✓</div>
+                            <div class="advantage-text">
+                                Smooth and gradual decay
+                            </div>
+                        </div>
+                        <div class="advantage-item">
+                            <div class="advantage-icon">✓</div>
+                            <div class="advantage-text">
+                                No hyperparameters to tune (only max/min LR)
+                            </div>
+                        </div>
+                        <div class="advantage-item">
+                            <div class="advantage-icon">✓</div>
+                            <div class="advantage-text">
+                                Improves generalization (empirically proven)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="sgdr-box">
+                    <div class="sgdr-title">🔄 Warm Restarts (SGDR)</div>
+                    <div class="sgdr-desc">
+                        Can include restarts to escape local minima
+                    </div>
+                </div>
+                
+                <div class="usage-box">
+                    <div class="usage-title">🎯 Popular In</div>
+                    <div class="usage-list">
+                        <div class="usage-item">Computer Vision</div>
+                        <div class="usage-item">Transformer Training</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture 12 - Complete Slideshow</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #1a1a1a;
+            overflow: hidden;
+        }
+        
+        .slideshow-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .slide {
+            display: none;
+            width: 100vw;
+            height: 100vh;
+            background: white;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        .slide.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        /* Navigation controls */
+        .nav-controls {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px 30px;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+        }
+        
+        .nav-button {
+            background: #1E64C8;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-button:hover {
+            background: #2874d8;
+            transform: scale(1.1);
+        }
+        
+        .nav-button:active {
+            transform: scale(0.95);
+        }
+        
+        .nav-button:disabled {
+            background: #555;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+        
+        .slide-counter {
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            min-width: 100px;
+            text-align: center;
+        }
+        
+        /* Progress bar */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #1E64C8;
+            transition: width 0.3s ease;
+        }
+        
+        /* Keyboard hint */
+        .keyboard-hint {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
+            animation: fadeOut 3s ease-in-out forwards;
+            z-index: 1000;
+        }
+        
+        @keyframes fadeOut {
+            0%, 70% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                pointer-events: none;
+            }
+        }
+        
+        .key {
+            display: inline-block;
+            background: #333;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin: 0 4px;
+            font-family: monospace;
+            border: 1px solid #555;
+        }
+        
+        /* Slide title overlay */
+        .slide-title {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(30, 100, 200, 0.9);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+            max-width: 600px;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <!-- Progress bar -->
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+    
+    <!-- Keyboard hint -->
+    <div class="keyboard-hint">
+        Use <span class="key">←</span> <span class="key">→</span> or <span class="key">Space</span> to navigate
+    </div>
+    
+    <!-- Slide title -->
+    <div class="slide-title" id="slideTitle">Loading...</div>
+    
+    <!-- Slideshow container -->
+    <div class="slideshow-container">
+        <div id="slideContainer"></div>
+    </div>
+    
+    <!-- Navigation controls -->
+    <div class="nav-controls">
+        <button class="nav-button" id="prevBtn" onclick="changeSlide(-1)">◄</button>
+        <div class="slide-counter">
+            <span id="currentSlide">1</span> / <span id="totalSlides">35</span>
+        </div>
+        <button class="nav-button" id="nextBtn" onclick="changeSlide(1)">►</button>
+    </div>
+
+    <script>
+        let currentSlideIndex = 0;
+        
+        // 전체 슬라이드 순서 (PDF 순서대로)
+        const slides = [
+            { title: "Title", file: "Lecture12_01_Title.html" },
+            { title: "Lecture Contents", file: "Lecture12_02_Contents.html" },
+            
+            // Part 1
+            { title: "Part 1: Introduction & Review", file: "Lecture12_03_Part1_Intro.html" },
+            { title: "Review of Last Lesson", file: "Lecture12_04_Review_of_Last_Lesson.html" },
+            { title: "Today's Learning Objectives", file: "Lecture12_05_Today_s Learning Objectives.html" },
+            { title: "Exploring the Limitations of RNNs", file: "Lecture12_06_Exploring the Limitations of RNNs.html" },
+            
+            // Part 2
+            { title: "Part 2: Bidirectional RNNs", file: "Lecture12_07_Part2_Intro.html" },
+            { title: "Why Bidirectional?", file: "Lecture12_08_Why Bidirectional.html" },
+            { title: "Bidirectional RNN Architecture", file: "Lecture12_09_Bidirectional RNN Architecture.html" },
+            { title: "BiRNN Formulas and Operations", file: "Lecture12_10_BiRNN_Formulas_and_Operations.html" },
+            { title: "BiRNN Pros and Cons & Applications", file: "Lecture12_11_BiRNN Pros and Cons & Applications.html" },
+            
+            // Part 3
+            { title: "Part 3: Sequence-to-Sequence", file: "Lecture12_12_Part3_Intro.html" },
+            { title: "The Need for Seq2Seq", file: "Lecture12_13_The Need for Seq2Seq.html" },
+            { title: "Encoder-Decoder Architecture", file: "Lecture12_14_Encoder-Decoder Architecture.html" },
+            { title: "Encoder Details", file: "Lecture12_15_Encoder Details.html" },
+            { title: "Decoder Details", file: "Lecture12_16_Decoder Details.html" },
+            { title: "Overall Seq2Seq Process", file: "Lecture12_17_Overall Seq2Seq Process.html" },
+            
+            // Part 4
+            { title: "Part 4: Teacher Forcing", file: "Lecture12_18_Part4_Intro.html" },
+            { title: "What is Teacher Forcing?", file: "Lecture12_19_What is Teacher Forcing.html" },
+            { title: "Teacher Forcing vs. Autoregressive", file: "Lecture12_20_Teacher Forcing vs. Autoregressive.html" },
+            { title: "Teacher Forcing Problems and Solutions", file: "Lecture12_21_Teacher Forcing Problems and Solutions.html" },
+            
+            // Part 5
+            { title: "Part 5: Attention Mechanism Basics", file: "Lecture12_22_Part5_Intro.html" },
+            { title: "Limitations of Seq2Seq", file: "Lecture12_23_Limitations of Seq2Seq.html" },
+            { title: "Core Ideas of Attention", file: "Lecture12_24_Core Ideas of Attention.html" },
+            { title: "Attention Mechanism Structure", file: "Lecture12_25_Attention Mechanism Structure.html" },
+            { title: "Attention Formula", file: "Lecture12_26_Attention Formula.html" },
+            { title: "Effects of Attention", file: "Lecture12_27_Effects of Attention.html" },
+            
+            // Part 6
+            { title: "Part 6: Practical Implementation Tips", file: "Lecture12_28_Part6_Intro.html" },
+            { title: "Batching", file: "Lecture12_29_Batching.html" },
+            { title: "Masking", file: "Lecture12_30_Masking.html" },
+            { title: "Practical Checklist", file: "Lecture12_31_Practical Checklist.html" },
+            
+            // Part 7
+            { title: "Part 7: Conclusion & Next Steps", file: "Lecture12_32_Part7_Intro.html" },
+            { title: "Summary and Preview of Next Lecture", file: "Lecture12_33_Summary and Preview of Next Lecture.html" },
+            
+            // Ending
+            { title: "Thank You", file: "Lecture12_34_Thank_You.html" }
+        ];
+        
+        function initializeSlides() {
+            const container = document.getElementById('slideContainer');
+            
+            // 모든 슬라이드를 미리 생성
+            slides.forEach((slide, index) => {
+                const slideDiv = document.createElement('div');
+                slideDiv.className = 'slide';
+                slideDiv.id = `slide-${index}`;
+                
+                const iframe = document.createElement('iframe');
+                iframe.src = encodeURI(slide.file);
+                
+                slideDiv.appendChild(iframe);
+                container.appendChild(slideDiv);
+            });
+            
+            // 첫 번째 슬라이드 표시
+            showSlide(0);
+        }
+        
+        function showSlide(index) {
+            // 모든 슬라이드 숨기기
+            const allSlides = document.querySelectorAll('.slide');
+            allSlides.forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            // 현재 슬라이드 표시
+            const currentSlide = document.getElementById(`slide-${index}`);
+            if (currentSlide) {
+                currentSlide.classList.add('active');
+            }
+            
+            // 제목 업데이트
+            document.getElementById('slideTitle').textContent = slides[index].title;
+            
+            // 카운터 업데이트
+            document.getElementById('currentSlide').textContent = index + 1;
+            document.getElementById('totalSlides').textContent = slides.length;
+            
+            // 진행 바 업데이트
+            const progress = ((index + 1) / slides.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            
+            // 버튼 상태 업데이트
+            document.getElementById('prevBtn').disabled = index === 0;
+            document.getElementById('nextBtn').disabled = index === slides.length - 1;
+        }
+        
+        function changeSlide(direction) {
+            const newIndex = currentSlideIndex + direction;
+            
+            if (newIndex >= 0 && newIndex < slides.length) {
+                currentSlideIndex = newIndex;
+                showSlide(currentSlideIndex);
+            }
+        }
+        
+        // 키보드 내비게이션
+        document.addEventListener('keydown', (event) => {
+            switch(event.key) {
+                case 'ArrowLeft':
+                case 'ArrowUp':
+                    changeSlide(-1);
+                    break;
+                case 'ArrowRight':
+                case 'ArrowDown':
+                case ' ':
+                    event.preventDefault();
+                    changeSlide(1);
+                    break;
+                case 'Home':
+                    currentSlideIndex = 0;
+                    showSlide(currentSlideIndex);
+                    break;
+                case 'End':
+                    currentSlideIndex = slides.length - 1;
+                    showSlide(currentSlideIndex);
+                    break;
+            }
+        });
+        
+        // 페이지 로드 시 슬라이드 초기화
+        window.addEventListener('load', () => {
+            initializeSlides();
+        });
+        
+        // 스페이스바로 스크롤 방지
+        window.addEventListener('keydown', (e) => {
+            if(e.key === ' ' && e.target === document.body) {
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>

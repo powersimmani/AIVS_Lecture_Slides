@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practical Tips</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            position: relative;
+            padding: 25px 40px;
+        }
+        
+        .header {
+            margin-bottom: 18px;
+        }
+        
+        .part-label {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .main-content {
+            display: flex;
+            gap: 25px;
+        }
+        
+        .left-panel {
+            flex: 1.2;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .category-section {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 16px 20px;
+        }
+        
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        
+        .category-icon {
+            width: 32px;
+            height: 32px;
+            background: #1E64C8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+        }
+        
+        .category-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .tips-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .tip-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 8px 10px;
+            background: #F5F9FF;
+            border-radius: 6px;
+        }
+        
+        .check-icon {
+            color: #4CAF50;
+            font-size: 16px;
+            font-weight: 700;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .tip-text {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .tip-code {
+            font-family: 'Courier New', monospace;
+            background: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            color: #1E64C8;
+            font-size: 14px;
+        }
+        
+        .right-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .architecture-box {
+            background: #F5F9FF;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 18px;
+            flex: 1;
+        }
+        
+        .arch-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 14px;
+        }
+        
+        .network-diagram {
+            display: flex;
+            justify-content: space-around;
+            gap: 15px;
+        }
+        
+        .network-column {
+            flex: 1;
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 14px;
+        }
+        
+        .network-column.generator {
+            border-color: #FF6B6B;
+        }
+        
+        .network-name {
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 10px;
+            color: #1E64C8;
+        }
+        
+        .network-column.generator .network-name {
+            color: #FF6B6B;
+        }
+        
+        .layer {
+            background: #F5F9FF;
+            border-radius: 4px;
+            padding: 6px 10px;
+            margin-bottom: 6px;
+            font-size: 13px;
+            text-align: center;
+            color: #333;
+        }
+        
+        .layer.special {
+            background: #FFF4E5;
+            border: 1px dashed #FF9800;
+            color: #FF9800;
+            font-weight: 600;
+        }
+        
+        .monitoring-box {
+            background: #1E64C8;
+            color: white;
+            border-radius: 10px;
+            padding: 16px 18px;
+        }
+        
+        .monitoring-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .monitoring-text {
+            font-size: 15px;
+            line-height: 1.5;
+            text-align: center;
+        }
+        
+        .optimizer-box {
+            background: #E8F5E9;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            padding: 14px 18px;
+        }
+        
+        .opt-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #4CAF50;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .opt-text {
+            font-size: 15px;
+            color: #333;
+            text-align: center;
+        }
+        
+        .opt-param {
+            font-family: 'Courier New', monospace;
+            background: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            color: #4CAF50;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="part-label">Part 3/6: Training Algorithm</div>
+            <div class="title">Practical Tips</div>
+        </div>
+        
+        <div class="main-content">
+            <div class="left-panel">
+                <div class="category-section">
+                    <div class="category-header">
+                        <div class="category-icon">1</div>
+                        <div class="category-title">Data & Activation</div>
+                    </div>
+                    <div class="tips-list">
+                        <div class="tip-item">
+                            <span class="check-icon">✓</span>
+                            <span class="tip-text">Normalize inputs to <span class="tip-code">[-1, 1]</span></span>
+                        </div>
+                        <div class="tip-item">
+                            <span class="check-icon">✓</span>
+                            <span class="tip-text">Use <span class="tip-code">tanh</span> activation for generator output</span>
+                        </div>
+                        <div class="tip-item">
+                            <span class="check-icon">✓</span>
+                            <span class="tip-text"><span class="tip-code">LeakyReLU</span> in D, <span class="tip-code">ReLU</span> in G</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="category-section">
+                    <div class="category-header">
+                        <div class="category-icon">2</div>
+                        <div class="category-title">Normalization & Regularization</div>
+                    </div>
+                    <div class="tips-list">
+                        <div class="tip-item">
+                            <span class="check-icon">✓</span>
+                            <span class="tip-text">Batch normalization (except last G, first D layer)</span>
+                        </div>
+                        <div class="tip-item">
+                            <span class="check-icon">✓</span>
+                            <span class="tip-text">Label smoothing: <span class="tip-code">real=0.9, fake=0.1</span></span>
+                        </div>
+                        <div class="tip-item">
+                            <span class="check-icon">✓</span>
+                            <span class="tip-text">Add noise to discriminator inputs</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="category-section">
+                    <div class="category-header">
+                        <div class="category-icon">3</div>
+                        <div class="category-title">Optimization</div>
+                    </div>
+                    <div class="tips-list">
+                        <div class="tip-item">
+                            <span class="check-icon">✓</span>
+                            <span class="tip-text">Use Adam optimizer with <span class="tip-code">β₁=0.5</span></span>
+                        </div>
+                        <div class="tip-item">
+                            <span class="check-icon">✓</span>
+                            <span class="tip-text">Monitor D loss - shouldn't go to 0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <div class="architecture-box">
+                    <div class="arch-title">Architecture Guide</div>
+                    <div class="network-diagram">
+                        <div class="network-column generator">
+                            <div class="network-name">Generator</div>
+                            <div class="layer">Dense/Conv Layers</div>
+                            <div class="layer">ReLU</div>
+                            <div class="layer">Batch Norm</div>
+                            <div class="layer">...</div>
+                            <div class="layer special">No BN (Last Layer)</div>
+                            <div class="layer">tanh Output</div>
+                        </div>
+                        
+                        <div class="network-column">
+                            <div class="network-name">Discriminator</div>
+                            <div class="layer special">No BN (First Layer)</div>
+                            <div class="layer">LeakyReLU</div>
+                            <div class="layer">Batch Norm</div>
+                            <div class="layer">...</div>
+                            <div class="layer">LeakyReLU</div>
+                            <div class="layer">Sigmoid Output</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="monitoring-box">
+                    <div class="monitoring-title">⚠ Monitoring</div>
+                    <div class="monitoring-text">
+                        Watch D loss carefully - if it drops to 0, G won't learn properly
+                    </div>
+                </div>
+                
+                <div class="optimizer-box">
+                    <div class="opt-title">✓ Recommended Optimizer</div>
+                    <div class="opt-text">
+                        Adam with <span class="opt-param">β₁ = 0.5</span>, <span class="opt-param">β₂ = 0.999</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

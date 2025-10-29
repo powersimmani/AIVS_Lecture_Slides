@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>He Initialization for ReLU</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: #ffffff;
+            padding: 20px 40px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 25px;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            height: 450px;
+        }
+        
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        
+        .relu-visual-box {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 12px;
+            padding: 20px;
+            flex: 1;
+        }
+        
+        .visual-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .relu-demo {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin: 15px 0;
+        }
+        
+        .neurons-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .neuron-row {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .neuron {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .neuron-active {
+            background: #1E64C8;
+            color: white;
+            border: 2px solid #1E64C8;
+        }
+        
+        .neuron-dead {
+            background: #e8e8e8;
+            color: #999;
+            border: 2px solid #999;
+        }
+        
+        .arrow {
+            font-size: 28px;
+            color: #1E64C8;
+        }
+        
+        .stat-label {
+            text-align: center;
+            font-size: 16px;
+            color: #2c3e50;
+            margin-top: 10px;
+        }
+        
+        .highlight-stat {
+            font-weight: 600;
+            color: #ff4444;
+        }
+        
+        .formula-box {
+            background: #f8f9fb;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        
+        .formula-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .formula {
+            font-family: 'Courier New', monospace;
+            font-size: 20px;
+            color: #2c3e50;
+            background: white;
+            padding: 16px;
+            border-radius: 6px;
+            text-align: center;
+            line-height: 1.6;
+        }
+        
+        .variance-note {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+            text-align: center;
+            font-size: 16px;
+            color: #2c3e50;
+        }
+        
+        .variance-highlight {
+            font-weight: 600;
+            color: #f57c00;
+        }
+        
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .section-header {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 5px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .info-card {
+            background: #f8f9fb;
+            border-left: 4px solid #1E64C8;
+            padding: 14px 16px;
+            border-radius: 6px;
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.5;
+            transition: all 0.3s ease;
+        }
+        
+        .info-card:hover {
+            background: #eef3fb;
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(30, 100, 200, 0.15);
+        }
+        
+        .highlight {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .usage-box {
+            background: #e8f5e9;
+            border: 2px solid #4caf50;
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin-top: 10px;
+        }
+        
+        .usage-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #4caf50;
+            margin-bottom: 8px;
+        }
+        
+        .usage-text {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">He Initialization (for ReLU)</div>
+        
+        <div class="main-content">
+            <div class="left-section">
+                <div class="relu-visual-box">
+                    <div class="visual-title">ReLU Effect: Half Neurons Output 0</div>
+                    
+                    <div class="relu-demo">
+                        <div class="neurons-group">
+                            <div class="neuron-row">
+                                <div class="neuron neuron-active">+</div>
+                                <div class="neuron neuron-dead">0</div>
+                            </div>
+                            <div class="neuron-row">
+                                <div class="neuron neuron-dead">0</div>
+                                <div class="neuron neuron-active">+</div>
+                            </div>
+                            <div class="neuron-row">
+                                <div class="neuron neuron-active">+</div>
+                                <div class="neuron neuron-dead">0</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-label">
+                        Approximately <span class="highlight-stat">50% neurons killed</span> by ReLU
+                    </div>
+                </div>
+                
+                <div class="formula-box">
+                    <div class="formula-label">He Initialization Formula</div>
+                    <div class="formula">
+                        W ~ N(0, 2/n<sub>in</sub>)
+                    </div>
+                    
+                    <div class="variance-note">
+                        Variance factor of <span class="variance-highlight">2</span> compensates for ReLU's effect
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-section">
+                <div class="section-header">Key Features</div>
+                
+                <div class="info-card">
+                    Specifically designed for <span class="highlight">ReLU activation</span> functions
+                </div>
+                
+                <div class="info-card">
+                    Accounts for ReLU <span class="highlight">killing half</span> the neurons (output 0)
+                </div>
+                
+                <div class="info-card">
+                    <span class="highlight">Maintains signal strength</span> in deep ReLU networks
+                </div>
+                
+                <div class="info-card">
+                    Significantly improves training of <span class="highlight">very deep networks</span>
+                </div>
+                
+                <div class="usage-box">
+                    <div class="usage-title">✓ Default Choice</div>
+                    <div class="usage-text">
+                        Standard initialization for modern <strong>CNN architectures</strong> and deep learning models with ReLU
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

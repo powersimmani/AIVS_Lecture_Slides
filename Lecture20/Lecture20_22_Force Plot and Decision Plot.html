@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Force Plot and Decision Plot</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Aptos', 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+            padding: 25px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+        }
+        
+        .plots-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            height: calc(100% - 60px);
+        }
+        
+        .plot-section {
+            background: #F8F9FA;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .plot-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        
+        .plot-icon {
+            font-size: 24px;
+        }
+        
+        .plot-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E64C8;
+        }
+        
+        .plot-visual {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            flex: 1;
+            margin-bottom: 12px;
+            position: relative;
+        }
+        
+        /* Force Plot Visualization */
+        .force-container {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .force-base {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: #E8F2FF;
+            border: 3px solid #1E64C8;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            color: #1E64C8;
+            z-index: 10;
+        }
+        
+        .force-value {
+            font-size: 16px;
+        }
+        
+        .force-arrow {
+            position: absolute;
+            top: 50%;
+            height: 3px;
+            display: flex;
+            align-items: center;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 0 8px;
+        }
+        
+        .force-positive {
+            background: linear-gradient(90deg, #DC3545 0%, #E63946 100%);
+            color: white;
+            border-radius: 0 4px 4px 0;
+            justify-content: flex-end;
+        }
+        
+        .force-negative {
+            background: linear-gradient(90deg, #1E64C8 0%, #4A90E2 100%);
+            color: white;
+            border-radius: 4px 0 0 4px;
+            justify-content: flex-start;
+        }
+        
+        .arrow-1 { right: 50%; width: 30%; top: 25%; margin-right: 35px; }
+        .arrow-2 { right: 50%; width: 25%; top: 40%; margin-right: 35px; }
+        .arrow-3 { left: 50%; width: 20%; top: 60%; margin-left: 35px; }
+        .arrow-4 { left: 50%; width: 15%; top: 75%; margin-left: 35px; }
+        
+        .force-label {
+            position: absolute;
+            font-size: 11px;
+            color: #666;
+            font-weight: 600;
+        }
+        
+        /* Decision Plot Visualization */
+        .decision-container {
+            height: 100%;
+            position: relative;
+            padding: 20px 10px;
+        }
+        
+        .decision-axis {
+            position: absolute;
+            left: 40px;
+            top: 20px;
+            bottom: 20px;
+            width: 2px;
+            background: #333;
+        }
+        
+        .decision-path {
+            position: absolute;
+            left: 42px;
+            top: 20px;
+            bottom: 20px;
+            width: calc(100% - 60px);
+        }
+        
+        .decision-line {
+            stroke: #1E64C8;
+            stroke-width: 3;
+            fill: none;
+        }
+        
+        .decision-point {
+            fill: #1E64C8;
+        }
+        
+        .decision-label {
+            font-size: 11px;
+            color: #666;
+            font-weight: 600;
+        }
+        
+        .y-label {
+            position: absolute;
+            left: 5px;
+            font-size: 11px;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .y-top { top: 15px; }
+        .y-bottom { bottom: 15px; }
+        
+        .feature-labels {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 11px;
+            color: #666;
+            line-height: 1.8;
+        }
+        
+        .plot-description {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 14px;
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .desc-title {
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .desc-items {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .desc-items div {
+            margin-bottom: 3px;
+            padding-left: 16px;
+            position: relative;
+        }
+        
+        .desc-items div:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #1E64C8;
+            font-weight: 700;
+        }
+        
+        .code-box {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 12px;
+        }
+        
+        .code-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .code-content {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #333;
+            background: #F8F9FA;
+            padding: 6px;
+            border-radius: 4px;
+        }
+        
+        .keyword {
+            color: #E63946;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Force Plot and Decision Plot: Interactive Visualizations</div>
+        
+        <div class="plots-grid">
+            <!-- Force Plot Section -->
+            <div class="plot-section">
+                <div class="plot-header">
+                    <div class="plot-icon">⚡</div>
+                    <div class="plot-title">Force Plot</div>
+                </div>
+                
+                <div class="plot-visual">
+                    <div class="force-container">
+                        <div class="force-base">
+                            <div>Base</div>
+                            <div class="force-value">0.42</div>
+                        </div>
+                        
+                        <div class="force-arrow force-positive arrow-1">
+                            Income +0.18
+                        </div>
+                        <div class="force-arrow force-positive arrow-2">
+                            Credit +0.15
+                        </div>
+                        
+                        <div class="force-arrow force-negative arrow-3">
+                            Age -0.08
+                        </div>
+                        <div class="force-arrow force-negative arrow-4">
+                            Debt -0.05
+                        </div>
+                        
+                        <div class="force-label" style="top: 10px; left: 10px;">
+                            Prediction: 0.62
+                        </div>
+                        <div class="force-label" style="bottom: 10px; right: 10px;">
+                            (Approved)
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="plot-description">
+                    <div class="desc-title">Characteristics</div>
+                    <div class="desc-items">
+                        <div>Horizontal push/pull layout</div>
+                        <div>Interactive HTML output</div>
+                        <div>Shows force direction</div>
+                        <div>Color gradient by value</div>
+                    </div>
+                </div>
+                
+                <div class="code-box">
+                    <div class="code-title">Code Example</div>
+                    <div class="code-content">
+shap.plots.<span class="keyword">force</span>(<br>
+&nbsp;&nbsp;base_value, shap_values[i]<br>
+)
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Decision Plot Section -->
+            <div class="plot-section">
+                <div class="plot-header">
+                    <div class="plot-icon">📈</div>
+                    <div class="plot-title">Decision Plot</div>
+                </div>
+                
+                <div class="plot-visual">
+                    <div class="decision-container">
+                        <div class="decision-axis"></div>
+                        <div class="y-label y-top">High</div>
+                        <div class="y-label y-bottom">Low</div>
+                        
+                        <div class="decision-path">
+                            <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
+                                <path class="decision-line" d="M 0,80 L 25,65 L 50,45 L 75,30 L 100,20" />
+                                <circle class="decision-point" cx="0" cy="80" r="2" />
+                                <circle class="decision-point" cx="25" cy="65" r="2" />
+                                <circle class="decision-point" cx="50" cy="45" r="2" />
+                                <circle class="decision-point" cx="75" cy="30" r="2" />
+                                <circle class="decision-point" cx="100" cy="20" r="2" />
+                            </svg>
+                        </div>
+                        
+                        <div class="feature-labels">
+                            Base<br>
+                            F1<br>
+                            F2<br>
+                            F3<br>
+                            F4<br>
+                            Final
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="plot-description">
+                    <div class="desc-title">Characteristics</div>
+                    <div class="desc-items">
+                        <div>Cumulative SHAP values</div>
+                        <div>Compare multiple predictions</div>
+                        <div>Shows decision boundaries</div>
+                        <div>Identifies critical thresholds</div>
+                    </div>
+                </div>
+                
+                <div class="code-box">
+                    <div class="code-title">Code Example</div>
+                    <div class="code-content">
+shap.plots.<span class="keyword">decision</span>(<br>
+&nbsp;&nbsp;base_value, shap_values<br>
+)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

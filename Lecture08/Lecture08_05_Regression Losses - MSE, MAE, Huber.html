@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regression Losses Comparison</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 30px;
+            background: #ffffff;
+        }
+        
+        .title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .loss-card {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 280px;
+        }
+        
+        .loss-card.highlight {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            color: white;
+        }
+        
+        .loss-card.highlight .loss-name {
+            color: white;
+        }
+        
+        .loss-card.highlight .characteristic {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
+        
+        .loss-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .loss-type {
+            font-size: 16px;
+            color: #666;
+            text-align: center;
+            margin-bottom: 16px;
+            font-style: italic;
+        }
+        
+        .loss-card.highlight .loss-type {
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .characteristics {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex: 1;
+        }
+        
+        .characteristic {
+            background: white;
+            padding: 10px 12px;
+            border-radius: 6px;
+            font-size: 16px;
+            line-height: 1.4;
+            color: #2c3e50;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .usage-guide {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: auto;
+        }
+        
+        .usage-card {
+            background: #e8f1fd;
+            border-left: 4px solid #1E64C8;
+            padding: 15px;
+            border-radius: 4px;
+        }
+        
+        .usage-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .usage-text {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+        
+        .arrow-down {
+            text-align: center;
+            color: #1E64C8;
+            font-size: 24px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Regression Loss Functions Comparison</div>
+        
+        <div class="comparison-grid">
+            <!-- MSE Card -->
+            <div class="loss-card">
+                <div class="loss-name">MSE</div>
+                <div class="loss-type">Mean Squared Error (L2)</div>
+                <div class="characteristics">
+                    <div class="characteristic">
+                        <strong>✓</strong> Strong penalty for large errors
+                    </div>
+                    <div class="characteristic">
+                        <strong>✗</strong> Sensitive to outliers
+                    </div>
+                    <div class="characteristic">
+                        Characteristics from squaring operation
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Huber Card (Highlighted) -->
+            <div class="loss-card highlight">
+                <div class="loss-name">Huber Loss</div>
+                <div class="loss-type">Hybrid Approach</div>
+                <div class="characteristics">
+                    <div class="characteristic">
+                        <strong>✓</strong> Combines MSE and MAE advantages
+                    </div>
+                    <div class="characteristic">
+                        <strong>✓</strong> Small errors: Quadratic function
+                    </div>
+                    <div class="characteristic">
+                        <strong>✓</strong> Large errors: Linear function
+                    </div>
+                    <div class="characteristic">
+                        Adjustable with delta parameter
+                    </div>
+                </div>
+            </div>
+            
+            <!-- MAE Card -->
+            <div class="loss-card">
+                <div class="loss-name">MAE</div>
+                <div class="loss-type">Mean Absolute Error (L1)</div>
+                <div class="characteristics">
+                    <div class="characteristic">
+                        <strong>✓</strong> Robust to outliers
+                    </div>
+                    <div class="characteristic">
+                        Uniform penalty regardless of error size
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="arrow-down">↓</div>
+        
+        <div class="usage-guide">
+            <div class="usage-card">
+                <div class="usage-title">Use MSE when</div>
+                <div class="usage-text">Outliers are important</div>
+            </div>
+            
+            <div class="usage-card">
+                <div class="usage-title">Use Huber when</div>
+                <div class="usage-text">Balanced approach is needed</div>
+            </div>
+            
+            <div class="usage-card">
+                <div class="usage-title">Use MAE when</div>
+                <div class="usage-text">Robustness is required</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

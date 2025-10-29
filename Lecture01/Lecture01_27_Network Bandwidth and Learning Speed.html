@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Bandwidth and Learning Speed</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 28px 40px;
+            background: white;
+        }
+        
+        .title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .intro-box {
+            background: #f0f5fc;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px 20px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        
+        .intro-text {
+            font-size: 17px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .intro-highlight {
+            color: #1E64C8;
+            font-weight: 700;
+        }
+        
+        .bandwidth-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 16px;
+        }
+        
+        .bandwidth-card {
+            background: white;
+            border: 3px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px 18px;
+            transition: all 0.3s;
+        }
+        
+        .bandwidth-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(30, 100, 200, 0.25);
+        }
+        
+        .bandwidth-card.fast {
+            background: #f8fbff;
+        }
+        
+        .bandwidth-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .bandwidth-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E64C8;
+        }
+        
+        .speed-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 700;
+        }
+        
+        .speed-fast {
+            background: #1E64C8;
+            color: white;
+        }
+        
+        .speed-moderate {
+            background: #ff9800;
+            color: white;
+        }
+        
+        .bandwidth-spec {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.5;
+            margin-bottom: 6px;
+        }
+        
+        .bandwidth-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1E64C8;
+            text-align: center;
+            margin: 8px 0;
+        }
+        
+        .bottleneck-section {
+            background: #fff4e6;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px 20px;
+            margin-bottom: 16px;
+        }
+        
+        .bottleneck-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .bottleneck-desc {
+            font-size: 16px;
+            color: #555;
+            text-align: center;
+            line-height: 1.5;
+        }
+        
+        .bottleneck-formula {
+            background: white;
+            border: 2px dashed #1E64C8;
+            border-radius: 8px;
+            padding: 8px 14px;
+            margin-top: 8px;
+            text-align: center;
+            font-size: 16px;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .formula-highlight {
+            color: #e57373;
+            font-weight: 700;
+        }
+        
+        .optimizations {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+        
+        .optimization-card {
+            background: white;
+            border: 2.5px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px 14px;
+            transition: all 0.3s;
+        }
+        
+        .optimization-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 16px rgba(30, 100, 200, 0.2);
+        }
+        
+        .opt-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 6px;
+            text-align: center;
+        }
+        
+        .opt-desc {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.4;
+            text-align: center;
+        }
+        
+        .rule-box {
+            background: #f8fbff;
+            border-left: 4px solid #1E64C8;
+            border-radius: 6px;
+            padding: 12px 18px;
+            text-align: center;
+        }
+        
+        .rule-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .rule-desc {
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Network Bandwidth and Learning Speed</div>
+        
+        <div class="intro-box">
+            <span class="intro-text"><span class="intro-highlight">Network Bandwidth</span>: Critical for multi-node distributed training</span>
+        </div>
+        
+        <div class="bandwidth-comparison">
+            <div class="bandwidth-card fast">
+                <div class="bandwidth-header">
+                    <div class="bandwidth-name">Single Node (8 GPUs)</div>
+                    <div class="speed-badge speed-fast">Fast</div>
+                </div>
+                <div class="bandwidth-spec">NVLink interconnect</div>
+                <div class="bandwidth-value">600 GB/s</div>
+                <div class="bandwidth-spec" style="text-align: center; color: #1E64C8; font-weight: 600;">No network bottleneck</div>
+            </div>
+            
+            <div class="bandwidth-card">
+                <div class="bandwidth-header">
+                    <div class="bandwidth-name">Multi-Node</div>
+                    <div class="speed-badge speed-moderate">Moderate</div>
+                </div>
+                <div class="bandwidth-spec">Ethernet: 10-100 Gbps</div>
+                <div class="bandwidth-spec">InfiniBand: 200-400 Gbps</div>
+                <div class="bandwidth-spec" style="text-align: center; color: #ff9800; font-weight: 600; margin-top: 8px;">Potential bottleneck</div>
+            </div>
+        </div>
+        
+        <div class="bottleneck-section">
+            <div class="bottleneck-title">Communication Bottleneck Example</div>
+            <div class="bottleneck-desc">Increases with more nodes and smaller batches</div>
+            <div class="bottleneck-formula">
+                <span class="formula-highlight">Gradient sync time</span> > <span>Computation time</span> = Bottleneck
+            </div>
+        </div>
+        
+        <div class="optimizations">
+            <div class="optimization-card">
+                <div class="opt-title">Gradient Compression</div>
+                <div class="opt-desc">Reduce data to transfer</div>
+            </div>
+            
+            <div class="optimization-card">
+                <div class="opt-title">Reduce Frequency</div>
+                <div class="opt-desc">Communicate less often</div>
+            </div>
+            
+            <div class="optimization-card">
+                <div class="opt-title">ZeRO (DeepSpeed)</div>
+                <div class="opt-desc">Partition optimizer states</div>
+            </div>
+        </div>
+        
+        <div class="rule-box">
+            <div class="rule-title">⚡ Design Rule</div>
+            <div class="rule-desc">Network bandwidth should match GPU compute capability</div>
+        </div>
+    </div>
+</body>
+</html>

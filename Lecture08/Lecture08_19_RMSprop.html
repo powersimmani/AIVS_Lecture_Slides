@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RMSprop</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 30px;
+            background: #ffffff;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .main-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .content-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            height: 440px;
+        }
+        
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .improvement-box {
+            background: linear-gradient(135deg, #28a745 0%, #34b755 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+        }
+        
+        .improvement-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .improvement-desc {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .innovation-box {
+            background: #e8f1fd;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 16px 18px;
+        }
+        
+        .innovation-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .innovation-text {
+            font-size: 16px;
+            color: #2c3e50;
+            text-align: center;
+            line-height: 1.5;
+        }
+        
+        .update-rule-box {
+            background: #f0f8ff;
+            border: 3px solid #1E64C8;
+            border-radius: 10px;
+            padding: 18px;
+            flex: 1;
+        }
+        
+        .rule-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .formula-step {
+            background: white;
+            border: 2px dashed #1E64C8;
+            border-radius: 8px;
+            padding: 10px 12px;
+            margin-bottom: 8px;
+        }
+        
+        .step-label {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+        
+        .formula {
+            font-size: 17px;
+            color: #1E64C8;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .rho-info {
+            background: #e8f1fd;
+            border-left: 4px solid #1E64C8;
+            padding: 10px 12px;
+            border-radius: 4px;
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+        
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .comparison-box {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 18px;
+        }
+        
+        .comparison-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .comparison-item {
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+        }
+        
+        .comparison-item.adagrad {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+        }
+        
+        .comparison-item.rmsprop {
+            background: #d4edda;
+            border: 2px solid #28a745;
+        }
+        
+        .comparison-label {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        
+        .comparison-item.adagrad .comparison-label {
+            color: #856404;
+        }
+        
+        .comparison-item.rmsprop .comparison-label {
+            color: #28a745;
+        }
+        
+        .comparison-desc {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+        
+        .advantages-box {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 18px;
+            flex: 1;
+        }
+        
+        .advantages-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+        }
+        
+        .advantage-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .advantage-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .advantage-icon {
+            background: #28a745;
+            color: white;
+            min-width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .advantage-text {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+        
+        .origin-box {
+            background: linear-gradient(135deg, #e8f1fd 0%, #f0f8ff 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 14px 16px;
+            text-align: center;
+        }
+        
+        .origin-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .origin-text {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+        
+        .recommendation-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            color: white;
+            padding: 16px 18px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.3);
+        }
+        
+        .recommendation-text {
+            font-size: 17px;
+            font-weight: 600;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="main-title">RMSprop (Root Mean Square Propagation)</div>
+            <div class="subtitle">Adaptive Learning Rate with Exponential Moving Average</div>
+        </div>
+        
+        <div class="content-layout">
+            <div class="left-section">
+                <div class="improvement-box">
+                    <div class="improvement-title">🔧 Key Improvement</div>
+                    <div class="improvement-desc">
+                        Solves AdaGrad's monotonically<br>
+                        decreasing learning rate problem
+                    </div>
+                </div>
+                
+                <div class="innovation-box">
+                    <div class="innovation-title">💡 Innovation</div>
+                    <div class="innovation-text">
+                        Uses exponential moving average<br>
+                        of squared gradients
+                    </div>
+                </div>
+                
+                <div class="update-rule-box">
+                    <div class="rule-title">Update Rules</div>
+                    
+                    <div class="formula-step">
+                        <div class="step-label">1. EMA of Squared Gradients</div>
+                        <div class="formula">E[g²] = ρE[g²] + (1-ρ)g²</div>
+                    </div>
+                    
+                    <div class="formula-step">
+                        <div class="step-label">2. Parameter Update</div>
+                        <div class="formula">θ = θ - η/√(E[g²] + ε) ⊙ g</div>
+                    </div>
+                    
+                    <div class="rho-info">
+                        <strong>Decay Rate ρ:</strong> Typically 0.9<br>
+                        Maintains moving average of recent gradients
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-section">
+                <div class="comparison-box">
+                    <div class="comparison-title">vs AdaGrad</div>
+                    <div class="comparison-grid">
+                        <div class="comparison-item adagrad">
+                            <div class="comparison-label">AdaGrad</div>
+                            <div class="comparison-desc">
+                                Monotonically<br>decreasing LR
+                            </div>
+                        </div>
+                        <div class="comparison-item rmsprop">
+                            <div class="comparison-label">RMSprop</div>
+                            <div class="comparison-desc">
+                                LR can dynamically<br>increase/decrease
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="advantages-box">
+                    <div class="advantages-title">✨ Advantages</div>
+                    <div class="advantage-list">
+                        <div class="advantage-item">
+                            <div class="advantage-icon">✓</div>
+                            <div class="advantage-text">
+                                Learning rate can dynamically increase/decrease
+                            </div>
+                        </div>
+                        <div class="advantage-item">
+                            <div class="advantage-icon">✓</div>
+                            <div class="advantage-text">
+                                Effective for non-stationary objectives
+                            </div>
+                        </div>
+                        <div class="advantage-item">
+                            <div class="advantage-icon">✓</div>
+                            <div class="advantage-text">
+                                Well-suited for Recurrent Neural Networks
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="origin-box">
+                    <div class="origin-title">📚 Origin</div>
+                    <div class="origin-text">
+                        Introduced in Geoff Hinton's Coursera lectures<br>
+                        (Unpublished paper)
+                    </div>
+                </div>
+                
+                <div class="recommendation-box">
+                    <div class="recommendation-text">
+                        ⭐ Good default choice for<br>
+                        various optimization problems
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

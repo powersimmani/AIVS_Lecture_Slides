@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detailed Algorithm</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            position: relative;
+            padding: 25px 40px;
+        }
+        
+        .header {
+            margin-bottom: 18px;
+        }
+        
+        .part-label {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .algorithm-container {
+            display: flex;
+            gap: 25px;
+        }
+        
+        .left-panel {
+            flex: 1.4;
+        }
+        
+        .algorithm-box {
+            background: #F5F9FF;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 20px;
+            height: 100%;
+        }
+        
+        .algo-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        
+        .algorithm-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .algo-step {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 16px;
+            position: relative;
+        }
+        
+        .algo-step.phase-d {
+            border-left: 5px solid #1E64C8;
+        }
+        
+        .algo-step.phase-g {
+            border-left: 5px solid #FF6B6B;
+        }
+        
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 26px;
+            background: #1E64C8;
+            color: white;
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 14px;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+        
+        .algo-step.phase-g .step-number {
+            background: #FF6B6B;
+        }
+        
+        .step-content {
+            display: inline;
+            font-size: 15px;
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .formula {
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #1E64C8;
+            background: #F5F9FF;
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-top: 8px;
+            display: block;
+            line-height: 1.6;
+        }
+        
+        .phase-separator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 8px 0;
+        }
+        
+        .separator-line {
+            flex: 1;
+            height: 2px;
+            background: linear-gradient(to right, #1E64C8, transparent);
+        }
+        
+        .separator-text {
+            font-size: 14px;
+            color: #1E64C8;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        
+        .right-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .info-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 16px 20px;
+        }
+        
+        .card-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+        }
+        
+        .card-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 8px 0;
+            font-size: 15px;
+            color: #333;
+        }
+        
+        .icon {
+            width: 20px;
+            text-align: center;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .icon.d {
+            color: #1E64C8;
+        }
+        
+        .icon.g {
+            color: #FF6B6B;
+        }
+        
+        .notation-box {
+            background: #F5F9FF;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 16px 20px;
+            flex: 1;
+        }
+        
+        .notation-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+        }
+        
+        .notation-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+            font-size: 15px;
+        }
+        
+        .notation-symbol {
+            font-family: 'Courier New', monospace;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .notation-desc {
+            color: #333;
+        }
+        
+        .convergence-box {
+            background: #1E64C8;
+            color: white;
+            border-radius: 10px;
+            padding: 14px 18px;
+            text-align: center;
+        }
+        
+        .convergence-icon {
+            font-size: 24px;
+            margin-bottom: 6px;
+        }
+        
+        .convergence-text {
+            font-size: 16px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="part-label">Part 3/6: Training Algorithm</div>
+            <div class="title">Detailed Algorithm</div>
+        </div>
+        
+        <div class="algorithm-container">
+            <div class="left-panel">
+                <div class="algorithm-box">
+                    <div class="algo-title">Training Procedure</div>
+                    <div class="algorithm-steps">
+                        <div class="algo-step phase-d">
+                            <span class="step-number">1</span>
+                            <span class="step-content">Sample minibatch of m noise samples {z<sup>(1)</sup>...z<sup>(m)</sup>}</span>
+                        </div>
+                        
+                        <div class="algo-step phase-d">
+                            <span class="step-number">2</span>
+                            <span class="step-content">Sample minibatch of m real samples {x<sup>(1)</sup>...x<sup>(m)</sup>}</span>
+                        </div>
+                        
+                        <div class="algo-step phase-d">
+                            <span class="step-number">3</span>
+                            <span class="step-content">Update Discriminator by ascending gradient:</span>
+                            <div class="formula">
+                                ∇<sub>θ<sub>d</sub></sub> [1/m Σ (log D(x<sup>(i)</sup>) + log(1-D(G(z<sup>(i)</sup>))))]
+                            </div>
+                        </div>
+                        
+                        <div class="phase-separator">
+                            <div class="separator-line"></div>
+                            <div class="separator-text">Switch to Generator</div>
+                            <div class="separator-line" style="background: linear-gradient(to left, #FF6B6B, transparent);"></div>
+                        </div>
+                        
+                        <div class="algo-step phase-g">
+                            <span class="step-number">4</span>
+                            <span class="step-content">Sample new minibatch of noise samples</span>
+                        </div>
+                        
+                        <div class="algo-step phase-g">
+                            <span class="step-number">5</span>
+                            <span class="step-content">Update Generator by descending gradient:</span>
+                            <div class="formula" style="color: #FF6B6B;">
+                                ∇<sub>θ<sub>g</sub></sub> [1/m Σ log(1-D(G(z<sup>(i)</sup>)))]
+                            </div>
+                        </div>
+                        
+                        <div class="algo-step" style="border: 2px dashed #4CAF50; background: rgba(76, 175, 80, 0.05);">
+                            <span class="step-number" style="background: #4CAF50;">6</span>
+                            <span class="step-content" style="font-weight: 600; color: #4CAF50;">Repeat until convergence</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <div class="info-card">
+                    <div class="card-title">Update Strategy</div>
+                    <div class="card-item">
+                        <span class="icon d">D</span>
+                        <span>Ascending gradient (maximize)</span>
+                    </div>
+                    <div class="card-item">
+                        <span class="icon g">G</span>
+                        <span>Descending gradient (minimize)</span>
+                    </div>
+                </div>
+                
+                <div class="notation-box">
+                    <div class="notation-title">Notation</div>
+                    <div class="notation-item">
+                        <span class="notation-symbol">m</span>
+                        <span class="notation-desc">Minibatch size</span>
+                    </div>
+                    <div class="notation-item">
+                        <span class="notation-symbol">z</span>
+                        <span class="notation-desc">Noise vector</span>
+                    </div>
+                    <div class="notation-item">
+                        <span class="notation-symbol">x</span>
+                        <span class="notation-desc">Real sample</span>
+                    </div>
+                    <div class="notation-item">
+                        <span class="notation-symbol">θ<sub>d</sub></span>
+                        <span class="notation-desc">D parameters</span>
+                    </div>
+                    <div class="notation-item">
+                        <span class="notation-symbol">θ<sub>g</sub></span>
+                        <span class="notation-desc">G parameters</span>
+                    </div>
+                </div>
+                
+                <div class="convergence-box">
+                    <div class="convergence-icon">⟲</div>
+                    <div class="convergence-text">Iterate Until Equilibrium</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

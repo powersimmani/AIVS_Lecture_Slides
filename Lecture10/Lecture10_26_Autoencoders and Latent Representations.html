@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autoencoders and Latent Representations</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Aptos', 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            padding: 30px;
+        }
+        
+        .title {
+            font-size: 26px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .intro-box {
+            background: #F0F6FF;
+            border-left: 4px solid #1E64C8;
+            padding: 12px 20px;
+            margin-bottom: 20px;
+            font-size: 17px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .architecture-section {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 18px 20px;
+            margin-bottom: 18px;
+        }
+        
+        .arch-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 14px;
+            text-align: center;
+        }
+        
+        .autoencoder-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .component-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 18px 20px;
+            text-align: center;
+            min-width: 140px;
+        }
+        
+        .component-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        
+        .component-label {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .component-desc {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .latent-box {
+            background: #1E64C8;
+            color: white;
+            border-radius: 10px;
+            padding: 20px 18px;
+            text-align: center;
+            min-width: 160px;
+        }
+        
+        .latent-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        
+        .latent-label {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        
+        .latent-desc {
+            font-size: 15px;
+            opacity: 0.95;
+        }
+        
+        .arrow {
+            color: #1E64C8;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .bottleneck-note {
+            background: #F0F6FF;
+            padding: 10px 14px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 15px;
+            color: #333;
+            margin-top: 12px;
+        }
+        
+        .variants-section {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin-bottom: 15px;
+        }
+        
+        .variants-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .variants-content {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .applications-section {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        
+        .app-card {
+            background: #F0F6FF;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 14px;
+            text-align: center;
+        }
+        
+        .app-icon {
+            font-size: 24px;
+            margin-bottom: 6px;
+        }
+        
+        .app-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Autoencoders and Latent Representations</div>
+        
+        <div class="intro-box">
+            Unsupervised learning of compressed data representations
+        </div>
+        
+        <div class="architecture-section">
+            <div class="arch-title">Autoencoder Architecture</div>
+            <div class="autoencoder-flow">
+                <div class="component-box">
+                    <div class="component-icon">📥</div>
+                    <div class="component-label">Input</div>
+                    <div class="component-desc">Original Data</div>
+                </div>
+                
+                <div class="arrow">→</div>
+                
+                <div class="component-box">
+                    <div class="component-icon">🔽</div>
+                    <div class="component-label">Encoder</div>
+                    <div class="component-desc">Maps to latent space</div>
+                </div>
+                
+                <div class="arrow">→</div>
+                
+                <div class="latent-box">
+                    <div class="latent-icon">💎</div>
+                    <div class="latent-label">Latent Space</div>
+                    <div class="latent-desc">Low-dimensional<br>representation</div>
+                </div>
+                
+                <div class="arrow">→</div>
+                
+                <div class="component-box">
+                    <div class="component-icon">🔼</div>
+                    <div class="component-label">Decoder</div>
+                    <div class="component-desc">Reconstructs input</div>
+                </div>
+                
+                <div class="arrow">→</div>
+                
+                <div class="component-box">
+                    <div class="component-icon">📤</div>
+                    <div class="component-label">Output</div>
+                    <div class="component-desc">Reconstructed Data</div>
+                </div>
+            </div>
+            <div class="bottleneck-note">
+                ⚙️ Bottleneck forces learning of essential features
+            </div>
+        </div>
+        
+        <div class="variants-section">
+            <div class="variants-title">🎲 Variational Autoencoders (VAE)</div>
+            <div class="variants-content">
+                Learn probabilistic latent distributions for generation and sampling
+            </div>
+        </div>
+        
+        <div class="applications-section">
+            <div class="app-card">
+                <div class="app-icon">📉</div>
+                <div class="app-name">Dimensionality<br>Reduction</div>
+            </div>
+            <div class="app-card">
+                <div class="app-icon">🔧</div>
+                <div class="app-name">Denoising</div>
+            </div>
+            <div class="app-card">
+                <div class="app-icon">✨</div>
+                <div class="app-name">Generation</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

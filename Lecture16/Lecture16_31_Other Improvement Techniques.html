@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Other Improvement Techniques</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .title {
+            font-size: 26px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .techniques-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .technique-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border-left: 5px solid #1E64C8;
+            border-radius: 8px;
+            padding: 15px 18px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(30, 100, 200, 0.08);
+        }
+        
+        .technique-card:hover {
+            transform: translateX(8px);
+            box-shadow: 0 4px 15px rgba(30, 100, 200, 0.2);
+            border-left-width: 8px;
+        }
+        
+        .technique-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        
+        .technique-icon {
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+        
+        .technique-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E64C8;
+        }
+        
+        .technique-desc {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.4;
+            margin-left: 32px;
+        }
+        
+        .quality-card {
+            border-left-color: #E74C3C;
+        }
+        
+        .quality-card .technique-title {
+            color: #E74C3C;
+        }
+        
+        .speed-card {
+            border-left-color: #27AE60;
+        }
+        
+        .speed-card .technique-title {
+            color: #27AE60;
+        }
+        
+        .alternative-card {
+            border-left-color: #9B59B6;
+        }
+        
+        .alternative-card .technique-title {
+            color: #9B59B6;
+        }
+        
+        .control-card {
+            border-left-color: #F39C12;
+        }
+        
+        .control-card .technique-title {
+            color: #F39C12;
+        }
+        
+        .categories-section {
+            background: linear-gradient(135deg, #e6f2ff 0%, #f0f8ff 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 15px 20px;
+        }
+        
+        .categories-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        
+        .category-item {
+            background: white;
+            border-radius: 6px;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        .category-icon {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+        
+        .category-label {
+            font-size: 15px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 3px;
+        }
+        
+        .category-count {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .quality-item { border-left: 3px solid #E74C3C; }
+        .speed-item { border-left: 3px solid #27AE60; }
+        .alternative-item { border-left: 3px solid #9B59B6; }
+        .control-item { border-left: 3px solid #F39C12; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">Other Improvement Techniques</div>
+            <div class="subtitle">Part 6/7: Advanced Techniques</div>
+        </div>
+        
+        <div class="techniques-grid">
+            <!-- Cascaded Diffusion -->
+            <div class="technique-card quality-card">
+                <div class="technique-header">
+                    <div class="technique-icon">🔼</div>
+                    <div class="technique-title">Cascaded Diffusion</div>
+                </div>
+                <div class="technique-desc">
+                    Low-res generation → super-resolution
+                </div>
+            </div>
+            
+            <!-- Upsampler -->
+            <div class="technique-card quality-card">
+                <div class="technique-header">
+                    <div class="technique-icon">📐</div>
+                    <div class="technique-title">Upsampler</div>
+                </div>
+                <div class="technique-desc">
+                    Specialized diffusion model for upscaling
+                </div>
+            </div>
+            
+            <!-- Progressive Distillation -->
+            <div class="technique-card speed-card">
+                <div class="technique-header">
+                    <div class="technique-icon">🎓</div>
+                    <div class="technique-title">Progressive Distillation</div>
+                </div>
+                <div class="technique-desc">
+                    Student mimics T-step teacher in T/2 steps
+                </div>
+            </div>
+            
+            <!-- Consistency Models -->
+            <div class="technique-card speed-card">
+                <div class="technique-header">
+                    <div class="technique-icon">⚡</div>
+                    <div class="technique-title">Consistency Models</div>
+                </div>
+                <div class="technique-desc">
+                    One-step generation via consistency training
+                </div>
+            </div>
+            
+            <!-- Flow Matching -->
+            <div class="technique-card alternative-card">
+                <div class="technique-header">
+                    <div class="technique-icon">🌊</div>
+                    <div class="technique-title">Flow Matching</div>
+                </div>
+                <div class="technique-desc">
+                    Alternative to diffusion with optimal transport
+                </div>
+            </div>
+            
+            <!-- Rectified Flow -->
+            <div class="technique-card alternative-card">
+                <div class="technique-header">
+                    <div class="technique-icon">📏</div>
+                    <div class="technique-title">Rectified Flow</div>
+                </div>
+                <div class="technique-desc">
+                    Straightens probability paths for efficiency
+                </div>
+            </div>
+            
+            <!-- Adversarial Diffusion -->
+            <div class="technique-card quality-card">
+                <div class="technique-header">
+                    <div class="technique-icon">⚔️</div>
+                    <div class="technique-title">Adversarial Diffusion</div>
+                </div>
+                <div class="technique-desc">
+                    Add adversarial loss for sharper samples
+                </div>
+            </div>
+            
+            <!-- Truncation Tricks -->
+            <div class="technique-card control-card">
+                <div class="technique-header">
+                    <div class="technique-icon">✂️</div>
+                    <div class="technique-title">Truncation Tricks</div>
+                </div>
+                <div class="technique-desc">
+                    Early stopping or partial diffusion for control
+                </div>
+            </div>
+        </div>
+        
+        <div class="categories-section">
+            <div class="categories-title">📂 Categorization by Purpose</div>
+            
+            <div class="categories-grid">
+                <div class="category-item quality-item">
+                    <div class="category-icon">✨</div>
+                    <div class="category-label">Quality</div>
+                    <div class="category-count">3 techniques</div>
+                </div>
+                
+                <div class="category-item speed-item">
+                    <div class="category-icon">⚡</div>
+                    <div class="category-label">Speed</div>
+                    <div class="category-count">2 techniques</div>
+                </div>
+                
+                <div class="category-item alternative-item">
+                    <div class="category-icon">🔄</div>
+                    <div class="category-label">Alternative</div>
+                    <div class="category-count">2 techniques</div>
+                </div>
+                
+                <div class="category-item control-item">
+                    <div class="category-icon">🎛️</div>
+                    <div class="category-label">Control</div>
+                    <div class="category-count">1 technique</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

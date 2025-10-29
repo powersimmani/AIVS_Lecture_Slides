@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XAI Classification Framework</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+            padding: 30px 40px;
+        }
+        
+        .tree {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        /* Root node */
+        .root {
+            background: linear-gradient(135deg, #1E64C8 0%, #2A7DE1 100%);
+            color: white;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-size: 20px;
+            font-weight: 700;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.3);
+            margin-bottom: 40px;
+        }
+        
+        /* Branches container */
+        .branches {
+            display: flex;
+            gap: 30px;
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .branch {
+            flex: 1;
+            max-width: 280px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        /* Category nodes */
+        .category {
+            background: white;
+            border: 3px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px 20px;
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(30, 100, 200, 0.15);
+            position: relative;
+        }
+        
+        /* Vertical line from root to categories */
+        .category::before {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            width: 2px;
+            height: 20px;
+            background: #B8D4F1;
+            transform: translateX(-50%);
+        }
+        
+        /* Sub-items */
+        .sub-items {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+        }
+        
+        .sub-item {
+            background: #F0F7FF;
+            border: 2px solid #B8D4F1;
+            border-radius: 8px;
+            padding: 10px 16px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            text-align: center;
+            transition: all 0.2s;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .sub-item:hover {
+            background: #E5F1FF;
+            border-color: #1E64C8;
+            transform: translateX(4px);
+        }
+        
+        /* Connecting line from category to sub-items */
+        .sub-item::before {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            width: 2px;
+            height: 12px;
+            background: #B8D4F1;
+            transform: translateX(-50%);
+        }
+        
+        .sub-item:first-child::before {
+            height: 20px;
+        }
+        
+        /* Special styling for different branches */
+        .branch:nth-child(1) .category {
+            border-color: #1E64C8;
+            color: #1E64C8;
+        }
+        
+        .branch:nth-child(2) .category {
+            border-color: #2A7DE1;
+            color: #2A7DE1;
+        }
+        
+        .branch:nth-child(3) .category {
+            border-color: #4A94E5;
+            color: #4A94E5;
+        }
+        
+        /* Description badge */
+        .description {
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+            margin-top: 4px;
+        }
+        
+        /* Additional category at bottom */
+        .additional {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .additional-item {
+            background: #FFF4E6;
+            border: 2px solid #FFD699;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #B35A00;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="tree">
+            <!-- Root -->
+            <div class="root">XAI Methods</div>
+            
+            <!-- Main branches -->
+            <div class="branches">
+                <!-- Branch 1: Timing -->
+                <div class="branch">
+                    <div class="category">
+                        Timing
+                        <div class="description">When applied</div>
+                    </div>
+                    <div class="sub-items">
+                        <div class="sub-item">Intrinsic<br><small>Built-in</small></div>
+                        <div class="sub-item">Post-hoc<br><small>After training</small></div>
+                        <div class="sub-item">Ante-hoc<br><small>Design phase</small></div>
+                    </div>
+                </div>
+                
+                <!-- Branch 2: Scope -->
+                <div class="branch">
+                    <div class="category">
+                        Scope
+                        <div class="description">Coverage level</div>
+                    </div>
+                    <div class="sub-items">
+                        <div class="sub-item">Global<br><small>Entire model</small></div>
+                        <div class="sub-item">Local<br><small>Single prediction</small></div>
+                        <div class="sub-item">Example-based<br><small>Representative cases</small></div>
+                    </div>
+                </div>
+                
+                <!-- Branch 3: Applicability -->
+                <div class="branch">
+                    <div class="category">
+                        Applicability
+                        <div class="description">Model dependency</div>
+                    </div>
+                    <div class="sub-items">
+                        <div class="sub-item">Model-specific<br><small>Tied to architecture</small></div>
+                        <div class="sub-item">Model-agnostic<br><small>Universal methods</small></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Additional categories -->
+            <div class="additional">
+                <div class="additional-item">Transparent (White-box)</div>
+                <div class="additional-item">Black-box (Opaque)</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Momentum Method</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 30px;
+            background: #ffffff;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .main-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .content-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            height: 440px;
+        }
+        
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .concept-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.3);
+        }
+        
+        .concept-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .concept-desc {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .update-rules-box {
+            background: #f0f8ff;
+            border: 3px solid #1E64C8;
+            border-radius: 10px;
+            padding: 18px;
+            flex: 1;
+        }
+        
+        .rules-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .rule-item {
+            background: white;
+            border: 2px dashed #1E64C8;
+            border-radius: 8px;
+            padding: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .rule-label {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 6px;
+        }
+        
+        .rule-formula {
+            font-size: 19px;
+            color: #1E64C8;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .beta-info {
+            background: #e8f1fd;
+            border-left: 4px solid #1E64C8;
+            padding: 12px 14px;
+            border-radius: 4px;
+            margin-top: 8px;
+        }
+        
+        .beta-text {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+        
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .benefits-box {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 18px;
+            flex: 1;
+        }
+        
+        .benefits-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+        }
+        
+        .benefit-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .benefit-icon {
+            background: #1E64C8;
+            color: white;
+            min-width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .benefit-text {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+        
+        .analogy-box {
+            background: linear-gradient(135deg, #e8f1fd 0%, #f0f8ff 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .analogy-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+        
+        .analogy-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .analogy-text {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+        
+        .visualization-box {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 16px;
+        }
+        
+        .viz-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .viz-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .viz-item {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 6px;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .viz-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .viz-desc {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="main-title">Momentum Method</div>
+            <div class="subtitle">Accelerating Gradient Descent with Velocity Accumulation</div>
+        </div>
+        
+        <div class="content-layout">
+            <div class="left-section">
+                <div class="concept-box">
+                    <div class="concept-title">🚀 Core Concept</div>
+                    <div class="concept-desc">
+                        Accelerates gradient descent by accumulating velocity from past gradients
+                    </div>
+                </div>
+                
+                <div class="update-rules-box">
+                    <div class="rules-title">Update Rules</div>
+                    
+                    <div class="rule-item">
+                        <div class="rule-label">1. Velocity Update</div>
+                        <div class="rule-formula">v = βv + ∇L(θ)</div>
+                    </div>
+                    
+                    <div class="rule-item">
+                        <div class="rule-label">2. Parameter Update</div>
+                        <div class="rule-formula">θ = θ - ηv</div>
+                    </div>
+                    
+                    <div class="beta-info">
+                        <div class="beta-text">
+                            <strong>Momentum Coefficient β:</strong> Typically 0.9<br>
+                            (Retains 90% of previous velocity)
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-section">
+                <div class="benefits-box">
+                    <div class="benefits-title">✨ Key Benefits</div>
+                    <div class="benefit-list">
+                        <div class="benefit-item">
+                            <div class="benefit-icon">1</div>
+                            <div class="benefit-text">
+                                Helps overcome local minima
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-icon">2</div>
+                            <div class="benefit-text">
+                                Navigates ravines in loss landscape
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-icon">3</div>
+                            <div class="benefit-text">
+                                Reduces oscillations in high curvature directions
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-icon">4</div>
+                            <div class="benefit-text">
+                                Accelerates progress in consistent gradient directions
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-icon">5</div>
+                            <div class="benefit-text">
+                                Dampens oscillations in narrow valleys
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="analogy-box">
+                    <div class="analogy-icon">⚽</div>
+                    <div class="analogy-title">Physical Analogy</div>
+                    <div class="analogy-text">
+                        Similar to a ball rolling down a hill<br>
+                        gaining momentum
+                    </div>
+                </div>
+                
+                <div class="visualization-box">
+                    <div class="viz-title">Effect Visualization</div>
+                    <div class="viz-comparison">
+                        <div class="viz-item">
+                            <div class="viz-label">Without Momentum</div>
+                            <div class="viz-desc">Zigzag movement</div>
+                        </div>
+                        <div class="viz-item" style="background: #e8f1fd;">
+                            <div class="viz-label">With Momentum</div>
+                            <div class="viz-desc">Smooth progress</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

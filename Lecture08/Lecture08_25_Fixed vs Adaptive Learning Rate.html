@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fixed vs Adaptive Learning Rate</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #ffffff; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 30px; background: #ffffff; }
+        .header { text-align: center; margin-bottom: 20px; }
+        .main-title { font-size: 20px; font-weight: 600; color: #1E64C8; margin-bottom: 6px; }
+        .subtitle { font-size: 16px; color: #666; }
+        .content-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 18px; }
+        .lr-card { background: #f8f9fa; border: 2px solid #1E64C8; border-radius: 8px; padding: 20px; display: flex; flex-direction: column; height: 280px; }
+        .lr-card.adaptive { background: linear-gradient(135deg, #e8f1fd 0%, #f0f8ff 100%); border: 3px solid #1E64C8; }
+        .lr-header { text-align: center; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 2px solid #1E64C8; }
+        .lr-name { font-size: 18px; font-weight: 600; color: #1E64C8; margin-bottom: 6px; }
+        .lr-desc { font-size: 16px; color: #666; line-height: 1.4; }
+        .lr-features { display: flex; flex-direction: column; gap: 10px; flex: 1; }
+        .feature-item { display: flex; align-items: flex-start; gap: 10px; }
+        .feature-icon { min-width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0; margin-top: 2px; }
+        .feature-icon.pro { background: #28a745; color: white; }
+        .feature-icon.con { background: #dc3545; color: white; }
+        .feature-text { font-size: 16px; color: #2c3e50; line-height: 1.5; }
+        .adaptive-types-box { background: #f0f8ff; border: 2px solid #1E64C8; border-radius: 8px; padding: 18px; margin-bottom: 15px; }
+        .types-title { font-size: 17px; font-weight: 600; color: #1E64C8; margin-bottom: 12px; text-align: center; }
+        .type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .type-card { background: white; border: 2px solid #1E64C8; border-radius: 6px; padding: 14px; }
+        .type-label { font-size: 16px; font-weight: 600; color: #1E64C8; margin-bottom: 8px; text-align: center; }
+        .type-desc { font-size: 16px; color: #2c3e50; line-height: 1.4; text-align: center; }
+        .type-examples { font-size: 16px; color: #666; margin-top: 6px; text-align: center; font-style: italic; }
+        .benefits-box { background: #d4edda; border: 2px solid #28a745; border-radius: 8px; padding: 16px 18px; margin-bottom: 15px; }
+        .benefits-title { font-size: 17px; font-weight: 600; color: #155724; margin-bottom: 10px; }
+        .benefit-list { display: flex; flex-direction: column; gap: 6px; }
+        .benefit-item { font-size: 16px; color: #155724; line-height: 1.4; }
+        .recommendation-box { background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%); color: white; padding: 16px 20px; border-radius: 8px; text-align: center; box-shadow: 0 4px 12px rgba(30, 100, 200, 0.3); }
+        .recommendation-icon { font-size: 24px; margin-bottom: 6px; }
+        .recommendation-text { font-size: 17px; font-weight: 600; line-height: 1.6; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="main-title">Fixed vs Adaptive Learning Rate</div>
+            <div class="subtitle">Comparing Learning Rate Strategies</div>
+        </div>
+        
+        <div class="content-layout">
+            <div class="lr-card">
+                <div class="lr-header">
+                    <div class="lr-name">Fixed Learning Rate</div>
+                    <div class="lr-desc">Constant throughout training</div>
+                </div>
+                <div class="lr-features">
+                    <div class="feature-item">
+                        <div class="feature-icon pro">✓</div>
+                        <div class="feature-text">Simple implementation</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon con">✗</div>
+                        <div class="feature-text">Suboptimal</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon con">✗</div>
+                        <div class="feature-text">Requires careful manual tuning</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon con">✗</div>
+                        <div class="feature-text">Difficult to find good value</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="lr-card adaptive">
+                <div class="lr-header">
+                    <div class="lr-name">Adaptive Learning Rate</div>
+                    <div class="lr-desc">Scheduled or metric-based variation</div>
+                </div>
+                <div class="lr-features">
+                    <div class="feature-item">
+                        <div class="feature-icon pro">✓</div>
+                        <div class="feature-text">Improved convergence</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon pro">✓</div>
+                        <div class="feature-text">Better final accuracy</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon pro">✓</div>
+                        <div class="feature-text">Fast early training</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon pro">✓</div>
+                        <div class="feature-text">Careful late refinement</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="adaptive-types-box">
+            <div class="types-title">Adaptive Learning Rate Types</div>
+            <div class="type-grid">
+                <div class="type-card">
+                    <div class="type-label">Schedule-based</div>
+                    <div class="type-desc">Predefined decay strategy</div>
+                    <div class="type-examples">(Step, Exponential)</div>
+                </div>
+                <div class="type-card">
+                    <div class="type-label">Performance-based</div>
+                    <div class="type-desc">Reduce on validation metric plateau</div>
+                    <div class="type-examples">(Plateau Detection)</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="benefits-box">
+            <div class="benefits-title">✨ Key Benefits of Adaptive LR</div>
+            <div class="benefit-list">
+                <div class="benefit-item">• Combines benefits of fast early training and careful late refinement</div>
+                <div class="benefit-item">• Improves both convergence speed and final model performance</div>
+            </div>
+        </div>
+        
+        <div class="recommendation-box">
+            <div class="recommendation-icon">💡</div>
+            <div class="recommendation-text">
+                Modern Practice: Always use some form of LR Scheduling
+            </div>
+        </div>
+    </div>
+</body>
+</html>

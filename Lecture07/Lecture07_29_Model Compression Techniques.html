@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model Compression Techniques</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            overflow-x: hidden;
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 960px;
+            width: 95vw;
+            min-height: 540px;
+            height: auto;
+            background: white;
+            position: relative;
+            overflow: hidden;
+            padding: 20px 35px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+        }
+        
+        .techniques-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        
+        .technique-card {
+            background: white;
+            border: 3px solid;
+            border-radius: 10px;
+            padding: 14px 16px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .technique-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .technique-card.pruning {
+            background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+            border-color: #2196F3;
+        }
+        
+        .technique-card.quantization {
+            background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+            border-color: #4CAF50;
+        }
+        
+        .technique-card.distillation {
+            background: linear-gradient(135deg, #FFF3E0 0%, #FFE0B2 100%);
+            border-color: #FF9800;
+        }
+        
+        .technique-card.factorization {
+            background: linear-gradient(135deg, #F3E5F5 0%, #E1BEE7 100%);
+            border-color: #9C27B0;
+        }
+        
+        .technique-card.sharing {
+            background: linear-gradient(135deg, #E0F2F1 0%, #B2DFDB 100%);
+            border-color: #009688;
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .card-icon {
+            font-size: 28px;
+            margin-right: 10px;
+        }
+        
+        .card-title {
+            font-size: 17px;
+            font-weight: 700;
+        }
+        
+        .technique-card.pruning .card-title {
+            color: #1565C0;
+        }
+        
+        .technique-card.quantization .card-title {
+            color: #2E7D32;
+        }
+        
+        .technique-card.distillation .card-title {
+            color: #E65100;
+        }
+        
+        .technique-card.factorization .card-title {
+            color: #6A1B9A;
+        }
+        
+        .technique-card.sharing .card-title {
+            color: #00695C;
+        }
+        
+        .card-description {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.4;
+            margin-bottom: 6px;
+        }
+        
+        .card-benefit {
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+        }
+        
+        .results-section {
+            background: #E8F5E9;
+            border: 3px solid #4CAF50;
+            border-radius: 12px;
+            padding: 14px 20px;
+            margin-bottom: 14px;
+        }
+        
+        .results-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #2E7D32;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        .result-item {
+            background: white;
+            border: 2px solid #4CAF50;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        .result-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+        
+        .result-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #2E7D32;
+        }
+        
+        .deployment-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        
+        .deployment-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .deployment-card:hover {
+            background: #F0F6FF;
+        }
+        
+        .deployment-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .deployment-icon {
+            margin-right: 8px;
+            font-size: 18px;
+        }
+        
+        .deployment-content {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.4;
+        }
+    
+        
+        /* Responsive adjustments */
+        @media screen and (max-width: 1000px) {
+            .container {
+                width: 98vw !important;
+                max-width: 98vw !important;
+                padding: 15px 20px !important;
+            }
+        }
+        
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: 10px 15px !important;
+            }
+            
+            .title {
+                font-size: 20px !important;
+            }
+            
+            /* 그리드 레이아웃을 1열로 */
+            .challenges-grid,
+            .comparison-grid,
+            .solutions-grid,
+            .guide-grid,
+            .findings-section,
+            .benefits-grid,
+            .applications-section,
+            .guidelines-grid,
+            .components-section,
+            .techniques-grid,
+            .deployment-section,
+            .savings-grid,
+            .results-grid,
+            .functions-grid,
+            .features-grid,
+            .comparison-section,
+            .bottom-section {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .gradient-flow,
+            .network-visual,
+            .flow-steps,
+            .bottleneck-flow,
+            .example-flow,
+            .dimension-box,
+            .inception-structure .parallel-paths,
+            .comparison-section {
+                flex-direction: column !important;
+                gap: 15px !important;
+            }
+            
+            .arrow-back,
+            .arrow,
+            .arrow-right,
+            .arrow-connector,
+            .conv-arrow {
+                transform: rotate(90deg);
+                margin: 5px 0 !important;
+            }
+            
+            /* SVG와 layer 위치 조정 */
+            .layers-container,
+            .architecture-visual {
+                height: auto !important;
+                min-height: 300px !important;
+            }
+            
+            .layer-node {
+                position: relative !important;
+                left: auto !important;
+                margin: 10px 0 !important;
+            }
+        }
+        
+        @media screen and (max-width: 480px) {
+            .container {
+                padding: 8px 10px !important;
+            }
+            
+            .title {
+                font-size: 18px !important;
+            }
+            
+            .card-header,
+            .scenario-label,
+            .card-title,
+            .function-title,
+            .arch-title,
+            .flow-title {
+                font-size: 16px !important;
+            }
+            
+            .layer-box,
+            .conv-box,
+            .step-circle,
+            .layer-circle {
+                font-size: 14px !important;
+                padding: 8px !important;
+            }
+        }
+    
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Model Compression Techniques</div>
+        
+        <div class="techniques-grid">
+            <div class="technique-card pruning">
+                <div class="card-header">
+                    <div class="card-icon">✂️</div>
+                    <div class="card-title">Pruning</div>
+                </div>
+                <div class="card-description">
+                    Remove unimportant weights/neurons
+                </div>
+                <div class="card-benefit">
+                    Structured or unstructured
+                </div>
+            </div>
+            
+            <div class="technique-card quantization">
+                <div class="card-header">
+                    <div class="card-icon">🔢</div>
+                    <div class="card-title">Quantization</div>
+                </div>
+                <div class="card-description">
+                    Reduce precision (FP32 → INT8)
+                </div>
+                <div class="card-benefit">
+                    ~4× memory/speed improvement
+                </div>
+            </div>
+            
+            <div class="technique-card distillation">
+                <div class="card-header">
+                    <div class="card-icon">👨‍🏫</div>
+                    <div class="card-title">Knowledge Distillation</div>
+                </div>
+                <div class="card-description">
+                    Train small student to mimic large teacher
+                </div>
+                <div class="card-benefit">
+                    Transfer knowledge efficiently
+                </div>
+            </div>
+            
+            <div class="technique-card factorization">
+                <div class="card-header">
+                    <div class="card-icon">📐</div>
+                    <div class="card-title">Low-Rank Factorization</div>
+                </div>
+                <div class="card-description">
+                    Decompose weight matrices into smaller components
+                </div>
+                <div class="card-benefit">
+                    Reduce parameter count
+                </div>
+            </div>
+            
+            <div class="technique-card sharing">
+                <div class="card-header">
+                    <div class="card-icon">🔗</div>
+                    <div class="card-title">Weight Sharing</div>
+                </div>
+                <div class="card-description">
+                    Group weights to reduce unique parameters
+                </div>
+                <div class="card-benefit">
+                    Efficient representation
+                </div>
+            </div>
+        </div>
+        
+        <div class="results-section">
+            <div class="results-title">Typical Compression Results</div>
+            <div class="results-grid">
+                <div class="result-item">
+                    <div class="result-label">Compression Ratio</div>
+                    <div class="result-value">5-10×</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label">Accuracy Loss</div>
+                    <div class="result-value">&lt;1%</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="deployment-section">
+            <div class="deployment-card">
+                <div class="deployment-title">
+                    <span class="deployment-icon">📱</span>
+                    Mobile Deployment
+                </div>
+                <div class="deployment-content">
+                    Essential for phones, IoT devices
+                </div>
+            </div>
+            
+            <div class="deployment-card">
+                <div class="deployment-title">
+                    <span class="deployment-icon">🛠️</span>
+                    Tools
+                </div>
+                <div class="deployment-content">
+                    TensorFlow Lite · PyTorch Mobile · ONNX Runtime
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

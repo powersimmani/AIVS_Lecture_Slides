@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backpropagation Algorithm Derivation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Aptos', 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            padding: 40px;
+        }
+        
+        .main-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+        }
+        
+        .content-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            flex: 1;
+        }
+        
+        .derivation-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .steps-container {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 15px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            overflow-y: auto;
+        }
+        
+        .step-card {
+            background: white;
+            border-left: 4px solid #1E64C8;
+            border-radius: 4px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .step-number {
+            width: 28px;
+            height: 28px;
+            background: #1E64C8;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        
+        .step-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .step-formula {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 15px;
+            color: #333;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .step-explanation {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.4;
+        }
+        
+        .visual-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .flow-diagram {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 15px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .flow-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+        }
+        
+        .flow-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            justify-content: center;
+        }
+        
+        .flow-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 6px;
+            padding: 10px 15px;
+            text-align: center;
+            min-width: 200px;
+        }
+        
+        .forward-box {
+            border-color: #4caf50;
+        }
+        
+        .backward-box {
+            border-color: #d32f2f;
+        }
+        
+        .box-label {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+        
+        .box-content {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .arrow-down {
+            font-size: 20px;
+            color: #1E64C8;
+            font-weight: bold;
+        }
+        
+        .arrow-up {
+            font-size: 20px;
+            color: #d32f2f;
+            font-weight: bold;
+        }
+        
+        .key-formulas {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .formula-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .formula-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+        }
+        
+        .formula-text {
+            background: #f8f9fa;
+            padding: 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #333;
+            text-align: center;
+        }
+        
+        .algorithm-section {
+            grid-column: 1 / -1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .algorithm-box {
+            background: #2d2d2d;
+            color: #e0e0e0;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+        
+        .code-comment {
+            color: #6a9955;
+        }
+        
+        .code-keyword {
+            color: #569cd6;
+        }
+        
+        .code-variable {
+            color: #9cdcfe;
+        }
+        
+        .insight-box {
+            background: #fff3cd;
+            border-left: 4px solid #ff9800;
+            padding: 12px;
+            border-radius: 4px;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 12px;
+            align-items: center;
+        }
+        
+        .insight-icon {
+            font-size: 24px;
+        }
+        
+        .insight-text {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-title">Backpropagation Algorithm Derivation</div>
+        
+        <div class="content-layout">
+            <!-- Derivation Steps -->
+            <div class="derivation-section">
+                <div class="section-title">Derivation Steps</div>
+                <div class="steps-container">
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-number">1</div>
+                            <div class="step-title">Output Layer Error</div>
+                        </div>
+                        <div class="step-formula">
+                            δ⁽ᴸ⁾ = ∂L/∂z⁽ᴸ⁾ = ∂L/∂a⁽ᴸ⁾ · σ'(z⁽ᴸ⁾)
+                        </div>
+                        <div class="step-explanation">
+                            Error at output layer using chain rule
+                        </div>
+                    </div>
+                    
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-number">2</div>
+                            <div class="step-title">Hidden Layer Error</div>
+                        </div>
+                        <div class="step-formula">
+                            δ⁽ˡ⁾ = (W⁽ˡ⁺¹⁾)ᵀδ⁽ˡ⁺¹⁾ ⊙ σ'(z⁽ˡ⁾)
+                        </div>
+                        <div class="step-explanation">
+                            Propagate error backward through weights
+                        </div>
+                    </div>
+                    
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-number">3</div>
+                            <div class="step-title">Weight Gradient</div>
+                        </div>
+                        <div class="step-formula">
+                            ∂L/∂W⁽ˡ⁾ = δ⁽ˡ⁾(a⁽ˡ⁻¹⁾)ᵀ
+                        </div>
+                        <div class="step-explanation">
+                            Gradient w.r.t. weights at layer l
+                        </div>
+                    </div>
+                    
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-number">4</div>
+                            <div class="step-title">Bias Gradient</div>
+                        </div>
+                        <div class="step-formula">
+                            ∂L/∂b⁽ˡ⁾ = δ⁽ˡ⁾
+                        </div>
+                        <div class="step-explanation">
+                            Gradient w.r.t. biases at layer l
+                        </div>
+                    </div>
+                    
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-number">5</div>
+                            <div class="step-title">Parameter Update</div>
+                        </div>
+                        <div class="step-formula">
+                            W⁽ˡ⁾ ← W⁽ˡ⁾ - η · ∂L/∂W⁽ˡ⁾
+                        </div>
+                        <div class="step-explanation">
+                            Update parameters using learning rate η
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Visual Flow -->
+            <div class="visual-section">
+                <div class="section-title">Forward & Backward Pass</div>
+                <div class="flow-diagram">
+                    <div class="flow-title">Information Flow</div>
+                    <div class="flow-content">
+                        <div class="flow-box">
+                            <div class="box-label">Input</div>
+                            <div class="box-content">x, W, b</div>
+                        </div>
+                        
+                        <div class="arrow-down">↓ Forward</div>
+                        
+                        <div class="flow-box forward-box">
+                            <div class="box-label">Compute</div>
+                            <div class="box-content">z, a, L</div>
+                        </div>
+                        
+                        <div class="arrow-up">↑ Backward</div>
+                        
+                        <div class="flow-box backward-box">
+                            <div class="box-label">Compute</div>
+                            <div class="box-content">∂L/∂W, ∂L/∂b</div>
+                        </div>
+                        
+                        <div class="arrow-down">↓ Update</div>
+                        
+                        <div class="flow-box">
+                            <div class="box-label">Output</div>
+                            <div class="box-content">W', b'</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="key-formulas">
+                    <div class="flow-title">Key Formulas</div>
+                    <div class="formula-item">
+                        <div class="formula-label">Forward:</div>
+                        <div class="formula-text">z⁽ˡ⁾ = W⁽ˡ⁾a⁽ˡ⁻¹⁾ + b⁽ˡ⁾</div>
+                    </div>
+                    <div class="formula-item">
+                        <div class="formula-label">Activation:</div>
+                        <div class="formula-text">a⁽ˡ⁾ = σ(z⁽ˡ⁾)</div>
+                    </div>
+                    <div class="formula-item">
+                        <div class="formula-label">Backward:</div>
+                        <div class="formula-text">δ⁽ˡ⁾ = (W⁽ˡ⁺¹⁾)ᵀδ⁽ˡ⁺¹⁾ ⊙ σ'(z⁽ˡ⁾)</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Algorithm Pseudocode -->
+            <div class="algorithm-section">
+                <div class="section-title">Backpropagation Algorithm</div>
+                <div class="algorithm-box">
+<span class="code-comment"># Forward Pass</span>
+<span class="code-keyword">for</span> <span class="code-variable">l</span> = 1 <span class="code-keyword">to</span> <span class="code-variable">L</span>:
+    <span class="code-variable">z[l]</span> = <span class="code-variable">W[l]</span> @ <span class="code-variable">a[l-1]</span> + <span class="code-variable">b[l]</span>
+    <span class="code-variable">a[l]</span> = activation(<span class="code-variable">z[l]</span>)
+
+<span class="code-comment"># Compute Loss</span>
+<span class="code-variable">L</span> = loss_function(<span class="code-variable">a[L]</span>, <span class="code-variable">y</span>)
+
+<span class="code-comment"># Backward Pass</span>
+<span class="code-variable">delta[L]</span> = <span class="code-variable">dL/da[L]</span> * activation_derivative(<span class="code-variable">z[L]</span>)
+<span class="code-keyword">for</span> <span class="code-variable">l</span> = <span class="code-variable">L-1</span> <span class="code-keyword">to</span> 1:
+    <span class="code-variable">delta[l]</span> = (<span class="code-variable">W[l+1]</span>.T @ <span class="code-variable">delta[l+1]</span>) * activation_derivative(<span class="code-variable">z[l]</span>)
+    <span class="code-variable">dW[l]</span> = <span class="code-variable">delta[l]</span> @ <span class="code-variable">a[l-1]</span>.T
+    <span class="code-variable">db[l]</span> = <span class="code-variable">delta[l]</span>
+
+<span class="code-comment"># Update Parameters</span>
+<span class="code-keyword">for</span> <span class="code-variable">l</span> = 1 <span class="code-keyword">to</span> <span class="code-variable">L</span>:
+    <span class="code-variable">W[l]</span> -= <span class="code-variable">learning_rate</span> * <span class="code-variable">dW[l]</span>
+    <span class="code-variable">b[l]</span> -= <span class="code-variable">learning_rate</span> * <span class="code-variable">db[l]</span>
+                </div>
+                
+                <div class="insight-box">
+                    <div class="insight-icon">💡</div>
+                    <div class="insight-text">
+                        <strong>Key Insight:</strong> Backpropagation efficiently computes gradients by reusing intermediate values from the forward pass and applying the chain rule backward through layers. Each layer's gradient depends only on the next layer's gradient and local derivatives.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kernel PCA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+            color: #666;
+            margin-top: -10px;
+        }
+        
+        .comparison-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+        
+        .pca-card {
+            background: white;
+            border: 2px solid;
+            border-radius: 12px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            transition: all 0.3s;
+        }
+        
+        .pca-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .pca-card.linear {
+            border-color: #64B5F6;
+            background: linear-gradient(135deg, #e3f2fd 0%, #ffffff 100%);
+        }
+        
+        .pca-card.kernel {
+            border-color: #9C27B0;
+            background: linear-gradient(135deg, #f3e5f5 0%, #ffffff 100%);
+        }
+        
+        .pca-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid;
+        }
+        
+        .pca-card.linear .pca-header {
+            border-color: #64B5F6;
+        }
+        
+        .pca-card.kernel .pca-header {
+            border-color: #9C27B0;
+        }
+        
+        .pca-icon {
+            font-size: 32px;
+        }
+        
+        .pca-name {
+            font-size: 20px;
+            font-weight: 600;
+            color: #64B5F6;
+        }
+        
+        .pca-card.kernel .pca-name {
+            color: #9C27B0;
+        }
+        
+        .feature-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .feature-list li {
+            font-size: 15px;
+            color: #333;
+            padding-left: 24px;
+            position: relative;
+            line-height: 1.4;
+        }
+        
+        .feature-list li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            font-size: 24px;
+            color: #64B5F6;
+        }
+        
+        .pca-card.kernel .feature-list li:before {
+            color: #9C27B0;
+        }
+        
+        .kernels-section {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffffff 100%);
+            border: 2px solid #FF9800;
+            border-radius: 12px;
+            padding: 16px;
+        }
+        
+        .section-header {
+            font-size: 18px;
+            font-weight: 600;
+            color: #F57C00;
+            text-align: center;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #FF9800;
+        }
+        
+        .kernel-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        
+        .kernel-box {
+            background: white;
+            border: 1px solid #FF9800;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .kernel-box:hover {
+            transform: scale(1.05);
+            box-shadow: 0 3px 10px rgba(255, 152, 0, 0.2);
+        }
+        
+        .kernel-icon {
+            font-size: 28px;
+            margin-bottom: 6px;
+        }
+        
+        .kernel-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #F57C00;
+            margin-bottom: 4px;
+        }
+        
+        .kernel-desc {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+        
+        .advantage-box {
+            background: linear-gradient(135deg, #e8f5e9 0%, #ffffff 100%);
+            border: 2px solid #4CAF50;
+            border-radius: 12px;
+            padding: 16px;
+        }
+        
+        .advantage-box .section-header {
+            color: #388E3C;
+            border-color: #4CAF50;
+        }
+        
+        .advantage-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .advantage-list li {
+            font-size: 15px;
+            color: #333;
+            padding-left: 24px;
+            position: relative;
+            line-height: 1.4;
+        }
+        
+        .advantage-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4CAF50;
+            font-weight: bold;
+            font-size: 20px;
+        }
+        
+        .tradeoff-box {
+            background: linear-gradient(135deg, #fff8e1 0%, #ffffff 100%);
+            border: 2px solid #FFA726;
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .tradeoff-icon {
+            font-size: 36px;
+            flex-shrink: 0;
+        }
+        
+        .tradeoff-content {
+            flex: 1;
+        }
+        
+        .tradeoff-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #F57C00;
+            margin-bottom: 6px;
+        }
+        
+        .tradeoff-text {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Kernel PCA</div>
+        <div class="subtitle">Non-linear extension of PCA using kernel trick</div>
+        
+        <div class="comparison-section">
+            <div class="pca-card linear">
+                <div class="pca-header">
+                    <div class="pca-icon">📐</div>
+                    <div class="pca-name">Linear PCA</div>
+                </div>
+                <ul class="feature-list">
+                    <li>Linear transformations only</li>
+                    <li>Works in original space</li>
+                    <li>Fast computation</li>
+                    <li>Limited to linear patterns</li>
+                </ul>
+            </div>
+            
+            <div class="pca-card kernel">
+                <div class="pca-header">
+                    <div class="pca-icon">🔮</div>
+                    <div class="pca-name">Kernel PCA</div>
+                </div>
+                <ul class="feature-list">
+                    <li>Captures non-linear patterns</li>
+                    <li>Projects to high-dim space</li>
+                    <li>No explicit computation</li>
+                    <li>More expressive power</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="kernels-section">
+            <div class="section-header">🎛️ Common Kernel Functions</div>
+            <div class="kernel-grid">
+                <div class="kernel-box">
+                    <div class="kernel-icon">⭕</div>
+                    <div class="kernel-name">RBF (Gaussian)</div>
+                    <div class="kernel-desc">Most popular choice</div>
+                </div>
+                
+                <div class="kernel-box">
+                    <div class="kernel-icon">📈</div>
+                    <div class="kernel-name">Polynomial</div>
+                    <div class="kernel-desc">For polynomial features</div>
+                </div>
+                
+                <div class="kernel-box">
+                    <div class="kernel-icon">〰️</div>
+                    <div class="kernel-name">Sigmoid</div>
+                    <div class="kernel-desc">Neural network-like</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bottom-grid">
+            <div class="advantage-box">
+                <div class="section-header">💪 Key Advantages</div>
+                <ul class="advantage-list">
+                    <li>Handles non-linear relationships</li>
+                    <li>No explicit feature mapping</li>
+                    <li>Works with complex data structures</li>
+                </ul>
+            </div>
+            
+            <div class="tradeoff-box">
+                <div class="tradeoff-icon">⚖️</div>
+                <div class="tradeoff-content">
+                    <div class="tradeoff-title">Trade-off</div>
+                    <div class="tradeoff-text">More powerful but computationally expensive. Requires careful hyperparameter tuning.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

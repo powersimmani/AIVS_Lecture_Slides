@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestalt Principles</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #FFFFFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            padding: 30px 40px;
+        }
+        
+        .title-section {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .main-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .subtitle {
+            font-size: 17px;
+            color: #666666;
+        }
+        
+        .principles-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            flex: 1;
+        }
+        
+        .principle-card {
+            background: #FFFFFF;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .principle-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(30, 100, 200, 0.15);
+            border-color: #1E64C8;
+            background: #F8FBFF;
+        }
+        
+        .principle-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .visual-example {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            min-height: 70px;
+        }
+        
+        .principle-description {
+            font-size: 16px;
+            color: #666666;
+            text-align: center;
+            line-height: 1.3;
+        }
+        
+        /* Visual Examples for each principle */
+        
+        /* Proximity */
+        .proximity-visual {
+            display: flex;
+            gap: 25px;
+        }
+        .proximity-group {
+            display: flex;
+            gap: 6px;
+        }
+        .proximity-dot {
+            width: 12px;
+            height: 12px;
+            background: #1E64C8;
+            border-radius: 50%;
+        }
+        
+        /* Similarity */
+        .similarity-visual {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+        .similarity-shape {
+            width: 16px;
+            height: 16px;
+            background: #1E64C8;
+        }
+        .similarity-shape.circle {
+            border-radius: 50%;
+        }
+        .similarity-shape.alt {
+            background: #FF6B6B;
+        }
+        
+        /* Continuity */
+        .continuity-visual {
+            position: relative;
+            width: 100%;
+            height: 60px;
+        }
+        .continuity-line {
+            position: absolute;
+            width: 80%;
+            height: 3px;
+            background: #1E64C8;
+            top: 50%;
+            left: 10%;
+            transform: translateY(-50%);
+            border-radius: 2px;
+        }
+        .continuity-dot {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #1E64C8;
+            border-radius: 50%;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .continuity-dot:nth-child(2) { left: 10%; }
+        .continuity-dot:nth-child(3) { left: 35%; }
+        .continuity-dot:nth-child(4) { left: 60%; }
+        .continuity-dot:nth-child(5) { left: 85%; }
+        
+        /* Closure */
+        .closure-visual {
+            position: relative;
+            width: 60px;
+            height: 60px;
+        }
+        .closure-circle {
+            width: 100%;
+            height: 100%;
+            border: 3px solid #1E64C8;
+            border-radius: 50%;
+            border-right-color: transparent;
+            border-bottom-color: transparent;
+        }
+        
+        /* Figure-Ground */
+        .figureground-visual {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .fg-background {
+            width: 70px;
+            height: 70px;
+            background: #E8F2FF;
+            border-radius: 8px;
+            position: relative;
+        }
+        .fg-figure {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: #1E64C8;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        /* Common Fate */
+        .fate-visual {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        .fate-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .fate-arrow {
+            font-size: 20px;
+            color: #1E64C8;
+        }
+        .fate-dot {
+            width: 10px;
+            height: 10px;
+            background: #1E64C8;
+            border-radius: 50%;
+        }
+        
+        /* Symmetry */
+        .symmetry-visual {
+            display: flex;
+            gap: 3px;
+            align-items: center;
+        }
+        .symmetry-half {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .symmetry-bar {
+            width: 25px;
+            height: 8px;
+            background: #1E64C8;
+            border-radius: 2px;
+        }
+        .symmetry-bar:nth-child(1) { width: 20px; }
+        .symmetry-bar:nth-child(2) { width: 30px; }
+        .symmetry-bar:nth-child(3) { width: 25px; }
+        .symmetry-divider {
+            width: 2px;
+            height: 40px;
+            background: #999;
+        }
+        
+        /* Application */
+        .application-visual {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .app-icon {
+            font-size: 30px;
+        }
+        .app-arrow {
+            font-size: 24px;
+            color: #1E64C8;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .principle-card {
+            animation: fadeIn 0.4s ease forwards;
+        }
+        
+        .principle-card:nth-child(1) { animation-delay: 0.05s; }
+        .principle-card:nth-child(2) { animation-delay: 0.1s; }
+        .principle-card:nth-child(3) { animation-delay: 0.15s; }
+        .principle-card:nth-child(4) { animation-delay: 0.2s; }
+        .principle-card:nth-child(5) { animation-delay: 0.25s; }
+        .principle-card:nth-child(6) { animation-delay: 0.3s; }
+        .principle-card:nth-child(7) { animation-delay: 0.35s; }
+        .principle-card:nth-child(8) { animation-delay: 0.4s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Gestalt Principles and Perception</div>
+            <div class="subtitle">Visual Organization Principles for Effective Data Visualization</div>
+        </div>
+        
+        <div class="principles-grid">
+            <!-- Proximity -->
+            <div class="principle-card">
+                <div class="principle-name">Proximity</div>
+                <div class="visual-example">
+                    <div class="proximity-visual">
+                        <div class="proximity-group">
+                            <div class="proximity-dot"></div>
+                            <div class="proximity-dot"></div>
+                            <div class="proximity-dot"></div>
+                        </div>
+                        <div class="proximity-group">
+                            <div class="proximity-dot"></div>
+                            <div class="proximity-dot"></div>
+                            <div class="proximity-dot"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="principle-description">Objects close together are grouped</div>
+            </div>
+            
+            <!-- Similarity -->
+            <div class="principle-card">
+                <div class="principle-name">Similarity</div>
+                <div class="visual-example">
+                    <div class="similarity-visual">
+                        <div class="similarity-shape circle"></div>
+                        <div class="similarity-shape"></div>
+                        <div class="similarity-shape circle"></div>
+                        <div class="similarity-shape"></div>
+                        <div class="similarity-shape circle"></div>
+                        <div class="similarity-shape"></div>
+                        <div class="similarity-shape circle"></div>
+                        <div class="similarity-shape"></div>
+                    </div>
+                </div>
+                <div class="principle-description">Similar elements grouped together</div>
+            </div>
+            
+            <!-- Continuity -->
+            <div class="principle-card">
+                <div class="principle-name">Continuity</div>
+                <div class="visual-example">
+                    <div class="continuity-visual">
+                        <div class="continuity-line"></div>
+                        <div class="continuity-dot"></div>
+                        <div class="continuity-dot"></div>
+                        <div class="continuity-dot"></div>
+                        <div class="continuity-dot"></div>
+                    </div>
+                </div>
+                <div class="principle-description">Eyes follow smooth paths</div>
+            </div>
+            
+            <!-- Closure -->
+            <div class="principle-card">
+                <div class="principle-name">Closure</div>
+                <div class="visual-example">
+                    <div class="closure-visual">
+                        <div class="closure-circle"></div>
+                    </div>
+                </div>
+                <div class="principle-description">Mind completes shapes</div>
+            </div>
+            
+            <!-- Figure-Ground -->
+            <div class="principle-card">
+                <div class="principle-name">Figure-Ground</div>
+                <div class="visual-example">
+                    <div class="figureground-visual">
+                        <div class="fg-background">
+                            <div class="fg-figure"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="principle-description">Objects vs background</div>
+            </div>
+            
+            <!-- Common Fate -->
+            <div class="principle-card">
+                <div class="principle-name">Common Fate</div>
+                <div class="visual-example">
+                    <div class="fate-visual">
+                        <div class="fate-group">
+                            <div class="fate-dot"></div>
+                            <div class="fate-dot"></div>
+                            <div class="fate-dot"></div>
+                        </div>
+                        <div class="fate-arrow">→</div>
+                    </div>
+                </div>
+                <div class="principle-description">Moving together = related</div>
+            </div>
+            
+            <!-- Symmetry -->
+            <div class="principle-card">
+                <div class="principle-name">Symmetry</div>
+                <div class="visual-example">
+                    <div class="symmetry-visual">
+                        <div class="symmetry-half">
+                            <div class="symmetry-bar"></div>
+                            <div class="symmetry-bar"></div>
+                            <div class="symmetry-bar"></div>
+                        </div>
+                        <div class="symmetry-divider"></div>
+                        <div class="symmetry-half">
+                            <div class="symmetry-bar"></div>
+                            <div class="symmetry-bar"></div>
+                            <div class="symmetry-bar"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="principle-description">Balanced compositions</div>
+            </div>
+            
+            <!-- Application -->
+            <div class="principle-card">
+                <div class="principle-name">Application</div>
+                <div class="visual-example">
+                    <div class="application-visual">
+                        <div class="app-icon">👁️</div>
+                        <div class="app-arrow">→</div>
+                        <div class="app-icon">🎯</div>
+                    </div>
+                </div>
+                <div class="principle-description">Guide viewer attention</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

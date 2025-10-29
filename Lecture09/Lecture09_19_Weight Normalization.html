@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weight Normalization</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: #ffffff;
+            padding: 20px 40px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 25px;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1.1fr 1fr;
+            gap: 25px;
+            height: 450px;
+        }
+        
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        
+        .formula-box {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 12px;
+            padding: 24px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .formula-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+        }
+        
+        .formula {
+            font-family: 'Courier New', monospace;
+            font-size: 24px;
+            color: #2c3e50;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            line-height: 1.8;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .decouple-visual {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 15px 0;
+        }
+        
+        .param-box {
+            background: white;
+            border-radius: 10px;
+            padding: 16px;
+            text-align: center;
+            min-width: 140px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .param-symbol {
+            font-size: 36px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .param-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .param-desc {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .plus-sign {
+            font-size: 32px;
+            color: #1E64C8;
+            font-weight: bold;
+        }
+        
+        .comparison-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 16px;
+        }
+        
+        .comparison-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .comparison-item {
+            background: #f8f9fb;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            border: 2px solid;
+        }
+        
+        .weight-norm-item {
+            border-color: #1E64C8;
+        }
+        
+        .batch-norm-item {
+            border-color: #90caf9;
+        }
+        
+        .item-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .item-title.weight {
+            color: #1E64C8;
+        }
+        
+        .item-title.batch {
+            color: #42a5f5;
+        }
+        
+        .item-text {
+            font-size: 13px;
+            color: #2c3e50;
+        }
+        
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .section-header {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 5px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .feature-card {
+            background: #f8f9fb;
+            border-left: 4px solid #1E64C8;
+            padding: 13px 16px;
+            border-radius: 6px;
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.5;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            background: #eef3fb;
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(30, 100, 200, 0.15);
+        }
+        
+        .highlight {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .usage-box {
+            background: #e8f5e9;
+            border: 2px solid #4caf50;
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin-top: 10px;
+        }
+        
+        .usage-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #4caf50;
+            margin-bottom: 8px;
+        }
+        
+        .usage-text {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+        
+        .note-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .note-text {
+            font-size: 15px;
+            color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Weight Normalization</div>
+        
+        <div class="main-content">
+            <div class="left-section">
+                <div class="formula-box">
+                    <div class="formula-title">Reparameterization</div>
+                    
+                    <div class="formula">
+                        w = g · (v / ||v||)
+                    </div>
+                    
+                    <div class="decouple-visual">
+                        <div class="param-box">
+                            <div class="param-symbol">g</div>
+                            <div class="param-label">Magnitude</div>
+                            <div class="param-desc">Scale</div>
+                        </div>
+                        
+                        <div class="plus-sign">×</div>
+                        
+                        <div class="param-box">
+                            <div class="param-symbol">v/||v||</div>
+                            <div class="param-label">Direction</div>
+                            <div class="param-desc">Normalized</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="comparison-box">
+                    <div class="comparison-title">Weight Norm vs Batch Norm</div>
+                    
+                    <div class="comparison-grid">
+                        <div class="comparison-item weight-norm-item">
+                            <div class="item-title weight">Weight Norm</div>
+                            <div class="item-text">Normalizes weights</div>
+                        </div>
+                        
+                        <div class="comparison-item batch-norm-item">
+                            <div class="item-title batch">Batch Norm</div>
+                            <div class="item-text">Normalizes activations</div>
+                        </div>
+                        
+                        <div class="comparison-item weight-norm-item">
+                            <div class="item-title weight">Fewer params</div>
+                            <div class="item-text">g and v only</div>
+                        </div>
+                        
+                        <div class="comparison-item batch-norm-item">
+                            <div class="item-title batch">More params</div>
+                            <div class="item-text">γ, β + statistics</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="note-box">
+                    <div class="note-text">Less commonly used in modern architectures</div>
+                </div>
+            </div>
+            
+            <div class="right-section">
+                <div class="section-header">Key Features</div>
+                
+                <div class="feature-card">
+                    <span class="highlight">Decouples magnitude (g) and direction (v)</span> of weights
+                </div>
+                
+                <div class="feature-card">
+                    Normalizes <span class="highlight">weights</span> rather than activations
+                </div>
+                
+                <div class="feature-card">
+                    <span class="highlight">Reduces parameters</span> compared to Batch Norm
+                </div>
+                
+                <div class="feature-card">
+                    <span class="highlight">Faster training</span> than Batch Norm in some cases
+                </div>
+                
+                <div class="usage-box">
+                    <div class="usage-title">✓ Works Well With</div>
+                    <div class="usage-text">
+                        <strong>RNNs</strong> and <strong>Reinforcement Learning</strong> applications
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

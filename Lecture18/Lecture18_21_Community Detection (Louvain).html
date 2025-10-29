@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Detection - Louvain Algorithm</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            padding: 25px;
+            gap: 18px;
+        }
+        
+        .header {
+            text-align: center;
+        }
+        
+        .main-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .content-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            flex: 1;
+        }
+        
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        
+        .definition-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #3a7bd5 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 18px;
+            text-align: center;
+        }
+        
+        .def-title {
+            font-size: 19px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .def-text {
+            font-size: 17px;
+            line-height: 1.4;
+            opacity: 0.95;
+        }
+        
+        .modularity-section {
+            background: #fff8f0;
+            border: 2px solid #ff9800;
+            border-radius: 12px;
+            padding: 16px;
+        }
+        
+        .mod-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #ff9800;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .mod-desc {
+            font-size: 16px;
+            color: #555;
+            text-align: center;
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+        
+        .mod-formula {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 700;
+            color: #ff9800;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .algorithm-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 16px;
+            flex: 1;
+        }
+        
+        .algo-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .phases-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .phase-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px 16px;
+        }
+        
+        .phase-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+        
+        .phase-number {
+            background: #1E64C8;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        
+        .phase-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .phase-desc {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.4;
+            padding-left: 48px;
+        }
+        
+        .phase-2 {
+            border-color: #9C27B0;
+        }
+        
+        .phase-2 .phase-number {
+            background: #9C27B0;
+        }
+        
+        .phase-2 .phase-name {
+            color: #9C27B0;
+        }
+        
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        
+        .visual-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 18px;
+            flex: 1;
+        }
+        
+        .visual-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 14px;
+            text-align: center;
+        }
+        
+        .network-visual {
+            background: white;
+            border-radius: 10px;
+            padding: 16px;
+            height: 200px;
+            position: relative;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .community {
+            position: absolute;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 14px;
+        }
+        
+        .comm-1 {
+            background: #1E64C8;
+            width: 80px;
+            height: 80px;
+            top: 20%;
+            left: 15%;
+        }
+        
+        .comm-2 {
+            background: #4CAF50;
+            width: 90px;
+            height: 90px;
+            top: 15%;
+            right: 15%;
+        }
+        
+        .comm-3 {
+            background: #ff9800;
+            width: 70px;
+            height: 70px;
+            bottom: 20%;
+            left: 20%;
+        }
+        
+        .comm-4 {
+            background: #9C27B0;
+            width: 85px;
+            height: 85px;
+            bottom: 15%;
+            right: 18%;
+        }
+        
+        .connection-line {
+            position: absolute;
+            height: 2px;
+            background: #ccc;
+            opacity: 0.4;
+        }
+        
+        .advantages-section {
+            background: #e8f5e9;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            padding: 14px 16px;
+        }
+        
+        .adv-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #4CAF50;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .adv-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+        
+        .adv-item {
+            background: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 16px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .adv-icon {
+            color: #4CAF50;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .applications-section {
+            background: #f3e5f5;
+            border: 2px solid #9C27B0;
+            border-radius: 10px;
+            padding: 14px 16px;
+        }
+        
+        .app-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #9C27B0;
+            margin-bottom: 10px;
+        }
+        
+        .app-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .app-tag {
+            background: white;
+            color: #9C27B0;
+            padding: 6px 14px;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 500;
+            border: 1px solid #9C27B0;
+        }
+        
+        .iteration-note {
+            background: #e8f4ff;
+            border-left: 4px solid #1E64C8;
+            padding: 10px 14px;
+            border-radius: 4px;
+            font-size: 16px;
+            color: #1E64C8;
+            font-weight: 600;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="main-title">Community Detection - Louvain Algorithm</div>
+            <div class="subtitle">Finding Densely Connected Groups in Networks</div>
+        </div>
+        
+        <div class="content-layout">
+            <div class="left-section">
+                <div class="definition-box">
+                    <div class="def-title">👥 Communities</div>
+                    <div class="def-text">Densely connected groups with sparse inter-group connections</div>
+                </div>
+                
+                <div class="modularity-section">
+                    <div class="mod-title">📊 Modularity Optimization</div>
+                    <div class="mod-desc">Measure of community structure quality</div>
+                    <div class="mod-formula">Q = Σ [e_in - (d_tot/2m)²]</div>
+                </div>
+                
+                <div class="algorithm-section">
+                    <div class="algo-title">Two-Phase Iterative Approach</div>
+                    <div class="phases-container">
+                        <div class="phase-card">
+                            <div class="phase-header">
+                                <div class="phase-number">1</div>
+                                <div class="phase-name">Local Phase</div>
+                            </div>
+                            <div class="phase-desc">
+                                Move nodes to neighboring communities to maximize modularity gain
+                            </div>
+                        </div>
+                        
+                        <div class="phase-card phase-2">
+                            <div class="phase-header">
+                                <div class="phase-number">2</div>
+                                <div class="phase-name">Global Phase</div>
+                            </div>
+                            <div class="phase-desc">
+                                Aggregate communities into super-nodes, build new network
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="iteration-note">
+                        🔄 Iterate until modularity cannot be improved
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-section">
+                <div class="visual-section">
+                    <div class="visual-title">Community Structure Visualization</div>
+                    <div class="network-visual">
+                        <div class="community comm-1">C1</div>
+                        <div class="community comm-2">C2</div>
+                        <div class="community comm-3">C3</div>
+                        <div class="community comm-4">C4</div>
+                        
+                        <!-- Connection lines -->
+                        <div class="connection-line" style="top: 40%; left: 28%; width: 40%; transform: rotate(-5deg);"></div>
+                        <div class="connection-line" style="top: 55%; left: 28%; width: 20%; transform: rotate(45deg);"></div>
+                        <div class="connection-line" style="bottom: 35%; left: 32%; width: 35%; transform: rotate(10deg);"></div>
+                    </div>
+                </div>
+                
+                <div class="advantages-section">
+                    <div class="adv-title">
+                        <span>✓</span>
+                        <span>Key Advantages</span>
+                    </div>
+                    <div class="adv-grid">
+                        <div class="adv-item">
+                            <span class="adv-icon">⚡</span>
+                            <span>Fast & Scalable</span>
+                        </div>
+                        <div class="adv-item">
+                            <span class="adv-icon">🌳</span>
+                            <span>Hierarchical</span>
+                        </div>
+                        <div class="adv-item">
+                            <span class="adv-icon">📈</span>
+                            <span>Large Networks</span>
+                        </div>
+                        <div class="adv-item">
+                            <span class="adv-icon">🎯</span>
+                            <span>High Quality</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="applications-section">
+                    <div class="app-title">🎯 Applications</div>
+                    <div class="app-tags">
+                        <div class="app-tag">Social Networks</div>
+                        <div class="app-tag">Protein Interactions</div>
+                        <div class="app-tag">Web Analysis</div>
+                        <div class="app-tag">Citation Networks</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

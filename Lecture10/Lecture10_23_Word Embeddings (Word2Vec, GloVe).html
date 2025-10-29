@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Embeddings - Word2Vec & GloVe</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Aptos', 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            padding: 30px;
+        }
+        
+        .title {
+            font-size: 26px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .definition-box {
+            background: #F0F6FF;
+            border-left: 4px solid #1E64C8;
+            padding: 12px 20px;
+            margin-bottom: 20px;
+            font-size: 17px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .methods-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+            margin-bottom: 18px;
+        }
+        
+        .method-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 16px;
+        }
+        
+        .method-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .method-icon {
+            font-size: 28px;
+        }
+        
+        .method-name {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .method-description {
+            background: #F0F6FF;
+            padding: 12px 14px;
+            border-radius: 6px;
+            font-size: 16px;
+            color: #333;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+        
+        .method-variants {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .variant-tag {
+            background: white;
+            border: 1px solid #1E64C8;
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 15px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .properties-section {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 16px 18px;
+            margin-bottom: 18px;
+        }
+        
+        .prop-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .properties-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .property-item {
+            background: #F0F6FF;
+            border: 1px solid #1E64C8;
+            border-radius: 6px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .prop-icon {
+            font-size: 20px;
+        }
+        
+        .prop-text {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .analogy-section {
+            background: #F0F6FF;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin-bottom: 15px;
+        }
+        
+        .analogy-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .analogy-formula {
+            background: white;
+            border: 1px solid #1E64C8;
+            border-radius: 6px;
+            padding: 12px 16px;
+            text-align: center;
+            font-size: 18px;
+            color: #333;
+            font-weight: 500;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .dimensions-box {
+            background: #1E64C8;
+            color: white;
+            border-radius: 10px;
+            padding: 12px 20px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .dim-highlight {
+            font-size: 20px;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Word Embeddings: Word2Vec & GloVe</div>
+        
+        <div class="definition-box">
+            Dense vector representations that capture semantic relationships
+        </div>
+        
+        <div class="methods-grid">
+            <div class="method-card">
+                <div class="method-header">
+                    <div class="method-icon">🔤</div>
+                    <div class="method-name">Word2Vec</div>
+                </div>
+                <div class="method-description">
+                    Learns embeddings from local context
+                </div>
+                <div class="method-variants">
+                    <div class="variant-tag">CBOW</div>
+                    <div class="variant-tag">Skip-gram</div>
+                </div>
+            </div>
+            
+            <div class="method-card">
+                <div class="method-header">
+                    <div class="method-icon">🌐</div>
+                    <div class="method-name">GloVe</div>
+                </div>
+                <div class="method-description">
+                    Learns from global word co-occurrence statistics
+                </div>
+            </div>
+        </div>
+        
+        <div class="properties-section">
+            <div class="prop-title">Key Properties</div>
+            <div class="properties-grid">
+                <div class="property-item">
+                    <div class="prop-icon">🎯</div>
+                    <div class="prop-text">Similar words have similar vectors</div>
+                </div>
+                <div class="property-item">
+                    <div class="prop-icon">📦</div>
+                    <div class="prop-text">Much lower dimensions than vocabulary</div>
+                </div>
+                <div class="property-item">
+                    <div class="prop-icon">🔄</div>
+                    <div class="prop-text">Transfer learning to downstream tasks</div>
+                </div>
+                <div class="property-item">
+                    <div class="prop-icon">🧮</div>
+                    <div class="prop-text">Captures semantic analogies</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="analogy-section">
+            <div class="analogy-title">🎓 Classic Analogy Example</div>
+            <div class="analogy-formula">
+                king - man + woman ≈ queen
+            </div>
+        </div>
+        
+        <div class="dimensions-box">
+            ⚙️ Typical Dimensions: <span class="dim-highlight">100-300</span> (vs. thousands in vocabulary size)
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Representation Diagram</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 30px 40px;
+            background: white;
+        }
+        
+        .title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+        
+        .method-card {
+            background: white;
+            border: 3px solid #1E64C8;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        
+        .method-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(30, 100, 200, 0.25);
+        }
+        
+        .method-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 15px;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .method-desc {
+            font-size: 17px;
+            color: #333;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+        
+        .characteristics {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        
+        .char-item {
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            color: #555;
+        }
+        
+        .char-item::before {
+            content: "✓";
+            color: #1E64C8;
+            font-weight: bold;
+            margin-right: 8px;
+            font-size: 17px;
+        }
+        
+        .fp-details {
+            margin-top: 20px;
+        }
+        
+        .fp-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .fp-types {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .fp-type {
+            background: #f8fbff;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        
+        .fp-type-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .bit-structure {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 16px;
+            color: #333;
+        }
+        
+        .bit-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+        
+        .bit-label {
+            font-weight: 600;
+            color: #1E64C8;
+            min-width: 70px;
+        }
+        
+        .bit-value {
+            color: #555;
+        }
+        
+        .range-info {
+            background: #fff4e6;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 16px;
+            color: #333;
+            text-align: center;
+            margin-top: 8px;
+            font-weight: 500;
+        }
+        
+        .range-highlight {
+            color: #1E64C8;
+            font-weight: 700;
+        }
+        
+        .tradeoff {
+            background: #f0f5fc;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 18px 25px;
+            text-align: center;
+        }
+        
+        .tradeoff-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 10px;
+        }
+        
+        .tradeoff-items {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            font-size: 18px;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .tradeoff-arrow {
+            color: #1E64C8;
+            font-size: 20px;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Number Representation Methods - Fixed Point vs. Floating Point</div>
+        
+        <div class="comparison-grid">
+            <div class="method-card">
+                <div class="method-name">Fixed Point</div>
+                <div class="method-desc">Integer with implicit decimal position</div>
+                <div class="characteristics">
+                    <div class="char-item">Fast computation</div>
+                    <div class="char-item">Limited range</div>
+                    <div class="char-item">Fixed precision</div>
+                </div>
+            </div>
+            
+            <div class="method-card">
+                <div class="method-name">Floating Point</div>
+                <div class="method-desc">Sign + Exponent + Mantissa</div>
+                <div class="characteristics">
+                    <div class="char-item">Flexible representation</div>
+                    <div class="char-item">Wide range</div>
+                    <div class="char-item">Slower processing</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="fp-details">
+            <div class="fp-title">Floating Point Formats</div>
+            <div class="fp-types">
+                <div class="fp-type">
+                    <div class="fp-type-name">FP32 (32 bits)</div>
+                    <div class="bit-row">
+                        <span class="bit-label">Sign:</span>
+                        <span class="bit-value">1 bit</span>
+                    </div>
+                    <div class="bit-row">
+                        <span class="bit-label">Exponent:</span>
+                        <span class="bit-value">8 bits</span>
+                    </div>
+                    <div class="bit-row">
+                        <span class="bit-label">Mantissa:</span>
+                        <span class="bit-value">23 bits</span>
+                    </div>
+                    <div class="range-info">
+                        Range: <span class="range-highlight">±3.4×10³⁸</span>
+                    </div>
+                </div>
+                
+                <div class="fp-type">
+                    <div class="fp-type-name">FP16 (16 bits)</div>
+                    <div class="bit-row">
+                        <span class="bit-label">Sign:</span>
+                        <span class="bit-value">1 bit</span>
+                    </div>
+                    <div class="bit-row">
+                        <span class="bit-label">Exponent:</span>
+                        <span class="bit-value">5 bits</span>
+                    </div>
+                    <div class="bit-row">
+                        <span class="bit-label">Mantissa:</span>
+                        <span class="bit-value">10 bits</span>
+                    </div>
+                    <div class="range-info">
+                        Range: <span class="range-highlight">±6.5×10⁴</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tradeoff" style="margin-top: 20px;">
+            <div class="tradeoff-title">Key Trade-off</div>
+            <div class="tradeoff-items">
+                <span>Precision</span>
+                <span class="tradeoff-arrow">⇄</span>
+                <span>Memory</span>
+                <span class="tradeoff-arrow">⇄</span>
+                <span>Speed</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

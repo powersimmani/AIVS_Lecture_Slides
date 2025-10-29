@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noise Schedule Improvements</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 18px;
+        }
+        
+        .title {
+            font-size: 26px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .schedules-section {
+            margin-bottom: 18px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .schedules-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        
+        .schedule-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px 18px;
+            transition: all 0.3s ease;
+        }
+        
+        .schedule-card:hover {
+            border-color: #1E64C8;
+            box-shadow: 0 4px 15px rgba(30, 100, 200, 0.2);
+            transform: translateY(-3px);
+        }
+        
+        .original-card {
+            border-color: #E74C3C;
+            border-width: 3px;
+        }
+        
+        .improved-card {
+            border-color: #27AE60;
+            border-width: 3px;
+        }
+        
+        .advanced-card {
+            border-color: #9B59B6;
+            border-width: 3px;
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .card-icon {
+            font-size: 24px;
+        }
+        
+        .card-badge {
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            color: white;
+        }
+        
+        .original-badge {
+            background: #E74C3C;
+        }
+        
+        .improved-badge {
+            background: #27AE60;
+        }
+        
+        .advanced-badge {
+            background: #9B59B6;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .card-desc {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.4;
+        }
+        
+        .card-formula {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 6px 10px;
+            margin-top: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #333;
+        }
+        
+        .concepts-section {
+            background: linear-gradient(135deg, #e6f2ff 0%, #f0f8ff 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+        }
+        
+        .concepts-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .concept-item {
+            background: white;
+            border-radius: 8px;
+            padding: 12px 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .concept-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        
+        .concept-content {
+            flex: 1;
+        }
+        
+        .concept-label {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .concept-value {
+            font-size: 15px;
+            color: #555;
+        }
+        
+        .impact-box {
+            background: linear-gradient(135deg, #27AE60 0%, #2ECC71 100%);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(39, 174, 96, 0.25);
+        }
+        
+        .impact-text {
+            font-size: 17px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">Noise Schedule Improvements</div>
+            <div class="subtitle">Part 6/7: Advanced Techniques</div>
+        </div>
+        
+        <div class="schedules-section">
+            <div class="section-title">📈 Evolution of Noise Schedules</div>
+            
+            <div class="schedules-grid">
+                <!-- Linear Schedule -->
+                <div class="schedule-card original-card">
+                    <div class="card-header">
+                        <div class="card-icon">📏</div>
+                        <div class="card-badge original-badge">Original</div>
+                    </div>
+                    <div class="card-title">Linear Schedule</div>
+                    <div class="card-desc">Original DDPM approach</div>
+                    <div class="card-formula">β_t: 1e-4 → 0.02</div>
+                </div>
+                
+                <!-- Cosine Schedule -->
+                <div class="schedule-card improved-card">
+                    <div class="card-header">
+                        <div class="card-icon">〰️</div>
+                        <div class="card-badge improved-badge">Improved</div>
+                    </div>
+                    <div class="card-title">Cosine Schedule</div>
+                    <div class="card-desc">Smoother transition, better for high-res</div>
+                </div>
+                
+                <!-- Learned Schedule -->
+                <div class="schedule-card advanced-card">
+                    <div class="card-header">
+                        <div class="card-icon">🧠</div>
+                        <div class="card-badge advanced-badge">Advanced</div>
+                    </div>
+                    <div class="card-title">Learned Schedule</div>
+                    <div class="card-desc">Network learns optimal β_t during training</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="concepts-section">
+            <div class="section-title">🔬 Key Concepts & Innovations</div>
+            
+            <div class="concepts-grid">
+                <div class="concept-item">
+                    <div class="concept-icon">📊</div>
+                    <div class="concept-content">
+                        <div class="concept-label">Signal-to-Noise Ratio</div>
+                        <div class="concept-value">SNR(t) = ᾱ_t / (1-ᾱ_t)</div>
+                    </div>
+                </div>
+                
+                <div class="concept-item">
+                    <div class="concept-icon">🎯</div>
+                    <div class="concept-content">
+                        <div class="concept-label">V-parameterization</div>
+                        <div class="concept-value">Predict velocity v_t instead of noise</div>
+                    </div>
+                </div>
+                
+                <div class="concept-item">
+                    <div class="concept-icon">⚡</div>
+                    <div class="concept-content">
+                        <div class="concept-label">EDM Framework</div>
+                        <div class="concept-value">Exponential noise for better scaling</div>
+                    </div>
+                </div>
+                
+                <div class="concept-item">
+                    <div class="concept-icon">♾️</div>
+                    <div class="concept-content">
+                        <div class="concept-label">Continuous Time</div>
+                        <div class="concept-value">Formulate as continuous SDE</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="impact-box">
+            <div class="impact-text">✨ Impact: Better sample quality and training stability</div>
+        </div>
+    </div>
+</body>
+</html>

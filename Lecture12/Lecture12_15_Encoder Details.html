@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encoder Details</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #ffffff;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 40px;
+            position: relative;
+        }
+        
+        .content {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 30px;
+            height: 100%;
+        }
+        
+        /* Left: Architecture */
+        .architecture-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 24px;
+            border-top: 5px solid #1E64C8;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .title-icon {
+            width: 32px;
+            height: 32px;
+            background: #1E64C8;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+        
+        /* Architecture Flow */
+        .encoder-flow {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            padding: 10px 0;
+        }
+        
+        .flow-step {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .step-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            text-align: center;
+        }
+        
+        .step-visual {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        /* Input Layer */
+        .input-tokens {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .token {
+            padding: 10px 16px;
+            background: white;
+            border: 2px solid #d0d9e3;
+            border-radius: 6px;
+            font-size: 16px;
+            color: #555;
+            font-weight: 500;
+        }
+        
+        /* Embedding Layer */
+        .embedding-boxes {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .embed-box {
+            width: 70px;
+            height: 55px;
+            background: #e8f2ff;
+            border: 2px solid #1E64C8;
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .embed-label {
+            font-size: 11px;
+            opacity: 0.8;
+        }
+        
+        /* RNN Processing */
+        .rnn-cells {
+            display: flex;
+            gap: 8px;
+            position: relative;
+        }
+        
+        .rnn-cell {
+            width: 70px;
+            height: 70px;
+            background: #1E64C8;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            position: relative;
+        }
+        
+        .cell-main {
+            font-size: 16px;
+        }
+        
+        .cell-sub {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+        
+        .h-arrow-line {
+            position: absolute;
+            top: 50%;
+            height: 3px;
+            background: white;
+            opacity: 0.6;
+        }
+        
+        .arrow-1 {
+            left: 78px;
+            width: 8px;
+        }
+        
+        .arrow-2 {
+            left: 156px;
+            width: 8px;
+        }
+        
+        .arrow-3 {
+            left: 234px;
+            width: 8px;
+        }
+        
+        /* Context Vector */
+        .context-output {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+        
+        .context-box {
+            width: 100px;
+            height: 70px;
+            background: linear-gradient(135deg, #1E64C8, #0d3d7a);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 6px 20px rgba(30, 100, 200, 0.4);
+        }
+        
+        .context-label-top {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+        
+        .context-value {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .context-desc {
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+            max-width: 150px;
+        }
+        
+        /* Arrows between steps */
+        .step-arrow {
+            text-align: center;
+            font-size: 28px;
+            color: #1E64C8;
+            line-height: 1;
+        }
+        
+        /* Right: Details */
+        .details-section {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .detail-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 16px;
+            border-left: 4px solid #1E64C8;
+        }
+        
+        .detail-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .detail-icon {
+            font-size: 18px;
+        }
+        
+        .detail-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .detail-item {
+            display: flex;
+            align-items: start;
+            gap: 8px;
+            font-size: 15px;
+            color: #555;
+            line-height: 1.4;
+        }
+        
+        .bullet {
+            color: #1E64C8;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        /* Formula Box */
+        .formula-box {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            border: 2px solid #1E64C8;
+            margin-top: 8px;
+        }
+        
+        .formula {
+            font-size: 16px;
+            color: #1E64C8;
+            font-weight: 600;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <!-- Left: Architecture -->
+            <div class="architecture-section">
+                <div class="section-title">
+                    <div class="title-icon">⚙</div>
+                    <span>Encoder Processing Flow</span>
+                </div>
+                
+                <div class="encoder-flow">
+                    <!-- Step 1: Input -->
+                    <div class="flow-step">
+                        <div class="step-label">① Input Tokens</div>
+                        <div class="step-visual">
+                            <div class="input-tokens">
+                                <div class="token">I</div>
+                                <div class="token">love</div>
+                                <div class="token">AI</div>
+                                <div class="token">⟨EOS⟩</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="step-arrow">↓</div>
+                    
+                    <!-- Step 2: Embedding -->
+                    <div class="flow-step">
+                        <div class="step-label">② Word Embeddings</div>
+                        <div class="step-visual">
+                            <div class="embedding-boxes">
+                                <div class="embed-box">
+                                    <div>e₁</div>
+                                    <div class="embed-label">d-dim</div>
+                                </div>
+                                <div class="embed-box">
+                                    <div>e₂</div>
+                                    <div class="embed-label">d-dim</div>
+                                </div>
+                                <div class="embed-box">
+                                    <div>e₃</div>
+                                    <div class="embed-label">d-dim</div>
+                                </div>
+                                <div class="embed-box">
+                                    <div>e₄</div>
+                                    <div class="embed-label">d-dim</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="step-arrow">↓</div>
+                    
+                    <!-- Step 3: RNN Processing -->
+                    <div class="flow-step">
+                        <div class="step-label">③ RNN Processing (LSTM/GRU)</div>
+                        <div class="step-visual">
+                            <div class="rnn-cells">
+                                <div class="rnn-cell">
+                                    <div class="cell-main">h₁</div>
+                                    <div class="cell-sub">t=1</div>
+                                </div>
+                                <div class="h-arrow-line arrow-1"></div>
+                                <div class="rnn-cell">
+                                    <div class="cell-main">h₂</div>
+                                    <div class="cell-sub">t=2</div>
+                                </div>
+                                <div class="h-arrow-line arrow-2"></div>
+                                <div class="rnn-cell">
+                                    <div class="cell-main">h₃</div>
+                                    <div class="cell-sub">t=3</div>
+                                </div>
+                                <div class="h-arrow-line arrow-3"></div>
+                                <div class="rnn-cell">
+                                    <div class="cell-main">h₄</div>
+                                    <div class="cell-sub">t=4</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="step-arrow">↓</div>
+                    
+                    <!-- Step 4: Context Vector -->
+                    <div class="flow-step">
+                        <div class="step-label">④ Context Vector</div>
+                        <div class="context-output">
+                            <div class="context-box">
+                                <div class="context-label-top">c = h₄</div>
+                                <div class="context-value">Context</div>
+                            </div>
+                            <div class="context-desc">
+                                Final hidden state captures entire input
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right: Details -->
+            <div class="details-section">
+                <!-- Key Components -->
+                <div class="detail-card">
+                    <div class="detail-title">
+                        <span class="detail-icon">🔧</span>
+                        <span>Key Components</span>
+                    </div>
+                    <div class="detail-list">
+                        <div class="detail-item">
+                            <span class="bullet">•</span>
+                            <span><strong>Embedding Layer:</strong> Convert tokens to vectors</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="bullet">•</span>
+                            <span><strong>RNN:</strong> LSTM or GRU for sequential processing</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="bullet">•</span>
+                            <span><strong>Hidden States:</strong> Maintain temporal information</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Computation -->
+                <div class="detail-card">
+                    <div class="detail-title">
+                        <span class="detail-icon">📐</span>
+                        <span>Computation</span>
+                    </div>
+                    <div class="detail-list">
+                        <div class="detail-item">
+                            <span class="bullet">•</span>
+                            <span>Process input sequentially left-to-right</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="bullet">•</span>
+                            <span>Each step updates hidden state</span>
+                        </div>
+                    </div>
+                    <div class="formula-box">
+                        <div class="formula">h_t = f(x_t, h_{t-1})</div>
+                    </div>
+                </div>
+                
+                <!-- Output -->
+                <div class="detail-card">
+                    <div class="detail-title">
+                        <span class="detail-icon">🎯</span>
+                        <span>Output</span>
+                    </div>
+                    <div class="detail-list">
+                        <div class="detail-item">
+                            <span class="bullet">•</span>
+                            <span><strong>Context vector (c):</strong> Final hidden state h_n</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="bullet">•</span>
+                            <span>Fixed-size representation of variable-length input</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="bullet">•</span>
+                            <span>Passed to decoder as initial state</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

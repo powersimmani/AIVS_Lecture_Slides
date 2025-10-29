@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary Cross-Entropy Loss</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px;
+            position: relative;
+        }
+        
+        .title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .content-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            height: calc(100% - 50px);
+        }
+        
+        .loss-formula-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            border-radius: 10px;
+            padding: 20px 24px;
+            color: white;
+            text-align: center;
+        }
+        
+        .formula-label {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            opacity: 0.95;
+        }
+        
+        .formula-text {
+            font-size: 22px;
+            font-weight: 700;
+            font-style: italic;
+        }
+        
+        .properties-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        
+        .property-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 14px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .property-card:hover {
+            background: #f8fbff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.15);
+        }
+        
+        .property-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        
+        .property-text {
+            font-size: 15px;
+            color: #333;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+        
+        .cases-section {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .case-box {
+            background: white;
+            border: 3px solid;
+            border-radius: 10px;
+            padding: 16px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .case-1 {
+            border-color: #28a745;
+        }
+        
+        .case-0 {
+            border-color: #dc3545;
+        }
+        
+        .case-header {
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .case-1 .case-header {
+            background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+        }
+        
+        .case-0 .case-header {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        }
+        
+        .case-loss {
+            background: #f8f9fa;
+            border-radius: 6px;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .case-loss-label {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+        
+        .case-loss-formula {
+            font-size: 18px;
+            font-weight: 700;
+            font-style: italic;
+        }
+        
+        .case-1 .case-loss-formula {
+            color: #28a745;
+        }
+        
+        .case-0 .case-loss-formula {
+            color: #dc3545;
+        }
+        
+        .case-minimize {
+            font-size: 15px;
+            color: #555;
+            text-align: center;
+            line-height: 1.4;
+        }
+        
+        .insights-section {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .insight-card {
+            background: white;
+            border: 2px solid #ffc107;
+            border-left: 5px solid #ffc107;
+            border-radius: 8px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .insight-icon {
+            width: 32px;
+            height: 32px;
+            background: #ffc107;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .insight-text {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+            flex: 1;
+        }
+        
+        .total-loss-box {
+            background: linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%);
+            border-radius: 8px;
+            padding: 14px 18px;
+            color: white;
+            text-align: center;
+            font-size: 17px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Binary Cross-Entropy Loss</div>
+        
+        <div class="content-layout">
+            <!-- Loss Formula -->
+            <div class="loss-formula-box">
+                <div class="formula-label">Loss Function:</div>
+                <div class="formula-text">L = -[y log(ŷ) + (1-y)log(1-ŷ)]</div>
+            </div>
+            
+            <!-- Properties -->
+            <div class="properties-row">
+                <div class="property-card">
+                    <div class="property-icon">⚠</div>
+                    <div class="property-text">
+                        Penalizes wrong predictions heavily
+                    </div>
+                </div>
+                
+                <div class="property-card">
+                    <div class="property-icon">∪</div>
+                    <div class="property-text">
+                        Convex function: Guaranteed global minimum
+                    </div>
+                </div>
+                
+                <div class="property-card">
+                    <div class="property-icon">⚖</div>
+                    <div class="property-text">
+                        Asymmetric penalty: Confident wrong predictions costly
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Cases -->
+            <div class="cases-section">
+                <div class="case-box case-1">
+                    <div class="case-header">If y = 1</div>
+                    <div class="case-loss">
+                        <div class="case-loss-label">Loss:</div>
+                        <div class="case-loss-formula">-log(ŷ)</div>
+                    </div>
+                    <div class="case-minimize">
+                        Minimized when ŷ → 1
+                    </div>
+                </div>
+                
+                <div class="case-box case-0">
+                    <div class="case-header">If y = 0</div>
+                    <div class="case-loss">
+                        <div class="case-loss-label">Loss:</div>
+                        <div class="case-loss-formula">-log(1-ŷ)</div>
+                    </div>
+                    <div class="case-minimize">
+                        Minimized when ŷ → 0
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Insights -->
+            <div class="insights-section">
+                <div class="insight-card">
+                    <div class="insight-icon">💡</div>
+                    <div class="insight-text">
+                        Asymmetric penalty structure
+                    </div>
+                </div>
+                
+                <div class="insight-card">
+                    <div class="insight-icon">💰</div>
+                    <div class="insight-text">
+                        Confident wrong predictions are costly
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Total Loss -->
+            <div class="total-loss-box">
+                Total Loss: Average over all training examples
+            </div>
+        </div>
+    </div>
+</body>
+</html>

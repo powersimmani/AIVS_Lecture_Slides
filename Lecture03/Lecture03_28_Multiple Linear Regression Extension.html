@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiple Linear Regression Extension</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: #ffffff;
+            position: relative;
+            padding: 25px 35px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .header-title {
+            font-size: 20px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .model-equation {
+            background: #1E64C8;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .eq-formula {
+            font-size: 17px;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .eq-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            flex: 1;
+        }
+        
+        .left-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 11px;
+        }
+        
+        .comparison-table {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 15px;
+        }
+        
+        .table-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .table-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+        
+        .table-cell {
+            background: #f8fafb;
+            padding: 8px 10px;
+            border-radius: 4px;
+            font-size: 15px;
+            text-align: center;
+            border: 1px solid #1E64C8;
+        }
+        
+        .table-cell.header {
+            background: #1E64C8;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .matrix-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 15px;
+        }
+        
+        .matrix-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .matrix-formula {
+            background: #f8fafb;
+            padding: 8px 10px;
+            border-radius: 4px;
+            font-size: 16px;
+            color: #333;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            margin-bottom: 6px;
+        }
+        
+        .matrix-note {
+            font-size: 14px;
+            color: #555;
+            text-align: center;
+        }
+        
+        .interpretation-box {
+            background: #f0f7ff;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 15px;
+        }
+        
+        .interp-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .interp-content {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 11px;
+        }
+        
+        .concept-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 11px 15px;
+        }
+        
+        .concept-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+        
+        .concept-content {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .r-squared-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 15px;
+        }
+        
+        .r2-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .r2-item {
+            background: #f8fafb;
+            padding: 8px 10px;
+            border-radius: 4px;
+            margin-bottom: 6px;
+        }
+        
+        .r2-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 3px;
+        }
+        
+        .r2-formula {
+            font-size: 14px;
+            color: #555;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .r2-desc {
+            font-size: 14px;
+            color: #555;
+            margin-top: 2px;
+        }
+        
+        .warning-box {
+            background: #fff3cd;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 11px 15px;
+        }
+        
+        .warning-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+        
+        .warning-content {
+            font-size: 15px;
+            color: #333;
+            text-align: center;
+            line-height: 1.4;
+        }
+        
+        .feature-box {
+            background: #1E64C8;
+            color: white;
+            border-radius: 8px;
+            padding: 11px 15px;
+            text-align: center;
+        }
+        
+        .feature-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .feature-content {
+            font-size: 15px;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-title">Multiple Linear Regression Extension</div>
+        </div>
+        
+        <div class="model-equation">
+            <div class="eq-formula">Y = β₀ + β₁X₁ + β₂X₂ + ... + βₚXₚ + ε</div>
+            <div class="eq-subtitle">Multiple predictors model</div>
+        </div>
+        
+        <div class="main-grid">
+            <div class="left-panel">
+                <div class="comparison-table">
+                    <div class="table-title">Simple vs Multiple Regression</div>
+                    <div class="table-row">
+                        <div class="table-cell header">Aspect</div>
+                        <div class="table-cell header">Simple</div>
+                    </div>
+                    <div class="table-row">
+                        <div class="table-cell">Predictors</div>
+                        <div class="table-cell">1 variable</div>
+                    </div>
+                    <div class="table-row">
+                        <div class="table-cell">Model</div>
+                        <div class="table-cell">Y = β₀ + β₁X</div>
+                    </div>
+                    <div class="table-row">
+                        <div class="table-cell header">Aspect</div>
+                        <div class="table-cell header">Multiple</div>
+                    </div>
+                    <div class="table-row">
+                        <div class="table-cell">Predictors</div>
+                        <div class="table-cell">p variables</div>
+                    </div>
+                    <div class="table-row">
+                        <div class="table-cell">Model</div>
+                        <div class="table-cell">Y = Xβ</div>
+                    </div>
+                </div>
+                
+                <div class="matrix-box">
+                    <div class="matrix-title">Matrix Notation</div>
+                    <div class="matrix-formula">Y = Xβ + ε</div>
+                    <div class="matrix-note">X ∈ ℝⁿˣ⁽ᵖ⁺¹⁾</div>
+                </div>
+                
+                <div class="matrix-box">
+                    <div class="matrix-title">Same Solution</div>
+                    <div class="matrix-formula">β̂ = (XᵀX)⁻¹XᵀY</div>
+                    <div class="matrix-note">Normal equation applies</div>
+                </div>
+                
+                <div class="interpretation-box">
+                    <div class="interp-title">Coefficient Interpretation</div>
+                    <div class="interp-content">
+                        βⱼ is the effect of Xⱼ<br>
+                        <strong>holding all other predictors constant</strong>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <div class="r-squared-box">
+                    <div class="r2-title">Model Fit Metrics</div>
+                    <div class="r2-item">
+                        <div class="r2-label">R² (R-squared)</div>
+                        <div class="r2-formula">R² = 1 - SSE/SST</div>
+                        <div class="r2-desc">Proportion of variance explained</div>
+                    </div>
+                    <div class="r2-item">
+                        <div class="r2-label">Adjusted R²</div>
+                        <div class="r2-desc">Penalizes model complexity</div>
+                    </div>
+                </div>
+                
+                <div class="warning-box">
+                    <div class="warning-title">⚠️ Multicollinearity</div>
+                    <div class="warning-content">
+                        Correlated predictors<br>
+                        cause instability in estimates
+                    </div>
+                </div>
+                
+                <div class="concept-box">
+                    <div class="concept-title">Challenges</div>
+                    <div class="concept-content">
+                        • Increased complexity<br>
+                        • More parameters to estimate<br>
+                        • Risk of overfitting<br>
+                        • Interpretation becomes harder
+                    </div>
+                </div>
+                
+                <div class="feature-box">
+                    <div class="feature-title">Feature Selection</div>
+                    <div class="feature-content">
+                        Choosing relevant predictors<br>
+                        to improve model performance
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

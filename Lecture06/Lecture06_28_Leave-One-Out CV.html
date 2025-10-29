@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leave-One-Out CV</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: white;
+            font-family: Aptos, 'Segoe UI', sans-serif;
+        }
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+            padding: 30px;
+            box-sizing: border-box;
+        }
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+        }
+        .concept-section {
+            background: #f8f9fb;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 18px;
+        }
+        .concept-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .visual-demo {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .iteration-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .iteration-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #555;
+            min-width: 90px;
+        }
+        .sample-blocks {
+            display: flex;
+            gap: 3px;
+            flex: 1;
+        }
+        .sample-block {
+            width: 40px;
+            height: 30px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+            color: white;
+        }
+        .train-sample {
+            background: #1E64C8;
+        }
+        .test-sample {
+            background: #e74c3c;
+        }
+        .dots {
+            color: #999;
+            font-size: 20px;
+            align-self: center;
+        }
+        
+        .formula-card {
+            background: #f8f9fb;
+            border-left: 5px solid #1E64C8;
+            padding: 18px;
+            border-radius: 8px;
+            margin-bottom: 18px;
+        }
+        .formula-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .formula-box {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            color: #1E64C8;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .formula-desc {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            margin-bottom: 18px;
+        }
+        .comparison-card {
+            background: #f8f9fb;
+            border-radius: 8px;
+            padding: 18px;
+        }
+        .advantages {
+            border-top: 4px solid #27ae60;
+        }
+        .disadvantages {
+            border-top: 4px solid #e74c3c;
+        }
+        .comparison-title {
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        .advantages .comparison-title {
+            color: #27ae60;
+        }
+        .disadvantages .comparison-title {
+            color: #e74c3c;
+        }
+        .comparison-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .comparison-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 15px;
+            color: #555;
+            line-height: 1.5;
+        }
+        .item-icon {
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        
+        .use-case-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .use-case-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .use-case-text {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Leave-One-Out Cross Validation (LOOCV)</div>
+        
+        <div class="concept-section">
+            <div class="concept-title">🔄 Process: K = N (where N = dataset size)</div>
+            <div class="visual-demo">
+                <div class="iteration-row">
+                    <div class="iteration-label">Iteration 1:</div>
+                    <div class="sample-blocks">
+                        <div class="sample-block test-sample">1</div>
+                        <div class="sample-block train-sample">2</div>
+                        <div class="sample-block train-sample">3</div>
+                        <div class="sample-block train-sample">4</div>
+                        <div class="sample-block train-sample">5</div>
+                        <div class="sample-block train-sample">6</div>
+                        <div class="sample-block train-sample">7</div>
+                        <div class="sample-block train-sample">8</div>
+                        <div class="sample-block train-sample">9</div>
+                        <div class="sample-block train-sample">10</div>
+                    </div>
+                </div>
+                
+                <div class="iteration-row">
+                    <div class="iteration-label">Iteration 2:</div>
+                    <div class="sample-blocks">
+                        <div class="sample-block train-sample">1</div>
+                        <div class="sample-block test-sample">2</div>
+                        <div class="sample-block train-sample">3</div>
+                        <div class="sample-block train-sample">4</div>
+                        <div class="sample-block train-sample">5</div>
+                        <div class="sample-block train-sample">6</div>
+                        <div class="sample-block train-sample">7</div>
+                        <div class="sample-block train-sample">8</div>
+                        <div class="sample-block train-sample">9</div>
+                        <div class="sample-block train-sample">10</div>
+                    </div>
+                </div>
+                
+                <div class="iteration-row">
+                    <div class="iteration-label">Iteration 3:</div>
+                    <div class="sample-blocks">
+                        <div class="sample-block train-sample">1</div>
+                        <div class="sample-block train-sample">2</div>
+                        <div class="sample-block test-sample">3</div>
+                        <div class="sample-block train-sample">4</div>
+                        <div class="sample-block train-sample">5</div>
+                        <div class="sample-block train-sample">6</div>
+                        <div class="sample-block train-sample">7</div>
+                        <div class="sample-block train-sample">8</div>
+                        <div class="sample-block train-sample">9</div>
+                        <div class="sample-block train-sample">10</div>
+                    </div>
+                </div>
+                
+                <div class="dots">⋮</div>
+                
+                <div class="iteration-row">
+                    <div class="iteration-label">Iteration N:</div>
+                    <div class="sample-blocks">
+                        <div class="sample-block train-sample">1</div>
+                        <div class="sample-block train-sample">2</div>
+                        <div class="sample-block train-sample">3</div>
+                        <div class="sample-block train-sample">4</div>
+                        <div class="sample-block train-sample">5</div>
+                        <div class="sample-block train-sample">6</div>
+                        <div class="sample-block train-sample">7</div>
+                        <div class="sample-block train-sample">8</div>
+                        <div class="sample-block train-sample">9</div>
+                        <div class="sample-block test-sample">10</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="formula-card">
+            <div class="formula-title">📊 Final Performance</div>
+            <div class="formula-box">
+                Performance = Σ(score₁ + score₂ + ... + scoreₙ) / N
+            </div>
+            <div class="formula-desc">
+                Average of N individual predictions where N = total samples
+            </div>
+        </div>
+
+        <div class="comparison-grid">
+            <div class="comparison-card advantages">
+                <div class="comparison-title">✅ Advantages</div>
+                <div class="comparison-list">
+                    <div class="comparison-item">
+                        <span class="item-icon">📊</span>
+                        <span>Maximum use of data (N-1 samples for training)</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="item-icon">🎯</span>
+                        <span>Nearly unbiased estimate of model performance</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="item-icon">✓</span>
+                        <span>Deterministic (no randomness in splits)</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="comparison-card disadvantages">
+                <div class="comparison-title">❌ Disadvantages</div>
+                <div class="comparison-list">
+                    <div class="comparison-item">
+                        <span class="item-icon">⏱️</span>
+                        <span>Computationally expensive (N model trainings)</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="item-icon">📈</span>
+                        <span>High variance in performance estimates</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="item-icon">⚠️</span>
+                        <span>Not practical for large datasets</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="use-case-box">
+            <div class="use-case-title">💡 When to Use</div>
+            <div class="use-case-text">
+                Best for small datasets where data is precious • Avoid for large datasets due to computational cost
+            </div>
+        </div>
+    </div>
+</body>
+</html>

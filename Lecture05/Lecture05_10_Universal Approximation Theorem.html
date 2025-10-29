@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal Approximation Theorem</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Aptos', 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            padding: 40px;
+        }
+        
+        .main-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+        }
+        
+        .theorem-statement {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .theorem-text {
+            font-size: 18px;
+            line-height: 1.6;
+            font-weight: 500;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            flex: 1;
+        }
+        
+        .visual-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+        }
+        
+        .approximation-demo {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            border: 2px solid #1E64C8;
+            flex: 1;
+            position: relative;
+        }
+        
+        .canvas-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        
+        canvas {
+            width: 100%;
+            height: 100%;
+            border-radius: 4px;
+            background: white;
+        }
+        
+        .legend {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 3px 0;
+        }
+        
+        .legend-line {
+            width: 25px;
+            height: 2px;
+        }
+        
+        .target-line {
+            background: #d32f2f;
+        }
+        
+        .approx-line {
+            background: #1E64C8;
+        }
+        
+        .key-points-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .key-point-card {
+            background: #f8f9fa;
+            border-left: 4px solid #1E64C8;
+            padding: 15px;
+            border-radius: 4px;
+        }
+        
+        .point-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        
+        .point-number {
+            width: 28px;
+            height: 28px;
+            background: #1E64C8;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        
+        .point-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .point-text {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.5;
+        }
+        
+        .implications {
+            grid-column: 1 / -1;
+            background: #fff3cd;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            border-radius: 4px;
+        }
+        
+        .implications-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #e65100;
+            margin-bottom: 8px;
+        }
+        
+        .implications-text {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-title">Universal Approximation Theorem</div>
+        
+        <div class="theorem-statement">
+            <div class="theorem-text">
+                A neural network with a single hidden layer containing a finite number of neurons can approximate any continuous function on a compact subset of ℝⁿ to arbitrary accuracy.
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <!-- Visual Demonstration -->
+            <div class="visual-section">
+                <div class="section-title">Function Approximation</div>
+                <div class="approximation-demo">
+                    <div class="canvas-container">
+                        <canvas id="approximationCanvas"></canvas>
+                        <div class="legend">
+                            <div class="legend-item">
+                                <div class="legend-line target-line"></div>
+                                <span>Target Function</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-line approx-line"></div>
+                                <span>Neural Network</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Key Points -->
+            <div class="key-points-section">
+                <div class="section-title">Key Insights</div>
+                
+                <div class="key-point-card">
+                    <div class="point-header">
+                        <div class="point-number">1</div>
+                        <div class="point-title">Theoretical Power</div>
+                    </div>
+                    <div class="point-text">
+                        Single hidden layer is theoretically sufficient for any continuous function
+                    </div>
+                </div>
+                
+                <div class="key-point-card">
+                    <div class="point-header">
+                        <div class="point-number">2</div>
+                        <div class="point-title">Width vs Depth</div>
+                    </div>
+                    <div class="point-text">
+                        May need exponentially many neurons; deeper networks are more efficient
+                    </div>
+                </div>
+                
+                <div class="key-point-card">
+                    <div class="point-header">
+                        <div class="point-number">3</div>
+                        <div class="point-title">Practical Learning</div>
+                    </div>
+                    <div class="point-text">
+                        Theorem doesn't guarantee efficient learning or generalization
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Implications -->
+            <div class="implications">
+                <div class="implications-title">⚡ Practical Implication</div>
+                <div class="implications-text">
+                    While theoretically powerful, we use deep networks in practice because they learn hierarchical features more efficiently and generalize better than wide shallow networks.
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const canvas = document.getElementById('approximationCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        function resizeCanvas() {
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * window.devicePixelRatio;
+            canvas.height = rect.height * window.devicePixelRatio;
+            ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+            drawApproximation();
+        }
+        
+        function drawApproximation() {
+            const width = canvas.width / window.devicePixelRatio;
+            const height = canvas.height / window.devicePixelRatio;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, width, height);
+            
+            // Draw axes
+            ctx.strokeStyle = '#ddd';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(30, height - 30);
+            ctx.lineTo(width - 20, height - 30);
+            ctx.moveTo(30, 20);
+            ctx.lineTo(30, height - 30);
+            ctx.stroke();
+            
+            // Axis labels
+            ctx.fillStyle = '#666';
+            ctx.font = '12px Aptos, Segoe UI, sans-serif';
+            ctx.fillText('x', width - 15, height - 15);
+            ctx.fillText('f(x)', 35, 15);
+            
+            const startX = 40;
+            const endX = width - 30;
+            const centerY = height / 2;
+            const amplitude = height * 0.3;
+            
+            // Target function (complex curve)
+            ctx.strokeStyle = '#d32f2f';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            
+            for (let x = startX; x <= endX; x += 1) {
+                const t = (x - startX) / (endX - startX);
+                const y = centerY - amplitude * (
+                    Math.sin(t * Math.PI * 4) * 0.5 + 
+                    Math.sin(t * Math.PI * 2) * 0.3 +
+                    Math.cos(t * Math.PI * 3) * 0.2
+                );
+                
+                if (x === startX) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            }
+            ctx.stroke();
+            
+            // Neural network approximation (slightly different)
+            ctx.strokeStyle = '#1E64C8';
+            ctx.lineWidth = 2.5;
+            ctx.setLineDash([5, 3]);
+            ctx.beginPath();
+            
+            for (let x = startX; x <= endX; x += 1) {
+                const t = (x - startX) / (endX - startX);
+                const targetY = Math.sin(t * Math.PI * 4) * 0.5 + 
+                               Math.sin(t * Math.PI * 2) * 0.3 +
+                               Math.cos(t * Math.PI * 3) * 0.2;
+                
+                // Add slight approximation error
+                const noise = Math.sin(t * Math.PI * 20) * 0.02;
+                const y = centerY - amplitude * (targetY + noise);
+                
+                if (x === startX) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            }
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            // Add annotation
+            ctx.fillStyle = '#1E64C8';
+            ctx.font = '14px Aptos, Segoe UI, sans-serif';
+            const annotationX = width / 2 - 50;
+            const annotationY = height - 50;
+            ctx.fillText('Approximation Error → 0', annotationX, annotationY);
+            ctx.fillText('as neurons → ∞', annotationX + 20, annotationY + 18);
+        }
+        
+        window.addEventListener('load', resizeCanvas);
+        window.addEventListener('resize', resizeCanvas);
+    </script>
+</body>
+</html>

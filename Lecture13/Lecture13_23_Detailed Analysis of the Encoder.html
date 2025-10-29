@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detailed Analysis of the Encoder</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 30px;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .main-content {
+            display: flex;
+            gap: 16px;
+            flex: 1;
+        }
+        
+        .layer-visualization {
+            flex: 1.2;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .encoder-layer-box {
+            background: #f0f7ff;
+            border: 3px solid #1E64C8;
+            border-radius: 12px;
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .layer-header {
+            text-align: center;
+            font-size: 19px;
+            font-weight: 600;
+            color: #1E64C8;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .sublayer-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 14px 16px;
+            position: relative;
+        }
+        
+        .sublayer-number {
+            position: absolute;
+            top: -12px;
+            left: 12px;
+            background: #1E64C8;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 700;
+        }
+        
+        .sublayer-content {
+            margin-left: 32px;
+        }
+        
+        .sublayer-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .sublayer-description {
+            font-size: 15px;
+            color: #333;
+        }
+        
+        .residual-indicator {
+            text-align: center;
+            font-size: 14px;
+            color: #16a34a;
+            font-weight: 600;
+            margin: -4px 0;
+        }
+        
+        .arrow-down {
+            text-align: center;
+            color: #1E64C8;
+            font-size: 20px;
+            height: 4px;
+        }
+        
+        .properties-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .property-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 14px 16px;
+            display: flex;
+            gap: 12px;
+            align-items: start;
+        }
+        
+        .property-icon {
+            font-size: 26px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .property-content {
+            flex: 1;
+        }
+        
+        .property-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .property-text {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .highlight {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .stack-info {
+            background: #fff9f0;
+            border: 2px solid #f59e0b;
+            border-radius: 8px;
+            padding: 12px 16px;
+            text-align: center;
+        }
+        
+        .stack-icon {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+        
+        .stack-text {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .stack-highlight {
+            font-weight: 600;
+            color: #d97700;
+        }
+        
+        .dimension-badge {
+            background: #f0fdf4;
+            border: 2px solid #16a34a;
+            border-radius: 8px;
+            padding: 10px 16px;
+            text-align: center;
+        }
+        
+        .dimension-text {
+            font-size: 16px;
+            color: #333;
+        }
+        
+        .dimension-value {
+            font-weight: 600;
+            color: #16a34a;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Detailed Analysis of the Encoder</div>
+        
+        <div class="main-content">
+            <div class="layer-visualization">
+                <div class="encoder-layer-box">
+                    <div class="layer-header">🔷 Single Encoder Layer</div>
+                    
+                    <div class="sublayer-box">
+                        <div class="sublayer-number">1</div>
+                        <div class="sublayer-content">
+                            <div class="sublayer-title">Multi-Head Self-Attention</div>
+                            <div class="sublayer-description">
+                                Captures relationships between all positions
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="residual-indicator">+ Residual → Layer Norm</div>
+                    
+                    <div class="arrow-down">↓</div>
+                    
+                    <div class="sublayer-box">
+                        <div class="sublayer-number">2</div>
+                        <div class="sublayer-content">
+                            <div class="sublayer-title">Feed-Forward Network</div>
+                            <div class="sublayer-description">
+                                Position-wise transformation
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="residual-indicator">+ Residual → Layer Norm</div>
+                </div>
+                
+                <div class="stack-info">
+                    <div class="stack-icon">📚</div>
+                    <div class="stack-text">
+                        This structure is <span class="stack-highlight">repeated 6 times</span> (stacked layers)<br>
+                        Each layer has <span class="stack-highlight">different parameters</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="properties-section">
+                <div class="property-card">
+                    <div class="property-icon">🔄</div>
+                    <div class="property-content">
+                        <div class="property-title">Residual Connections</div>
+                        <div class="property-text">
+                            Around <span class="highlight">each sub-layer</span> to help gradient flow
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="property-card">
+                    <div class="property-icon">📊</div>
+                    <div class="property-content">
+                        <div class="property-title">Layer Normalization</div>
+                        <div class="property-text">
+                            Applied <span class="highlight">after each sub-layer</span> for stability
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="property-card">
+                    <div class="property-icon">🏗️</div>
+                    <div class="property-content">
+                        <div class="property-title">Same Structure</div>
+                        <div class="property-text">
+                            All layers share <span class="highlight">identical structure</span> but have different parameters
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dimension-badge">
+                    <div class="dimension-text">
+                        Output dimension <span class="highlight">preserved</span> throughout:<br>
+                        <span class="dimension-value">d_model = 512</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

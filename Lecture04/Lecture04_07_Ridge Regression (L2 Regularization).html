@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ridge Regression (L2)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px;
+            position: relative;
+        }
+        
+        .title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .content-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            height: calc(100% - 50px);
+        }
+        
+        .problem-solution-row {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .problem-box {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            border-radius: 10px;
+            padding: 18px 20px;
+            color: white;
+            text-align: center;
+        }
+        
+        .problem-label {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            opacity: 0.9;
+        }
+        
+        .problem-text {
+            font-size: 17px;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+        
+        .arrow-divider {
+            font-size: 32px;
+            color: #1E64C8;
+            font-weight: bold;
+        }
+        
+        .solution-box {
+            background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+            border-radius: 10px;
+            padding: 18px 20px;
+            color: white;
+            text-align: center;
+        }
+        
+        .solution-label {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            opacity: 0.9;
+        }
+        
+        .solution-text {
+            font-size: 17px;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+        
+        .cost-function-box {
+            background: white;
+            border: 3px solid #1E64C8;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .cost-label {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+        
+        .cost-formula {
+            font-size: 20px;
+            color: #1E64C8;
+            font-weight: 600;
+            font-style: italic;
+            letter-spacing: 0.5px;
+        }
+        
+        .cost-description {
+            font-size: 16px;
+            color: #666;
+            margin-top: 10px;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            flex: 1;
+        }
+        
+        .feature-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-left: 5px solid #1E64C8;
+            border-radius: 8px;
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            transition: all 0.3s;
+        }
+        
+        .feature-card:hover {
+            background: #f8fbff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.15);
+        }
+        
+        .feature-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .feature-icon {
+            font-size: 20px;
+        }
+        
+        .feature-desc {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.4;
+        }
+        
+        .lambda-card {
+            grid-column: span 2;
+            background: #fff8e6;
+            border-color: #ffc107;
+            border-left-color: #ffc107;
+        }
+        
+        .lambda-card .feature-title {
+            color: #f57c00;
+        }
+        
+        .benefit-card {
+            grid-column: span 2;
+            background: #e8f5e9;
+            border-color: #28a745;
+            border-left-color: #28a745;
+        }
+        
+        .benefit-card .feature-title {
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Ridge Regression (L2 Regularization)</div>
+        
+        <div class="content-layout">
+            <!-- Problem → Solution -->
+            <div class="problem-solution-row">
+                <div class="problem-box">
+                    <div class="problem-label">PROBLEM</div>
+                    <div class="problem-text">Large coefficients<br>lead to overfitting</div>
+                </div>
+                
+                <div class="arrow-divider">→</div>
+                
+                <div class="solution-box">
+                    <div class="solution-label">SOLUTION</div>
+                    <div class="solution-text">Add penalty term<br>for large coefficients</div>
+                </div>
+            </div>
+            
+            <!-- Cost Function -->
+            <div class="cost-function-box">
+                <div class="cost-label">Cost Function:</div>
+                <div class="cost-formula">RSS + λ∑βᵢ²</div>
+                <div class="cost-description">(L2 Penalty)</div>
+            </div>
+            
+            <!-- Features Grid -->
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-title">
+                        <span class="feature-icon">📉</span>
+                        Coefficient Shrinkage
+                    </div>
+                    <div class="feature-desc">
+                        Shrinks coefficients toward zero (but not exactly zero)
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-title">
+                        <span class="feature-icon">⚙️</span>
+                        Hyperparameter λ
+                    </div>
+                    <div class="feature-desc">
+                        Controls regularization strength
+                    </div>
+                </div>
+                
+                <div class="feature-card lambda-card">
+                    <div class="feature-title">
+                        <span class="feature-icon">📊</span>
+                        Effect of λ
+                    </div>
+                    <div class="feature-desc">
+                        Larger λ → more regularization, simpler model
+                    </div>
+                </div>
+                
+                <div class="feature-card benefit-card">
+                    <div class="feature-title">
+                        <span class="feature-icon">✓</span>
+                        Key Benefit
+                    </div>
+                    <div class="feature-desc">
+                        Helps with multicollinearity problem
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

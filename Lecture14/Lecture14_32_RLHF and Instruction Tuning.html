@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RLHF and Instruction Tuning</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: #ffffff;
+            padding: 25px 40px;
+        }
+        
+        .title {
+            font-size: 26px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .subtitle {
+            font-size: 17px;
+            color: #666666;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        /* RLHF Pipeline */
+        .pipeline-section {
+            background: #F8F9FA;
+            border: 3px solid #1E64C8;
+            border-radius: 12px;
+            padding: 15px 18px;
+        }
+        
+        .pipeline-title {
+            font-size: 19px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .stages-flow {
+            display: flex;
+            align-items: stretch;
+            gap: 15px;
+        }
+        
+        .stage-box {
+            flex: 1;
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .stage-header {
+            text-align: center;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .stage-number {
+            display: inline-block;
+            background: #1E64C8;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            line-height: 28px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .stage-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .stage-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .stage-desc {
+            font-size: 14px;
+            color: #333333;
+            line-height: 1.4;
+            text-align: center;
+        }
+        
+        .stage-icon {
+            font-size: 32px;
+            text-align: center;
+            margin: 8px 0;
+        }
+        
+        .arrow-large {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: #1E64C8;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        /* Benefits Section */
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        
+        .benefit-card {
+            background: #E8F5E9;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            padding: 12px 15px;
+            text-align: center;
+        }
+        
+        .benefit-icon {
+            font-size: 32px;
+            margin-bottom: 6px;
+        }
+        
+        .benefit-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2E7D32;
+            margin-bottom: 4px;
+        }
+        
+        .benefit-text {
+            font-size: 14px;
+            color: #1B5E20;
+            line-height: 1.3;
+        }
+        
+        /* Additional Concepts */
+        .concepts-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        
+        .concept-card {
+            background: #E8F4F8;
+            border-left: 4px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        
+        .concept-icon {
+            font-size: 32px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .concept-content {
+            flex: 1;
+        }
+        
+        .concept-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .concept-text {
+            font-size: 16px;
+            color: #333333;
+            line-height: 1.4;
+        }
+        
+        /* Success Box */
+        .success-box {
+            background: #FFF9E6;
+            border: 3px solid #FFC107;
+            border-radius: 10px;
+            padding: 12px 18px;
+            text-align: center;
+        }
+        
+        .success-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #F57C00;
+            margin-bottom: 6px;
+        }
+        
+        .success-text {
+            font-size: 16px;
+            color: #555555;
+            line-height: 1.4;
+        }
+        
+        .highlight {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">RLHF and Instruction Tuning</div>
+        <div class="subtitle">Reinforcement Learning from Human Feedback</div>
+        
+        <div class="main-content">
+            <!-- RLHF Pipeline -->
+            <div class="pipeline-section">
+                <div class="pipeline-title">🔄 Three-Stage RLHF Pipeline</div>
+                <div class="stages-flow">
+                    <!-- Stage 1 -->
+                    <div class="stage-box">
+                        <div class="stage-header">
+                            <div class="stage-number">1</div>
+                            <div class="stage-title">Supervised Fine-tuning</div>
+                        </div>
+                        <div class="stage-content">
+                            <div class="stage-icon">📚</div>
+                            <div class="stage-desc">
+                                Train on high-quality demonstration data
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="arrow-large">→</div>
+                    
+                    <!-- Stage 2 -->
+                    <div class="stage-box">
+                        <div class="stage-header">
+                            <div class="stage-number">2</div>
+                            <div class="stage-title">Reward Model</div>
+                        </div>
+                        <div class="stage-content">
+                            <div class="stage-icon">⭐</div>
+                            <div class="stage-desc">
+                                Learn human preferences from comparisons
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="arrow-large">→</div>
+                    
+                    <!-- Stage 3 -->
+                    <div class="stage-box">
+                        <div class="stage-header">
+                            <div class="stage-number">3</div>
+                            <div class="stage-title">PPO Training</div>
+                        </div>
+                        <div class="stage-content">
+                            <div class="stage-icon">🎯</div>
+                            <div class="stage-desc">
+                                Optimize policy using reward model
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Benefits -->
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">🤝</div>
+                    <div class="benefit-title">Helpfulness</div>
+                    <div class="benefit-text">
+                        Better at following instructions
+                    </div>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon">✓</div>
+                    <div class="benefit-title">Truthfulness</div>
+                    <div class="benefit-text">
+                        More accurate and reliable
+                    </div>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon">🛡️</div>
+                    <div class="benefit-title">Safety</div>
+                    <div class="benefit-text">
+                        Reduces harmful outputs
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Additional Concepts -->
+            <div class="concepts-section">
+                <div class="concept-card">
+                    <div class="concept-icon">📋</div>
+                    <div class="concept-content">
+                        <div class="concept-title">Instruction Tuning</div>
+                        <div class="concept-text">
+                            Train on <span class="highlight">diverse task instructions</span> to improve generalization
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="concept-card">
+                    <div class="concept-icon">⚖️</div>
+                    <div class="concept-content">
+                        <div class="concept-title">Constitutional AI</div>
+                        <div class="concept-text">
+                            <span class="highlight">Self-improvement</span> through principles and guidelines
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Success Box -->
+            <div class="success-box">
+                <div class="success-title">🎉 Key to Success</div>
+                <div class="success-text">
+                    <strong>RLHF and Instruction Tuning</strong> are fundamental to the success of <strong>ChatGPT</strong> and other assistant models
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

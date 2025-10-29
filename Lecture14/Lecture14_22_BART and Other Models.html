@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BART and Other Encoder-Decoder Models</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: #ffffff;
+            padding: 25px 40px;
+        }
+        
+        .title {
+            font-size: 26px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .main-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        /* BART Architecture */
+        .bart-section {
+            background: #F8F9FA;
+            border: 3px solid #1E64C8;
+            border-radius: 12px;
+            padding: 15px 18px;
+        }
+        
+        .bart-title {
+            font-size: 19px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .bart-subtitle {
+            font-size: 16px;
+            color: #666666;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .architecture-flow {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            justify-content: center;
+        }
+        
+        .flow-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 15px;
+            text-align: center;
+            flex: 1;
+            max-width: 180px;
+        }
+        
+        .flow-box.corrupt {
+            background: #FFE0B2;
+            border-color: #FF9800;
+        }
+        
+        .flow-box.encoder {
+            background: #E8F4F8;
+        }
+        
+        .flow-box.decoder {
+            background: #C8E6C9;
+            border-color: #4CAF50;
+        }
+        
+        .flow-label {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .flow-box.corrupt .flow-label {
+            color: #E65100;
+        }
+        
+        .flow-box.encoder .flow-label {
+            color: #1E64C8;
+        }
+        
+        .flow-box.decoder .flow-label {
+            color: #2E7D32;
+        }
+        
+        .flow-desc {
+            font-size: 14px;
+            color: #333333;
+        }
+        
+        .arrow {
+            font-size: 28px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        /* Corruption Schemes */
+        .corruption-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .corruption-card {
+            background: white;
+            border: 2px solid #FF9800;
+            border-radius: 6px;
+            padding: 8px 10px;
+        }
+        
+        .corruption-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #E65100;
+            margin-bottom: 4px;
+        }
+        
+        .corruption-example {
+            font-size: 13px;
+            color: #666666;
+            font-family: 'Courier New', monospace;
+        }
+        
+        /* Other Models */
+        .models-section {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .model-card {
+            background: #E8F4F8;
+            border-left: 4px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        
+        .model-icon {
+            font-size: 28px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .model-content {
+            flex: 1;
+        }
+        
+        .model-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .model-desc {
+            font-size: 16px;
+            color: #333333;
+            line-height: 1.4;
+        }
+        
+        /* Key Strength */
+        .strength-box {
+            background: #FFF9E6;
+            border: 3px solid #FFC107;
+            border-radius: 10px;
+            padding: 12px 18px;
+            text-align: center;
+        }
+        
+        .strength-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #F57C00;
+            margin-bottom: 6px;
+        }
+        
+        .strength-text {
+            font-size: 16px;
+            color: #555555;
+            line-height: 1.4;
+        }
+        
+        .highlight {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">BART and Other Encoder-Decoder Models</div>
+        
+        <div class="main-layout">
+            <!-- BART Architecture -->
+            <div class="bart-section">
+                <div class="bart-title">🔄 BART: Denoising Autoencoder</div>
+                <div class="bart-subtitle">Combines BERT (Encoder) + GPT (Decoder)</div>
+                
+                <div class="architecture-flow">
+                    <div class="flow-box corrupt">
+                        <div class="flow-label">1. Corrupt Input</div>
+                        <div class="flow-desc">Add noise</div>
+                    </div>
+                    
+                    <div class="arrow">→</div>
+                    
+                    <div class="flow-box encoder">
+                        <div class="flow-label">2. Encode</div>
+                        <div class="flow-desc">BERT-style</div>
+                    </div>
+                    
+                    <div class="arrow">→</div>
+                    
+                    <div class="flow-box decoder">
+                        <div class="flow-label">3. Decode</div>
+                        <div class="flow-desc">GPT-style</div>
+                    </div>
+                    
+                    <div class="arrow">→</div>
+                    
+                    <div class="flow-box">
+                        <div class="flow-label" style="color: #1E64C8;">4. Reconstruct</div>
+                        <div class="flow-desc">Original text</div>
+                    </div>
+                </div>
+                
+                <div class="corruption-grid">
+                    <div class="corruption-card">
+                        <div class="corruption-title">Token Masking</div>
+                        <div class="corruption-example">The [MASK] sat</div>
+                    </div>
+                    
+                    <div class="corruption-card">
+                        <div class="corruption-title">Token Deletion</div>
+                        <div class="corruption-example">The _ sat</div>
+                    </div>
+                    
+                    <div class="corruption-card">
+                        <div class="corruption-title">Span Infilling</div>
+                        <div class="corruption-example">The [X] mat</div>
+                    </div>
+                    
+                    <div class="corruption-card">
+                        <div class="corruption-title">Sentence Permutation</div>
+                        <div class="corruption-example">Sent2 Sent1 Sent3</div>
+                    </div>
+                    
+                    <div class="corruption-card">
+                        <div class="corruption-title">Document Rotation</div>
+                        <div class="corruption-example">...end → start...</div>
+                    </div>
+                    
+                    <div class="corruption-card">
+                        <div class="corruption-title">Text Infilling</div>
+                        <div class="corruption-example">A B [Y] E F</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Other Models -->
+            <div class="models-section">
+                <div class="model-card">
+                    <div class="model-icon">🌍</div>
+                    <div class="model-content">
+                        <div class="model-name">mBART</div>
+                        <div class="model-desc">
+                            Multilingual BART for <span class="highlight">50+ languages</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="model-card">
+                    <div class="model-icon">📝</div>
+                    <div class="model-content">
+                        <div class="model-name">PEGASUS</div>
+                        <div class="model-desc">
+                            <span class="highlight">Gap sentence generation</span> for summarization
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="model-card">
+                    <div class="model-icon">🌐</div>
+                    <div class="model-content">
+                        <div class="model-name">Marian</div>
+                        <div class="model-desc">
+                            Efficient <span class="highlight">neural machine translation</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="model-card">
+                    <div class="model-icon">⭐</div>
+                    <div class="model-content">
+                        <div class="model-name">BART Strengths</div>
+                        <div class="model-desc">
+                            Particularly strong for <span class="highlight">generation & summarization</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Key Strength -->
+            <div class="strength-box">
+                <div class="strength-title">🎯 Encoder-Decoder Models</div>
+                <div class="strength-text">
+                    Best suited for <strong>sequence-to-sequence tasks</strong> • Translation • Summarization • Question Answering
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

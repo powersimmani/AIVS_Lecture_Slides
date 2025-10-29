@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practical Design Guidelines</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            overflow-x: hidden;
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 960px;
+            width: 95vw;
+            min-height: 540px;
+            height: auto;
+            background: white;
+            position: relative;
+            overflow: hidden;
+            padding: 20px 35px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+        }
+        
+        .starting-point {
+            background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+            border: 3px solid #1E64C8;
+            border-radius: 12px;
+            padding: 12px 20px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        
+        .starting-label {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .starting-text {
+            font-size: 16px;
+            color: #333;
+        }
+        
+        .guidelines-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+        
+        .guideline-card {
+            background: white;
+            border: 3px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px 14px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .guideline-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(30, 100, 200, 0.15);
+        }
+        
+        .guideline-card.architecture {
+            background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+            border-color: #4CAF50;
+        }
+        
+        .guideline-card.components {
+            background: linear-gradient(135deg, #FFF3E0 0%, #FFE0B2 100%);
+            border-color: #FF9800;
+        }
+        
+        .guideline-card.regularization {
+            background: linear-gradient(135deg, #F3E5F5 0%, #E1BEE7 100%);
+            border-color: #9C27B0;
+        }
+        
+        .guideline-card.principles {
+            background: linear-gradient(135deg, #E0F2F1 0%, #B2DFDB 100%);
+            border-color: #009688;
+        }
+        
+        .card-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+        }
+        
+        .card-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            padding-right: 35px;
+        }
+        
+        .guideline-card.architecture .card-title {
+            color: #2E7D32;
+        }
+        
+        .guideline-card.components .card-title {
+            color: #E65100;
+        }
+        
+        .guideline-card.regularization .card-title {
+            color: #6A1B9A;
+        }
+        
+        .guideline-card.principles .card-title {
+            color: #00695C;
+        }
+        
+        .guideline-items {
+            list-style: none;
+        }
+        
+        .guideline-item {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.4;
+            margin-bottom: 6px;
+            padding-left: 18px;
+            position: relative;
+        }
+        
+        .guideline-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .guideline-item::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            font-weight: 700;
+        }
+        
+        .guideline-card.architecture .guideline-item::before {
+            color: #4CAF50;
+        }
+        
+        .guideline-card.components .guideline-item::before {
+            color: #FF9800;
+        }
+        
+        .guideline-card.regularization .guideline-item::before {
+            color: #9C27B0;
+        }
+        
+        .guideline-card.principles .guideline-item::before {
+            color: #009688;
+        }
+        
+        .validation-section {
+            background: #FFF8E1;
+            border: 3px solid #FFC107;
+            border-radius: 12px;
+            padding: 12px 18px;
+            text-align: center;
+        }
+        
+        .validation-icon {
+            font-size: 24px;
+            margin-bottom: 6px;
+        }
+        
+        .validation-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #F57F17;
+            margin-bottom: 6px;
+        }
+        
+        .validation-text {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .highlight {
+            font-weight: 700;
+            color: #F57F17;
+        }
+    
+        
+        /* Responsive adjustments */
+        @media screen and (max-width: 1000px) {
+            .container {
+                width: 98vw !important;
+                max-width: 98vw !important;
+                padding: 15px 20px !important;
+            }
+        }
+        
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: 10px 15px !important;
+            }
+            
+            .title {
+                font-size: 20px !important;
+            }
+            
+            /* 그리드 레이아웃을 1열로 */
+            .challenges-grid,
+            .comparison-grid,
+            .solutions-grid,
+            .guide-grid,
+            .findings-section,
+            .benefits-grid,
+            .applications-section,
+            .guidelines-grid,
+            .components-section,
+            .techniques-grid,
+            .deployment-section,
+            .savings-grid,
+            .results-grid,
+            .functions-grid,
+            .features-grid,
+            .comparison-section,
+            .bottom-section {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .gradient-flow,
+            .network-visual,
+            .flow-steps,
+            .bottleneck-flow,
+            .example-flow,
+            .dimension-box,
+            .inception-structure .parallel-paths,
+            .comparison-section {
+                flex-direction: column !important;
+                gap: 15px !important;
+            }
+            
+            .arrow-back,
+            .arrow,
+            .arrow-right,
+            .arrow-connector,
+            .conv-arrow {
+                transform: rotate(90deg);
+                margin: 5px 0 !important;
+            }
+            
+            /* SVG와 layer 위치 조정 */
+            .layers-container,
+            .architecture-visual {
+                height: auto !important;
+                min-height: 300px !important;
+            }
+            
+            .layer-node {
+                position: relative !important;
+                left: auto !important;
+                margin: 10px 0 !important;
+            }
+        }
+        
+        @media screen and (max-width: 480px) {
+            .container {
+                padding: 8px 10px !important;
+            }
+            
+            .title {
+                font-size: 18px !important;
+            }
+            
+            .card-header,
+            .scenario-label,
+            .card-title,
+            .function-title,
+            .arch-title,
+            .flow-title {
+                font-size: 16px !important;
+            }
+            
+            .layer-box,
+            .conv-box,
+            .step-circle,
+            .layer-circle {
+                font-size: 14px !important;
+                padding: 8px !important;
+            }
+        }
+    
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Practical Design Guidelines</div>
+        
+        <div class="starting-point">
+            <div class="starting-label">🚀 START SIMPLE</div>
+            <div class="starting-text">Begin with proven architectures (ResNet, EfficientNet), modify as needed</div>
+        </div>
+        
+        <div class="guidelines-grid">
+            <div class="guideline-card architecture">
+                <div class="card-icon">🏗️</div>
+                <div class="card-title">Architecture Choices</div>
+                <ul class="guideline-items">
+                    <li class="guideline-item">Depth vs. width: Deeper generally better</li>
+                    <li class="guideline-item">Residual connections for >10 layers</li>
+                </ul>
+            </div>
+            
+            <div class="guideline-card components">
+                <div class="card-icon">🔧</div>
+                <div class="card-title">Key Components</div>
+                <ul class="guideline-items">
+                    <li class="guideline-item">Batch norm: After conv, before activation</li>
+                    <li class="guideline-item">Activation: ReLU/GELU (avoid sigmoid/tanh)</li>
+                </ul>
+            </div>
+            
+            <div class="guideline-card regularization">
+                <div class="card-icon">🛡️</div>
+                <div class="card-title">Regularization Stack</div>
+                <ul class="guideline-items">
+                    <li class="guideline-item">Data augmentation</li>
+                    <li class="guideline-item">Dropout</li>
+                    <li class="guideline-item">Weight decay</li>
+                </ul>
+            </div>
+            
+            <div class="guideline-card principles">
+                <div class="card-icon">📐</div>
+                <div class="card-title">Architecture Principles</div>
+                <ul class="guideline-items">
+                    <li class="guideline-item">Gradually reduce spatial size</li>
+                    <li class="guideline-item">Increase channels through network</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="validation-section">
+            <div class="validation-icon">⚡</div>
+            <div class="validation-title">Validate on Real Hardware</div>
+            <div class="validation-text">
+                Consider <span class="highlight">inference speed</span> and <span class="highlight">memory</span>, not just accuracy
+            </div>
+        </div>
+    </div>
+</body>
+</html>

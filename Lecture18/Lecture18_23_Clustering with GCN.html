@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clustering with GCN</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            padding: 25px;
+            gap: 18px;
+        }
+        
+        .header {
+            text-align: center;
+        }
+        
+        .main-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .architecture-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 18px;
+            flex: 1;
+        }
+        
+        .arch-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 14px;
+            text-align: center;
+        }
+        
+        .arch-flow {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        
+        .arch-component {
+            flex: 1;
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 16px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .arch-component:hover {
+            background: #f0f6ff;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.2);
+        }
+        
+        .component-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        
+        .component-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .component-desc {
+            font-size: 15px;
+            color: #666;
+            line-height: 1.3;
+        }
+        
+        .gcn-component {
+            background: #fff8f0;
+            border-color: #ff9800;
+        }
+        
+        .gcn-component .component-title {
+            color: #ff9800;
+        }
+        
+        .embedding-component {
+            background: #f3e5f5;
+            border-color: #9C27B0;
+        }
+        
+        .embedding-component .component-title {
+            color: #9C27B0;
+        }
+        
+        .cluster-component {
+            background: #e8f5e9;
+            border-color: #4CAF50;
+        }
+        
+        .cluster-component .component-title {
+            color: #4CAF50;
+        }
+        
+        .arrow {
+            color: #1E64C8;
+            font-size: 28px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .loss-section {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .loss-card {
+            background: white;
+            border: 2px solid #f44336;
+            border-radius: 10px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .loss-icon {
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+        
+        .loss-content {
+            flex: 1;
+        }
+        
+        .loss-name {
+            font-size: 17px;
+            font-weight: 600;
+            color: #f44336;
+            margin-bottom: 4px;
+        }
+        
+        .loss-desc {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.3;
+        }
+        
+        .loss-formula {
+            background: #ffebee;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #f44336;
+            margin-top: 6px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+        
+        .features-section {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 12px;
+            padding: 14px 16px;
+        }
+        
+        .features-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .features-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .feature-item {
+            background: #f0f6ff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 16px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .feature-icon {
+            color: #1E64C8;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .advantages-section {
+            background: white;
+            border: 2px solid #4CAF50;
+            border-radius: 12px;
+            padding: 14px 16px;
+        }
+        
+        .adv-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #4CAF50;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .adv-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .adv-item {
+            background: #e8f5e9;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 16px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .adv-icon {
+            color: #4CAF50;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .training-badge {
+            background: #1E64C8;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="main-title">Clustering with Graph Convolutional Networks (GCN)</div>
+            <div class="subtitle">End-to-End Trainable Graph Clustering</div>
+        </div>
+        
+        <div class="architecture-section">
+            <div class="arch-title">GCN-based Clustering Architecture</div>
+            
+            <div class="arch-flow">
+                <div class="arch-component">
+                    <div class="component-icon">🕸️</div>
+                    <div class="component-title">Input Graph</div>
+                    <div class="component-desc">Nodes + Adjacency</div>
+                </div>
+                
+                <div class="arrow">→</div>
+                
+                <div class="arch-component gcn-component">
+                    <div class="component-icon">🧠</div>
+                    <div class="component-title">GCN Encoder</div>
+                    <div class="component-desc">Multi-layer convolutions</div>
+                </div>
+                
+                <div class="arrow">→</div>
+                
+                <div class="arch-component embedding-component">
+                    <div class="component-icon">📊</div>
+                    <div class="component-title">Node Embeddings</div>
+                    <div class="component-desc">Low-dim representations</div>
+                </div>
+                
+                <div class="arrow">→</div>
+                
+                <div class="arch-component cluster-component">
+                    <div class="component-icon">🎯</div>
+                    <div class="component-title">Clustering</div>
+                    <div class="component-desc">Assign clusters</div>
+                </div>
+            </div>
+            
+            <div class="loss-section">
+                <div class="loss-card">
+                    <div class="loss-icon">🔄</div>
+                    <div class="loss-content">
+                        <div class="loss-name">Reconstruction Loss</div>
+                        <div class="loss-desc">Preserve graph structure</div>
+                        <div class="loss-formula">L_recon = ||A - Â||²</div>
+                    </div>
+                </div>
+                
+                <div class="loss-card">
+                    <div class="loss-icon">🎯</div>
+                    <div class="loss-content">
+                        <div class="loss-name">Clustering Loss</div>
+                        <div class="loss-desc">Optimize cluster assignment</div>
+                        <div class="loss-formula">L_cluster = KL(P||Q)</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="training-badge">
+                End-to-End Trainable: L_total = L_recon + λ·L_cluster
+            </div>
+        </div>
+        
+        <div class="bottom-grid">
+            <div class="features-section">
+                <div class="features-title">
+                    <span>🔑</span>
+                    <span>Key Features</span>
+                </div>
+                <div class="features-list">
+                    <div class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Supervised or unsupervised learning</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Captures local & global structure</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Joint optimization of encoder & clustering</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="advantages-section">
+                <div class="adv-title">
+                    <span>🚀</span>
+                    <span>Advantages</span>
+                </div>
+                <div class="adv-list">
+                    <div class="adv-item">
+                        <span class="adv-icon">✓</span>
+                        <span>Outperforms spectral methods</span>
+                    </div>
+                    <div class="adv-item">
+                        <span class="adv-icon">✓</span>
+                        <span>Better on benchmarks</span>
+                    </div>
+                    <div class="adv-item">
+                        <span class="adv-icon">✓</span>
+                        <span>Learns rich node representations</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Condition Injection Methods</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .title {
+            font-size: 26px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .methods-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .method-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border-left: 5px solid #1E64C8;
+            border-radius: 8px;
+            padding: 15px 18px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(30, 100, 200, 0.08);
+        }
+        
+        .method-card:hover {
+            transform: translateX(8px);
+            box-shadow: 0 4px 15px rgba(30, 100, 200, 0.2);
+            border-left-width: 8px;
+        }
+        
+        .method-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        
+        .method-icon {
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+        
+        .method-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E64C8;
+        }
+        
+        .method-desc {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.4;
+            margin-left: 32px;
+        }
+        
+        .highlight-method {
+            border-left-color: #9B59B6;
+        }
+        
+        .highlight-method .method-title {
+            color: #9B59B6;
+        }
+        
+        .primary-method {
+            border-left-color: #27AE60;
+        }
+        
+        .primary-method .method-title {
+            color: #27AE60;
+        }
+        
+        .full-width-card {
+            grid-column: 1 / -1;
+        }
+        
+        .categories-section {
+            background: linear-gradient(135deg, #e6f2ff 0%, #f0f8ff 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 15px 20px;
+        }
+        
+        .categories-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        
+        .category-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .category-icon {
+            font-size: 24px;
+            margin-bottom: 6px;
+        }
+        
+        .category-label {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .category-items {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .note-box {
+            background: linear-gradient(135deg, #9B59B6 0%, #8E44AD 100%);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 15px;
+            box-shadow: 0 4px 15px rgba(155, 89, 182, 0.25);
+        }
+        
+        .note-text {
+            font-size: 17px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">Condition Injection Methods</div>
+            <div class="subtitle">Part 5/7: Architecture</div>
+        </div>
+        
+        <div class="methods-grid">
+            <!-- Time Embedding -->
+            <div class="method-card primary-method">
+                <div class="method-header">
+                    <div class="method-icon">⏰</div>
+                    <div class="method-title">Time Embedding</div>
+                </div>
+                <div class="method-desc">
+                    Sinusoidal positional encoding + MLP
+                </div>
+            </div>
+            
+            <!-- Class Embedding -->
+            <div class="method-card">
+                <div class="method-header">
+                    <div class="method-icon">🏷️</div>
+                    <div class="method-title">Class Embedding</div>
+                </div>
+                <div class="method-desc">
+                    Learned embedding for each class
+                </div>
+            </div>
+            
+            <!-- Text Conditioning -->
+            <div class="method-card highlight-method">
+                <div class="method-header">
+                    <div class="method-icon">📝</div>
+                    <div class="method-title">Text Conditioning</div>
+                </div>
+                <div class="method-desc">
+                    CLIP or T5 text encoder → cross-attention
+                </div>
+            </div>
+            
+            <!-- Adaptive Group Norm -->
+            <div class="method-card">
+                <div class="method-header">
+                    <div class="method-icon">📊</div>
+                    <div class="method-title">Adaptive Group Norm</div>
+                </div>
+                <div class="method-desc">
+                    Scale and shift from condition embedding
+                </div>
+            </div>
+            
+            <!-- FiLM Layers -->
+            <div class="method-card">
+                <div class="method-header">
+                    <div class="method-icon">🎬</div>
+                    <div class="method-title">FiLM Layers</div>
+                </div>
+                <div class="method-desc">
+                    Feature-wise Linear Modulation
+                </div>
+            </div>
+            
+            <!-- Concatenation -->
+            <div class="method-card">
+                <div class="method-header">
+                    <div class="method-icon">➕</div>
+                    <div class="method-title">Concatenation</div>
+                </div>
+                <div class="method-desc">
+                    Directly concat condition to input channels
+                </div>
+            </div>
+            
+            <!-- Cross-Attention -->
+            <div class="method-card highlight-method">
+                <div class="method-header">
+                    <div class="method-icon">🔗</div>
+                    <div class="method-title">Cross-Attention</div>
+                </div>
+                <div class="method-desc">
+                    Text tokens attend to image features
+                </div>
+            </div>
+            
+            <!-- Hybrid Approaches -->
+            <div class="method-card full-width-card primary-method">
+                <div class="method-header">
+                    <div class="method-icon">🔀</div>
+                    <div class="method-title">Hybrid Approaches</div>
+                </div>
+                <div class="method-desc">
+                    Combine multiple conditioning methods for optimal performance
+                </div>
+            </div>
+        </div>
+        
+        <div class="categories-section">
+            <div class="categories-title">📂 Categorization by Type</div>
+            
+            <div class="categories-grid">
+                <div class="category-box">
+                    <div class="category-icon">⏰</div>
+                    <div class="category-label">Temporal</div>
+                    <div class="category-items">Time Embedding</div>
+                </div>
+                
+                <div class="category-box">
+                    <div class="category-icon">🏷️</div>
+                    <div class="category-label">Categorical</div>
+                    <div class="category-items">Class Embedding</div>
+                </div>
+                
+                <div class="category-box">
+                    <div class="category-icon">📝</div>
+                    <div class="category-label">Textual</div>
+                    <div class="category-items">Text + Cross-Attention</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="note-box">
+            <div class="note-text">💡 Modern models often combine multiple injection methods for best results</div>
+        </div>
+    </div>
+</body>
+</html>

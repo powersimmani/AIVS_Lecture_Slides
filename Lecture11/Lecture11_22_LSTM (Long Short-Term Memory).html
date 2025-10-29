@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LSTM (Long Short-Term Memory)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+            padding: 25px 45px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 25px;
+        }
+        
+        .solution-box {
+            background: linear-gradient(135deg, #27AE60 0%, #2ECC71 100%);
+            color: white;
+            padding: 16px 30px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .solution-text {
+            font-size: 17px;
+            font-weight: 600;
+        }
+        
+        .gates-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 22px;
+        }
+        
+        .gate-card {
+            background: white;
+            border: 2.5px solid #1E64C8;
+            border-radius: 8px;
+            padding: 18px 16px;
+            text-align: center;
+            min-height: 140px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .gate-icon {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        
+        .gate-name {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .gate-description {
+            font-size: 15px;
+            color: #2C3E50;
+            line-height: 1.4;
+        }
+        
+        .memory-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            margin-bottom: 20px;
+        }
+        
+        .memory-card {
+            background: #F8FAFE;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 16px 22px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .memory-icon {
+            font-size: 32px;
+            flex-shrink: 0;
+        }
+        
+        .memory-content {
+            flex-grow: 1;
+        }
+        
+        .memory-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .memory-text {
+            font-size: 15px;
+            color: #2C3E50;
+        }
+        
+        .success-box {
+            background: #E8F1FC;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 14px 25px;
+            text-align: center;
+        }
+        
+        .success-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .success-text {
+            font-size: 16px;
+            color: #2C3E50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">LSTM (Long Short-Term Memory)</div>
+        
+        <div class="solution-box">
+            <div class="solution-text">
+                ✓ Solves vanishing gradient problem with gating mechanism
+            </div>
+        </div>
+        
+        <div class="gates-grid">
+            <div class="gate-card">
+                <div class="gate-icon">🚪</div>
+                <div class="gate-name">Forget Gate</div>
+                <div class="gate-description">
+                    Decides what to remove from cell state
+                </div>
+            </div>
+            
+            <div class="gate-card">
+                <div class="gate-icon">➕</div>
+                <div class="gate-name">Input Gate</div>
+                <div class="gate-description">
+                    Controls new information addition
+                </div>
+            </div>
+            
+            <div class="gate-card">
+                <div class="gate-icon">📤</div>
+                <div class="gate-name">Output Gate</div>
+                <div class="gate-description">
+                    Determines hidden state output
+                </div>
+            </div>
+        </div>
+        
+        <div class="memory-section">
+            <div class="memory-card">
+                <div class="memory-icon">💾</div>
+                <div class="memory-content">
+                    <div class="memory-title">Cell State</div>
+                    <div class="memory-text">Long-term memory pathway</div>
+                </div>
+            </div>
+            
+            <div class="memory-card">
+                <div class="memory-icon">🔄</div>
+                <div class="memory-content">
+                    <div class="memory-title">Hidden State</div>
+                    <div class="memory-text">Short-term working memory</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="success-box">
+            <div class="success-title">🎯 Success</div>
+            <div class="success-text">
+                Widely successful for various sequence tasks across domains
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Partial Dependence Plots (PDP)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+            padding: 25px 35px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 18px;
+        }
+        
+        .title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            font-size: 15px;
+            color: #666;
+            font-style: italic;
+        }
+        
+        /* Main content */
+        .content {
+            display: flex;
+            gap: 20px;
+            flex: 1;
+        }
+        
+        /* Plots section */
+        .plots-section {
+            flex: 1.5;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        /* 1D PDP */
+        .plot-1d {
+            flex: 1;
+            background: white;
+            border: 2px solid #E5E7EB;
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .plot-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .plot-canvas {
+            flex: 1;
+            background: #FAFAFA;
+            border-radius: 8px;
+            padding: 15px;
+            position: relative;
+        }
+        
+        svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .axis {
+            stroke: #666;
+            stroke-width: 2;
+        }
+        
+        .axis-label {
+            font-size: 13px;
+            fill: #666;
+            font-weight: 600;
+        }
+        
+        .grid-line {
+            stroke: #E5E7EB;
+            stroke-width: 1;
+        }
+        
+        .pdp-curve {
+            fill: none;
+            stroke: #1E64C8;
+            stroke-width: 3;
+        }
+        
+        .confidence-band {
+            fill: rgba(30, 100, 200, 0.1);
+        }
+        
+        /* 2D PDP Heatmap */
+        .plot-2d {
+            flex: 1;
+            background: white;
+            border: 2px solid #E5E7EB;
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .heatmap-container {
+            flex: 1;
+            background: #FAFAFA;
+            border-radius: 8px;
+            padding: 15px;
+            position: relative;
+        }
+        
+        .heatmap-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            grid-template-rows: repeat(6, 1fr);
+            gap: 2px;
+            height: calc(100% - 30px);
+        }
+        
+        .heat-cell {
+            border-radius: 2px;
+            transition: transform 0.2s;
+        }
+        
+        .heat-cell:hover {
+            transform: scale(1.1);
+            z-index: 10;
+        }
+        
+        /* Heat colors - gradient from light blue to dark blue */
+        .heat-0 { background: #E3F2FD; }
+        .heat-1 { background: #BBDEFB; }
+        .heat-2 { background: #90CAF9; }
+        .heat-3 { background: #64B5F6; }
+        .heat-4 { background: #42A5F5; }
+        .heat-5 { background: #2196F3; }
+        .heat-6 { background: #1E88E5; }
+        .heat-7 { background: #1976D2; }
+        .heat-8 { background: #1565C0; }
+        .heat-9 { background: #0D47A1; }
+        
+        .heatmap-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 12px;
+            color: #666;
+            font-weight: 600;
+        }
+        
+        .heatmap-y-label {
+            position: absolute;
+            left: -10px;
+            top: 50%;
+            transform: translateY(-50%) rotate(-90deg);
+            font-size: 13px;
+            color: #666;
+            font-weight: 600;
+        }
+        
+        /* Color scale legend */
+        .color-scale {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+            justify-content: center;
+        }
+        
+        .scale-bar {
+            width: 150px;
+            height: 12px;
+            background: linear-gradient(90deg, #E3F2FD 0%, #0D47A1 100%);
+            border-radius: 6px;
+        }
+        
+        .scale-label {
+            font-size: 11px;
+            color: #666;
+            font-weight: 600;
+        }
+        
+        /* Info section */
+        .info-section {
+            flex: 0.5;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .section-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .info-card {
+            background: #F8FAFC;
+            border-left: 4px solid #1E64C8;
+            border-radius: 8px;
+            padding: 10px 12px;
+            transition: all 0.2s;
+        }
+        
+        .info-card:hover {
+            background: #F0F7FF;
+            transform: translateX(4px);
+        }
+        
+        .info-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 3px;
+        }
+        
+        .info-desc {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.3;
+        }
+        
+        /* Key features box */
+        .features-box {
+            background: linear-gradient(135deg, #F0F7FF 0%, #E5F1FF 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: auto;
+        }
+        
+        .features-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .features-list {
+            font-size: 13px;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .warning-box {
+            background: #FFF9C4;
+            border-left: 3px solid #FBC02D;
+            border-radius: 6px;
+            padding: 10px;
+            font-size: 13px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .warning-title {
+            font-weight: 700;
+            color: #F57C00;
+            margin-bottom: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="title">Partial Dependence Plots (PDP)</div>
+            <div class="subtitle">Marginal Effect Visualization</div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="content">
+            <!-- Plots Section -->
+            <div class="plots-section">
+                <!-- 1D PDP -->
+                <div class="plot-1d">
+                    <div class="plot-title">1D PDP: Age vs Loan Approval Probability</div>
+                    <div class="plot-canvas">
+                        <svg viewBox="0 0 300 150">
+                            <!-- Axes -->
+                            <line x1="30" y1="130" x2="280" y2="130" class="axis"/>
+                            <line x1="30" y1="20" x2="30" y2="130" class="axis"/>
+                            
+                            <!-- Grid lines -->
+                            <line x1="30" y1="50" x2="280" y2="50" class="grid-line"/>
+                            <line x1="30" y1="80" x2="280" y2="80" class="grid-line"/>
+                            <line x1="30" y1="110" x2="280" y2="110" class="grid-line"/>
+                            
+                            <!-- Confidence band -->
+                            <path d="M 30 125 Q 80 115 130 80 T 230 35 L 280 30 L 280 40 Q 230 45 180 65 Q 130 85 80 120 L 30 128 Z" 
+                                  class="confidence-band"/>
+                            
+                            <!-- S-curve -->
+                            <path d="M 30 127 Q 80 118 130 82 T 230 38 L 280 32" 
+                                  class="pdp-curve"/>
+                            
+                            <!-- Axis labels -->
+                            <text x="155" y="145" class="axis-label" text-anchor="middle">Age (years)</text>
+                            <text x="15" y="75" class="axis-label" text-anchor="middle" transform="rotate(-90 15 75)">Probability</text>
+                            
+                            <!-- Tick labels -->
+                            <text x="30" y="142" class="axis-label" text-anchor="middle" style="font-size: 11px;">20</text>
+                            <text x="155" y="142" class="axis-label" text-anchor="middle" style="font-size: 11px;">45</text>
+                            <text x="280" y="142" class="axis-label" text-anchor="middle" style="font-size: 11px;">70</text>
+                        </svg>
+                    </div>
+                </div>
+                
+                <!-- 2D PDP Heatmap -->
+                <div class="plot-2d">
+                    <div class="plot-title">2D PDP: Age × Income Interaction</div>
+                    <div class="heatmap-container">
+                        <div class="heatmap-y-label">Income</div>
+                        <div class="heatmap-grid">
+                            <!-- Row 1 (High Income) -->
+                            <div class="heat-cell heat-3"></div>
+                            <div class="heat-cell heat-5"></div>
+                            <div class="heat-cell heat-7"></div>
+                            <div class="heat-cell heat-8"></div>
+                            <div class="heat-cell heat-9"></div>
+                            <div class="heat-cell heat-9"></div>
+                            <div class="heat-cell heat-9"></div>
+                            <div class="heat-cell heat-9"></div>
+                            
+                            <!-- Row 2 -->
+                            <div class="heat-cell heat-2"></div>
+                            <div class="heat-cell heat-4"></div>
+                            <div class="heat-cell heat-6"></div>
+                            <div class="heat-cell heat-7"></div>
+                            <div class="heat-cell heat-8"></div>
+                            <div class="heat-cell heat-8"></div>
+                            <div class="heat-cell heat-8"></div>
+                            <div class="heat-cell heat-8"></div>
+                            
+                            <!-- Row 3 -->
+                            <div class="heat-cell heat-1"></div>
+                            <div class="heat-cell heat-3"></div>
+                            <div class="heat-cell heat-5"></div>
+                            <div class="heat-cell heat-6"></div>
+                            <div class="heat-cell heat-7"></div>
+                            <div class="heat-cell heat-7"></div>
+                            <div class="heat-cell heat-7"></div>
+                            <div class="heat-cell heat-7"></div>
+                            
+                            <!-- Row 4 -->
+                            <div class="heat-cell heat-0"></div>
+                            <div class="heat-cell heat-2"></div>
+                            <div class="heat-cell heat-4"></div>
+                            <div class="heat-cell heat-5"></div>
+                            <div class="heat-cell heat-6"></div>
+                            <div class="heat-cell heat-6"></div>
+                            <div class="heat-cell heat-6"></div>
+                            <div class="heat-cell heat-6"></div>
+                            
+                            <!-- Row 5 -->
+                            <div class="heat-cell heat-0"></div>
+                            <div class="heat-cell heat-1"></div>
+                            <div class="heat-cell heat-3"></div>
+                            <div class="heat-cell heat-4"></div>
+                            <div class="heat-cell heat-5"></div>
+                            <div class="heat-cell heat-5"></div>
+                            <div class="heat-cell heat-5"></div>
+                            <div class="heat-cell heat-5"></div>
+                            
+                            <!-- Row 6 (Low Income) -->
+                            <div class="heat-cell heat-0"></div>
+                            <div class="heat-cell heat-0"></div>
+                            <div class="heat-cell heat-2"></div>
+                            <div class="heat-cell heat-3"></div>
+                            <div class="heat-cell heat-4"></div>
+                            <div class="heat-cell heat-4"></div>
+                            <div class="heat-cell heat-4"></div>
+                            <div class="heat-cell heat-4"></div>
+                        </div>
+                        <div class="heatmap-labels">
+                            <span>20</span>
+                            <span>Age</span>
+                            <span>70</span>
+                        </div>
+                        <div class="color-scale">
+                            <span class="scale-label">Low</span>
+                            <div class="scale-bar"></div>
+                            <span class="scale-label">High</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Info Section -->
+            <div class="info-section">
+                <div class="section-title">Key Concepts</div>
+                
+                <div class="info-card">
+                    <div class="info-title">Marginal Effect</div>
+                    <div class="info-desc">Average prediction as feature varies</div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-title">1D PDP</div>
+                    <div class="info-desc">Single feature effect (line plot)</div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-title">2D PDP</div>
+                    <div class="info-desc">Two-feature interactions (heatmap)</div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-title">Implementation</div>
+                    <div class="info-desc">sklearn.inspection.PartialDependenceDisplay</div>
+                </div>
+                
+                <div class="warning-box">
+                    <div class="warning-title">⚠ Assumption</div>
+                    Features are independent - misleading if violated
+                </div>
+                
+                <!-- Features -->
+                <div class="features-box">
+                    <div class="features-title">Reveals</div>
+                    <div class="features-list">
+                        • Non-linear relationships<br>
+                        • Thresholds & transitions<br>
+                        • Average behavior patterns
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

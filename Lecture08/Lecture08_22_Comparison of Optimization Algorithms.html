@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comparison of Optimization Algorithms</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 30px;
+            background: #ffffff;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .main-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .comparison-table {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .table-header {
+            display: grid;
+            grid-template-columns: 180px repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .header-cell {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            padding: 8px;
+        }
+        
+        .header-cell:first-child {
+            text-align: left;
+        }
+        
+        .table-row {
+            display: grid;
+            grid-template-columns: 180px repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .row-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+            padding: 10px;
+            background: #e8f1fd;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .cell {
+            font-size: 16px;
+            color: #2c3e50;
+            padding: 10px;
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.4;
+        }
+        
+        .cell.best {
+            background: #d4edda;
+            border-color: #28a745;
+            font-weight: 600;
+        }
+        
+        .cell.good {
+            background: #e8f1fd;
+            border-color: #1E64C8;
+        }
+        
+        .characteristics-section {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        
+        .char-card {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 14px;
+        }
+        
+        .char-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .char-content {
+            font-size: 16px;
+            color: #2c3e50;
+            text-align: center;
+            line-height: 1.4;
+        }
+        
+        .recommendation-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            color: white;
+            padding: 16px 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.3);
+        }
+        
+        .recommendation-icon {
+            font-size: 24px;
+            margin-bottom: 6px;
+        }
+        
+        .recommendation-text {
+            font-size: 17px;
+            font-weight: 600;
+            line-height: 1.6;
+        }
+        
+        .arrow {
+            color: #1E64C8;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="main-title">Comparison of Optimization Algorithms</div>
+            <div class="subtitle">Performance Characteristics and Trade-offs</div>
+        </div>
+        
+        <div class="comparison-table">
+            <div class="table-header">
+                <div class="header-cell">Metric</div>
+                <div class="header-cell">SGD</div>
+                <div class="header-cell">Momentum</div>
+                <div class="header-cell">RMSprop</div>
+                <div class="header-cell">Adam/AdamW</div>
+            </div>
+            
+            <div class="table-row">
+                <div class="row-label">Training Speed</div>
+                <div class="cell">Slow</div>
+                <div class="cell">Moderate</div>
+                <div class="cell good">Fast</div>
+                <div class="cell best">Fastest</div>
+            </div>
+            
+            <div class="table-row">
+                <div class="row-label">Generalization</div>
+                <div class="cell">Good</div>
+                <div class="cell best">Best</div>
+                <div class="cell">Moderate</div>
+                <div class="cell good">Good</div>
+            </div>
+            
+            <div class="table-row">
+                <div class="row-label">Memory Usage</div>
+                <div class="cell best">Lowest</div>
+                <div class="cell good">Low</div>
+                <div class="cell">Moderate</div>
+                <div class="cell">High</div>
+            </div>
+            
+            <div class="table-row">
+                <div class="row-label">HP Sensitivity</div>
+                <div class="cell">High</div>
+                <div class="cell">Moderate</div>
+                <div class="cell good">Low</div>
+                <div class="cell best">Lowest</div>
+            </div>
+        </div>
+        
+        <div class="characteristics-section">
+            <div class="char-card">
+                <div class="char-title">SGD + Momentum</div>
+                <div class="char-content">
+                    Simple, reliable<br>
+                    Good generalization<br>
+                    Requires tuning
+                </div>
+            </div>
+            
+            <div class="char-card">
+                <div class="char-title">Adam/AdamW</div>
+                <div class="char-content">
+                    Adaptive<br>
+                    Fast convergence<br>
+                    Out-of-the-box
+                </div>
+            </div>
+            
+            <div class="char-card">
+                <div class="char-title">RMSprop</div>
+                <div class="char-content">
+                    Good for RNNs<br>
+                    Non-stationary<br>
+                    problems
+                </div>
+            </div>
+            
+            <div class="char-card">
+                <div class="char-title">Speed Ranking</div>
+                <div class="char-content">
+                    Adam <span class="arrow">></span> RMSprop<br>
+                    <span class="arrow">></span> Momentum <span class="arrow">></span> SGD
+                </div>
+            </div>
+        </div>
+        
+        <div class="recommendation-box">
+            <div class="recommendation-icon">💡</div>
+            <div class="recommendation-text">
+                Recommendation: Start with Adam/AdamW, then fine-tune with SGD+Momentum
+            </div>
+        </div>
+    </div>
+</body>
+</html>

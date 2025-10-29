@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moving Average (MA)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+            padding: 25px 45px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 30px;
+        }
+        
+        .types-section {
+            margin-bottom: 25px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .types-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+        
+        .type-card {
+            background: white;
+            border: 2.5px solid #1E64C8;
+            border-radius: 8px;
+            padding: 18px 16px;
+            text-align: center;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .type-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .type-name {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .type-description {
+            font-size: 15px;
+            color: #2C3E50;
+            line-height: 1.4;
+        }
+        
+        .benefits-limitations {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .benefits, .limitations {
+            border-radius: 8px;
+            padding: 18px 22px;
+        }
+        
+        .benefits {
+            background: #E8F1FC;
+            border: 2px solid #1E64C8;
+        }
+        
+        .limitations {
+            background: #FDECEA;
+            border: 2px solid #E74C3C;
+        }
+        
+        .subsection-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .benefits .subsection-title {
+            color: #1E64C8;
+        }
+        
+        .limitations .subsection-title {
+            color: #E74C3C;
+        }
+        
+        .item-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .item {
+            font-size: 16px;
+            color: #2C3E50;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            line-height: 1.5;
+        }
+        
+        .bullet {
+            font-weight: 600;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .benefits .bullet {
+            color: #1E64C8;
+        }
+        
+        .limitations .bullet {
+            color: #E74C3C;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Moving Average (MA)</div>
+        
+        <div class="types-section">
+            <div class="section-title">Types of Moving Averages</div>
+            <div class="types-grid">
+                <div class="type-card">
+                    <div class="type-icon">📊</div>
+                    <div class="type-name">Simple MA</div>
+                    <div class="type-description">
+                        Equal weights for recent observations
+                    </div>
+                </div>
+                
+                <div class="type-card">
+                    <div class="type-icon">⚖️</div>
+                    <div class="type-name">Weighted MA</div>
+                    <div class="type-description">
+                        Different weights by recency
+                    </div>
+                </div>
+                
+                <div class="type-card">
+                    <div class="type-icon">📉</div>
+                    <div class="type-name">Exponential Smoothing</div>
+                    <div class="type-description">
+                        Exponentially decreasing weights
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="benefits-limitations">
+            <div class="benefits">
+                <div class="subsection-title">
+                    <span>✓</span>
+                    <span>Benefits</span>
+                </div>
+                <div class="item-list">
+                    <div class="item">
+                        <span class="bullet">•</span>
+                        <span>Smoothing noisy data</span>
+                    </div>
+                    <div class="item">
+                        <span class="bullet">•</span>
+                        <span>Trend identification</span>
+                    </div>
+                    <div class="item">
+                        <span class="bullet">•</span>
+                        <span>No look-ahead bias for forecasting</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="limitations">
+                <div class="subsection-title">
+                    <span>⚠</span>
+                    <span>Limitations</span>
+                </div>
+                <div class="item-list">
+                    <div class="item">
+                        <span class="bullet">•</span>
+                        <span>Cannot capture complex patterns</span>
+                    </div>
+                    <div class="item">
+                        <span class="bullet">•</span>
+                        <span>Cannot model seasonality</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Layer-wise Activation Patterns</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            overflow-x: hidden;
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 960px;
+            width: 95vw;
+            min-height: 540px;
+            height: auto;
+            background: white;
+            position: relative;
+            overflow: hidden;
+            padding: 20px 35px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+        }
+        
+        .observation-box {
+            background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+            border: 3px solid #1E64C8;
+            border-radius: 12px;
+            padding: 12px 20px;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .observation-label {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .observation-text {
+            font-size: 16px;
+            color: #333;
+        }
+        
+        .network-visual {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+            padding: 0 20px;
+        }
+        
+        .layer-block {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .layer-block:hover {
+            transform: scale(1.05);
+        }
+        
+        .layer-visual {
+            width: 100%;
+            height: 110px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid;
+            padding: 10px;
+        }
+        
+        .layer-block.early .layer-visual {
+            background: linear-gradient(135deg, #FFF3E0 0%, #FFE0B2 100%);
+            border-color: #FF9800;
+        }
+        
+        .layer-block.middle .layer-visual {
+            background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+            border-color: #4CAF50;
+        }
+        
+        .layer-block.output .layer-visual {
+            background: linear-gradient(135deg, #F3E5F5 0%, #E1BEE7 100%);
+            border-color: #9C27B0;
+        }
+        
+        .layer-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+        
+        .layer-block.early .layer-title {
+            color: #E65100;
+        }
+        
+        .layer-block.middle .layer-title {
+            color: #2E7D32;
+        }
+        
+        .layer-block.output .layer-title {
+            color: #6A1B9A;
+        }
+        
+        .activation-choice {
+            font-size: 17px;
+            color: #333;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .layer-purpose {
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+            line-height: 1.3;
+        }
+        
+        .layer-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            text-align: center;
+        }
+        
+        .arrow-connector {
+            font-size: 32px;
+            color: #1E64C8;
+            font-weight: 700;
+        }
+        
+        .findings-section {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        
+        .finding-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .finding-card:hover {
+            background: #F0F6FF;
+            transform: translateY(-2px);
+        }
+        
+        .finding-icon {
+            font-size: 20px;
+            margin-right: 8px;
+        }
+        
+        .finding-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+        
+        .finding-text {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .transformer-example {
+            background: #FFF3E0;
+            border: 3px solid #FF9800;
+            border-radius: 10px;
+            padding: 12px 18px;
+        }
+        
+        .example-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #E65100;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .example-title::before {
+            content: "🔍";
+            margin-right: 8px;
+        }
+        
+        .example-content {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .highlight {
+            font-weight: 700;
+            color: #E65100;
+        }
+    
+        
+        /* Responsive adjustments */
+        @media screen and (max-width: 1000px) {
+            .container {
+                width: 98vw !important;
+                max-width: 98vw !important;
+                padding: 15px 20px !important;
+            }
+        }
+        
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: 10px 15px !important;
+            }
+            
+            .title {
+                font-size: 20px !important;
+            }
+            
+            /* 그리드 레이아웃을 1열로 */
+            .challenges-grid,
+            .comparison-grid,
+            .solutions-grid,
+            .guide-grid,
+            .findings-section,
+            .benefits-grid,
+            .applications-section,
+            .guidelines-grid,
+            .components-section,
+            .techniques-grid,
+            .deployment-section {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .gradient-flow,
+            .network-visual,
+            .flow-steps,
+            .comparison-section {
+                flex-direction: column !important;
+                gap: 15px !important;
+            }
+            
+            .arrow-back,
+            .arrow,
+            .arrow-right,
+            .arrow-connector {
+                transform: rotate(90deg);
+                margin: 5px 0 !important;
+            }
+        }
+        
+        @media screen and (max-width: 480px) {
+            .container {
+                padding: 8px 10px !important;
+            }
+            
+            .title {
+                font-size: 18px !important;
+            }
+            
+            .card-header,
+            .scenario-label,
+            .card-title,
+            .function-title {
+                font-size: 16px !important;
+            }
+        }
+    
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Layer-wise Activation Patterns</div>
+        
+        <div class="observation-box">
+            <div class="observation-label">KEY OBSERVATION</div>
+            <div class="observation-text">Different layers may benefit from different activations</div>
+        </div>
+        
+        <div class="network-visual">
+            <div class="layer-block early">
+                <div class="layer-visual">
+                    <div class="layer-title">Early Layers</div>
+                    <div class="activation-choice">ReLU</div>
+                    <div class="layer-purpose">Low-level features</div>
+                </div>
+                <div class="layer-label">Input → Features</div>
+            </div>
+            
+            <div class="arrow-connector">→</div>
+            
+            <div class="layer-block middle">
+                <div class="layer-visual">
+                    <div class="layer-title">Middle Layers</div>
+                    <div class="activation-choice">ELU / GELU</div>
+                    <div class="layer-purpose">Complex patterns</div>
+                </div>
+                <div class="layer-label">Feature Processing</div>
+            </div>
+            
+            <div class="arrow-connector">→</div>
+            
+            <div class="layer-block output">
+                <div class="layer-visual">
+                    <div class="layer-title">Output Layer</div>
+                    <div class="activation-choice">Task-Specific</div>
+                    <div class="layer-purpose">Sigmoid / Softmax</div>
+                </div>
+                <div class="layer-label">Predictions</div>
+            </div>
+        </div>
+        
+        <div class="findings-section">
+            <div class="finding-card">
+                <div class="finding-title">
+                    <span class="finding-icon">📊</span>
+                    Empirical Finding
+                </div>
+                <div class="finding-text">Uniform activation often works well, mixed can be better</div>
+            </div>
+            
+            <div class="finding-card">
+                <div class="finding-title">
+                    <span class="finding-icon">🔬</span>
+                    Research Direction
+                </div>
+                <div class="finding-text">Neural Architecture Search explores per-layer choices</div>
+            </div>
+            
+            <div class="finding-card">
+                <div class="finding-title">
+                    <span class="finding-icon">💡</span>
+                    Practical Tip
+                </div>
+                <div class="finding-text">If experimenting, start from output and work backward</div>
+            </div>
+            
+            <div class="finding-card">
+                <div class="finding-title">
+                    <span class="finding-icon">⚙️</span>
+                    Implementation
+                </div>
+                <div class="finding-text">Start simple (uniform), optimize if needed</div>
+            </div>
+        </div>
+        
+        <div class="transformer-example">
+            <div class="example-title">Transformer Pattern Example</div>
+            <div class="example-content">
+                <span class="highlight">GELU</span> in feedforward layers · 
+                <span class="highlight">Linear (no activation)</span> in attention mechanisms
+            </div>
+        </div>
+    </div>
+</body>
+</html>

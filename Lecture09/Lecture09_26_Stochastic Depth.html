@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stochastic Depth</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: #ffffff;
+            padding: 20px 40px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 25px;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 25px;
+            height: 450px;
+        }
+        
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        
+        .visual-box {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 12px;
+            padding: 20px;
+            flex: 1;
+        }
+        
+        .visual-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .comparison {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            gap: 20px;
+            margin: 15px 0;
+        }
+        
+        .network-view {
+            text-align: center;
+        }
+        
+        .view-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 15px;
+        }
+        
+        .layers-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            align-items: center;
+        }
+        
+        .layer {
+            width: 100px;
+            height: 35px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            border: 2px solid;
+            position: relative;
+        }
+        
+        .layer-active {
+            background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
+            border-color: #2e7d32;
+            color: white;
+        }
+        
+        .layer-dropped {
+            background: #e8e8e8;
+            border-color: #999;
+            color: #999;
+            opacity: 0.4;
+        }
+        
+        .probability-label {
+            position: absolute;
+            right: -35px;
+            font-size: 11px;
+            color: #666;
+            font-weight: 600;
+        }
+        
+        .arrow-compare {
+            font-size: 32px;
+            color: #1E64C8;
+        }
+        
+        .probability-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 14px;
+            text-align: center;
+        }
+        
+        .prob-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #f57c00;
+            margin-bottom: 8px;
+        }
+        
+        .prob-text {
+            font-size: 15px;
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+        
+        .gradient-bar {
+            width: 100%;
+            height: 30px;
+            background: linear-gradient(to bottom, #4caf50, #ff9800);
+            border-radius: 6px;
+            margin-top: 8px;
+            position: relative;
+        }
+        
+        .gradient-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .section-header {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 5px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .benefit-card {
+            background: #f8f9fb;
+            border-left: 4px solid #1E64C8;
+            padding: 13px 16px;
+            border-radius: 6px;
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.5;
+            transition: all 0.3s ease;
+        }
+        
+        .benefit-card:hover {
+            background: #eef3fb;
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(30, 100, 200, 0.15);
+        }
+        
+        .highlight {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .capability-box {
+            background: #e8f5e9;
+            border: 2px solid #4caf50;
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin-top: 10px;
+        }
+        
+        .capability-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #4caf50;
+            margin-bottom: 8px;
+        }
+        
+        .capability-text {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Stochastic Depth</div>
+        
+        <div class="main-content">
+            <div class="left-section">
+                <div class="visual-box">
+                    <div class="visual-title">Training vs Inference</div>
+                    
+                    <div class="comparison">
+                        <div class="network-view">
+                            <div class="view-label">Training</div>
+                            <div class="layers-stack">
+                                <div class="layer layer-active">
+                                    Layer 1
+                                    <span class="probability-label">p=0.9</span>
+                                </div>
+                                <div class="layer layer-active">Layer 2</div>
+                                <div class="layer layer-dropped">
+                                    Layer 3 ✗
+                                    <span class="probability-label">p=0.7</span>
+                                </div>
+                                <div class="layer layer-active">Layer 4</div>
+                                <div class="layer layer-dropped">
+                                    Layer 5 ✗
+                                    <span class="probability-label">p=0.5</span>
+                                </div>
+                                <div class="layer layer-active">Layer 6</div>
+                            </div>
+                        </div>
+                        
+                        <div class="arrow-compare">→</div>
+                        
+                        <div class="network-view">
+                            <div class="view-label">Inference</div>
+                            <div class="layers-stack">
+                                <div class="layer layer-active">Layer 1</div>
+                                <div class="layer layer-active">Layer 2</div>
+                                <div class="layer layer-active">Layer 3</div>
+                                <div class="layer layer-active">Layer 4</div>
+                                <div class="layer layer-active">Layer 5</div>
+                                <div class="layer layer-active">Layer 6</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="probability-box">
+                    <div class="prob-title">Survival Probability</div>
+                    <div class="prob-text">
+                        Decreases with layer depth
+                    </div>
+                    <div class="gradient-bar"></div>
+                    <div class="gradient-labels">
+                        <span>Early layers (High)</span>
+                        <span>Deep layers (Low)</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-section">
+                <div class="section-header">Key Benefits</div>
+                
+                <div class="benefit-card">
+                    Randomly drops <span class="highlight">entire layers</span> during training
+                </div>
+                
+                <div class="benefit-card">
+                    Creates <span class="highlight">shorter networks</span> during training
+                </div>
+                
+                <div class="benefit-card">
+                    <span class="highlight">Improves gradient flow</span> to early layers
+                </div>
+                
+                <div class="benefit-card">
+                    <span class="highlight">Reduces training time</span> significantly
+                </div>
+                
+                <div class="capability-box">
+                    <div class="capability-title">✓ Enables Extreme Depth</div>
+                    <div class="capability-text">
+                        Training of <strong>extremely deep networks</strong> (1000+ layers)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

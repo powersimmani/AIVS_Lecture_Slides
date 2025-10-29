@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Hierarchy Diagram</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 28px 40px;
+            background: white;
+        }
+        
+        .title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .hierarchy-pyramid {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .memory-level {
+            background: white;
+            border: 2.5px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 20px;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .memory-level:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(30, 100, 200, 0.3);
+            background: #f8fbff;
+            z-index: 10;
+        }
+        
+        .level-1 { width: 150px; }
+        .level-2 { width: 220px; }
+        .level-3 { width: 290px; }
+        .level-4 { width: 360px; }
+        .level-5 { width: 430px; }
+        .level-6 { width: 500px; }
+        
+        .memory-name {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 4px;
+        }
+        
+        .memory-spec {
+            font-size: 15px;
+            color: #666;
+            text-align: center;
+            line-height: 1.3;
+        }
+        
+        .arrow-down {
+            color: #1E64C8;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .tradeoff-box {
+            background: #f0f5fc;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px 25px;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .tradeoff-text {
+            font-size: 17px;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .tradeoff-highlight {
+            color: #1E64C8;
+            font-weight: 700;
+        }
+        
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .detail-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 15px;
+        }
+        
+        .detail-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .detail-item {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 4px;
+            line-height: 1.4;
+        }
+        
+        .detail-value {
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .bottleneck-box {
+            background: #fff4e6;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .bottleneck-label {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+        }
+        
+        .bottleneck-desc {
+            font-size: 16px;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .bottleneck-arrow {
+            font-size: 24px;
+            color: #1E64C8;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Memory Hierarchy - RAM, VRAM, Cache</div>
+        
+        <div class="hierarchy-pyramid">
+            <div class="memory-level level-1">
+                <div class="memory-name">Registers</div>
+                <div class="memory-spec">Fastest • Smallest</div>
+            </div>
+            <div class="arrow-down">↓</div>
+            <div class="memory-level level-2">
+                <div class="memory-name">L1 Cache</div>
+                <div class="memory-spec">~1ns • KB size</div>
+            </div>
+            <div class="arrow-down">↓</div>
+            <div class="memory-level level-3">
+                <div class="memory-name">L2 Cache</div>
+                <div class="memory-spec">~4ns • MB size</div>
+            </div>
+            <div class="arrow-down">↓</div>
+            <div class="memory-level level-4">
+                <div class="memory-name">L3 Cache</div>
+                <div class="memory-spec">~10ns • MB size</div>
+            </div>
+            <div class="arrow-down">↓</div>
+            <div class="memory-level level-5">
+                <div class="memory-name">RAM</div>
+                <div class="memory-spec">~100ns • 16-512GB</div>
+            </div>
+            <div class="arrow-down">↓</div>
+            <div class="memory-level level-6">
+                <div class="memory-name">Storage</div>
+                <div class="memory-spec">~100μs • TB size</div>
+            </div>
+        </div>
+        
+        <div class="tradeoff-box">
+            <span class="tradeoff-text">Trade-off: </span>
+            <span class="tradeoff-highlight">Faster = Smaller + Higher Cost</span>
+        </div>
+        
+        <div class="details-grid">
+            <div class="detail-card">
+                <div class="detail-title">RAM</div>
+                <div class="detail-item"><span class="detail-value">16-512GB</span></div>
+                <div class="detail-item"><span class="detail-value">~20GB/s</span> bandwidth</div>
+                <div class="detail-item">System memory</div>
+            </div>
+            
+            <div class="detail-card">
+                <div class="detail-title">VRAM (GPU)</div>
+                <div class="detail-item"><span class="detail-value">8-80GB</span></div>
+                <div class="detail-item"><span class="detail-value">~1-2TB/s</span> bandwidth</div>
+                <div class="detail-item">HBM2/HBM3</div>
+            </div>
+            
+            <div class="detail-card">
+                <div class="detail-title">Cache</div>
+                <div class="detail-item">L1: <span class="detail-value">KB</span></div>
+                <div class="detail-item">L2: <span class="detail-value">MB</span></div>
+                <div class="detail-item">L3: <span class="detail-value">MB</span></div>
+            </div>
+        </div>
+        
+        <div class="bottleneck-box">
+            <div class="bottleneck-label">ML Bottleneck:</div>
+            <div class="bottleneck-desc">RAM</div>
+            <div class="bottleneck-arrow">↔</div>
+            <div class="bottleneck-desc">VRAM</div>
+            <div style="font-size: 16px; color: #666; font-style: italic;">Data transfer overhead</div>
+        </div>
+    </div>
+</body>
+</html>

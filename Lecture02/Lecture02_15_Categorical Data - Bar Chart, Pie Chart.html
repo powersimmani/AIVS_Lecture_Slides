@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categorical Data - Bar & Pie Charts</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #FFFFFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            padding: 25px 35px;
+        }
+        
+        .title-section {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        
+        .main-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .subtitle {
+            font-size: 17px;
+            color: #666666;
+        }
+        
+        .content-wrapper {
+            display: flex;
+            gap: 18px;
+            flex: 1;
+        }
+        
+        .left-panel {
+            flex: 1.5;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .charts-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            flex: 1;
+        }
+        
+        .chart-card {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 10px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+        
+        .chart-card:hover {
+            border-color: #1E64C8;
+            box-shadow: 0 4px 15px rgba(30, 100, 200, 0.15);
+            transform: translateY(-3px);
+        }
+        
+        .chart-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        
+        .chart-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .chart-icon {
+            font-size: 20px;
+        }
+        
+        .chart-visual {
+            flex: 1;
+            background: #F8F8F8;
+            border-radius: 6px;
+            padding: 10px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+        }
+        
+        /* Simple Bar Chart */
+        .simple-bars {
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .bar {
+            background: #1E64C8;
+            border-radius: 4px 4px 0 0;
+            transition: all 0.3s ease;
+        }
+        
+        .bar:hover {
+            background: #2B7FDB;
+            transform: scaleY(1.05);
+        }
+        
+        .simple-bars .bar:nth-child(1) { width: 30px; height: 90px; }
+        .simple-bars .bar:nth-child(2) { width: 30px; height: 70px; }
+        .simple-bars .bar:nth-child(3) { width: 30px; height: 50px; }
+        .simple-bars .bar:nth-child(4) { width: 30px; height: 30px; }
+        
+        /* Grouped Bar Chart */
+        .grouped-bars {
+            display: flex;
+            align-items: flex-end;
+            gap: 12px;
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .bar-group {
+            display: flex;
+            gap: 3px;
+            align-items: flex-end;
+        }
+        
+        .bar-group .bar {
+            width: 18px;
+        }
+        
+        .bar-group .bar:nth-child(1) { background: #1E64C8; height: 70px; }
+        .bar-group .bar:nth-child(2) { background: #4CAF50; height: 50px; }
+        
+        .grouped-bars .bar-group:nth-child(1) .bar:nth-child(1) { height: 70px; }
+        .grouped-bars .bar-group:nth-child(1) .bar:nth-child(2) { height: 50px; }
+        .grouped-bars .bar-group:nth-child(2) .bar:nth-child(1) { height: 55px; }
+        .grouped-bars .bar-group:nth-child(2) .bar:nth-child(2) { height: 65px; }
+        .grouped-bars .bar-group:nth-child(3) .bar:nth-child(1) { height: 40px; }
+        .grouped-bars .bar-group:nth-child(3) .bar:nth-child(2) { height: 45px; }
+        
+        /* Stacked Bar Chart */
+        .stacked-bars {
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .stacked-bar {
+            width: 35px;
+            display: flex;
+            flex-direction: column;
+            border-radius: 4px 4px 0 0;
+            overflow: hidden;
+        }
+        
+        .stack-segment {
+            transition: all 0.3s ease;
+        }
+        
+        .stack-segment:hover {
+            opacity: 0.8;
+        }
+        
+        .segment-1 { background: #1E64C8; }
+        .segment-2 { background: #4CAF50; }
+        .segment-3 { background: #FF9800; }
+        
+        .stacked-bars .stacked-bar:nth-child(1) .segment-1 { height: 40px; }
+        .stacked-bars .stacked-bar:nth-child(1) .segment-2 { height: 30px; }
+        .stacked-bars .stacked-bar:nth-child(1) .segment-3 { height: 20px; }
+        
+        .stacked-bars .stacked-bar:nth-child(2) .segment-1 { height: 35px; }
+        .stacked-bars .stacked-bar:nth-child(2) .segment-2 { height: 25px; }
+        .stacked-bars .stacked-bar:nth-child(2) .segment-3 { height: 15px; }
+        
+        .stacked-bars .stacked-bar:nth-child(3) .segment-1 { height: 25px; }
+        .stacked-bars .stacked-bar:nth-child(3) .segment-2 { height: 20px; }
+        .stacked-bars .stacked-bar:nth-child(3) .segment-3 { height: 15px; }
+        
+        /* Pie Chart */
+        .pie-visual {
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .pie-chart {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: conic-gradient(
+                #1E64C8 0deg 144deg,
+                #4CAF50 144deg 252deg,
+                #FF9800 252deg 324deg,
+                #9C27B0 324deg 360deg
+            );
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .pie-chart:hover {
+            transform: scale(1.05);
+        }
+        
+        .chart-note {
+            text-align: center;
+            font-size: 16px;
+            color: #666;
+            margin-top: 6px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-style: italic;
+        }
+        
+        .warning-note {
+            background: #FFF9E6;
+            color: #F57C00;
+            font-weight: 500;
+        }
+        
+        .right-panel {
+            flex: 0.5;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .guidelines-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px;
+            flex: 1;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .guideline-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+            margin-bottom: 8px;
+            padding: 6px;
+            background: #F8FBFF;
+            border-radius: 4px;
+        }
+        
+        .guideline-icon {
+            color: #1E64C8;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .comparison-card {
+            background: #FFF9E6;
+            border: 2px solid #FFC107;
+            border-radius: 10px;
+            padding: 14px;
+        }
+        
+        .comparison-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .comparison-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 6px;
+            padding: 6px 8px;
+            background: white;
+            border-radius: 4px;
+        }
+        
+        .comparison-label {
+            font-weight: 600;
+        }
+        
+        .comparison-value {
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .use-cases {
+            background: #E8F5E9;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            padding: 14px;
+        }
+        
+        .use-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2E7D32;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .use-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 6px;
+        }
+        
+        .check-icon {
+            color: #4CAF50;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .chart-card, .guidelines-card, .comparison-card, .use-cases {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        .chart-card:nth-child(1) { animation-delay: 0.1s; }
+        .chart-card:nth-child(2) { animation-delay: 0.2s; }
+        .chart-card:nth-child(3) { animation-delay: 0.3s; }
+        .chart-card:nth-child(4) { animation-delay: 0.4s; }
+        .guidelines-card { animation-delay: 0.5s; }
+        .comparison-card { animation-delay: 0.6s; }
+        .use-cases { animation-delay: 0.7s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Categorical Data: Bar Chart & Pie Chart</div>
+            <div class="subtitle">Comparing Categories and Showing Proportions</div>
+        </div>
+        
+        <div class="content-wrapper">
+            <div class="left-panel">
+                <div class="charts-row">
+                    <!-- Simple Bar Chart -->
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title">Simple Bar Chart</div>
+                            <div class="chart-icon">📊</div>
+                        </div>
+                        <div class="chart-visual">
+                            <div class="simple-bars">
+                                <div class="bar"></div>
+                                <div class="bar"></div>
+                                <div class="bar"></div>
+                                <div class="bar"></div>
+                            </div>
+                        </div>
+                        <div class="chart-note">Best for comparing categories</div>
+                    </div>
+                    
+                    <!-- Grouped Bar Chart -->
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title">Grouped Bar Chart</div>
+                            <div class="chart-icon">📈</div>
+                        </div>
+                        <div class="chart-visual">
+                            <div class="grouped-bars">
+                                <div class="bar-group">
+                                    <div class="bar"></div>
+                                    <div class="bar"></div>
+                                </div>
+                                <div class="bar-group">
+                                    <div class="bar"></div>
+                                    <div class="bar"></div>
+                                </div>
+                                <div class="bar-group">
+                                    <div class="bar"></div>
+                                    <div class="bar"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chart-note">Compare subcategories</div>
+                    </div>
+                    
+                    <!-- Stacked Bar Chart -->
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title">Stacked Bar Chart</div>
+                            <div class="chart-icon">📋</div>
+                        </div>
+                        <div class="chart-visual">
+                            <div class="stacked-bars">
+                                <div class="stacked-bar">
+                                    <div class="stack-segment segment-3"></div>
+                                    <div class="stack-segment segment-2"></div>
+                                    <div class="stack-segment segment-1"></div>
+                                </div>
+                                <div class="stacked-bar">
+                                    <div class="stack-segment segment-3"></div>
+                                    <div class="stack-segment segment-2"></div>
+                                    <div class="stack-segment segment-1"></div>
+                                </div>
+                                <div class="stacked-bar">
+                                    <div class="stack-segment segment-3"></div>
+                                    <div class="stack-segment segment-2"></div>
+                                    <div class="stack-segment segment-1"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chart-note">Show composition</div>
+                    </div>
+                    
+                    <!-- Pie Chart -->
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title">Pie Chart</div>
+                            <div class="chart-icon">🥧</div>
+                        </div>
+                        <div class="chart-visual pie-visual">
+                            <div class="pie-chart"></div>
+                        </div>
+                        <div class="chart-note warning-note">Use sparingly (&lt;5 categories)</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <div class="guidelines-card">
+                    <div class="card-title">
+                        <span>📋</span>
+                        Guidelines
+                    </div>
+                    <div class="guideline-item">
+                        <span class="guideline-icon">•</span>
+                        <span>Horizontal bars for long names</span>
+                    </div>
+                    <div class="guideline-item">
+                        <span class="guideline-icon">•</span>
+                        <span>Sort by value (descending)</span>
+                    </div>
+                    <div class="guideline-item">
+                        <span class="guideline-icon">•</span>
+                        <span>Stacked bars harder to compare</span>
+                    </div>
+                    <div class="guideline-item">
+                        <span class="guideline-icon">•</span>
+                        <span>Pie only for simple proportions</span>
+                    </div>
+                </div>
+                
+                <div class="comparison-card">
+                    <div class="comparison-title">Perception Accuracy</div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Length (Bar)</span>
+                        <span class="comparison-value">High ✓</span>
+                    </div>
+                    <div class="comparison-item">
+                        <span class="comparison-label">Angle (Pie)</span>
+                        <span class="comparison-value">Low ✗</span>
+                    </div>
+                </div>
+                
+                <div class="use-cases">
+                    <div class="use-title">When to Use</div>
+                    <div class="use-item">
+                        <span class="check-icon">✓</span>
+                        <span>Category comparison</span>
+                    </div>
+                    <div class="use-item">
+                        <span class="check-icon">✓</span>
+                        <span>Ranking & ordering</span>
+                    </div>
+                    <div class="use-item">
+                        <span class="check-icon">✓</span>
+                        <span>Simple proportions</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

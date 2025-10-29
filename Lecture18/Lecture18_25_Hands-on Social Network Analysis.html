@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hands-on: Social Network Analysis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            padding: 25px;
+            gap: 16px;
+        }
+        
+        .header {
+            text-align: center;
+        }
+        
+        .main-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .workflow-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 12px;
+            flex: 1;
+        }
+        
+        .workflow-step {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 12px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+        
+        .workflow-step:hover {
+            background: #f0f6ff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.2);
+        }
+        
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .step-number {
+            background: #1E64C8;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        
+        .step-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            line-height: 1.3;
+        }
+        
+        .step-content {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex: 1;
+        }
+        
+        .step-desc {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.3;
+        }
+        
+        .step-tech {
+            display: inline-block;
+            background: #e8f4ff;
+            color: #1E64C8;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 4px;
+            align-self: flex-start;
+        }
+        
+        .step-icon {
+            font-size: 28px;
+            text-align: center;
+            margin-top: auto;
+        }
+        
+        .data-step {
+            background: #fff8f0;
+            border-color: #ff9800;
+        }
+        
+        .data-step .step-number {
+            background: #ff9800;
+        }
+        
+        .data-step .step-title {
+            color: #ff9800;
+        }
+        
+        .spectral-step {
+            background: #f3e5f5;
+            border-color: #9C27B0;
+        }
+        
+        .spectral-step .step-number {
+            background: #9C27B0;
+        }
+        
+        .spectral-step .step-title {
+            color: #9C27B0;
+        }
+        
+        .louvain-step {
+            background: #fff3e0;
+            border-color: #ff9800;
+        }
+        
+        .louvain-step .step-number {
+            background: #ff9800;
+        }
+        
+        .louvain-step .step-title {
+            color: #ff9800;
+        }
+        
+        .gcn-step {
+            background: #e8f5e9;
+            border-color: #4CAF50;
+        }
+        
+        .gcn-step .step-number {
+            background: #4CAF50;
+        }
+        
+        .gcn-step .step-title {
+            color: #4CAF50;
+        }
+        
+        .viz-step {
+            background: #e1f5fe;
+            border-color: #03A9F4;
+        }
+        
+        .viz-step .step-number {
+            background: #03A9F4;
+        }
+        
+        .viz-step .step-title {
+            color: #03A9F4;
+        }
+        
+        .compare-step {
+            background: #fce4ec;
+            border-color: #e91e63;
+        }
+        
+        .compare-step .step-number {
+            background: #e91e63;
+        }
+        
+        .compare-step .step-title {
+            color: #e91e63;
+        }
+        
+        .footer-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        
+        .dataset-box {
+            background: #fff8f0;
+            border: 2px solid #ff9800;
+            border-radius: 10px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .dataset-icon {
+            font-size: 32px;
+        }
+        
+        .dataset-content {
+            flex: 1;
+        }
+        
+        .dataset-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #ff9800;
+            margin-bottom: 4px;
+        }
+        
+        .dataset-list {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.3;
+        }
+        
+        .comparison-box {
+            background: #e8f4ff;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .comparison-icon {
+            font-size: 32px;
+        }
+        
+        .comparison-content {
+            flex: 1;
+        }
+        
+        .comparison-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .comparison-text {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.3;
+        }
+        
+        .method-badge {
+            position: absolute;
+            top: -8px;
+            right: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .classical-badge {
+            background: #9C27B0;
+            color: white;
+        }
+        
+        .deep-badge {
+            background: #4CAF50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="main-title">Hands-on: Social Network Analysis</div>
+            <div class="subtitle">Graph Clustering Implementation Workflow</div>
+        </div>
+        
+        <div class="workflow-container">
+            <!-- Step 1: Dataset -->
+            <div class="workflow-step data-step">
+                <div class="step-header">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Load Dataset</div>
+                </div>
+                <div class="step-content">
+                    <div class="step-desc">Karate Club or Facebook networks</div>
+                    <div class="step-tech">NetworkX</div>
+                    <div class="step-icon">📊</div>
+                </div>
+            </div>
+            
+            <!-- Step 2: Data Loading -->
+            <div class="workflow-step">
+                <div class="step-header">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Load Graph Data</div>
+                </div>
+                <div class="step-content">
+                    <div class="step-desc">Import and preprocess</div>
+                    <div class="step-tech">NetworkX</div>
+                    <div class="step-icon">🔧</div>
+                </div>
+            </div>
+            
+            <!-- Step 3: Spectral Clustering -->
+            <div class="workflow-step spectral-step" style="position: relative;">
+                <div class="method-badge classical-badge">Classical</div>
+                <div class="step-header">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Spectral Clustering</div>
+                </div>
+                <div class="step-content">
+                    <div class="step-desc">Eigendecomposition-based</div>
+                    <div class="step-tech">scikit-learn</div>
+                    <div class="step-icon">🌈</div>
+                </div>
+            </div>
+            
+            <!-- Step 4: Louvain -->
+            <div class="workflow-step louvain-step" style="position: relative;">
+                <div class="method-badge classical-badge">Classical</div>
+                <div class="step-header">
+                    <div class="step-number">4</div>
+                    <div class="step-title">Louvain Method</div>
+                </div>
+                <div class="step-content">
+                    <div class="step-desc">Community detection</div>
+                    <div class="step-tech">python-louvain</div>
+                    <div class="step-icon">👥</div>
+                </div>
+            </div>
+            
+            <!-- Step 5: GCN Training -->
+            <div class="workflow-step gcn-step" style="position: relative;">
+                <div class="method-badge deep-badge">Deep Learning</div>
+                <div class="step-header">
+                    <div class="step-number">5</div>
+                    <div class="step-title">Train GCN</div>
+                </div>
+                <div class="step-content">
+                    <div class="step-desc">Graph neural network</div>
+                    <div class="step-tech">PyTorch Geometric</div>
+                    <div class="step-icon">🧠</div>
+                </div>
+            </div>
+            
+            <!-- Step 6: Visualization -->
+            <div class="workflow-step viz-step">
+                <div class="step-header">
+                    <div class="step-number">6</div>
+                    <div class="step-title">Visualize Communities</div>
+                </div>
+                <div class="step-content">
+                    <div class="step-desc">Plot detected clusters</div>
+                    <div class="step-tech">matplotlib</div>
+                    <div class="step-icon">📈</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-section">
+            <div class="dataset-box">
+                <div class="dataset-icon">🗂️</div>
+                <div class="dataset-content">
+                    <div class="dataset-title">Datasets</div>
+                    <div class="dataset-list">Zachary's Karate Club • Facebook Ego-networks</div>
+                </div>
+            </div>
+            
+            <div class="comparison-box">
+                <div class="comparison-icon">⚖️</div>
+                <div class="comparison-content">
+                    <div class="comparison-title">Step 7: Compare Results</div>
+                    <div class="comparison-text">Analyze Spectral vs Louvain vs GCN performance</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

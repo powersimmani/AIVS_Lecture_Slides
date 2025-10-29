@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hands-on with PyTorch/TensorFlow</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Aptos', 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            padding: 40px;
+        }
+        
+        .main-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+        }
+        
+        .content-layout {
+            display: grid;
+            grid-template-rows: auto 1fr;
+            gap: 15px;
+            flex: 1;
+        }
+        
+        .framework-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            flex: 1;
+        }
+        
+        .framework-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .framework-header {
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .pytorch-header {
+            background: linear-gradient(135deg, #ee4c2c 0%, #ff6b45 100%);
+        }
+        
+        .tensorflow-header {
+            background: linear-gradient(135deg, #ff6f00 0%, #ffa726 100%);
+        }
+        
+        .code-container {
+            background: #f8f9fa;
+            border: 2px solid;
+            border-radius: 8px;
+            padding: 12px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            overflow-y: auto;
+        }
+        
+        .pytorch-container {
+            border-color: #ee4c2c;
+        }
+        
+        .tensorflow-container {
+            border-color: #ff6f00;
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #e0e0e0;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+        
+        .code-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 4px;
+        }
+        
+        .code-comment {
+            color: #6a9955;
+        }
+        
+        .code-keyword {
+            color: #569cd6;
+        }
+        
+        .code-function {
+            color: #dcdcaa;
+        }
+        
+        .code-string {
+            color: #ce9178;
+        }
+        
+        .code-number {
+            color: #b5cea8;
+        }
+        
+        .comparison-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .feature-card {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .feature-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: auto 1fr 1fr;
+            gap: 8px;
+            font-size: 14px;
+        }
+        
+        .feature-row {
+            display: contents;
+        }
+        
+        .feature-name {
+            font-weight: 600;
+            color: #666;
+            padding: 6px 8px;
+            background: white;
+            border-radius: 4px;
+        }
+        
+        .pytorch-value {
+            color: #ee4c2c;
+            font-weight: 600;
+            padding: 6px 8px;
+            background: white;
+            border-radius: 4px;
+            text-align: center;
+        }
+        
+        .tensorflow-value {
+            color: #ff6f00;
+            font-weight: 600;
+            padding: 6px 8px;
+            background: white;
+            border-radius: 4px;
+            text-align: center;
+        }
+        
+        .workflow-card {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .workflow-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .workflow-steps {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+        }
+        
+        .workflow-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .step-box {
+            width: 80px;
+            height: 50px;
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            color: #1E64C8;
+        }
+        
+        .step-label {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+        }
+        
+        .arrow {
+            font-size: 20px;
+            color: #1E64C8;
+            font-weight: bold;
+        }
+        
+        .key-differences {
+            grid-column: 1 / -1;
+            background: #fff3cd;
+            border-left: 4px solid #ff9800;
+            padding: 12px;
+            border-radius: 4px;
+        }
+        
+        .differences-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #e65100;
+            margin-bottom: 8px;
+        }
+        
+        .differences-text {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-title">Hands-on with PyTorch/TensorFlow</div>
+        
+        <div class="content-layout">
+            <div class="framework-comparison">
+                <!-- PyTorch -->
+                <div class="framework-section">
+                    <div class="framework-header pytorch-header">
+                        <span>🔥</span>
+                        <span>PyTorch</span>
+                    </div>
+                    <div class="code-container pytorch-container">
+                        <div>
+                            <div class="code-label">1. Define Model</div>
+                            <div class="code-block">
+<span class="code-keyword">import</span> torch
+<span class="code-keyword">import</span> torch.nn <span class="code-keyword">as</span> nn
+
+<span class="code-keyword">class</span> <span class="code-function">NeuralNet</span>(nn.Module):
+    <span class="code-keyword">def</span> <span class="code-function">__init__</span>(self):
+        <span class="code-function">super</span>().<span class="code-function">__init__</span>()
+        self.fc1 = nn.<span class="code-function">Linear</span>(<span class="code-number">784</span>, <span class="code-number">128</span>)
+        self.fc2 = nn.<span class="code-function">Linear</span>(<span class="code-number">128</span>, <span class="code-number">10</span>)
+        self.relu = nn.<span class="code-function">ReLU</span>()
+    
+    <span class="code-keyword">def</span> <span class="code-function">forward</span>(self, x):
+        x = self.<span class="code-function">relu</span>(self.<span class="code-function">fc1</span>(x))
+        x = self.<span class="code-function">fc2</span>(x)
+        <span class="code-keyword">return</span> x
+
+model = <span class="code-function">NeuralNet</span>()
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="code-label">2. Training Loop</div>
+                            <div class="code-block">
+criterion = nn.<span class="code-function">CrossEntropyLoss</span>()
+optimizer = torch.optim.<span class="code-function">Adam</span>(model.<span class="code-function">parameters</span>())
+
+<span class="code-keyword">for</span> epoch <span class="code-keyword">in</span> <span class="code-function">range</span>(epochs):
+    <span class="code-keyword">for</span> x_batch, y_batch <span class="code-keyword">in</span> train_loader:
+        <span class="code-comment"># Forward pass</span>
+        outputs = <span class="code-function">model</span>(x_batch)
+        loss = <span class="code-function">criterion</span>(outputs, y_batch)
+        
+        <span class="code-comment"># Backward pass</span>
+        optimizer.<span class="code-function">zero_grad</span>()
+        loss.<span class="code-function">backward</span>()
+        optimizer.<span class="code-function">step</span>()
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- TensorFlow -->
+                <div class="framework-section">
+                    <div class="framework-header tensorflow-header">
+                        <span>🧮</span>
+                        <span>TensorFlow/Keras</span>
+                    </div>
+                    <div class="code-container tensorflow-container">
+                        <div>
+                            <div class="code-label">1. Define Model</div>
+                            <div class="code-block">
+<span class="code-keyword">import</span> tensorflow <span class="code-keyword">as</span> tf
+<span class="code-keyword">from</span> tensorflow <span class="code-keyword">import</span> keras
+
+model = keras.<span class="code-function">Sequential</span>([
+    keras.layers.<span class="code-function">Dense</span>(<span class="code-number">128</span>, activation=<span class="code-string">'relu'</span>,
+                         input_shape=(<span class="code-number">784</span>,)),
+    keras.layers.<span class="code-function">Dense</span>(<span class="code-number">10</span>, activation=<span class="code-string">'softmax'</span>)
+])
+
+model.<span class="code-function">compile</span>(
+    optimizer=<span class="code-string">'adam'</span>,
+    loss=<span class="code-string">'sparse_categorical_crossentropy'</span>,
+    metrics=[<span class="code-string">'accuracy'</span>]
+)
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="code-label">2. Training</div>
+                            <div class="code-block">
+<span class="code-comment"># Simple training with fit()</span>
+history = model.<span class="code-function">fit</span>(
+    x_train, y_train,
+    batch_size=<span class="code-number">32</span>,
+    epochs=<span class="code-number">10</span>,
+    validation_split=<span class="code-number">0.2</span>
+)
+
+<span class="code-comment"># Evaluation</span>
+test_loss, test_acc = model.<span class="code-function">evaluate</span>(
+    x_test, y_test
+)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="comparison-section">
+                <div class="feature-card">
+                    <div class="feature-title">Key Differences</div>
+                    <div class="feature-grid">
+                        <div class="feature-name">Style</div>
+                        <div class="pytorch-value">Pythonic</div>
+                        <div class="tensorflow-value">Keras API</div>
+                        
+                        <div class="feature-name">Paradigm</div>
+                        <div class="pytorch-value">Define-by-run</div>
+                        <div class="tensorflow-value">Sequential</div>
+                        
+                        <div class="feature-name">Debugging</div>
+                        <div class="pytorch-value">Native Python</div>
+                        <div class="tensorflow-value">TensorBoard</div>
+                        
+                        <div class="feature-name">Deployment</div>
+                        <div class="pytorch-value">TorchScript</div>
+                        <div class="tensorflow-value">TF Serving</div>
+                        
+                        <div class="feature-name">Learning Curve</div>
+                        <div class="pytorch-value">Moderate</div>
+                        <div class="tensorflow-value">Easy</div>
+                    </div>
+                </div>
+                
+                <div class="workflow-card">
+                    <div class="workflow-title">Common Workflow</div>
+                    <div class="workflow-steps">
+                        <div class="workflow-step">
+                            <div class="step-box">Data</div>
+                            <div class="step-label">Load & Prep</div>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div class="workflow-step">
+                            <div class="step-box">Model</div>
+                            <div class="step-label">Define</div>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div class="workflow-step">
+                            <div class="step-box">Train</div>
+                            <div class="step-label">Optimize</div>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div class="workflow-step">
+                            <div class="step-box">Eval</div>
+                            <div class="step-label">Test</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="key-differences">
+                    <div class="differences-title">💡 Which to Choose?</div>
+                    <div class="differences-text">
+                        <strong>PyTorch:</strong> Research, experimentation, custom operations, more control<br>
+                        <strong>TensorFlow:</strong> Production deployment, mobile/edge, high-level API, easier prototyping
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

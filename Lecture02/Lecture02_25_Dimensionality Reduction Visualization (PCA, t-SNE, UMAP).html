@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dimensionality Reduction Visualization</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #FFFFFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            padding: 25px 35px;
+        }
+        
+        .title-section {
+            text-align: center;
+            margin-bottom: 14px;
+        }
+        
+        .main-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .subtitle {
+            font-size: 17px;
+            color: #666666;
+        }
+        
+        .content-wrapper {
+            display: flex;
+            gap: 18px;
+            flex: 1;
+        }
+        
+        .left-panel {
+            flex: 1.6;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .methods-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            flex: 1;
+        }
+        
+        .method-card {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 10px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+        
+        .method-card:hover {
+            border-color: #1E64C8;
+            box-shadow: 0 4px 15px rgba(30, 100, 200, 0.15);
+            transform: translateY(-3px);
+        }
+        
+        .method-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .method-visual {
+            flex: 1;
+            background: #F8F8F8;
+            border-radius: 6px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .method-visual svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .method-description {
+            text-align: center;
+            font-size: 15px;
+            color: #666;
+            margin-top: 8px;
+            line-height: 1.3;
+        }
+        
+        .method-label {
+            background: #1E64C8;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 6px;
+            text-align: center;
+        }
+        
+        .pca-label { background: #1E64C8; }
+        .tsne-label { background: #FF9800; }
+        .umap-label { background: #4CAF50; }
+        
+        .scree-section {
+            background: #F8FBFF;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px;
+        }
+        
+        .scree-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .scree-plot {
+            height: 60px;
+            background: #F8F8F8;
+            border-radius: 6px;
+            padding: 8px;
+        }
+        
+        .scree-plot svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .right-panel {
+            flex: 0.4;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .comparison-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .comparison-row {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .comp-header {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .comp-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 16px;
+            color: #333;
+            line-height: 1.3;
+            padding: 6px 8px;
+            background: #F8FBFF;
+            border-radius: 4px;
+        }
+        
+        .comp-icon {
+            color: #1E64C8;
+            flex-shrink: 0;
+        }
+        
+        .caution-card {
+            background: #FFF9E6;
+            border: 2px solid #FFC107;
+            border-radius: 10px;
+            padding: 14px;
+        }
+        
+        .caution-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .caution-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 6px;
+            line-height: 1.3;
+        }
+        
+        .warning-icon {
+            color: #F57C00;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        
+        .tips-card {
+            background: #E8F5E9;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            padding: 14px;
+        }
+        
+        .tips-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2E7D32;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .tip-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 6px;
+        }
+        
+        .check-icon {
+            color: #4CAF50;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .method-card, .scree-section, .comparison-card, .caution-card, .tips-card {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        .method-card:nth-child(1) { animation-delay: 0.1s; }
+        .method-card:nth-child(2) { animation-delay: 0.2s; }
+        .method-card:nth-child(3) { animation-delay: 0.3s; }
+        .scree-section { animation-delay: 0.4s; }
+        .comparison-card { animation-delay: 0.5s; }
+        .caution-card { animation-delay: 0.6s; }
+        .tips-card { animation-delay: 0.7s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Dimensionality Reduction: PCA, t-SNE, UMAP</div>
+            <div class="subtitle">Projecting High-Dimensional Data to 2D</div>
+        </div>
+        
+        <div class="content-wrapper">
+            <div class="left-panel">
+                <div class="methods-row">
+                    <!-- PCA -->
+                    <div class="method-card">
+                        <div class="method-title">PCA</div>
+                        <div class="method-visual">
+                            <svg viewBox="0 0 100 100">
+                                <!-- Class 1 (blue) - more spread, linear -->
+                                <circle cx="25" cy="65" r="2.5" fill="#1E64C8" opacity="0.7"/>
+                                <circle cx="30" cy="60" r="2.5" fill="#1E64C8" opacity="0.7"/>
+                                <circle cx="35" cy="55" r="2.5" fill="#1E64C8" opacity="0.7"/>
+                                <circle cx="40" cy="50" r="2.5" fill="#1E64C8" opacity="0.7"/>
+                                <circle cx="45" cy="45" r="2.5" fill="#1E64C8" opacity="0.7"/>
+                                <circle cx="32" cy="58" r="2.5" fill="#1E64C8" opacity="0.7"/>
+                                <circle cx="38" cy="52" r="2.5" fill="#1E64C8" opacity="0.7"/>
+                                
+                                <!-- Class 2 (green) - more spread, linear -->
+                                <circle cx="55" cy="40" r="2.5" fill="#4CAF50" opacity="0.7"/>
+                                <circle cx="60" cy="35" r="2.5" fill="#4CAF50" opacity="0.7"/>
+                                <circle cx="65" cy="30" r="2.5" fill="#4CAF50" opacity="0.7"/>
+                                <circle cx="70" cy="25" r="2.5" fill="#4CAF50" opacity="0.7"/>
+                                <circle cx="75" cy="20" r="2.5" fill="#4CAF50" opacity="0.7"/>
+                                <circle cx="62" cy="33" r="2.5" fill="#4CAF50" opacity="0.7"/>
+                                <circle cx="68" cy="28" r="2.5" fill="#4CAF50" opacity="0.7"/>
+                                
+                                <!-- Class 3 (orange) -->
+                                <circle cx="45" cy="75" r="2.5" fill="#FF9800" opacity="0.7"/>
+                                <circle cx="50" cy="70" r="2.5" fill="#FF9800" opacity="0.7"/>
+                                <circle cx="55" cy="68" r="2.5" fill="#FF9800" opacity="0.7"/>
+                                <circle cx="48" cy="72" r="2.5" fill="#FF9800" opacity="0.7"/>
+                                
+                                <!-- Principal Component arrows -->
+                                <line x1="20" y1="80" x2="80" y2="20" stroke="#666" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.5"/>
+                                
+                                <!-- Axes -->
+                                <line x1="10" y1="90" x2="90" y2="90" stroke="#999" stroke-width="1"/>
+                                <line x1="10" y1="90" x2="10" y2="10" stroke="#999" stroke-width="1"/>
+                            </svg>
+                        </div>
+                        <div class="method-label pca-label">Linear Projection</div>
+                        <div class="method-description">Maximizes variance</div>
+                    </div>
+                    
+                    <!-- t-SNE -->
+                    <div class="method-card">
+                        <div class="method-title">t-SNE</div>
+                        <div class="method-visual">
+                            <svg viewBox="0 0 100 100">
+                                <!-- Class 1 (blue) - tight cluster -->
+                                <circle cx="25" cy="30" r="2.5" fill="#1E64C8" opacity="0.7"/>
+                                <circle cx="28" cy="28" r="2.5" fill="#1E64C8" opacity="0.7"/>
+                                <circle cx="30" cy="32" r="2.5" fill="#1E64C8" opacity="0.7"/>
+                                <circle cx="22" cy="33" r="2.5" fill="#1E64C8" opacity="0.7"/>
+                                <circle cx="27" cy="35" r="2.5" fill="#1E64C8" opacity="0.7"/>
+                                <circle cx="24" cy="27" r="2.5" fill="#1E64C8" opacity="0.7"/>
+                                <circle cx="29" cy="30" r="2.5" fill="#1E64C8" opacity="0.7"/>
+                                
+                                <!-- Class 2 (green) - tight cluster -->
+                                <circle cx="70" cy="25" r="2.5" fill="#4CAF50" opacity="0.7"/>
+                                <circle cx="73" cy="23" r="2.5" fill="#4CAF50" opacity="0.7"/>
+                                <circle cx="75" cy="27" r="2.5" fill="#4CAF50" opacity="0.7"/>
+                                <circle cx="67" cy="28" r="2.5" fill="#4CAF50" opacity="0.7"/>
+                                <circle cx="72" cy="30" r="2.5" fill="#4CAF50" opacity="0.7"/>
+                                <circle cx="69" cy="22" r="2.5" fill="#4CAF50" opacity="0.7"/>
+                                <circle cx="74" cy="25" r="2.5" fill="#4CAF50" opacity="0.7"/>
+                                
+                                <!-- Class 3 (orange) - tight cluster -->
+                                <circle cx="48" cy="70" r="2.5" fill="#FF9800" opacity="0.7"/>
+                                <circle cx="51" cy="68" r="2.5" fill="#FF9800" opacity="0.7"/>
+                                <circle cx="53" cy="72" r="2.5" fill="#FF9800" opacity="0.7"/>
+                                <circle cx="50" cy="73" r="2.5" fill="#FF9800" opacity="0.7"/>
+                                
+                                <!-- Axes -->
+                                <line x1="10" y1="90" x2="90" y2="90" stroke="#999" stroke-width="1"/>
+                                <line x1="10" y1="90" x2="10" y2="10" stroke="#999" stroke-width="1"/>
+                            </svg>
+                        </div>
+                        <div class="method-label tsne-label">Non-linear</div>
+                        <div class="method-description">Preserves local structure</div>
+                    </div>
+                    
+                    <!-- UMAP -->
+                    <div class="method-card">
+                        <div class="method-title">UMAP</div>
+                        <div class="method-visual">
+                            <svg viewBox="0 0 100 100">
+                                <!-- Class 1 (blue) - balanced cluster -->
+                                <circle cx="30" cy="35" r="2.5" fill="#1E64C8" opacity="0.7"/>
+                                <circle cx="33" cy="33" r="2.5" fill="#1E64C8" opacity="0.7"/>
+                                <circle cx="35" cy="37" r="2.5" fill="#1E64C8" opacity="0.7"/>
+                                <circle cx="27" cy="38" r="2.5" fill="#1E64C8" opacity="0.7"/>
+                                <circle cx="32" cy="40" r="2.5" fill="#1E64C8" opacity="0.7"/>
+                                <circle cx="29" cy="32" r="2.5" fill="#1E64C8" opacity="0.7"/>
+                                <circle cx="34" cy="35" r="2.5" fill="#1E64C8" opacity="0.7"/>
+                                
+                                <!-- Class 2 (green) - balanced cluster -->
+                                <circle cx="65" cy="30" r="2.5" fill="#4CAF50" opacity="0.7"/>
+                                <circle cx="68" cy="28" r="2.5" fill="#4CAF50" opacity="0.7"/>
+                                <circle cx="70" cy="32" r="2.5" fill="#4CAF50" opacity="0.7"/>
+                                <circle cx="62" cy="33" r="2.5" fill="#4CAF50" opacity="0.7"/>
+                                <circle cx="67" cy="35" r="2.5" fill="#4CAF50" opacity="0.7"/>
+                                <circle cx="64" cy="27" r="2.5" fill="#4CAF50" opacity="0.7"/>
+                                <circle cx="69" cy="30" r="2.5" fill="#4CAF50" opacity="0.7"/>
+                                
+                                <!-- Class 3 (orange) - balanced cluster -->
+                                <circle cx="50" cy="65" r="2.5" fill="#FF9800" opacity="0.7"/>
+                                <circle cx="53" cy="63" r="2.5" fill="#FF9800" opacity="0.7"/>
+                                <circle cx="55" cy="67" r="2.5" fill="#FF9800" opacity="0.7"/>
+                                <circle cx="52" cy="68" r="2.5" fill="#FF9800" opacity="0.7"/>
+                                
+                                <!-- Axes -->
+                                <line x1="10" y1="90" x2="90" y2="90" stroke="#999" stroke-width="1"/>
+                                <line x1="10" y1="90" x2="10" y2="10" stroke="#999" stroke-width="1"/>
+                            </svg>
+                        </div>
+                        <div class="method-label umap-label">Balanced</div>
+                        <div class="method-description">Local + global structure</div>
+                    </div>
+                </div>
+                
+                <div class="scree-section">
+                    <div class="scree-title">PCA Scree Plot: Explained Variance Ratio</div>
+                    <div class="scree-plot">
+                        <svg viewBox="0 0 100 50">
+                            <!-- Bars -->
+                            <rect x="5" y="10" width="8" height="35" fill="#1E64C8"/>
+                            <rect x="15" y="20" width="8" height="25" fill="#1E64C8"/>
+                            <rect x="25" y="28" width="8" height="17" fill="#42A5F5"/>
+                            <rect x="35" y="33" width="8" height="12" fill="#42A5F5"/>
+                            <rect x="45" y="37" width="8" height="8" fill="#90CAF9"/>
+                            <rect x="55" y="40" width="8" height="5" fill="#90CAF9"/>
+                            <rect x="65" y="42" width="8" height="3" fill="#E3F2FD"/>
+                            <rect x="75" y="43" width="8" height="2" fill="#E3F2FD"/>
+                            
+                            <!-- Line connecting tops -->
+                            <polyline points="9,10 19,20 29,28 39,33 49,37 59,40 69,42 79,43" 
+                                      fill="none" stroke="#C62828" stroke-width="1.5"/>
+                            
+                            <!-- Baseline -->
+                            <line x1="0" y1="45" x2="85" y2="45" stroke="#666" stroke-width="1"/>
+                            
+                            <!-- Labels -->
+                            <text x="9" y="50" text-anchor="middle" font-size="5" fill="#666">PC1</text>
+                            <text x="19" y="50" text-anchor="middle" font-size="5" fill="#666">PC2</text>
+                            <text x="29" y="50" text-anchor="middle" font-size="5" fill="#666">PC3</text>
+                            <text x="39" y="50" text-anchor="middle" font-size="5" fill="#666">PC4</text>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <div class="comparison-card">
+                    <div class="card-title">
+                        <span>⚖️</span>
+                        Comparison
+                    </div>
+                    
+                    <div class="comparison-row">
+                        <div class="comp-header">
+                            <span>🔵</span>
+                            <span>PCA</span>
+                        </div>
+                        <div class="comp-item">
+                            <span class="comp-icon">•</span>
+                            <span>Linear, interpretable</span>
+                        </div>
+                        <div class="comp-item">
+                            <span class="comp-icon">•</span>
+                            <span>Fast, deterministic</span>
+                        </div>
+                    </div>
+                    
+                    <div class="comparison-row">
+                        <div class="comp-header">
+                            <span>🟠</span>
+                            <span>t-SNE</span>
+                        </div>
+                        <div class="comp-item">
+                            <span class="comp-icon">•</span>
+                            <span>Non-linear, local focus</span>
+                        </div>
+                        <div class="comp-item">
+                            <span class="comp-icon">•</span>
+                            <span>Perplexity: 5-50</span>
+                        </div>
+                    </div>
+                    
+                    <div class="comparison-row">
+                        <div class="comp-header">
+                            <span>🟢</span>
+                            <span>UMAP</span>
+                        </div>
+                        <div class="comp-item">
+                            <span class="comp-icon">•</span>
+                            <span>Faster than t-SNE</span>
+                        </div>
+                        <div class="comp-item">
+                            <span class="comp-icon">•</span>
+                            <span>Local + global</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="caution-card">
+                    <div class="caution-title">⚠️ Cautions</div>
+                    <div class="caution-item">
+                        <span class="warning-icon">▸</span>
+                        <span>2D projections lose info</span>
+                    </div>
+                    <div class="caution-item">
+                        <span class="warning-icon">▸</span>
+                        <span>Can create false patterns</span>
+                    </div>
+                    <div class="caution-item">
+                        <span class="warning-icon">▸</span>
+                        <span>Validate with multiple methods</span>
+                    </div>
+                </div>
+                
+                <div class="tips-card">
+                    <div class="tips-title">✓ Best Practices</div>
+                    <div class="tip-item">
+                        <span class="check-icon">✓</span>
+                        <span>Color by class labels</span>
+                    </div>
+                    <div class="tip-item">
+                        <span class="check-icon">✓</span>
+                        <span>Try continuous variables</span>
+                    </div>
+                    <div class="tip-item">
+                        <span class="check-icon">✓</span>
+                        <span>Combine with clustering</span>
+                    </div>
+                    <div class="tip-item">
+                        <span class="check-icon">✓</span>
+                        <span>Use scree plot for PCA</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linear Classifier Concepts</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px;
+            position: relative;
+        }
+        
+        .title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .content-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            height: calc(100% - 50px);
+        }
+        
+        .goal-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            border-radius: 10px;
+            padding: 18px 24px;
+            color: white;
+            text-align: center;
+        }
+        
+        .goal-label {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            opacity: 0.95;
+        }
+        
+        .goal-text {
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+        
+        .decision-section {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .function-box {
+            background: white;
+            border: 3px solid #1E64C8;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .function-label {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        
+        .function-formula {
+            font-size: 20px;
+            color: #1E64C8;
+            font-weight: 700;
+            font-style: italic;
+        }
+        
+        .arrow-icon {
+            font-size: 32px;
+            color: #1E64C8;
+            font-weight: bold;
+        }
+        
+        .rule-box {
+            background: #f8f9fa;
+            border: 3px solid #1E64C8;
+            border-radius: 10px;
+            padding: 16px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .rule-label {
+            font-size: 16px;
+            color: #666;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 4px;
+        }
+        
+        .rule-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 8px;
+            background: white;
+            border-radius: 6px;
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .class-1 {
+            border-left: 4px solid #28a745;
+        }
+        
+        .class-0 {
+            border-left: 4px solid #dc3545;
+        }
+        
+        .components-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            flex: 1;
+        }
+        
+        .component-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+        
+        .component-card:hover {
+            background: #f8fbff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.15);
+        }
+        
+        .component-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .component-icon {
+            width: 32px;
+            height: 32px;
+            background: #1E64C8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .component-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .component-desc {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.4;
+            padding-left: 42px;
+        }
+        
+        .high-dim-card {
+            grid-column: span 2;
+            background: #fff8e6;
+            border-color: #ffc107;
+        }
+        
+        .high-dim-card .component-icon {
+            background: #ffc107;
+        }
+        
+        .high-dim-card .component-title {
+            color: #f57c00;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Linear Classifier Concepts</div>
+        
+        <div class="content-layout">
+            <!-- Goal -->
+            <div class="goal-box">
+                <div class="goal-label">Goal:</div>
+                <div class="goal-text">Find a line (hyperplane) that separates two classes</div>
+            </div>
+            
+            <!-- Decision Section -->
+            <div class="decision-section">
+                <div class="function-box">
+                    <div class="function-label">Decision Function:</div>
+                    <div class="function-formula">f(x) = wᵀx + b</div>
+                </div>
+                
+                <div class="arrow-icon">→</div>
+                
+                <div class="rule-box">
+                    <div class="rule-label">Classification Rule:</div>
+                    <div class="rule-item class-1">
+                        if f(x) > 0 → <strong>Class 1</strong>
+                    </div>
+                    <div class="rule-item class-0">
+                        else → <strong>Class 0</strong>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Components Grid -->
+            <div class="components-grid">
+                <div class="component-card">
+                    <div class="component-header">
+                        <div class="component-icon">📐</div>
+                        <div class="component-title">Geometric View</div>
+                    </div>
+                    <div class="component-desc">
+                        Distance from decision boundary
+                    </div>
+                </div>
+                
+                <div class="component-card">
+                    <div class="component-header">
+                        <div class="component-icon">w</div>
+                        <div class="component-title">Weight Vector w</div>
+                    </div>
+                    <div class="component-desc">
+                        Perpendicular to decision boundary
+                    </div>
+                </div>
+                
+                <div class="component-card">
+                    <div class="component-header">
+                        <div class="component-icon">b</div>
+                        <div class="component-title">Bias Term b</div>
+                    </div>
+                    <div class="component-desc">
+                        Shifts boundary position
+                    </div>
+                </div>
+                
+                <div class="component-card high-dim-card">
+                    <div class="component-header">
+                        <div class="component-icon">∞</div>
+                        <div class="component-title">Multiple Features</div>
+                    </div>
+                    <div class="component-desc">
+                        Hyperplane in high-dimensional space
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

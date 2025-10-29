@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why is this Process Necessary?</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px 40px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .title {
+            font-size: 26px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .central-question {
+            background: linear-gradient(135deg, #1E64C8 0%, #4A90E2 100%);
+            color: white;
+            padding: 18px 30px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(30, 100, 200, 0.25);
+        }
+        
+        .question-text {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .question-icon {
+            font-size: 24px;
+            margin-right: 12px;
+        }
+        
+        .reasons-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+            flex-grow: 1;
+        }
+        
+        .reason-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border-radius: 10px;
+            padding: 18px 20px;
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(30, 100, 200, 0.08);
+            border-left: 5px solid #1E64C8;
+        }
+        
+        .reason-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(30, 100, 200, 0.2);
+            border-left-width: 8px;
+        }
+        
+        .reason-icon {
+            font-size: 32px;
+            flex-shrink: 0;
+            line-height: 1;
+        }
+        
+        .reason-content {
+            flex: 1;
+        }
+        
+        .reason-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .reason-description {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.4;
+        }
+        
+        .highlight-card {
+            border-left-color: #27AE60;
+        }
+        
+        .highlight-card .reason-title {
+            color: #27AE60;
+        }
+        
+        .bottom-note {
+            background: linear-gradient(135deg, #f0f8ff 0%, #e6f2ff 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 15px 25px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .note-text {
+            font-size: 17px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .note-icon {
+            font-size: 20px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">Why is this Process Necessary?</div>
+            <div class="subtitle">Part 2/7: Forward Process</div>
+        </div>
+        
+        <div class="central-question">
+            <span class="question-icon">🤔</span>
+            <span class="question-text">Understanding the Fundamental Motivation</span>
+        </div>
+        
+        <div class="reasons-grid">
+            <!-- Tractable Posterior -->
+            <div class="reason-card highlight-card">
+                <div class="reason-icon">📊</div>
+                <div class="reason-content">
+                    <div class="reason-title">Tractable Posterior</div>
+                    <div class="reason-description">Known distribution q(x_{t-1}|x_t,x₀) enables efficient training</div>
+                </div>
+            </div>
+            
+            <!-- Curriculum Learning -->
+            <div class="reason-card">
+                <div class="reason-icon">📚</div>
+                <div class="reason-content">
+                    <div class="reason-title">Curriculum Learning</div>
+                    <div class="reason-description">Start easy (small noise), gradually increase difficulty</div>
+                </div>
+            </div>
+            
+            <!-- Stable Gradients -->
+            <div class="reason-card">
+                <div class="reason-icon">⚡</div>
+                <div class="reason-content">
+                    <div class="reason-title">Stable Gradients</div>
+                    <div class="reason-description">Small steps ensure smooth gradient flow during training</div>
+                </div>
+            </div>
+            
+            <!-- Mode Coverage -->
+            <div class="reason-card">
+                <div class="reason-icon">🎯</div>
+                <div class="reason-content">
+                    <div class="reason-title">Mode Coverage</div>
+                    <div class="reason-description">Noise prevents collapse to single mode</div>
+                </div>
+            </div>
+            
+            <!-- Theoretical Foundation -->
+            <div class="reason-card highlight-card">
+                <div class="reason-icon">🧮</div>
+                <div class="reason-content">
+                    <div class="reason-title">Theoretical Foundation</div>
+                    <div class="reason-description">Enables variational bound derivation for optimization</div>
+                </div>
+            </div>
+            
+            <!-- Flexible Design -->
+            <div class="reason-card">
+                <div class="reason-icon">🔧</div>
+                <div class="reason-content">
+                    <div class="reason-title">Flexible Design</div>
+                    <div class="reason-description">Can adjust β_t schedule for different data types</div>
+                </div>
+            </div>
+            
+            <!-- Reversibility -->
+            <div class="reason-card highlight-card">
+                <div class="reason-icon">🔄</div>
+                <div class="reason-content">
+                    <div class="reason-title">Reversibility</div>
+                    <div class="reason-description">Ensures reverse generative process is well-defined</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bottom-note">
+            <span class="note-icon">💡</span>
+            <span class="note-text">The forward process creates a tractable learning framework that makes the reverse process trainable</span>
+        </div>
+    </div>
+</body>
+</html>

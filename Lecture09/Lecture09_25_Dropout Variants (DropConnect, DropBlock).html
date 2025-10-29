@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dropout Variants</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: #ffffff;
+            padding: 20px 40px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 25px;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        .variant-card {
+            background: linear-gradient(135deg, #f8f9fb 0%, #e8f4ff 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 12px;
+            padding: 18px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .variant-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 16px rgba(30, 100, 200, 0.2);
+            background: linear-gradient(135deg, #e8f4ff 0%, #d1e9ff 100%);
+        }
+        
+        .variant-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        
+        .variant-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .variant-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 12px;
+            min-height: 100px;
+        }
+        
+        .feature-map {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 4px;
+        }
+        
+        .pixel {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+            border: 1px solid;
+        }
+        
+        .pixel-active {
+            background: #4caf50;
+            border-color: #2e7d32;
+        }
+        
+        .pixel-dropped {
+            background: #e8e8e8;
+            border-color: #999;
+            opacity: 0.4;
+        }
+        
+        .weight-matrix {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+        }
+        
+        .weight-cell {
+            width: 28px;
+            height: 28px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            border: 2px solid;
+        }
+        
+        .weight-active {
+            background: #4caf50;
+            border-color: #2e7d32;
+            color: white;
+        }
+        
+        .weight-dropped {
+            background: #e8e8e8;
+            border-color: #999;
+            color: #999;
+        }
+        
+        .channel-visual {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .channel {
+            width: 35px;
+            height: 80px;
+            border-radius: 6px;
+            border: 2px solid;
+        }
+        
+        .channel-active {
+            background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
+            border-color: #2e7d32;
+        }
+        
+        .channel-dropped {
+            background: #e8e8e8;
+            border-color: #999;
+            opacity: 0.4;
+        }
+        
+        .path-visual {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+        }
+        
+        .path {
+            width: 120px;
+            height: 25px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+            border: 2px solid;
+        }
+        
+        .path-active {
+            background: #4caf50;
+            border-color: #2e7d32;
+            color: white;
+        }
+        
+        .path-dropped {
+            background: #e8e8e8;
+            border-color: #999;
+            color: #999;
+        }
+        
+        .variant-description {
+            font-size: 15px;
+            color: #2c3e50;
+            line-height: 1.5;
+            text-align: center;
+        }
+        
+        .highlight {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .best-for {
+            background: #e8f5e9;
+            border-radius: 6px;
+            padding: 8px 12px;
+            margin-top: 10px;
+            text-align: center;
+        }
+        
+        .best-for-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #4caf50;
+            margin-bottom: 3px;
+        }
+        
+        .best-for-text {
+            font-size: 14px;
+            color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Dropout Variants (DropConnect, DropBlock)</div>
+        
+        <div class="main-content">
+            <div class="variant-card">
+                <div class="variant-header">
+                    <div class="variant-name">DropConnect</div>
+                </div>
+                <div class="variant-visual">
+                    <div class="weight-matrix">
+                        <div class="weight-cell weight-active">W</div>
+                        <div class="weight-cell weight-dropped">✗</div>
+                        <div class="weight-cell weight-active">W</div>
+                        <div class="weight-cell weight-dropped">✗</div>
+                        <div class="weight-cell weight-dropped">✗</div>
+                        <div class="weight-cell weight-active">W</div>
+                        <div class="weight-cell weight-active">W</div>
+                        <div class="weight-cell weight-dropped">✗</div>
+                        <div class="weight-cell weight-active">W</div>
+                        <div class="weight-cell weight-active">W</div>
+                        <div class="weight-cell weight-dropped">✗</div>
+                        <div class="weight-cell weight-active">W</div>
+                    </div>
+                </div>
+                <div class="variant-description">
+                    Drops <span class="highlight">weights</span> instead of activations
+                </div>
+            </div>
+            
+            <div class="variant-card">
+                <div class="variant-header">
+                    <div class="variant-name">DropBlock</div>
+                </div>
+                <div class="variant-visual">
+                    <div class="feature-map">
+                        <div class="pixel pixel-active"></div>
+                        <div class="pixel pixel-active"></div>
+                        <div class="pixel pixel-active"></div>
+                        <div class="pixel pixel-active"></div>
+                        <div class="pixel pixel-active"></div>
+                        <div class="pixel pixel-active"></div>
+                        <div class="pixel pixel-active"></div>
+                        <div class="pixel pixel-dropped"></div>
+                        <div class="pixel pixel-dropped"></div>
+                        <div class="pixel pixel-dropped"></div>
+                        <div class="pixel pixel-active"></div>
+                        <div class="pixel pixel-active"></div>
+                        <div class="pixel pixel-active"></div>
+                        <div class="pixel pixel-dropped"></div>
+                        <div class="pixel pixel-dropped"></div>
+                        <div class="pixel pixel-dropped"></div>
+                        <div class="pixel pixel-active"></div>
+                        <div class="pixel pixel-active"></div>
+                        <div class="pixel pixel-active"></div>
+                        <div class="pixel pixel-dropped"></div>
+                        <div class="pixel pixel-dropped"></div>
+                        <div class="pixel pixel-dropped"></div>
+                        <div class="pixel pixel-active"></div>
+                        <div class="pixel pixel-active"></div>
+                        <div class="pixel pixel-active"></div>
+                        <div class="pixel pixel-active"></div>
+                        <div class="pixel pixel-active"></div>
+                        <div class="pixel pixel-active"></div>
+                        <div class="pixel pixel-active"></div>
+                        <div class="pixel pixel-active"></div>
+                        <div class="pixel pixel-active"></div>
+                        <div class="pixel pixel-active"></div>
+                        <div class="pixel pixel-active"></div>
+                        <div class="pixel pixel-active"></div>
+                        <div class="pixel pixel-active"></div>
+                        <div class="pixel pixel-active"></div>
+                    </div>
+                </div>
+                <div class="variant-description">
+                    Drops <span class="highlight">contiguous regions</span> in feature maps
+                </div>
+                <div class="best-for">
+                    <div class="best-for-label">✓ Better for CNNs</div>
+                    <div class="best-for-text">Prevents info leaking</div>
+                </div>
+            </div>
+            
+            <div class="variant-card">
+                <div class="variant-header">
+                    <div class="variant-name">Spatial Dropout</div>
+                </div>
+                <div class="variant-visual">
+                    <div class="channel-visual">
+                        <div class="channel channel-active"></div>
+                        <div class="channel channel-dropped"></div>
+                        <div class="channel channel-active"></div>
+                        <div class="channel channel-dropped"></div>
+                        <div class="channel channel-active"></div>
+                    </div>
+                </div>
+                <div class="variant-description">
+                    Drops entire <span class="highlight">feature channels</span>
+                </div>
+            </div>
+            
+            <div class="variant-card">
+                <div class="variant-header">
+                    <div class="variant-name">DropPath</div>
+                </div>
+                <div class="variant-visual">
+                    <div class="path-visual">
+                        <div class="path path-active">Branch 1</div>
+                        <div class="path path-dropped">Branch 2 ✗</div>
+                        <div class="path path-active">Branch 3</div>
+                    </div>
+                </div>
+                <div class="variant-description">
+                    Drops entire <span class="highlight">paths</span> in multi-branch architectures
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

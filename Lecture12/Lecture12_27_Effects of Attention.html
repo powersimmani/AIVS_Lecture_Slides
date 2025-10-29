@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Effects of Attention</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #ffffff;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 35px;
+            position: relative;
+        }
+        
+        .main-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 18px;
+        }
+        
+        .content {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            height: calc(100% - 40px);
+        }
+        
+        /* Visual Comparison */
+        .visual-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            flex: 1;
+        }
+        
+        .comparison-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 18px;
+            border-top: 5px solid currentColor;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .card-before {
+            color: #dc3545;
+        }
+        
+        .card-after {
+            color: #28a745;
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+        
+        .card-icon {
+            width: 36px;
+            height: 36px;
+            background: currentColor;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .card-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: currentColor;
+        }
+        
+        /* Attention Heatmap Visualization */
+        .heatmap-container {
+            flex: 1;
+            background: white;
+            border-radius: 8px;
+            padding: 14px;
+            border: 2px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .heatmap-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+            text-align: center;
+        }
+        
+        .heatmap-grid {
+            display: grid;
+            grid-template-columns: auto repeat(4, 1fr);
+            gap: 4px;
+            align-items: center;
+        }
+        
+        .heatmap-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #666;
+            text-align: center;
+        }
+        
+        .heatmap-cell {
+            height: 35px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+            color: white;
+        }
+        
+        /* Before: All equal */
+        .heat-equal {
+            background: #999;
+        }
+        
+        /* After: Variable attention */
+        .heat-low {
+            background: #e6f0f8;
+            color: #666;
+        }
+        
+        .heat-medium {
+            background: #82ace0;
+        }
+        
+        .heat-high {
+            background: #1E64C8;
+        }
+        
+        .heat-very-high {
+            background: #0d3d7a;
+        }
+        
+        /* Description */
+        .card-description {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 3px solid currentColor;
+            font-size: 14px;
+            color: #555;
+            line-height: 1.4;
+        }
+        
+        /* Benefits Grid */
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+        
+        .benefit-card {
+            background: #e8f2ff;
+            border-radius: 8px;
+            padding: 14px;
+            border-left: 4px solid #1E64C8;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .benefit-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 16px rgba(30, 100, 200, 0.15);
+        }
+        
+        .benefit-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .benefit-icon {
+            font-size: 22px;
+        }
+        
+        .benefit-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .benefit-description {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.3;
+        }
+        
+        /* Performance Box */
+        .performance-box {
+            background: #d4edda;
+            border: 2px solid #28a745;
+            border-radius: 8px;
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+        }
+        
+        .performance-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .performance-label {
+            font-size: 13px;
+            color: #155724;
+            font-weight: 600;
+        }
+        
+        .performance-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #28a745;
+        }
+        
+        .performance-metric {
+            font-size: 11px;
+            color: #155724;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-title">The Effects of Attention Mechanism</div>
+        
+        <div class="content">
+            <!-- Visual Comparison -->
+            <div class="visual-comparison">
+                <!-- Before Attention -->
+                <div class="comparison-card card-before">
+                    <div class="card-header">
+                        <div class="card-icon">✗</div>
+                        <div class="card-title">Before Attention</div>
+                    </div>
+                    
+                    <div class="heatmap-container">
+                        <div class="heatmap-title">All inputs treated equally</div>
+                        <div class="heatmap-grid">
+                            <div></div>
+                            <div class="heatmap-label">x₁</div>
+                            <div class="heatmap-label">x₂</div>
+                            <div class="heatmap-label">x₃</div>
+                            <div class="heatmap-label">x₄</div>
+                            
+                            <div class="heatmap-label">y₁</div>
+                            <div class="heatmap-cell heat-equal">0.25</div>
+                            <div class="heatmap-cell heat-equal">0.25</div>
+                            <div class="heatmap-cell heat-equal">0.25</div>
+                            <div class="heatmap-cell heat-equal">0.25</div>
+                            
+                            <div class="heatmap-label">y₂</div>
+                            <div class="heatmap-cell heat-equal">0.25</div>
+                            <div class="heatmap-cell heat-equal">0.25</div>
+                            <div class="heatmap-cell heat-equal">0.25</div>
+                            <div class="heatmap-cell heat-equal">0.25</div>
+                            
+                            <div class="heatmap-label">y₃</div>
+                            <div class="heatmap-cell heat-equal">0.25</div>
+                            <div class="heatmap-cell heat-equal">0.25</div>
+                            <div class="heatmap-cell heat-equal">0.25</div>
+                            <div class="heatmap-cell heat-equal">0.25</div>
+                        </div>
+                    </div>
+                    
+                    <div class="card-description card-before">
+                        <strong>Static context:</strong> Same fixed representation used for all outputs. No selective focus on relevant information.
+                    </div>
+                </div>
+                
+                <!-- After Attention -->
+                <div class="comparison-card card-after">
+                    <div class="card-header">
+                        <div class="card-icon">✓</div>
+                        <div class="card-title">With Attention</div>
+                    </div>
+                    
+                    <div class="heatmap-container">
+                        <div class="heatmap-title">Dynamic attention weights</div>
+                        <div class="heatmap-grid">
+                            <div></div>
+                            <div class="heatmap-label">x₁</div>
+                            <div class="heatmap-label">x₂</div>
+                            <div class="heatmap-label">x₃</div>
+                            <div class="heatmap-label">x₄</div>
+                            
+                            <div class="heatmap-label">y₁</div>
+                            <div class="heatmap-cell heat-very-high">0.7</div>
+                            <div class="heatmap-cell heat-medium">0.2</div>
+                            <div class="heatmap-cell heat-low">0.05</div>
+                            <div class="heatmap-cell heat-low">0.05</div>
+                            
+                            <div class="heatmap-label">y₂</div>
+                            <div class="heatmap-cell heat-low">0.1</div>
+                            <div class="heatmap-cell heat-very-high">0.6</div>
+                            <div class="heatmap-cell heat-medium">0.25</div>
+                            <div class="heatmap-cell heat-low">0.05</div>
+                            
+                            <div class="heatmap-label">y₃</div>
+                            <div class="heatmap-cell heat-low">0.05</div>
+                            <div class="heatmap-cell heat-medium">0.15</div>
+                            <div class="heatmap-cell heat-high">0.3</div>
+                            <div class="heatmap-cell heat-very-high">0.5</div>
+                        </div>
+                    </div>
+                    
+                    <div class="card-description card-after">
+                        <strong>Dynamic context:</strong> Different attention distribution for each output. Focuses on most relevant inputs at each step.
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Benefits Grid -->
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-header">
+                        <span class="benefit-icon">🎯</span>
+                        <span class="benefit-title">Better Alignment</span>
+                    </div>
+                    <div class="benefit-description">
+                        Learns input-output correspondence automatically. Essential for translation tasks.
+                    </div>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-header">
+                        <span class="benefit-icon">📏</span>
+                        <span class="benefit-title">Long Sequences</span>
+                    </div>
+                    <div class="benefit-description">
+                        Handles long inputs effectively without information bottleneck. No gradient vanishing.
+                    </div>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-header">
+                        <span class="benefit-icon">🔍</span>
+                        <span class="benefit-title">Interpretability</span>
+                    </div>
+                    <div class="benefit-description">
+                        Attention weights visualize what model focuses on. Debugging and understanding easier.
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Performance Improvement -->
+            <div class="performance-box">
+                <div class="performance-item">
+                    <div class="performance-label">Translation Quality</div>
+                    <div class="performance-value">↑ 15-20%</div>
+                    <div class="performance-metric">BLEU Score Improvement</div>
+                </div>
+                <div class="performance-item">
+                    <div class="performance-label">Long Sequences</div>
+                    <div class="performance-value">↑ 30-40%</div>
+                    <div class="performance-metric">Performance on 50+ tokens</div>
+                </div>
+                <div class="performance-item">
+                    <div class="performance-label">Gradient Flow</div>
+                    <div class="performance-value">✓ Stable</div>
+                    <div class="performance-metric">Direct path to each input</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

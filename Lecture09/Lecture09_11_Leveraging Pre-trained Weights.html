@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leveraging Pre-trained Weights</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: #ffffff;
+            padding: 20px 40px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 25px;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 25px;
+            height: 450px;
+        }
+        
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .network-visual {
+            flex: 1;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .visual-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .layers-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .layer-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .layer-boxes {
+            flex: 1;
+            display: flex;
+            gap: 8px;
+        }
+        
+        .layer-box {
+            flex: 1;
+            height: 50px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .frozen-layer {
+            background: linear-gradient(135deg, #90caf9 0%, #64b5f6 100%);
+            border: 2px solid #1E64C8;
+        }
+        
+        .finetune-layer {
+            background: linear-gradient(135deg, #ffc107 0%, #ffb300 100%);
+            border: 2px solid #f57c00;
+        }
+        
+        .layer-label {
+            min-width: 120px;
+            font-size: 16px;
+            color: #2c3e50;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+        
+        .label-main {
+            font-weight: 600;
+        }
+        
+        .label-sub {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .arrow-icon {
+            font-size: 20px;
+            color: #1E64C8;
+        }
+        
+        .source-box {
+            background: white;
+            border: 2px dashed #1E64C8;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .source-title {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        
+        .source-items {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+        
+        .source-item {
+            background: #1E64C8;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 600;
+        }
+        
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .section-header {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 5px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .benefit-card {
+            background: #f8f9fb;
+            border-left: 4px solid #1E64C8;
+            padding: 13px 16px;
+            border-radius: 6px;
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.5;
+            transition: all 0.3s ease;
+        }
+        
+        .benefit-card:hover {
+            background: #eef3fb;
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(30, 100, 200, 0.15);
+        }
+        
+        .highlight {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .usage-box {
+            background: #e8f5e9;
+            border: 2px solid #4caf50;
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin-top: 10px;
+        }
+        
+        .usage-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #4caf50;
+            margin-bottom: 8px;
+        }
+        
+        .usage-text {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+        
+        .icon-emoji {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Leveraging Pre-trained Weights</div>
+        
+        <div class="main-content">
+            <div class="left-section">
+                <div class="network-visual">
+                    <div class="visual-title">Transfer Learning Architecture</div>
+                    
+                    <div class="layers-container">
+                        <div class="layer-group">
+                            <div class="layer-label">
+                                <div class="label-main">Lower Layers</div>
+                                <div class="label-sub">General features</div>
+                            </div>
+                            <div class="arrow-icon">→</div>
+                            <div class="layer-boxes">
+                                <div class="layer-box frozen-layer">Edges</div>
+                                <div class="layer-box frozen-layer">Textures</div>
+                                <div class="layer-box frozen-layer">Patterns</div>
+                            </div>
+                        </div>
+                        
+                        <div class="layer-group">
+                            <div class="layer-label">
+                                <div class="label-main">Higher Layers</div>
+                                <div class="label-sub">Task-specific</div>
+                            </div>
+                            <div class="arrow-icon">→</div>
+                            <div class="layer-boxes">
+                                <div class="layer-box finetune-layer">Domain</div>
+                                <div class="layer-box finetune-layer">Features</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="source-box">
+                        <div class="source-title">Pre-trained on Large Datasets</div>
+                        <div class="source-items">
+                            <div class="source-item">ImageNet</div>
+                            <div class="source-item">COCO</div>
+                            <div class="source-item">etc.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-section">
+                <div class="section-header">Key Benefits</div>
+                
+                <div class="benefit-card">
+                    <span class="icon-emoji">🔄</span>
+                    <span class="highlight">Reuse learned features</span> from large-scale datasets
+                </div>
+                
+                <div class="benefit-card">
+                    <span class="icon-emoji">⚡</span>
+                    <span class="highlight">Dramatically reduces</span> training time and data requirements
+                </div>
+                
+                <div class="benefit-card">
+                    <span class="icon-emoji">🔧</span>
+                    <span class="highlight">Fine-tune</span> pre-trained weights for specific tasks
+                </div>
+                
+                <div class="benefit-card">
+                    <span class="icon-emoji">🎯</span>
+                    Lower layers: <span class="highlight">general features</span> (edges, textures)
+                </div>
+                
+                <div class="benefit-card">
+                    <span class="icon-emoji">🔝</span>
+                    Higher layers: <span class="highlight">domain-specific</span> features
+                </div>
+                
+                <div class="usage-box">
+                    <div class="usage-title">✓ Standard Practice</div>
+                    <div class="usage-text">
+                        Widely adopted in <strong>Computer Vision</strong> and <strong>NLP</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

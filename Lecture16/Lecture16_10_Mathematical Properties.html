@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mathematical Properties</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px 40px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .properties-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+            flex-grow: 1;
+        }
+        
+        .property-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border-left: 5px solid #1E64C8;
+            border-radius: 10px;
+            padding: 18px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(30, 100, 200, 0.08);
+        }
+        
+        .property-card:hover {
+            transform: translateX(8px);
+            box-shadow: 0 4px 15px rgba(30, 100, 200, 0.2);
+            border-left-width: 8px;
+        }
+        
+        .property-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .property-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        
+        .property-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E64C8;
+        }
+        
+        .property-formula {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 10px 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 17px;
+            color: #333;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .property-description {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.4;
+        }
+        
+        .highlight-card {
+            border-left-color: #27AE60;
+        }
+        
+        .highlight-card .property-title {
+            color: #27AE60;
+        }
+        
+        .key-insight {
+            background: linear-gradient(135deg, #1E64C8 0%, #4A90E2 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(30, 100, 200, 0.3);
+        }
+        
+        .insight-text {
+            font-size: 17px;
+            font-weight: 600;
+        }
+        
+        .insight-icon {
+            font-size: 20px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">Mathematical Properties</div>
+            <div class="subtitle">Part 2/7: Forward Process</div>
+        </div>
+        
+        <div class="properties-grid">
+            <!-- Mean Preservation -->
+            <div class="property-card">
+                <div class="property-header">
+                    <div class="property-icon">📊</div>
+                    <div class="property-title">Mean Preservation</div>
+                </div>
+                <div class="property-formula">E[x_t] = √ᾱ_t · x₀</div>
+                <div class="property-description">Expected value scaled by √ᾱ_t</div>
+            </div>
+            
+            <!-- Variance Growth -->
+            <div class="property-card">
+                <div class="property-header">
+                    <div class="property-icon">📈</div>
+                    <div class="property-title">Variance Growth</div>
+                </div>
+                <div class="property-formula">Var[x_t] = (1-ᾱ_t) · I</div>
+                <div class="property-description">Variance increases as noise accumulates</div>
+            </div>
+            
+            <!-- Gaussian Distribution -->
+            <div class="property-card highlight-card">
+                <div class="property-header">
+                    <div class="property-icon">🔔</div>
+                    <div class="property-title">Gaussian Distribution</div>
+                </div>
+                <div class="property-formula">q(x_t|x₀) = N(x_t; √ᾱ_t·x₀, (1-ᾱ_t)·I)</div>
+                <div class="property-description">Complete distributional characterization</div>
+            </div>
+            
+            <!-- Posterior -->
+            <div class="property-card">
+                <div class="property-header">
+                    <div class="property-icon">🔙</div>
+                    <div class="property-title">Posterior Distribution</div>
+                </div>
+                <div class="property-formula">q(x_{t-1}|x_t,x₀)</div>
+                <div class="property-description">Also Gaussian with closed-form solution</div>
+            </div>
+            
+            <!-- Tractable Likelihood -->
+            <div class="property-card">
+                <div class="property-header">
+                    <div class="property-icon">🧮</div>
+                    <div class="property-title">Tractable Likelihood</div>
+                </div>
+                <div class="property-description">Can compute exact log-likelihood for model evaluation and comparison</div>
+            </div>
+            
+            <!-- Reversibility -->
+            <div class="property-card highlight-card">
+                <div class="property-header">
+                    <div class="property-icon">🔄</div>
+                    <div class="property-title">Reversibility</div>
+                </div>
+                <div class="property-description">Theoretical foundation enables the reverse generative process</div>
+            </div>
+            
+            <!-- Independence -->
+            <div class="property-card">
+                <div class="property-header">
+                    <div class="property-icon">🎲</div>
+                    <div class="property-title">Noise Independence</div>
+                </div>
+                <div class="property-description">Noise at different timesteps is independent, simplifying analysis</div>
+            </div>
+        </div>
+        
+        <div class="key-insight">
+            <span class="insight-icon">💡</span>
+            <span class="insight-text">All properties maintain Gaussian structure, enabling tractable inference and generation</span>
+        </div>
+    </div>
+</body>
+</html>

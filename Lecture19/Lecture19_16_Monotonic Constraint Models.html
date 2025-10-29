@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monotonic Constraint Models</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+            padding: 30px 40px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+            font-style: italic;
+        }
+        
+        /* Main content */
+        .content {
+            display: flex;
+            gap: 25px;
+            flex: 1;
+        }
+        
+        /* Comparison plots section */
+        .plots-section {
+            flex: 1.3;
+            display: flex;
+            gap: 20px;
+        }
+        
+        .plot-container {
+            flex: 1;
+            background: white;
+            border: 2px solid #E5E7EB;
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s;
+        }
+        
+        .plot-container:hover {
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+        }
+        
+        .plot-container.bad {
+            border-color: #E57373;
+        }
+        
+        .plot-container.good {
+            border-color: #4CAF50;
+        }
+        
+        .plot-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid currentColor;
+        }
+        
+        .plot-container.bad .plot-header {
+            border-color: #E57373;
+        }
+        
+        .plot-container.good .plot-header {
+            border-color: #4CAF50;
+        }
+        
+        .plot-icon {
+            font-size: 24px;
+        }
+        
+        .plot-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+        }
+        
+        .plot-container.bad .plot-title {
+            color: #C62828;
+        }
+        
+        .plot-container.good .plot-title {
+            color: #2E7D32;
+        }
+        
+        .plot-canvas {
+            flex: 1;
+            position: relative;
+            background: #FAFAFA;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        
+        svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .axis {
+            stroke: #666;
+            stroke-width: 2;
+        }
+        
+        .axis-label {
+            font-size: 13px;
+            fill: #666;
+            font-weight: 600;
+        }
+        
+        .grid-line {
+            stroke: #E5E7EB;
+            stroke-width: 1;
+        }
+        
+        .curve-bad {
+            fill: none;
+            stroke: #E57373;
+            stroke-width: 3;
+        }
+        
+        .curve-good {
+            fill: none;
+            stroke: #4CAF50;
+            stroke-width: 3;
+        }
+        
+        .point {
+            fill: white;
+            stroke-width: 2;
+        }
+        
+        .point-bad {
+            stroke: #C62828;
+        }
+        
+        .point-good {
+            stroke: #2E7D32;
+        }
+        
+        .plot-note {
+            margin-top: 10px;
+            padding: 10px;
+            background: #FFF9C4;
+            border-left: 3px solid #FBC02D;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .plot-container.good .plot-note {
+            background: #E8F5E9;
+            border-left-color: #4CAF50;
+        }
+        
+        /* Info section */
+        .info-section {
+            flex: 0.7;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+        
+        .info-card {
+            background: #F8FAFC;
+            border-left: 4px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 14px;
+            transition: all 0.2s;
+        }
+        
+        .info-card:hover {
+            background: #F0F7FF;
+            transform: translateX(4px);
+        }
+        
+        .info-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .info-desc {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.4;
+        }
+        
+        /* Benefits box */
+        .benefits-box {
+            background: linear-gradient(135deg, #F0F7FF 0%, #E5F1FF 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 14px;
+            margin-top: 10px;
+        }
+        
+        .benefits-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .benefits-list {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="title">Monotonic Constraint Models</div>
+            <div class="subtitle">Enforcing Logical Relationships in Predictions</div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="content">
+            <!-- Comparison Plots -->
+            <div class="plots-section">
+                <!-- Non-Monotonic Model -->
+                <div class="plot-container bad">
+                    <div class="plot-header">
+                        <span class="plot-icon">⚠️</span>
+                        <div class="plot-title">Non-Monotonic Model</div>
+                    </div>
+                    <div class="plot-canvas">
+                        <svg viewBox="0 0 200 180">
+                            <!-- Axes -->
+                            <line x1="20" y1="160" x2="180" y2="160" class="axis"/>
+                            <line x1="20" y1="20" x2="20" y2="160" class="axis"/>
+                            
+                            <!-- Grid lines -->
+                            <line x1="20" y1="60" x2="180" y2="60" class="grid-line"/>
+                            <line x1="20" y1="100" x2="180" y2="100" class="grid-line"/>
+                            <line x1="20" y1="140" x2="180" y2="140" class="grid-line"/>
+                            
+                            <!-- Erratic curve -->
+                            <path d="M 20 140 Q 40 130 50 110 T 80 100 Q 95 90 110 120 T 140 80 Q 155 60 180 70" 
+                                  class="curve-bad"/>
+                            
+                            <!-- Data points -->
+                            <circle cx="30" cy="135" r="4" class="point point-bad"/>
+                            <circle cx="50" cy="110" r="4" class="point point-bad"/>
+                            <circle cx="80" cy="100" r="4" class="point point-bad"/>
+                            <circle cx="110" cy="120" r="4" class="point point-bad"/>
+                            <circle cx="140" cy="80" r="4" class="point point-bad"/>
+                            <circle cx="170" cy="70" r="4" class="point point-bad"/>
+                            
+                            <!-- Labels -->
+                            <text x="100" y="178" class="axis-label" text-anchor="middle">Credit Score →</text>
+                            <text x="10" y="90" class="axis-label" text-anchor="end">Approval</text>
+                            <text x="10" y="105" class="axis-label" text-anchor="end">Probability</text>
+                        </svg>
+                    </div>
+                    <div class="plot-note">
+                        ❌ Counter-intuitive: Higher score sometimes decreases approval
+                    </div>
+                </div>
+                
+                <!-- Monotonic Model -->
+                <div class="plot-container good">
+                    <div class="plot-header">
+                        <span class="plot-icon">✓</span>
+                        <div class="plot-title">Monotonic Model</div>
+                    </div>
+                    <div class="plot-canvas">
+                        <svg viewBox="0 0 200 180">
+                            <!-- Axes -->
+                            <line x1="20" y1="160" x2="180" y2="160" class="axis"/>
+                            <line x1="20" y1="20" x2="20" y2="160" class="axis"/>
+                            
+                            <!-- Grid lines -->
+                            <line x1="20" y1="60" x2="180" y2="60" class="grid-line"/>
+                            <line x1="20" y1="100" x2="180" y2="100" class="grid-line"/>
+                            <line x1="20" y1="140" x2="180" y2="140" class="grid-line"/>
+                            
+                            <!-- Smooth monotonic increasing curve -->
+                            <path d="M 20 145 Q 60 120 100 80 T 180 30" 
+                                  class="curve-good"/>
+                            
+                            <!-- Data points -->
+                            <circle cx="30" cy="140" r="4" class="point point-good"/>
+                            <circle cx="60" cy="120" r="4" class="point point-good"/>
+                            <circle cx="90" cy="95" r="4" class="point point-good"/>
+                            <circle cx="120" cy="65" r="4" class="point point-good"/>
+                            <circle cx="150" cy="45" r="4" class="point point-good"/>
+                            <circle cx="170" cy="35" r="4" class="point point-good"/>
+                            
+                            <!-- Labels -->
+                            <text x="100" y="178" class="axis-label" text-anchor="middle">Credit Score →</text>
+                            <text x="10" y="90" class="axis-label" text-anchor="end">Approval</text>
+                            <text x="10" y="105" class="axis-label" text-anchor="end">Probability</text>
+                        </svg>
+                    </div>
+                    <div class="plot-note">
+                        ✓ Logical: Higher credit score consistently increases approval
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Info Section -->
+            <div class="info-section">
+                <div class="section-title">Key Features</div>
+                
+                <div class="info-card">
+                    <div class="info-title">Logical Constraints</div>
+                    <div class="info-desc">Enforces domain knowledge relationships</div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-title">Trust Building</div>
+                    <div class="info-desc">Predictions follow expected behavior patterns</div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-title">Implementation</div>
+                    <div class="info-desc">XGBoost, LightGBM, monotonic NNs</div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-title">Trade-offs</div>
+                    <div class="info-desc">May slightly reduce accuracy for interpretability</div>
+                </div>
+                
+                <!-- Benefits -->
+                <div class="benefits-box">
+                    <div class="benefits-title">Critical For:</div>
+                    <div class="benefits-list">
+                        • Regulated industries<br>
+                        • Financial decisions<br>
+                        • Healthcare applications<br>
+                        • High-stakes predictions
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

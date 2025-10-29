@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TreeSHAP Algorithm</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Aptos', 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+            padding: 25px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 15px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 18px;
+        }
+        
+        .content-layout {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 20px;
+            height: calc(100% - 100px);
+        }
+        
+        .tree-section {
+            background: #F8F9FA;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 15px;
+        }
+        
+        .section-header {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .tree-diagram {
+            position: relative;
+            height: 280px;
+            margin-bottom: 15px;
+        }
+        
+        .tree-node {
+            position: absolute;
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 8px 12px;
+            text-align: center;
+            font-size: 14px;
+            min-width: 80px;
+            transition: all 0.3s ease;
+        }
+        
+        .tree-node:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.3);
+            z-index: 10;
+        }
+        
+        .root-node {
+            background: #1E64C8;
+            color: white;
+            font-weight: 700;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .internal-node {
+            background: #E8F2FF;
+            border-color: #1E64C8;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .leaf-node {
+            background: #D4EDDA;
+            border-color: #28A745;
+            color: #155724;
+            font-weight: 600;
+        }
+        
+        .node-label {
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+        
+        .node-value {
+            font-size: 13px;
+        }
+        
+        .tree-line {
+            position: absolute;
+            background: #1E64C8;
+            opacity: 0.4;
+            z-index: 0;
+        }
+        
+        .line-v { width: 2px; }
+        .line-h { height: 2px; }
+        
+        .algorithm-box {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 12px;
+        }
+        
+        .algo-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .algo-formula {
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            color: #333;
+            background: #F8F9FA;
+            padding: 8px;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .complexity {
+            color: #E63946;
+        }
+        
+        .algo-text {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.4;
+        }
+        
+        .features-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .feature-card {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 10px;
+            padding: 15px;
+            flex: 1;
+        }
+        
+        .feature-card.highlight {
+            border-color: #1E64C8;
+            background: #E8F2FF;
+        }
+        
+        .feature-icon {
+            font-size: 24px;
+            margin-bottom: 6px;
+        }
+        
+        .feature-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .feature-text {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .comparison-box {
+            background: #FFF9E6;
+            border: 2px solid #FFC107;
+            border-radius: 8px;
+            padding: 12px;
+        }
+        
+        .comparison-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #F57C00;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .speed-bars {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .speed-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .bar-label {
+            min-width: 100px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .bar-container {
+            flex: 1;
+            height: 24px;
+            background: #F0F0F0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .bar-fill {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            color: white;
+        }
+        
+        .bar-treeshap {
+            background: #28A745;
+            width: 15%;
+        }
+        
+        .bar-kernelshap {
+            background: #DC3545;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">TreeSHAP: Optimized for Tree-Based Models</div>
+        <div class="subtitle">Polynomial time algorithm with exact Shapley values</div>
+        
+        <div class="content-layout">
+            <!-- Tree Section -->
+            <div class="tree-section">
+                <div class="section-header">Tree Traversal Example</div>
+                
+                <div class="tree-diagram">
+                    <!-- Lines -->
+                    <div class="tree-line line-v" style="left: 50%; top: 45px; height: 50px;"></div>
+                    <div class="tree-line line-h" style="left: 28%; top: 95px; width: 44%;"></div>
+                    <div class="tree-line line-v" style="left: 28%; top: 95px; height: 50px;"></div>
+                    <div class="tree-line line-v" style="left: 72%; top: 95px; height: 50px;"></div>
+                    <div class="tree-line line-h" style="left: 18%; top: 145px; width: 20%;"></div>
+                    <div class="tree-line line-h" style="left: 62%; top: 145px; width: 20%;"></div>
+                    <div class="tree-line line-v" style="left: 18%; top: 145px; height: 50px;"></div>
+                    <div class="tree-line line-v" style="left: 38%; top: 145px; height: 50px;"></div>
+                    <div class="tree-line line-v" style="left: 62%; top: 145px; height: 50px;"></div>
+                    <div class="tree-line line-v" style="left: 82%; top: 145px; height: 50px;"></div>
+                    
+                    <!-- Nodes -->
+                    <div class="tree-node root-node">
+                        <div class="node-label">Root</div>
+                        <div class="node-value">X₁ ≤ 5.0</div>
+                    </div>
+                    
+                    <div class="tree-node internal-node" style="left: 28%; top: 95px; transform: translateX(-50%);">
+                        <div class="node-label">Node 1</div>
+                        <div class="node-value">X₂ ≤ 3.5</div>
+                    </div>
+                    
+                    <div class="tree-node internal-node" style="left: 72%; top: 95px; transform: translateX(-50%);">
+                        <div class="node-label">Node 2</div>
+                        <div class="node-value">X₃ ≤ 2.0</div>
+                    </div>
+                    
+                    <div class="tree-node leaf-node" style="left: 18%; top: 195px; transform: translateX(-50%);">
+                        <div class="node-label">Leaf 1</div>
+                        <div class="node-value">v = 0.8</div>
+                    </div>
+                    
+                    <div class="tree-node leaf-node" style="left: 38%; top: 195px; transform: translateX(-50%);">
+                        <div class="node-label">Leaf 2</div>
+                        <div class="node-value">v = 0.3</div>
+                    </div>
+                    
+                    <div class="tree-node leaf-node" style="left: 62%; top: 195px; transform: translateX(-50%);">
+                        <div class="node-label">Leaf 3</div>
+                        <div class="node-value">v = 0.6</div>
+                    </div>
+                    
+                    <div class="tree-node leaf-node" style="left: 82%; top: 195px; transform: translateX(-50%);">
+                        <div class="node-label">Leaf 4</div>
+                        <div class="node-value">v = 0.2</div>
+                    </div>
+                </div>
+                
+                <div class="algorithm-box">
+                    <div class="algo-title">Complexity Analysis</div>
+                    <div class="algo-formula">
+                        O(TLD²) <span style="color: #28A745;">vs</span> O(2<sup>M</sup>)
+                    </div>
+                    <div class="algo-text">
+                        <span style="font-weight: 600;">T</span>: trees, 
+                        <span style="font-weight: 600;">L</span>: leaves, 
+                        <span style="font-weight: 600;">D</span>: max depth, 
+                        <span style="font-weight: 600;">M</span>: features
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Features Section -->
+            <div class="features-section">
+                <div class="feature-card highlight">
+                    <div class="feature-icon">⚡</div>
+                    <div class="feature-title">Speed Advantage</div>
+                    <div class="feature-text">
+                        10-100x faster than KernelSHAP for tree models
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <div class="feature-title">Exact Values</div>
+                    <div class="feature-text">
+                        Computes exact Shapley values using tree structure
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🌳</div>
+                    <div class="feature-title">Model Support</div>
+                    <div class="feature-text">
+                        Random Forest, XGBoost, LightGBM, CatBoost
+                    </div>
+                </div>
+                
+                <div class="comparison-box">
+                    <div class="comparison-title">⏱ Speed Comparison</div>
+                    <div class="speed-bars">
+                        <div class="speed-bar">
+                            <div class="bar-label">TreeSHAP</div>
+                            <div class="bar-container">
+                                <div class="bar-fill bar-treeshap">1x</div>
+                            </div>
+                        </div>
+                        <div class="speed-bar">
+                            <div class="bar-label">KernelSHAP</div>
+                            <div class="bar-container">
+                                <div class="bar-fill bar-kernelshap">100x</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

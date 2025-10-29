@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DBSCAN - Density-Based</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .header {
+            text-align: center;
+        }
+        
+        .title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .full-name {
+            font-size: 14px;
+            color: #666;
+            margin-top: 4px;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            flex: 1;
+        }
+        
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        
+        .parameters-box {
+            background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 12px;
+            padding: 16px;
+        }
+        
+        .box-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .param-item {
+            background: white;
+            border: 1px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+        }
+        
+        .param-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .param-desc {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.3;
+        }
+        
+        .point-types {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex: 1;
+        }
+        
+        .point-card {
+            background: white;
+            border: 2px solid;
+            border-radius: 10px;
+            padding: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+            transition: all 0.3s;
+        }
+        
+        .point-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .point-card.core {
+            border-color: #4CAF50;
+            background: linear-gradient(135deg, #e8f5e9 0%, #ffffff 100%);
+        }
+        
+        .point-card.border {
+            border-color: #FFA726;
+            background: linear-gradient(135deg, #fff3e0 0%, #ffffff 100%);
+        }
+        
+        .point-card.noise {
+            border-color: #e57373;
+            background: linear-gradient(135deg, #ffebee 0%, #ffffff 100%);
+        }
+        
+        .point-icon {
+            font-size: 36px;
+            flex-shrink: 0;
+        }
+        
+        .point-content {
+            flex: 1;
+        }
+        
+        .point-name {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .point-card.core .point-name {
+            color: #388E3C;
+        }
+        
+        .point-card.border .point-name {
+            color: #F57C00;
+        }
+        
+        .point-card.noise .point-name {
+            color: #d32f2f;
+        }
+        
+        .point-definition {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.3;
+        }
+        
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        
+        .advantages-box {
+            background: linear-gradient(135deg, #e8f5e9 0%, #ffffff 100%);
+            border: 2px solid #4CAF50;
+            border-radius: 12px;
+            padding: 16px;
+            flex: 1;
+        }
+        
+        .advantages-box .box-title {
+            color: #388E3C;
+            border-color: #4CAF50;
+        }
+        
+        .advantage-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .advantage-list li {
+            font-size: 15px;
+            color: #333;
+            padding-left: 24px;
+            position: relative;
+            line-height: 1.4;
+        }
+        
+        .advantage-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4CAF50;
+            font-weight: bold;
+            font-size: 20px;
+        }
+        
+        .challenges-box {
+            background: linear-gradient(135deg, #fff8e1 0%, #ffffff 100%);
+            border: 2px solid #FFA726;
+            border-radius: 12px;
+            padding: 16px;
+            flex: 1;
+        }
+        
+        .challenges-box .box-title {
+            color: #F57C00;
+            border-color: #FFA726;
+        }
+        
+        .challenge-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .challenge-list li {
+            font-size: 15px;
+            color: #333;
+            padding-left: 24px;
+            position: relative;
+            line-height: 1.4;
+        }
+        
+        .challenge-list li:before {
+            content: "⚠";
+            position: absolute;
+            left: 0;
+            color: #FFA726;
+            font-size: 18px;
+        }
+        
+        .feature-highlight {
+            background: linear-gradient(135deg, #f3e5f5 0%, #ffffff 100%);
+            border: 2px solid #9C27B0;
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .highlight-icon {
+            font-size: 28px;
+            margin-bottom: 6px;
+        }
+        
+        .highlight-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: #9C27B0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">DBSCAN - Density-Based Clustering</div>
+            <div class="full-name">Density-Based Spatial Clustering of Applications with Noise</div>
+        </div>
+        
+        <div class="main-content">
+            <div class="left-section">
+                <div class="parameters-box">
+                    <div class="box-title">Parameters</div>
+                    <div class="param-item">
+                        <div class="param-name">ε (epsilon)</div>
+                        <div class="param-desc">Neighborhood radius</div>
+                    </div>
+                    <div class="param-item">
+                        <div class="param-name">minPts</div>
+                        <div class="param-desc">Minimum density threshold</div>
+                    </div>
+                </div>
+                
+                <div class="point-types">
+                    <div class="point-card core">
+                        <div class="point-icon">🟢</div>
+                        <div class="point-content">
+                            <div class="point-name">Core Points</div>
+                            <div class="point-definition">≥ minPts neighbors within ε</div>
+                        </div>
+                    </div>
+                    
+                    <div class="point-card border">
+                        <div class="point-icon">🟠</div>
+                        <div class="point-content">
+                            <div class="point-name">Border Points</div>
+                            <div class="point-definition">In neighborhood of core, but not core</div>
+                        </div>
+                    </div>
+                    
+                    <div class="point-card noise">
+                        <div class="point-icon">🔴</div>
+                        <div class="point-content">
+                            <div class="point-name">Noise Points</div>
+                            <div class="point-definition">Neither core nor border (outliers)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-section">
+                <div class="feature-highlight">
+                    <div class="highlight-icon">🎯</div>
+                    <div class="highlight-text">Discovers clusters of arbitrary shape</div>
+                </div>
+                
+                <div class="advantages-box">
+                    <div class="box-title">💪 Advantages</div>
+                    <ul class="advantage-list">
+                        <li>Finds outliers automatically</li>
+                        <li>No need to specify k</li>
+                        <li>Handles arbitrary shapes</li>
+                        <li>Works with non-spherical clusters</li>
+                    </ul>
+                </div>
+                
+                <div class="challenges-box">
+                    <div class="box-title">⚠️ Challenges</div>
+                    <ul class="challenge-list">
+                        <li>Sensitive to parameters (ε, minPts)</li>
+                        <li>Struggles with varying densities</li>
+                        <li>Difficulty in high dimensions</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

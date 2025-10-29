@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attention Mechanism Structure</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #ffffff;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 35px;
+            position: relative;
+        }
+        
+        .main-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .content {
+            display: flex;
+            gap: 20px;
+            height: calc(100% - 45px);
+        }
+        
+        /* Architecture Section */
+        .architecture-section {
+            flex: 1.3;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            border-top: 5px solid #1E64C8;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .architecture-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        
+        .attention-flow {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+        }
+        
+        /* Input Layer */
+        .flow-layer {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .layer-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+            text-align: center;
+        }
+        
+        .layer-content {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        /* Encoder States */
+        .encoder-states {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .encoder-state {
+            width: 60px;
+            height: 50px;
+            background: #1E64C8;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .decoder-state {
+            width: 80px;
+            height: 50px;
+            background: #5088d4;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        /* QKV Components */
+        .qkv-section {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+        
+        .qkv-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .qkv-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #666;
+        }
+        
+        .qkv-component {
+            width: 70px;
+            height: 55px;
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .query-box {
+            background: #e91e63;
+        }
+        
+        .key-box {
+            background: #9c27b0;
+        }
+        
+        .value-box {
+            background: #3f51b5;
+        }
+        
+        .component-main {
+            font-size: 16px;
+        }
+        
+        .component-sub {
+            font-size: 11px;
+            opacity: 0.9;
+        }
+        
+        /* Score Computation */
+        .score-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 6px;
+            padding: 10px 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .score-formula {
+            font-size: 15px;
+            color: #1E64C8;
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .score-label {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        /* Attention Weights */
+        .weights-display {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+        }
+        
+        .weight-item {
+            width: 60px;
+            height: 40px;
+            background: linear-gradient(135deg, #1E64C8, #5088d4);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        /* Context Output */
+        .context-output {
+            width: 100px;
+            height: 60px;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);
+        }
+        
+        .context-label {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        
+        .context-value {
+            font-size: 18px;
+        }
+        
+        /* Arrow */
+        .flow-arrow {
+            text-align: center;
+            font-size: 24px;
+            color: #1E64C8;
+            line-height: 1;
+        }
+        
+        /* Components Section */
+        .components-section {
+            flex: 0.7;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        
+        .component-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 14px;
+            border-left: 4px solid currentColor;
+            flex: 1;
+        }
+        
+        .card-query { color: #e91e63; }
+        .card-key { color: #9c27b0; }
+        .card-value { color: #3f51b5; }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .card-icon {
+            width: 28px;
+            height: 28px;
+            background: currentColor;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+        }
+        
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: currentColor;
+        }
+        
+        .card-description {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.4;
+        }
+        
+        .card-formula {
+            background: white;
+            padding: 8px 10px;
+            border-radius: 4px;
+            margin-top: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: currentColor;
+            font-weight: 600;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-title">Attention Mechanism Structure</div>
+        
+        <div class="content">
+            <!-- Architecture Flow -->
+            <div class="architecture-section">
+                <div class="architecture-title">Step-by-Step Attention Computation</div>
+                
+                <div class="attention-flow">
+                    <!-- Step 1: Inputs -->
+                    <div class="flow-layer">
+                        <div class="layer-label">① Inputs</div>
+                        <div class="layer-content">
+                            <div class="encoder-states">
+                                <div class="encoder-state">h₁</div>
+                                <div class="encoder-state">h₂</div>
+                                <div class="encoder-state">h₃</div>
+                                <div class="encoder-state">h₄</div>
+                            </div>
+                            <div style="font-size: 20px; color: #999;">+</div>
+                            <div class="decoder-state">s_t</div>
+                        </div>
+                        <div style="text-align: center; font-size: 12px; color: #666;">
+                            Encoder states (Keys & Values) + Decoder state (Query)
+                        </div>
+                    </div>
+                    
+                    <div class="flow-arrow">↓</div>
+                    
+                    <!-- Step 2: QKV -->
+                    <div class="flow-layer">
+                        <div class="layer-label">② Query, Key, Value</div>
+                        <div class="layer-content">
+                            <div class="qkv-section">
+                                <div class="qkv-box">
+                                    <div class="qkv-component query-box">
+                                        <div class="component-main">Q</div>
+                                        <div class="component-sub">Query</div>
+                                    </div>
+                                    <div class="qkv-label">from s_t</div>
+                                </div>
+                                <div class="qkv-box">
+                                    <div class="qkv-component key-box">
+                                        <div class="component-main">K</div>
+                                        <div class="component-sub">Keys</div>
+                                    </div>
+                                    <div class="qkv-label">from h_i</div>
+                                </div>
+                                <div class="qkv-box">
+                                    <div class="qkv-component value-box">
+                                        <div class="component-main">V</div>
+                                        <div class="component-sub">Values</div>
+                                    </div>
+                                    <div class="qkv-label">from h_i</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flow-arrow">↓</div>
+                    
+                    <!-- Step 3: Score -->
+                    <div class="flow-layer">
+                        <div class="layer-label">③ Compute Scores</div>
+                        <div class="layer-content">
+                            <div class="score-box">
+                                <div class="score-formula">score = Q · K^T</div>
+                                <div class="score-label">Similarity between Q and each K</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flow-arrow">↓</div>
+                    
+                    <!-- Step 4: Attention Weights -->
+                    <div class="flow-layer">
+                        <div class="layer-label">④ Attention Weights (Softmax)</div>
+                        <div class="layer-content">
+                            <div class="weights-display">
+                                <div class="weight-item">α₁: 0.1</div>
+                                <div class="weight-item">α₂: 0.2</div>
+                                <div class="weight-item">α₃: 0.6</div>
+                                <div class="weight-item">α₄: 0.1</div>
+                            </div>
+                        </div>
+                        <div style="text-align: center; font-size: 12px; color: #666;">
+                            Normalized scores (sum to 1.0)
+                        </div>
+                    </div>
+                    
+                    <div class="flow-arrow">↓</div>
+                    
+                    <!-- Step 5: Context Vector -->
+                    <div class="flow-layer">
+                        <div class="layer-label">⑤ Context Vector</div>
+                        <div class="layer-content">
+                            <div class="context-output">
+                                <div class="context-label">Weighted sum</div>
+                                <div class="context-value">c_t</div>
+                            </div>
+                        </div>
+                        <div style="text-align: center; font-size: 12px; color: #666;">
+                            c_t = Σ(α_i × V_i)
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Components Explanation -->
+            <div class="components-section">
+                <!-- Query -->
+                <div class="component-card card-query">
+                    <div class="card-header">
+                        <div class="card-icon">Q</div>
+                        <div class="card-title">Query</div>
+                    </div>
+                    <div class="card-description">
+                        "What am I looking for?" Derived from current decoder state to find relevant encoder states.
+                    </div>
+                    <div class="card-formula">
+                        Q = W_Q × s_t
+                    </div>
+                </div>
+                
+                <!-- Key -->
+                <div class="component-card card-key">
+                    <div class="card-header">
+                        <div class="card-icon">K</div>
+                        <div class="card-title">Key</div>
+                    </div>
+                    <div class="card-description">
+                        "What do I contain?" Encoder states transformed to be compared with query.
+                    </div>
+                    <div class="card-formula">
+                        K = W_K × h_i
+                    </div>
+                </div>
+                
+                <!-- Value -->
+                <div class="component-card card-value">
+                    <div class="card-header">
+                        <div class="card-icon">V</div>
+                        <div class="card-title">Value</div>
+                    </div>
+                    <div class="card-description">
+                        "What information to extract?" Actual content to be aggregated based on attention weights.
+                    </div>
+                    <div class="card-formula">
+                        V = W_V × h_i
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

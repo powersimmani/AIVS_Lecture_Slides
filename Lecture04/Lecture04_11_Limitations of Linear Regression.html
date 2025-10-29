@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Limitations of Linear Regression</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px;
+            position: relative;
+        }
+        
+        .title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .content-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            height: calc(100% - 50px);
+        }
+        
+        .limitations-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            flex: 1;
+        }
+        
+        .limitation-card {
+            background: white;
+            border: 2px solid #dc3545;
+            border-left: 5px solid #dc3545;
+            border-radius: 8px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            transition: all 0.3s;
+        }
+        
+        .limitation-card:hover {
+            background: #fff5f5;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.15);
+        }
+        
+        .limitation-icon {
+            width: 28px;
+            height: 28px;
+            background: #dc3545;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .limitation-text {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+            flex: 1;
+        }
+        
+        .transition-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .reason-box {
+            background: linear-gradient(135deg, #ffc107 0%, #ffb300 100%);
+            border-radius: 10px;
+            padding: 16px 20px;
+            text-align: center;
+            color: white;
+        }
+        
+        .reason-text {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .transition-box {
+            background: white;
+            border: 3px solid #1E64C8;
+            border-radius: 10px;
+            padding: 18px 24px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .transition-icon {
+            width: 50px;
+            height: 50px;
+            background: #1E64C8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        
+        .transition-content {
+            flex: 1;
+        }
+        
+        .transition-label {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+        
+        .transition-question {
+            font-size: 19px;
+            color: #1E64C8;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+        
+        .next-arrow {
+            width: 40px;
+            height: 40px;
+            background: #28a745;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Limitations of Linear Regression</div>
+        
+        <div class="content-layout">
+            <!-- Limitations Grid -->
+            <div class="limitations-grid">
+                <div class="limitation-card">
+                    <div class="limitation-icon">✕</div>
+                    <div class="limitation-text">
+                        Cannot handle non-linear decision boundaries naturally
+                    </div>
+                </div>
+                
+                <div class="limitation-card">
+                    <div class="limitation-icon">✕</div>
+                    <div class="limitation-text">
+                        Assumes continuous output (not suitable for classification)
+                    </div>
+                </div>
+                
+                <div class="limitation-card">
+                    <div class="limitation-icon">✕</div>
+                    <div class="limitation-text">
+                        Sensitive to outliers without robust variants
+                    </div>
+                </div>
+                
+                <div class="limitation-card">
+                    <div class="limitation-icon">✕</div>
+                    <div class="limitation-text">
+                        Feature engineering required for complex patterns
+                    </div>
+                </div>
+                
+                <div class="limitation-card">
+                    <div class="limitation-icon">✕</div>
+                    <div class="limitation-text">
+                        Interpretation difficult with many interaction terms
+                    </div>
+                </div>
+                
+                <div class="limitation-card" style="grid-column: span 1;">
+                    <div class="limitation-icon">✕</div>
+                    <div class="limitation-text">
+                        Limited for categorical outcomes
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Transition Section -->
+            <div class="transition-section">
+                <div class="reason-box">
+                    <div class="reason-text">Why We Need Classification Algorithms</div>
+                </div>
+                
+                <div class="transition-box">
+                    <div class="transition-icon">?</div>
+                    <div class="transition-content">
+                        <div class="transition-label">Critical Question:</div>
+                        <div class="transition-question">
+                            What if output is categorical (yes/no)?
+                        </div>
+                    </div>
+                    <div class="next-arrow">→</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

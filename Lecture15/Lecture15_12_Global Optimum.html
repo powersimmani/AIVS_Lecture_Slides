@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Optimum</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            position: relative;
+            padding: 25px 40px;
+        }
+        
+        .header {
+            margin-bottom: 20px;
+        }
+        
+        .part-label {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .theorem-box {
+            background: #1E64C8;
+            color: white;
+            border-radius: 10px;
+            padding: 18px 24px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .theorem-label {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            opacity: 0.9;
+        }
+        
+        .theorem-text {
+            font-size: 20px;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+        
+        .main-content {
+            display: flex;
+            gap: 25px;
+            margin-bottom: 20px;
+        }
+        
+        .left-panel {
+            flex: 1;
+        }
+        
+        .convergence-visual {
+            background: #F5F9FF;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 20px;
+            height: 100%;
+        }
+        
+        .visual-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .trajectory {
+            position: relative;
+            height: 240px;
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        
+        .trajectory-path {
+            position: relative;
+            height: 100%;
+        }
+        
+        .path-point {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #1E64C8;
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 0 0 2px #1E64C8;
+        }
+        
+        .path-point.start {
+            left: 10%;
+            top: 20%;
+            width: 16px;
+            height: 16px;
+        }
+        
+        .path-point.mid1 {
+            left: 30%;
+            top: 45%;
+        }
+        
+        .path-point.mid2 {
+            left: 55%;
+            top: 65%;
+        }
+        
+        .path-point.end {
+            left: 80%;
+            top: 75%;
+            width: 20px;
+            height: 20px;
+            background: #4CAF50;
+            box-shadow: 0 0 0 2px #4CAF50, 0 0 0 6px rgba(76, 175, 80, 0.2);
+        }
+        
+        .path-line {
+            stroke: #1E64C8;
+            stroke-width: 2;
+            fill: none;
+            stroke-dasharray: 5, 3;
+        }
+        
+        .point-label {
+            position: absolute;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        
+        .label-start {
+            left: 10%;
+            top: 5%;
+            color: #1E64C8;
+        }
+        
+        .label-end {
+            left: 75%;
+            top: 88%;
+            color: #4CAF50;
+            font-size: 15px;
+        }
+        
+        .axis-label {
+            position: absolute;
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .axis-x {
+            bottom: 5px;
+            right: 10px;
+        }
+        
+        .axis-y {
+            top: 5px;
+            left: 5px;
+        }
+        
+        .right-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .optimum-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 16px 20px;
+        }
+        
+        .optimum-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+        }
+        
+        .optimum-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 14px;
+            background: #F5F9FF;
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+        
+        .item-label {
+            font-size: 15px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .item-value {
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .connection-box {
+            background: #F5F9FF;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 16px 20px;
+            flex: 1;
+        }
+        
+        .connection-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+        }
+        
+        .connection-text {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+        
+        .formula-highlight {
+            font-family: 'Courier New', monospace;
+            background: white;
+            color: #1E64C8;
+            padding: 8px 12px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 15px;
+            margin-top: 8px;
+        }
+        
+        .bottom-section {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .challenge-box {
+            flex: 1;
+            background: white;
+            border: 2px solid #FF6B6B;
+            border-radius: 10px;
+            padding: 16px 20px;
+        }
+        
+        .challenge-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #FF6B6B;
+            margin-bottom: 10px;
+        }
+        
+        .challenge-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin: 8px 0;
+            font-size: 15px;
+            color: #333;
+        }
+        
+        .warning-icon {
+            color: #FF6B6B;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .proof-box {
+            flex: 1;
+            background: #4CAF50;
+            color: white;
+            border-radius: 10px;
+            padding: 16px 20px;
+        }
+        
+        .proof-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .proof-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin: 8px 0;
+            font-size: 15px;
+        }
+        
+        .check-icon {
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="part-label">Part 2/6: Mathematical Foundations</div>
+            <div class="title">Global Optimum</div>
+        </div>
+        
+        <div class="theorem-box">
+            <div class="theorem-label">🎯 Theorem</div>
+            <div class="theorem-text">
+                Global minimum achieved if and only if p<sub>g</sub> = p<sub>data</sub>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="left-panel">
+                <div class="convergence-visual">
+                    <div class="visual-title">Convergence Trajectory</div>
+                    <div class="trajectory">
+                        <svg class="trajectory-path" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0;">
+                            <path class="path-line" d="M 40,50 Q 120,110 200,160 T 320,190" />
+                        </svg>
+                        
+                        <div class="path-point start"></div>
+                        <div class="path-point mid1"></div>
+                        <div class="path-point mid2"></div>
+                        <div class="path-point end"></div>
+                        
+                        <div class="point-label label-start">Initial State</div>
+                        <div class="point-label label-end">Optimum ★</div>
+                        
+                        <div class="axis-label axis-x">Training Steps →</div>
+                        <div class="axis-label axis-y">Loss ↓</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <div class="optimum-box">
+                    <div class="optimum-title">At Global Optimum</div>
+                    <div class="optimum-item">
+                        <span class="item-label">Discriminator</span>
+                        <span class="item-value">D*(x) = 1/2</span>
+                    </div>
+                    <div class="optimum-item">
+                        <span class="item-label">Value Function</span>
+                        <span class="item-value">V = -log(4)</span>
+                    </div>
+                    <div class="optimum-item">
+                        <span class="item-label">Distributions</span>
+                        <span class="item-value">p<sub>g</sub> = p<sub>data</sub></span>
+                    </div>
+                </div>
+                
+                <div class="connection-box">
+                    <div class="connection-title">JS Divergence Connection</div>
+                    <div class="connection-text">
+                        Minimizing GAN objective equals minimizing Jensen-Shannon divergence
+                    </div>
+                    <div class="formula-highlight">
+                        JS(p<sub>data</sub> || p<sub>g</sub>) = 0 ⟺ p<sub>g</sub> = p<sub>data</sub>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bottom-section">
+            <div class="proof-box">
+                <div class="proof-title">✓ Convergence Properties</div>
+                <div class="proof-item">
+                    <span class="check-icon">•</span>
+                    <span>Uniqueness of global optimum</span>
+                </div>
+                <div class="proof-item">
+                    <span class="check-icon">•</span>
+                    <span>Proof under ideal conditions</span>
+                </div>
+                <div class="proof-item">
+                    <span class="check-icon">•</span>
+                    <span>Theoretical guarantees</span>
+                </div>
+            </div>
+            
+            <div class="challenge-box">
+                <div class="challenge-title">⚠ Practical Challenges</div>
+                <div class="challenge-item">
+                    <span class="warning-icon">•</span>
+                    <span>Mode collapse issues</span>
+                </div>
+                <div class="challenge-item">
+                    <span class="warning-icon">•</span>
+                    <span>Training instability</span>
+                </div>
+                <div class="challenge-item">
+                    <span class="warning-icon">•</span>
+                    <span>Non-convex optimization</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

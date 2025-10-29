@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Core Ideas of SHAP</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Aptos', 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+            padding: 25px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 20px;
+        }
+        
+        .decomposition-section {
+            background: #F8F9FA;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .formula-display {
+            text-align: center;
+            font-size: 26px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 20px;
+        }
+        
+        .decomposition-visual {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .value-box {
+            padding: 12px 18px;
+            border-radius: 8px;
+            text-align: center;
+            min-width: 120px;
+        }
+        
+        .base-value {
+            background: #E8F2FF;
+            border: 2px solid #1E64C8;
+        }
+        
+        .feature-contribution {
+            border: 2px solid #ccc;
+        }
+        
+        .positive {
+            background: #D4EDDA;
+            border-color: #28A745;
+        }
+        
+        .negative {
+            background: #F8D7DA;
+            border-color: #DC3545;
+        }
+        
+        .prediction {
+            background: #1E64C8;
+            color: white;
+            font-weight: 700;
+        }
+        
+        .value-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+        
+        .value-number {
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .operator {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1E64C8;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .comparison-table th {
+            background: #1E64C8;
+            color: white;
+            padding: 14px;
+            font-size: 17px;
+            font-weight: 600;
+            text-align: left;
+        }
+        
+        .comparison-table td {
+            padding: 12px 14px;
+            font-size: 16px;
+            border-bottom: 1px solid #E0E0E0;
+        }
+        
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .comparison-table tr:hover {
+            background: #F8F9FA;
+        }
+        
+        .feature-col {
+            font-weight: 600;
+            color: #333;
+            width: 30%;
+        }
+        
+        .shap-col {
+            color: #1E64C8;
+            font-weight: 500;
+        }
+        
+        .traditional-col {
+            color: #666;
+        }
+        
+        .check {
+            color: #28A745;
+            font-weight: 700;
+        }
+        
+        .cross {
+            color: #DC3545;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">SHAP: Additive Feature Attribution</div>
+        
+        <div class="decomposition-section">
+            <div class="formula-display">
+                f(x) = φ₀ + Σφᵢ
+            </div>
+            
+            <div class="decomposition-visual">
+                <div class="value-box base-value">
+                    <div class="value-label">Base Value (φ₀)</div>
+                    <div class="value-number">$250K</div>
+                </div>
+                
+                <div class="operator">+</div>
+                
+                <div class="value-box feature-contribution positive">
+                    <div class="value-label">Size (φ₁)</div>
+                    <div class="value-number">+$80K</div>
+                </div>
+                
+                <div class="operator">+</div>
+                
+                <div class="value-box feature-contribution positive">
+                    <div class="value-label">Location (φ₂)</div>
+                    <div class="value-number">+$50K</div>
+                </div>
+                
+                <div class="operator">+</div>
+                
+                <div class="value-box feature-contribution negative">
+                    <div class="value-label">Age (φ₃)</div>
+                    <div class="value-number">-$30K</div>
+                </div>
+                
+                <div class="operator">=</div>
+                
+                <div class="value-box prediction">
+                    <div class="value-label" style="color: white;">Prediction</div>
+                    <div class="value-number">$350K</div>
+                </div>
+            </div>
+        </div>
+        
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th class="feature-col">Characteristic</th>
+                    <th class="shap-col">SHAP Values</th>
+                    <th class="traditional-col">Traditional Feature Importance</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="feature-col">Model-Agnostic</td>
+                    <td class="shap-col"><span class="check">✓</span> Works with any model</td>
+                    <td class="traditional-col"><span class="cross">✗</span> Model-specific</td>
+                </tr>
+                <tr>
+                    <td class="feature-col">Local Explanation</td>
+                    <td class="shap-col"><span class="check">✓</span> Individual predictions</td>
+                    <td class="traditional-col"><span class="cross">✗</span> Global only</td>
+                </tr>
+                <tr>
+                    <td class="feature-col">Theoretical Foundation</td>
+                    <td class="shap-col"><span class="check">✓</span> Game theory (Shapley)</td>
+                    <td class="traditional-col"><span class="cross">✗</span> Heuristic-based</td>
+                </tr>
+                <tr>
+                    <td class="feature-col">Feature Interactions</td>
+                    <td class="shap-col"><span class="check">✓</span> Captures interactions</td>
+                    <td class="traditional-col"><span class="cross">✗</span> Independent only</td>
+                </tr>
+                <tr>
+                    <td class="feature-col">Consistency</td>
+                    <td class="shap-col"><span class="check">✓</span> Fairness axioms satisfied</td>
+                    <td class="traditional-col"><span class="cross">✗</span> No guarantees</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batch Size and Memory Diagram</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 28px 40px;
+            background: white;
+        }
+        
+        .title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .memory-components {
+            background: #f0f5fc;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 15px 25px;
+            margin-bottom: 18px;
+        }
+        
+        .components-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .components-formula {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .component-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 8px 15px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            transition: all 0.3s;
+        }
+        
+        .component-box:hover {
+            background: #1E64C8;
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        .plus-sign {
+            font-size: 20px;
+            color: #1E64C8;
+            font-weight: bold;
+        }
+        
+        .activation-highlight {
+            background: #fff4e6;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px 20px;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .highlight-text {
+            font-size: 17px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .highlight-value {
+            color: #1E64C8;
+            font-weight: 700;
+        }
+        
+        .example-section {
+            background: white;
+            border: 3px solid #1E64C8;
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-bottom: 18px;
+        }
+        
+        .example-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .example-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            font-size: 17px;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .example-param {
+            color: #1E64C8;
+            font-weight: 700;
+        }
+        
+        .techniques-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 16px;
+        }
+        
+        .technique-card {
+            background: white;
+            border: 2.5px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px 18px;
+            transition: all 0.3s;
+        }
+        
+        .technique-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(30, 100, 200, 0.2);
+        }
+        
+        .technique-name {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .technique-desc {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.4;
+        }
+        
+        .tips-monitoring {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .info-box {
+            background: #f8fbff;
+            border-left: 4px solid #1E64C8;
+            border-radius: 6px;
+            padding: 12px 16px;
+        }
+        
+        .info-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .info-content {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .tip-badge {
+            display: inline-block;
+            background: #1E64C8;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        
+        .code-style {
+            font-family: 'Courier New', monospace;
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 15px;
+            color: #1E64C8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Batch Size and Memory Usage Calculation</div>
+        
+        <div class="memory-components">
+            <div class="components-title">Memory Usage Components</div>
+            <div class="components-formula">
+                <div class="component-box">Model Params</div>
+                <div class="plus-sign">+</div>
+                <div class="component-box">Optimizer States</div>
+                <div class="plus-sign">+</div>
+                <div class="component-box">Gradients</div>
+                <div class="plus-sign">+</div>
+                <div class="component-box">Activations</div>
+            </div>
+        </div>
+        
+        <div class="activation-highlight">
+            <span class="highlight-text">Activations Memory ∝ </span>
+            <span class="highlight-value">Batch Size × Sequence Length</span>
+        </div>
+        
+        <div class="example-section">
+            <div class="example-title">Example: BERT-base</div>
+            <div class="example-content">
+                <span class="example-param">batch = 32</span>
+                <span>•</span>
+                <span class="example-param">seq = 512</span>
+                <span>→</span>
+                <span class="example-param">~8GB</span>
+                <span>activation memory</span>
+            </div>
+        </div>
+        
+        <div class="techniques-grid">
+            <div class="technique-card">
+                <div class="technique-name">Gradient Accumulation</div>
+                <div class="technique-desc">Split batch into micro-batches to save memory</div>
+            </div>
+            
+            <div class="technique-card">
+                <div class="technique-name">Gradient Checkpointing</div>
+                <div class="technique-desc">Recompute activations (trade compute for memory)</div>
+            </div>
+        </div>
+        
+        <div class="tips-monitoring">
+            <div class="info-box">
+                <div class="info-title">💡 Rule of Thumb</div>
+                <div class="info-content">
+                    <div class="tip-badge">OOM Error?</div>
+                    <div>Reduce batch size by 50%</div>
+                </div>
+            </div>
+            
+            <div class="info-box">
+                <div class="info-title">🔍 Monitoring Tools</div>
+                <div class="info-content">
+                    <div style="margin-bottom: 4px;"><span class="code-style">nvidia-smi</span></div>
+                    <div><span class="code-style">torch.cuda.memory_allocated()</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

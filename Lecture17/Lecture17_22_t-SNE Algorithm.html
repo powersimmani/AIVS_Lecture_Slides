@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>t-SNE Algorithm</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        
+        .header {
+            text-align: center;
+        }
+        
+        .title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .full-name {
+            font-size: 14px;
+            color: #666;
+            margin-top: 4px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-top: 4px;
+        }
+        
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 18px;
+            flex: 1;
+        }
+        
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        
+        .process-box {
+            background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 12px;
+            padding: 16px;
+        }
+        
+        .box-header {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .step-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .step-item {
+            background: white;
+            border: 1px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .step-number {
+            min-width: 35px;
+            height: 35px;
+            background: #1E64C8;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .step-text {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .step-arrow {
+            text-align: center;
+            color: #1E64C8;
+            font-size: 20px;
+            margin: -6px 0;
+        }
+        
+        .key-feature-box {
+            background: linear-gradient(135deg, #f3e5f5 0%, #ffffff 100%);
+            border: 2px solid #9C27B0;
+            border-radius: 12px;
+            padding: 16px;
+            flex: 1;
+        }
+        
+        .key-feature-box .box-header {
+            color: #9C27B0;
+            border-color: #9C27B0;
+        }
+        
+        .feature-item {
+            background: white;
+            border: 1px solid #9C27B0;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .feature-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        
+        .feature-text {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        
+        .parameter-box {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffffff 100%);
+            border: 2px solid #FF9800;
+            border-radius: 12px;
+            padding: 16px;
+        }
+        
+        .parameter-box .box-header {
+            color: #F57C00;
+            border-color: #FF9800;
+        }
+        
+        .param-content {
+            background: white;
+            border: 1px solid #FF9800;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .param-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #F57C00;
+            margin-bottom: 6px;
+        }
+        
+        .param-range {
+            font-size: 14px;
+            color: #666;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 6px;
+        }
+        
+        .param-desc {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.3;
+        }
+        
+        .usage-box {
+            background: linear-gradient(135deg, #e8f5e9 0%, #ffffff 100%);
+            border: 2px solid #4CAF50;
+            border-radius: 12px;
+            padding: 16px;
+        }
+        
+        .usage-box .box-header {
+            color: #388E3C;
+            border-color: #4CAF50;
+        }
+        
+        .usage-item {
+            background: white;
+            border: 1px solid #4CAF50;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .usage-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        
+        .usage-text {
+            font-size: 15px;
+            color: #333;
+        }
+        
+        .limitations-box {
+            background: linear-gradient(135deg, #ffebee 0%, #ffffff 100%);
+            border: 2px solid #e57373;
+            border-radius: 12px;
+            padding: 16px;
+            flex: 1;
+        }
+        
+        .limitations-box .box-header {
+            color: #d32f2f;
+            border-color: #e57373;
+        }
+        
+        .limitation-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .limitation-list li {
+            font-size: 15px;
+            color: #333;
+            padding-left: 24px;
+            position: relative;
+            line-height: 1.4;
+        }
+        
+        .limitation-list li:before {
+            content: "⚠";
+            position: absolute;
+            left: 0;
+            color: #e57373;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">t-SNE Algorithm</div>
+            <div class="full-name">t-Distributed Stochastic Neighbor Embedding</div>
+            <div class="subtitle">Non-linear dimensionality reduction for visualization</div>
+        </div>
+        
+        <div class="main-grid">
+            <div class="left-section">
+                <div class="process-box">
+                    <div class="box-header">🔄 Two-Step Process</div>
+                    <div class="step-flow">
+                        <div class="step-item">
+                            <div class="step-number">1</div>
+                            <div class="step-text">Compute pairwise similarities in high-dimensional space</div>
+                        </div>
+                        
+                        <div class="step-arrow">↓</div>
+                        
+                        <div class="step-item">
+                            <div class="step-number">2</div>
+                            <div class="step-text">Optimize low-dimensional embedding to match similarities</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="key-feature-box">
+                    <div class="box-header">✨ Key Features</div>
+                    
+                    <div class="feature-item">
+                        <div class="feature-icon">🎯</div>
+                        <div class="feature-text"><strong>Preserves local structure:</strong> Similar points stay close</div>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="feature-icon">📊</div>
+                        <div class="feature-text"><strong>Student t-distribution:</strong> Avoids crowding problem</div>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="feature-icon">🎲</div>
+                        <div class="feature-text"><strong>Stochastic:</strong> Different runs produce different results</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-section">
+                <div class="parameter-box">
+                    <div class="box-header">⚙️ Key Parameter</div>
+                    <div class="param-content">
+                        <div class="param-name">Perplexity</div>
+                        <div class="param-range">Range: 5 - 50</div>
+                        <div class="param-desc">Balances local vs global structure</div>
+                    </div>
+                </div>
+                
+                <div class="usage-box">
+                    <div class="box-header">🎯 Primary Use</div>
+                    
+                    <div class="usage-item">
+                        <div class="usage-icon">📊</div>
+                        <div class="usage-text">2D/3D visualization</div>
+                    </div>
+                    
+                    <div class="usage-item">
+                        <div class="usage-icon">❌</div>
+                        <div class="usage-text">NOT for general dim reduction</div>
+                    </div>
+                </div>
+                
+                <div class="limitations-box">
+                    <div class="box-header">⚠️ Limitations</div>
+                    <ul class="limitation-list">
+                        <li>Computationally expensive: O(n²)</li>
+                        <li>Best with <10k samples</li>
+                        <li>Non-deterministic results</li>
+                        <li>Sensitive to hyperparameters</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

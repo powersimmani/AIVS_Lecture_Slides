@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autoencoder Dimensionality Reduction</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+            color: #666;
+            margin-top: -10px;
+        }
+        
+        .architecture-section {
+            background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 12px;
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .arch-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex: 1;
+        }
+        
+        .arch-component {
+            background: white;
+            border: 2px solid;
+            border-radius: 10px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            transition: all 0.3s;
+        }
+        
+        .arch-component:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .arch-component.input {
+            border-color: #4CAF50;
+            background: linear-gradient(135deg, #e8f5e9 0%, #ffffff 100%);
+        }
+        
+        .arch-component.encoder {
+            border-color: #1E64C8;
+            background: linear-gradient(135deg, #e3f2fd 0%, #ffffff 100%);
+        }
+        
+        .arch-component.bottleneck {
+            border-color: #9C27B0;
+            background: linear-gradient(135deg, #f3e5f5 0%, #ffffff 100%);
+            flex: 0.8;
+        }
+        
+        .arch-component.decoder {
+            border-color: #FF9800;
+            background: linear-gradient(135deg, #fff3e0 0%, #ffffff 100%);
+        }
+        
+        .arch-component.output {
+            border-color: #00897B;
+            background: linear-gradient(135deg, #e0f2f1 0%, #ffffff 100%);
+        }
+        
+        .comp-icon {
+            font-size: 36px;
+        }
+        
+        .comp-name {
+            font-size: 17px;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .arch-component.input .comp-name {
+            color: #388E3C;
+        }
+        
+        .arch-component.encoder .comp-name {
+            color: #1E64C8;
+        }
+        
+        .arch-component.bottleneck .comp-name {
+            color: #9C27B0;
+        }
+        
+        .arch-component.decoder .comp-name {
+            color: #F57C00;
+        }
+        
+        .arch-component.output .comp-name {
+            color: #00897B;
+        }
+        
+        .comp-desc {
+            font-size: 13px;
+            color: #666;
+            text-align: center;
+            line-height: 1.3;
+        }
+        
+        .arrow {
+            font-size: 32px;
+            color: #1E64C8;
+            flex-shrink: 0;
+        }
+        
+        .training-box {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffffff 100%);
+            border: 2px solid #FF9800;
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .training-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: #F57C00;
+        }
+        
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+        
+        .variants-box {
+            background: linear-gradient(135deg, #f3e5f5 0%, #ffffff 100%);
+            border: 2px solid #9C27B0;
+            border-radius: 12px;
+            padding: 16px;
+        }
+        
+        .box-header {
+            font-size: 18px;
+            font-weight: 600;
+            color: #9C27B0;
+            text-align: center;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #9C27B0;
+        }
+        
+        .variant-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+        }
+        
+        .variant-tag {
+            background: white;
+            border: 1px solid #9C27B0;
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 14px;
+            color: #9C27B0;
+            font-weight: 600;
+        }
+        
+        .applications-box {
+            background: linear-gradient(135deg, #e8f5e9 0%, #ffffff 100%);
+            border: 2px solid #4CAF50;
+            border-radius: 12px;
+            padding: 16px;
+        }
+        
+        .applications-box .box-header {
+            color: #388E3C;
+            border-color: #4CAF50;
+        }
+        
+        .app-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+        }
+        
+        .app-item {
+            background: white;
+            border: 1px solid #4CAF50;
+            border-radius: 8px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .app-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        
+        .app-text {
+            font-size: 15px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Autoencoder for Dimensionality Reduction</div>
+        <div class="subtitle">Neural network approach with encoder-bottleneck-decoder architecture</div>
+        
+        <div class="architecture-section">
+            <div class="arch-flow">
+                <div class="arch-component input">
+                    <div class="comp-icon">📥</div>
+                    <div class="comp-name">Input</div>
+                    <div class="comp-desc">High-dimensional data</div>
+                </div>
+                
+                <div class="arrow">→</div>
+                
+                <div class="arch-component encoder">
+                    <div class="comp-icon">🔽</div>
+                    <div class="comp-name">Encoder</div>
+                    <div class="comp-desc">Compress to latent space</div>
+                </div>
+                
+                <div class="arrow">→</div>
+                
+                <div class="arch-component bottleneck">
+                    <div class="comp-icon">⚡</div>
+                    <div class="comp-name">Bottleneck</div>
+                    <div class="comp-desc">Low-dimensional representation</div>
+                </div>
+                
+                <div class="arrow">→</div>
+                
+                <div class="arch-component decoder">
+                    <div class="comp-icon">🔼</div>
+                    <div class="comp-name">Decoder</div>
+                    <div class="comp-desc">Reconstruct from latent</div>
+                </div>
+                
+                <div class="arrow">→</div>
+                
+                <div class="arch-component output">
+                    <div class="comp-icon">📤</div>
+                    <div class="comp-name">Output</div>
+                    <div class="comp-desc">Reconstructed data</div>
+                </div>
+            </div>
+            
+            <div class="training-box">
+                <div class="training-text">🎯 Training Objective: Minimize Reconstruction Error (MSE)</div>
+            </div>
+        </div>
+        
+        <div class="bottom-grid">
+            <div class="variants-box">
+                <div class="box-header">🔧 Variants</div>
+                <div class="variant-list">
+                    <div class="variant-tag">Denoising</div>
+                    <div class="variant-tag">Sparse</div>
+                    <div class="variant-tag">Contractive</div>
+                </div>
+                <div style="margin-top: 12px; text-align: center; font-size: 14px; color: #666;">
+                    Non-linear transformation can learn complex manifolds
+                </div>
+            </div>
+            
+            <div class="applications-box">
+                <div class="box-header">🎯 Applications</div>
+                <div class="app-grid">
+                    <div class="app-item">
+                        <div class="app-icon">🖼️</div>
+                        <div class="app-text">Image compression</div>
+                    </div>
+                    
+                    <div class="app-item">
+                        <div class="app-icon">🧠</div>
+                        <div class="app-text">Feature learning</div>
+                    </div>
+                    
+                    <div class="app-item">
+                        <div class="app-icon">⚠️</div>
+                        <div class="app-text">Anomaly detection</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Precision-Recall Curve</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: white;
+            font-family: Aptos, 'Segoe UI', sans-serif;
+        }
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+            padding: 30px;
+            box-sizing: border-box;
+        }
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+        }
+        .main-content {
+            display: grid;
+            grid-template-columns: 1.1fr 1fr;
+            gap: 22px;
+        }
+        .curve-section {
+            background: #f8f9fb;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        .curve-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .pr-plot {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            position: relative;
+            height: 300px;
+        }
+        .plot-svg {
+            width: 100%;
+            height: 100%;
+        }
+        .axis-label {
+            position: absolute;
+            font-size: 14px;
+            color: #666;
+            font-weight: 600;
+        }
+        .x-axis-label {
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .y-axis-label {
+            top: 50%;
+            left: 5px;
+            transform: translateY(-50%) rotate(-90deg);
+        }
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            margin-top: 12px;
+            font-size: 14px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .legend-line {
+            width: 30px;
+            height: 3px;
+            border-radius: 2px;
+        }
+        
+        .info-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .info-card {
+            background: #f8f9fb;
+            border-left: 5px solid #1E64C8;
+            padding: 16px 18px;
+            border-radius: 8px;
+        }
+        .info-card:nth-child(2) {
+            border-left-color: #4A90E2;
+        }
+        .info-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        .info-text {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        .comparison-box {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+        }
+        .comparison-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .comparison-item {
+            background: #f8f9fb;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 14px;
+        }
+        .comparison-label {
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        .comparison-text {
+            color: #666;
+            font-size: 13px;
+        }
+        
+        .use-cases-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            grid-column: 1 / -1;
+            margin-top: 10px;
+        }
+        .use-cases-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .use-cases-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        .use-case-item {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+        }
+        .use-case-icon {
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+        .use-case-text {
+            font-size: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Precision-Recall Curve</div>
+        
+        <div class="main-content">
+            <!-- PR Curve Visualization -->
+            <div class="curve-section">
+                <div class="curve-title">PR Curve Visualization</div>
+                <div class="pr-plot">
+                    <svg class="plot-svg" viewBox="0 0 300 260" preserveAspectRatio="xMidYMid meet">
+                        <!-- Axes -->
+                        <line x1="40" y1="220" x2="280" y2="220" stroke="#333" stroke-width="2"/>
+                        <line x1="40" y1="20" x2="40" y2="220" stroke="#333" stroke-width="2"/>
+                        
+                        <!-- Grid lines -->
+                        <line x1="40" y1="120" x2="280" y2="120" stroke="#ddd" stroke-width="1" stroke-dasharray="3,3"/>
+                        <line x1="160" y1="20" x2="160" y2="220" stroke="#ddd" stroke-width="1" stroke-dasharray="3,3"/>
+                        
+                        <!-- Baseline (horizontal line for random classifier) -->
+                        <line x1="40" y1="170" x2="280" y2="170" stroke="#e74c3c" stroke-width="2" stroke-dasharray="5,5" opacity="0.7"/>
+                        <text x="285" y="173" font-size="11" fill="#e74c3c">Baseline</text>
+                        
+                        <!-- Good PR curve (high precision maintained) -->
+                        <path d="M 40 25 L 70 28 Q 120 35, 160 50 T 220 90 L 280 180" 
+                              stroke="#27ae60" 
+                              stroke-width="3.5" 
+                              fill="none"
+                              stroke-linecap="round"/>
+                        
+                        <!-- Poor PR curve (steep decline) -->
+                        <path d="M 40 25 L 60 40 Q 100 90, 140 130 T 200 180 L 280 210" 
+                              stroke="#f39c12" 
+                              stroke-width="3" 
+                              fill="none"
+                              stroke-dasharray="4,4"
+                              opacity="0.7"/>
+                        
+                        <!-- Axis labels -->
+                        <text x="35" y="25" font-size="12" fill="#333" text-anchor="end">1.0</text>
+                        <text x="35" y="223" font-size="12" fill="#333" text-anchor="end">0.0</text>
+                        <text x="42" y="233" font-size="12" fill="#333">0.0</text>
+                        <text x="275" y="233" font-size="12" fill="#333">1.0</text>
+                        
+                        <!-- Threshold annotation -->
+                        <circle cx="160" cy="50" r="4" fill="#27ae60"/>
+                        <text x="165" y="45" font-size="11" fill="#666">Threshold</text>
+                    </svg>
+                    <div class="axis-label x-axis-label">Recall →</div>
+                    <div class="axis-label y-axis-label">Precision →</div>
+                </div>
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-line" style="background: #27ae60;"></div>
+                        <span>Good Model</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-line" style="background: #f39c12; border: 2px dashed #f39c12; height: 0;"></div>
+                        <span>Weak Model</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-line" style="background: #e74c3c; border: 2px dashed #e74c3c; height: 0;"></div>
+                        <span>Random</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Information Cards -->
+            <div class="info-section">
+                <div class="info-card">
+                    <div class="info-title">📊 PR Curve</div>
+                    <div class="info-text">
+                        Plots Precision vs Recall at different thresholds. High area indicates both metrics are maintained well.
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-title">⚖️ vs ROC Curve</div>
+                    <div class="info-text">
+                        More informative for imbalanced datasets. Better reveals performance on minority class.
+                    </div>
+                </div>
+                
+                <div class="comparison-box">
+                    <div class="comparison-title">Key Insights</div>
+                    <div class="comparison-grid">
+                        <div class="comparison-item">
+                            <div class="comparison-label">Steep Decline</div>
+                            <div class="comparison-text">Difficult P-R tradeoff</div>
+                        </div>
+                        <div class="comparison-item">
+                            <div class="comparison-label">High Area</div>
+                            <div class="comparison-text">Strong classifier</div>
+                        </div>
+                        <div class="comparison-item">
+                            <div class="comparison-label">Baseline</div>
+                            <div class="comparison-text">= Positive class %</div>
+                        </div>
+                        <div class="comparison-item">
+                            <div class="comparison-label">Complement</div>
+                            <div class="comparison-text">Use with ROC</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="use-cases-box">
+            <div class="use-cases-title">💡 Best Used For</div>
+            <div class="use-cases-grid">
+                <div class="use-case-item">
+                    <div class="use-case-icon">💳</div>
+                    <div class="use-case-text">Fraud Detection</div>
+                </div>
+                <div class="use-case-item">
+                    <div class="use-case-icon">🔬</div>
+                    <div class="use-case-text">Rare Disease Detection</div>
+                </div>
+                <div class="use-case-item">
+                    <div class="use-case-icon">⚖️</div>
+                    <div class="use-case-text">Imbalanced Datasets</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

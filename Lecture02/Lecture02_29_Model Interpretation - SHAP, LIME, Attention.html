@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model Interpretation Methods</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #FFFFFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            padding: 25px 35px;
+        }
+        
+        .title-section {
+            text-align: center;
+            margin-bottom: 14px;
+        }
+        
+        .main-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .subtitle {
+            font-size: 17px;
+            color: #666666;
+        }
+        
+        .content-wrapper {
+            display: flex;
+            gap: 18px;
+            flex: 1;
+        }
+        
+        .left-panel {
+            flex: 1.6;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .top-row {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 10px;
+            flex: 1;
+        }
+        
+        .bottom-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            flex: 1;
+        }
+        
+        .method-card {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 10px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+        
+        .method-card:hover {
+            border-color: #1E64C8;
+            box-shadow: 0 4px 15px rgba(30, 100, 200, 0.15);
+            transform: scale(1.02);
+        }
+        
+        .method-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .method-visual {
+            flex: 1;
+            background: #F8F8F8;
+            border-radius: 6px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .method-description {
+            text-align: center;
+            font-size: 15px;
+            color: #666;
+            margin-top: 8px;
+            line-height: 1.3;
+        }
+        
+        /* SHAP Summary Plot */
+        .shap-summary {
+            width: 100%;
+            height: 100%;
+            padding: 10px;
+        }
+        
+        .feature-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .feature-label {
+            width: 60px;
+            font-size: 11px;
+            color: #666;
+            font-weight: 600;
+            text-align: right;
+            padding-right: 8px;
+        }
+        
+        .feature-bar-container {
+            flex: 1;
+            height: 15px;
+            background: #F0F0F0;
+            border-radius: 3px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-dots {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .shap-dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            margin: 0 1px;
+        }
+        
+        /* SHAP Waterfall */
+        .shap-waterfall {
+            width: 100%;
+            height: 100%;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+        }
+        
+        .waterfall-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .waterfall-label {
+            font-size: 11px;
+            color: #666;
+            font-weight: 600;
+            width: 50px;
+            text-align: right;
+        }
+        
+        .waterfall-bar {
+            height: 18px;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            padding: 0 6px;
+            font-size: 10px;
+            font-weight: 600;
+            color: white;
+        }
+        
+        .bar-positive { background: #F44336; }
+        .bar-negative { background: #1E64C8; }
+        .bar-base { background: #999; }
+        
+        /* LIME */
+        .lime-visual {
+            width: 100%;
+            height: 100%;
+            padding: 10px;
+        }
+        
+        .lime-text {
+            font-size: 13px;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .lime-word {
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: 500;
+        }
+        
+        .word-pos { background: rgba(76, 175, 80, 0.3); color: #2E7D32; }
+        .word-neg { background: rgba(244, 67, 54, 0.3); color: #C62828; }
+        .word-neutral { background: none; color: #666; }
+        
+        /* Attention Heatmap */
+        .attention-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 2px;
+            padding: 15px;
+        }
+        
+        .attention-cell {
+            aspect-ratio: 1;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+        
+        .attention-cell:hover {
+            transform: scale(1.2);
+            z-index: 10;
+        }
+        
+        .right-panel {
+            flex: 0.4;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .comparison-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .method-section {
+            margin-bottom: 10px;
+        }
+        
+        .section-header {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .method-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 6px;
+            font-size: 15px;
+            color: #333;
+            line-height: 1.3;
+            margin-bottom: 4px;
+            padding: 4px 6px;
+            background: #F8FBFF;
+            border-radius: 4px;
+        }
+        
+        .method-icon {
+            color: #1E64C8;
+            flex-shrink: 0;
+            font-size: 14px;
+        }
+        
+        .scope-card {
+            background: #FFF9E6;
+            border: 2px solid #FFC107;
+            border-radius: 10px;
+            padding: 14px;
+        }
+        
+        .scope-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .scope-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 15px;
+            color: #333;
+            margin-bottom: 6px;
+            padding: 6px 8px;
+            background: white;
+            border-radius: 4px;
+        }
+        
+        .scope-label {
+            font-weight: 600;
+        }
+        
+        .scope-value {
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .tips-card {
+            background: #E8F5E9;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            padding: 14px;
+        }
+        
+        .tips-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2E7D32;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .tip-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 15px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .check-icon {
+            color: #4CAF50;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .method-card, .comparison-card, .scope-card, .tips-card {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        .method-card:nth-child(1) { animation-delay: 0.1s; }
+        .method-card:nth-child(2) { animation-delay: 0.2s; }
+        .method-card:nth-child(3) { animation-delay: 0.3s; }
+        .method-card:nth-child(4) { animation-delay: 0.4s; }
+        .comparison-card { animation-delay: 0.5s; }
+        .scope-card { animation-delay: 0.6s; }
+        .tips-card { animation-delay: 0.7s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Model Interpretation: SHAP, LIME, Attention</div>
+            <div class="subtitle">Understanding Model Decisions and Feature Contributions</div>
+        </div>
+        
+        <div class="content-wrapper">
+            <div class="left-panel">
+                <div class="top-row">
+                    <!-- SHAP Summary Plot -->
+                    <div class="method-card">
+                        <div class="method-title">SHAP Summary Plot</div>
+                        <div class="method-visual">
+                            <div class="shap-summary">
+                                <div class="feature-row">
+                                    <div class="feature-label">Feature A</div>
+                                    <div class="feature-bar-container">
+                                        <div class="feature-dots">
+                                            <div class="shap-dot" style="background: #1E64C8; margin-left: -30px;"></div>
+                                            <div class="shap-dot" style="background: #1E64C8; margin-left: -25px;"></div>
+                                            <div class="shap-dot" style="background: #42A5F5; margin-left: -20px;"></div>
+                                            <div class="shap-dot" style="background: #F44336; margin-left: 15px;"></div>
+                                            <div class="shap-dot" style="background: #F44336; margin-left: 20px;"></div>
+                                            <div class="shap-dot" style="background: #FF6B6B; margin-left: 25px;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="feature-row">
+                                    <div class="feature-label">Feature B</div>
+                                    <div class="feature-bar-container">
+                                        <div class="feature-dots">
+                                            <div class="shap-dot" style="background: #1E64C8; margin-left: -20px;"></div>
+                                            <div class="shap-dot" style="background: #42A5F5; margin-left: -15px;"></div>
+                                            <div class="shap-dot" style="background: #90CAF9; margin-left: 0px;"></div>
+                                            <div class="shap-dot" style="background: #F44336; margin-left: 10px;"></div>
+                                            <div class="shap-dot" style="background: #FF6B6B; margin-left: 15px;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="feature-row">
+                                    <div class="feature-label">Feature C</div>
+                                    <div class="feature-bar-container">
+                                        <div class="feature-dots">
+                                            <div class="shap-dot" style="background: #1E64C8; margin-left: -15px;"></div>
+                                            <div class="shap-dot" style="background: #42A5F5; margin-left: -10px;"></div>
+                                            <div class="shap-dot" style="background: #90CAF9; margin-left: -5px;"></div>
+                                            <div class="shap-dot" style="background: #FF6B6B; margin-left: 5px;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="feature-row">
+                                    <div class="feature-label">Feature D</div>
+                                    <div class="feature-bar-container">
+                                        <div class="feature-dots">
+                                            <div class="shap-dot" style="background: #1E64C8; margin-left: -10px;"></div>
+                                            <div class="shap-dot" style="background: #42A5F5; margin-left: -5px;"></div>
+                                            <div class="shap-dot" style="background: #90CAF9; margin-left: 0px;"></div>
+                                            <div class="shap-dot" style="background: #F44336; margin-left: 5px;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="method-description">Global feature importance</div>
+                    </div>
+                    
+                    <!-- SHAP Waterfall -->
+                    <div class="method-card">
+                        <div class="method-title">SHAP Waterfall</div>
+                        <div class="method-visual">
+                            <div class="shap-waterfall">
+                                <div class="waterfall-item">
+                                    <div class="waterfall-label">Base</div>
+                                    <div class="waterfall-bar bar-base" style="width: 60px;">0.50</div>
+                                </div>
+                                <div class="waterfall-item">
+                                    <div class="waterfall-label">Feature A</div>
+                                    <div class="waterfall-bar bar-positive" style="width: 80px;">+0.25</div>
+                                </div>
+                                <div class="waterfall-item">
+                                    <div class="waterfall-label">Feature B</div>
+                                    <div class="waterfall-bar bar-negative" style="width: 50px;">-0.10</div>
+                                </div>
+                                <div class="waterfall-item">
+                                    <div class="waterfall-label">Feature C</div>
+                                    <div class="waterfall-bar bar-positive" style="width: 60px;">+0.15</div>
+                                </div>
+                                <div class="waterfall-item">
+                                    <div class="waterfall-label">Final</div>
+                                    <div class="waterfall-bar bar-base" style="width: 90px;">0.80</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="method-description">Individual contribution</div>
+                    </div>
+                </div>
+                
+                <div class="bottom-row">
+                    <!-- LIME -->
+                    <div class="method-card">
+                        <div class="method-title">LIME Explanation</div>
+                        <div class="method-visual">
+                            <div class="lime-visual">
+                                <div class="lime-text">
+                                    <span class="lime-word word-neutral">This</span>
+                                    <span class="lime-word word-pos">excellent</span>
+                                    <span class="lime-word word-neutral">movie</span>
+                                    <span class="lime-word word-neutral">was</span>
+                                    <span class="lime-word word-pos">amazing</span>
+                                    <span class="lime-word word-neutral">and</span>
+                                    <span class="lime-word word-neg">boring</span>
+                                    <span class="lime-word word-neutral">scenes</span>
+                                    <span class="lime-word word-neutral">were</span>
+                                    <span class="lime-word word-neutral">few.</span>
+                                    <span class="lime-word word-pos">Great</span>
+                                    <span class="lime-word word-neutral">acting!</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="method-description">Local linear approximation</div>
+                    </div>
+                    
+                    <!-- Attention Heatmap -->
+                    <div class="method-card">
+                        <div class="method-title">Attention Heatmap</div>
+                        <div class="method-visual">
+                            <div class="attention-grid">
+                                <div class="attention-cell" style="background: rgba(244, 67, 54, 0.8);"></div>
+                                <div class="attention-cell" style="background: rgba(244, 67, 54, 0.6);"></div>
+                                <div class="attention-cell" style="background: rgba(30, 100, 200, 0.3);"></div>
+                                <div class="attention-cell" style="background: rgba(30, 100, 200, 0.2);"></div>
+                                <div class="attention-cell" style="background: rgba(244, 67, 54, 0.5);"></div>
+                                <div class="attention-cell" style="background: rgba(30, 100, 200, 0.3);"></div>
+                                <div class="attention-cell" style="background: rgba(30, 100, 200, 0.2);"></div>
+                                <div class="attention-cell" style="background: rgba(30, 100, 200, 0.4);"></div>
+                                
+                                <div class="attention-cell" style="background: rgba(30, 100, 200, 0.4);"></div>
+                                <div class="attention-cell" style="background: rgba(244, 67, 54, 0.9);"></div>
+                                <div class="attention-cell" style="background: rgba(244, 67, 54, 0.7);"></div>
+                                <div class="attention-cell" style="background: rgba(30, 100, 200, 0.3);"></div>
+                                <div class="attention-cell" style="background: rgba(30, 100, 200, 0.2);"></div>
+                                <div class="attention-cell" style="background: rgba(30, 100, 200, 0.3);"></div>
+                                <div class="attention-cell" style="background: rgba(244, 67, 54, 0.4);"></div>
+                                <div class="attention-cell" style="background: rgba(30, 100, 200, 0.2);"></div>
+                                
+                                <div class="attention-cell" style="background: rgba(30, 100, 200, 0.3);"></div>
+                                <div class="attention-cell" style="background: rgba(244, 67, 54, 0.6);"></div>
+                                <div class="attention-cell" style="background: rgba(244, 67, 54, 0.8);"></div>
+                                <div class="attention-cell" style="background: rgba(244, 67, 54, 0.5);"></div>
+                                <div class="attention-cell" style="background: rgba(30, 100, 200, 0.2);"></div>
+                                <div class="attention-cell" style="background: rgba(30, 100, 200, 0.3);"></div>
+                                <div class="attention-cell" style="background: rgba(30, 100, 200, 0.2);"></div>
+                                <div class="attention-cell" style="background: rgba(30, 100, 200, 0.4);"></div>
+                                
+                                <div class="attention-cell" style="background: rgba(30, 100, 200, 0.2);"></div>
+                                <div class="attention-cell" style="background: rgba(30, 100, 200, 0.3);"></div>
+                                <div class="attention-cell" style="background: rgba(244, 67, 54, 0.5);"></div>
+                                <div class="attention-cell" style="background: rgba(244, 67, 54, 0.7);"></div>
+                                <div class="attention-cell" style="background: rgba(244, 67, 54, 0.4);"></div>
+                                <div class="attention-cell" style="background: rgba(30, 100, 200, 0.2);"></div>
+                                <div class="attention-cell" style="background: rgba(30, 100, 200, 0.3);"></div>
+                                <div class="attention-cell" style="background: rgba(30, 100, 200, 0.2);"></div>
+                            </div>
+                        </div>
+                        <div class="method-description">Model focus visualization</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <div class="comparison-card">
+                    <div class="card-title">
+                        <span>🔍</span>
+                        Methods
+                    </div>
+                    
+                    <div class="method-section">
+                        <div class="section-header">SHAP</div>
+                        <div class="method-item">
+                            <span class="method-icon">•</span>
+                            <span>Game-theory based</span>
+                        </div>
+                        <div class="method-item">
+                            <span class="method-icon">•</span>
+                            <span>Global + local</span>
+                        </div>
+                    </div>
+                    
+                    <div class="method-section">
+                        <div class="section-header">LIME</div>
+                        <div class="method-item">
+                            <span class="method-icon">•</span>
+                            <span>Model-agnostic</span>
+                        </div>
+                        <div class="method-item">
+                            <span class="method-icon">•</span>
+                            <span>Local perturbation</span>
+                        </div>
+                    </div>
+                    
+                    <div class="method-section">
+                        <div class="section-header">Attention</div>
+                        <div class="method-item">
+                            <span class="method-icon">•</span>
+                            <span>Built-in mechanism</span>
+                        </div>
+                        <div class="method-item">
+                            <span class="method-icon">•</span>
+                            <span>Text/image focus</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="scope-card">
+                    <div class="scope-title">Scope</div>
+                    <div class="scope-row">
+                        <span class="scope-label">SHAP</span>
+                        <span class="scope-value">Global/Local</span>
+                    </div>
+                    <div class="scope-row">
+                        <span class="scope-label">LIME</span>
+                        <span class="scope-value">Local only</span>
+                    </div>
+                    <div class="scope-row">
+                        <span class="scope-label">Attention</span>
+                        <span class="scope-value">Instance-level</span>
+                    </div>
+                </div>
+                
+                <div class="tips-card">
+                    <div class="tips-title">✓ Best Practices</div>
+                    <div class="tip-item">
+                        <span class="check-icon">✓</span>
+                        <span>Use SHAP for importance</span>
+                    </div>
+                    <div class="tip-item">
+                        <span class="check-icon">✓</span>
+                        <span>LIME for quick insights</span>
+                    </div>
+                    <div class="tip-item">
+                        <span class="check-icon">✓</span>
+                        <span>Attention for NLP/vision</span>
+                    </div>
+                    <div class="tip-item">
+                        <span class="check-icon">✓</span>
+                        <span>Compare with PDP</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

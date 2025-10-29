@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categorical Cross-Entropy</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px;
+            position: relative;
+        }
+        
+        .title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .content-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            height: calc(100% - 50px);
+        }
+        
+        .purpose-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            border-radius: 10px;
+            padding: 16px 20px;
+            color: white;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .formula-section {
+            background: white;
+            border: 3px solid #1E64C8;
+            border-radius: 10px;
+            padding: 20px 24px;
+            text-align: center;
+        }
+        
+        .formula-label {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        
+        .formula-text {
+            font-size: 24px;
+            color: #1E64C8;
+            font-weight: 700;
+            font-style: italic;
+        }
+        
+        .main-content {
+            display: flex;
+            gap: 18px;
+            flex: 1;
+        }
+        
+        .left-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .encoding-box {
+            background: white;
+            border: 2px solid #9c27b0;
+            border-radius: 10px;
+            padding: 16px 18px;
+        }
+        
+        .encoding-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #9c27b0;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .encoding-visual {
+            background: #f3e5f5;
+            border-radius: 6px;
+            padding: 12px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+            color: #9c27b0;
+        }
+        
+        .encoding-desc {
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+            margin-top: 6px;
+        }
+        
+        .features-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex: 1;
+        }
+        
+        .feature-item {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-left: 5px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+        }
+        
+        .feature-item:hover {
+            background: #f8fbff;
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.15);
+        }
+        
+        .feature-icon {
+            width: 28px;
+            height: 28px;
+            background: #1E64C8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .feature-text {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.4;
+            flex: 1;
+        }
+        
+        .right-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .combination-box {
+            background: white;
+            border: 2px solid #28a745;
+            border-radius: 10px;
+            padding: 16px 18px;
+        }
+        
+        .combo-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #28a745;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .combo-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 10px;
+        }
+        
+        .combo-item {
+            background: #e8f5e9;
+            border: 2px solid #28a745;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 15px;
+            color: #28a745;
+            font-weight: 600;
+        }
+        
+        .combo-arrow {
+            font-size: 24px;
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        .gradient-box {
+            background: linear-gradient(135deg, #ffc107 0%, #ffb300 100%);
+            border-radius: 10px;
+            padding: 18px 20px;
+            color: white;
+            text-align: center;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .gradient-label {
+            font-size: 16px;
+            font-weight: 600;
+            opacity: 0.95;
+        }
+        
+        .gradient-formula {
+            font-size: 22px;
+            font-weight: 700;
+            font-style: italic;
+        }
+        
+        .gradient-note {
+            font-size: 15px;
+            font-weight: 600;
+            opacity: 0.95;
+        }
+        
+        .comparison-box {
+            background: white;
+            border: 2px solid #6c757d;
+            border-radius: 10px;
+            padding: 14px 16px;
+            text-align: center;
+        }
+        
+        .comparison-text {
+            font-size: 16px;
+            color: #495057;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+        
+        .highlight {
+            font-weight: 700;
+            color: #1E64C8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Categorical Cross-Entropy</div>
+        
+        <div class="content-layout">
+            <!-- Purpose -->
+            <div class="purpose-box">
+                Loss Function for Multiclass Classification
+            </div>
+            
+            <!-- Formula -->
+            <div class="formula-section">
+                <div class="formula-label">Formula:</div>
+                <div class="formula-text">L = -∑ₖ yₖ log(ŷₖ)</div>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Left Section -->
+                <div class="left-section">
+                    <div class="encoding-box">
+                        <div class="encoding-title">One-hot Encoding:</div>
+                        <div class="encoding-visual">
+                            y = [0, 0, 1, 0, ...]
+                        </div>
+                        <div class="encoding-desc">for true class</div>
+                    </div>
+                    
+                    <div class="features-list">
+                        <div class="feature-item">
+                            <div class="feature-icon">∑</div>
+                            <div class="feature-text">
+                                Generalizes binary cross-entropy to <strong>K classes</strong>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <div class="feature-icon">⚠</div>
+                            <div class="feature-text">
+                                Penalizes deviation from true class distribution
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right Section -->
+                <div class="right-section">
+                    <div class="combination-box">
+                        <div class="combo-title">Combined with Softmax:</div>
+                        <div class="combo-flow">
+                            <div class="combo-item">Softmax</div>
+                            <div class="combo-arrow">+</div>
+                            <div class="combo-item">CCE</div>
+                        </div>
+                        <div style="margin-top: 10px; text-align: center; font-size: 15px; color: #28a745; font-weight: 600;">
+                            Differentiable end-to-end
+                        </div>
+                    </div>
+                    
+                    <div class="gradient-box">
+                        <div class="gradient-label">Gradient:</div>
+                        <div class="gradient-formula">ŷₖ - yₖ</div>
+                        <div class="gradient-note">(elegant and simple!)</div>
+                    </div>
+                    
+                    <div class="comparison-box">
+                        <div class="comparison-text">
+                            <span class="highlight">Binary</span> → 2 classes<br>
+                            <span class="highlight">Categorical</span> → K classes
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

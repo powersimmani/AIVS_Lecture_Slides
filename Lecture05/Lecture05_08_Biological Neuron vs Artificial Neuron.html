@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biological Neuron vs Artificial Neuron</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Aptos', 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            padding: 40px;
+        }
+        
+        .main-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+        }
+        
+        .comparison-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            flex: 1;
+        }
+        
+        .neuron-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #1E64C8;
+        }
+        
+        .diagram-area {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            border: 2px solid #1E64C8;
+        }
+        
+        /* Biological Neuron Styles */
+        .bio-neuron {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .dendrites {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .dendrite-line {
+            width: 60px;
+            height: 2px;
+            background: #1E64C8;
+            margin: 15px 0;
+            position: relative;
+        }
+        
+        .dendrite-label {
+            position: absolute;
+            left: -80px;
+            top: -8px;
+            font-size: 14px;
+            color: #666;
+            white-space: nowrap;
+        }
+        
+        .soma {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            border: 3px solid #1557b0;
+        }
+        
+        .axon {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 80px;
+            height: 3px;
+            background: #1E64C8;
+        }
+        
+        .axon-terminal {
+            position: absolute;
+            right: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #1E64C8;
+        }
+        
+        .bio-label {
+            position: absolute;
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .label-dendrites {
+            left: 10px;
+            top: 10px;
+        }
+        
+        .label-soma {
+            left: 50%;
+            bottom: -25px;
+            transform: translateX(-50%);
+        }
+        
+        .label-axon {
+            right: 10px;
+            bottom: 10px;
+        }
+        
+        /* Artificial Neuron Styles */
+        .artificial-neuron {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .inputs-container {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .input-line {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .input-node {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #e3f2fd;
+            border: 2px solid #1E64C8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .weight-label {
+            font-size: 13px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .connection {
+            width: 50px;
+            height: 2px;
+            background: #1E64C8;
+        }
+        
+        .neuron-core {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            border: 3px solid #1557b0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .neuron-formula {
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .activation-label {
+            font-size: 12px;
+            margin-top: 3px;
+            opacity: 0.9;
+        }
+        
+        .output-line {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .output-arrow {
+            width: 60px;
+            height: 2px;
+            background: #4caf50;
+            position: relative;
+        }
+        
+        .output-arrow::after {
+            content: '';
+            position: absolute;
+            right: -5px;
+            top: -3px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid #4caf50;
+            border-top: 4px solid transparent;
+            border-bottom: 4px solid transparent;
+        }
+        
+        .output-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #4caf50;
+        }
+        
+        .mapping-section {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 15px;
+            align-items: center;
+            background: #fff3cd;
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 4px solid #ff9800;
+        }
+        
+        .mapping-item {
+            font-size: 16px;
+            color: #333;
+            text-align: center;
+        }
+        
+        .mapping-bio {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .mapping-arrow {
+            font-size: 20px;
+            color: #ff9800;
+            font-weight: bold;
+        }
+        
+        .mapping-artificial {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-title">Biological Neuron vs Artificial Neuron</div>
+        
+        <div class="comparison-container">
+            <!-- Biological Neuron -->
+            <div class="neuron-section">
+                <div class="section-title">Biological Neuron</div>
+                <div class="diagram-area">
+                    <div class="bio-neuron">
+                        <!-- Dendrites -->
+                        <div class="dendrites">
+                            <div class="dendrite-line">
+                                <div class="dendrite-label">Input 1</div>
+                            </div>
+                            <div class="dendrite-line">
+                                <div class="dendrite-label">Input 2</div>
+                            </div>
+                            <div class="dendrite-line">
+                                <div class="dendrite-label">Input 3</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Soma (Cell Body) -->
+                        <div class="soma">Soma</div>
+                        
+                        <!-- Axon -->
+                        <div class="axon"></div>
+                        <div class="axon-terminal"></div>
+                        
+                        <!-- Labels -->
+                        <div class="bio-label label-dendrites">Dendrites</div>
+                        <div class="bio-label label-soma">Cell Body</div>
+                        <div class="bio-label label-axon">Axon</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Artificial Neuron -->
+            <div class="neuron-section">
+                <div class="section-title">Artificial Neuron</div>
+                <div class="diagram-area">
+                    <div class="artificial-neuron">
+                        <!-- Inputs with weights -->
+                        <div class="inputs-container">
+                            <div class="input-line">
+                                <div class="input-node">x₁</div>
+                                <div class="weight-label">w₁</div>
+                                <div class="connection"></div>
+                            </div>
+                            <div class="input-line">
+                                <div class="input-node">x₂</div>
+                                <div class="weight-label">w₂</div>
+                                <div class="connection"></div>
+                            </div>
+                            <div class="input-line">
+                                <div class="input-node">x₃</div>
+                                <div class="weight-label">w₃</div>
+                                <div class="connection"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Neuron Core -->
+                        <div class="neuron-core">
+                            <div class="neuron-formula">Σ + b</div>
+                            <div class="activation-label">σ(·)</div>
+                        </div>
+                        
+                        <!-- Output -->
+                        <div class="output-line">
+                            <div class="output-arrow"></div>
+                            <div class="output-label">y</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mapping-section">
+            <div class="mapping-item mapping-bio">Dendrites → Soma → Axon</div>
+            <div class="mapping-arrow">≈</div>
+            <div class="mapping-item mapping-artificial">Weighted Inputs → Summation & Activation → Output</div>
+        </div>
+    </div>
+</body>
+</html>

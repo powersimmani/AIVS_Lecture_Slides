@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Importance of Scale</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: #ffffff;
+            padding: 25px 40px;
+        }
+        
+        .title {
+            font-size: 26px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 25px;
+            height: 430px;
+        }
+        
+        .chart-section {
+            position: relative;
+        }
+        
+        .chart-container {
+            background: #F8F9FA;
+            border: 3px solid #1E64C8;
+            border-radius: 12px;
+            padding: 20px;
+            height: 100%;
+            position: relative;
+        }
+        
+        .chart-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .chart-area {
+            position: relative;
+            width: 100%;
+            height: 320px;
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+        }
+        
+        .y-axis {
+            position: absolute;
+            left: 15px;
+            top: 10px;
+            bottom: 40px;
+            width: 2px;
+            background: #666666;
+        }
+        
+        .x-axis {
+            position: absolute;
+            left: 15px;
+            right: 10px;
+            bottom: 40px;
+            height: 2px;
+            background: #666666;
+        }
+        
+        .y-label {
+            position: absolute;
+            left: -10px;
+            top: -25px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #333333;
+            transform: rotate(-90deg);
+            transform-origin: left center;
+            white-space: nowrap;
+        }
+        
+        .x-label {
+            position: absolute;
+            right: 0;
+            bottom: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #333333;
+        }
+        
+        .curve {
+            position: absolute;
+            left: 17px;
+            bottom: 42px;
+            right: 10px;
+            top: 20px;
+        }
+        
+        .curve svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .point {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #1E64C8;
+            border: 2px solid white;
+            border-radius: 50%;
+            transform: translate(-50%, 50%);
+            box-shadow: 0 0 0 2px #1E64C8;
+        }
+        
+        .point-label {
+            position: absolute;
+            font-size: 14px;
+            color: #1E64C8;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        
+        .emergent-zone {
+            position: absolute;
+            background: rgba(76, 175, 80, 0.1);
+            border: 2px dashed #4CAF50;
+            border-radius: 6px;
+            padding: 5px 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #2E7D32;
+        }
+        
+        .insights-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .insight-card {
+            background: #E8F4F8;
+            border-left: 4px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .insight-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .insight-content {
+            flex: 1;
+        }
+        
+        .insight-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .insight-text {
+            font-size: 16px;
+            color: #333333;
+            line-height: 1.4;
+        }
+        
+        .tradeoff-box {
+            background: #FFF4E6;
+            border: 2px solid #FF9800;
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin-top: auto;
+        }
+        
+        .tradeoff-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #E65100;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .tradeoff-text {
+            font-size: 16px;
+            color: #555555;
+            line-height: 1.4;
+        }
+        
+        .highlight {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">The Importance of Scale</div>
+        
+        <div class="main-content">
+            <!-- Chart Section -->
+            <div class="chart-section">
+                <div class="chart-container">
+                    <div class="chart-title">Scaling Laws: Model Size vs. Performance</div>
+                    <div class="chart-area">
+                        <div class="y-axis">
+                            <div class="y-label">Performance</div>
+                        </div>
+                        <div class="x-axis">
+                            <div class="x-label">Model Size (Parameters) →</div>
+                        </div>
+                        
+                        <div class="curve">
+                            <svg viewBox="0 0 400 250" preserveAspectRatio="none">
+                                <path d="M 0 240 Q 100 180 200 80 T 400 10" 
+                                      stroke="#1E64C8" 
+                                      stroke-width="4" 
+                                      fill="none"
+                                      stroke-linecap="round"/>
+                                <path d="M 0 240 Q 100 180 200 80 T 400 10 L 400 250 L 0 250 Z" 
+                                      fill="rgba(30, 100, 200, 0.1)"/>
+                            </svg>
+                        </div>
+                        
+                        <!-- Data Points -->
+                        <div class="point" style="left: 15%; bottom: 20%;"></div>
+                        <div class="point-label" style="left: 15%; bottom: 23%;">Small</div>
+                        
+                        <div class="point" style="left: 40%; bottom: 45%;"></div>
+                        <div class="point-label" style="left: 40%; bottom: 48%;">Medium</div>
+                        
+                        <div class="point" style="left: 65%; bottom: 70%;"></div>
+                        <div class="point-label" style="left: 65%; bottom: 73%;">Large</div>
+                        
+                        <div class="point" style="left: 85%; bottom: 88%;"></div>
+                        <div class="point-label" style="left: 85%; bottom: 91%;">XL</div>
+                        
+                        <!-- Emergent Abilities Zone -->
+                        <div class="emergent-zone" style="right: 50px; top: 40px;">
+                            ✨ Emergent<br>Abilities
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Insights Section -->
+            <div class="insights-section">
+                <div class="insight-card">
+                    <div class="insight-icon">📈</div>
+                    <div class="insight-content">
+                        <div class="insight-title">Predictable Growth</div>
+                        <div class="insight-text">Performance improves <span class="highlight">predictably</span> with size</div>
+                    </div>
+                </div>
+                
+                <div class="insight-card">
+                    <div class="insight-icon">🧠</div>
+                    <div class="insight-content">
+                        <div class="insight-title">More Parameters</div>
+                        <div class="insight-text">Capture <span class="highlight">more patterns</span> & knowledge</div>
+                    </div>
+                </div>
+                
+                <div class="insight-card">
+                    <div class="insight-icon">📚</div>
+                    <div class="insight-content">
+                        <div class="insight-title">Larger Datasets</div>
+                        <div class="insight-text"><span class="highlight">Richer knowledge</span> coverage</div>
+                    </div>
+                </div>
+                
+                <div class="insight-card">
+                    <div class="insight-icon">✨</div>
+                    <div class="insight-content">
+                        <div class="insight-title">Emergent Abilities</div>
+                        <div class="insight-text">New capabilities at <span class="highlight">scale thresholds</span></div>
+                    </div>
+                </div>
+                
+                <div class="insight-card">
+                    <div class="insight-icon">🎯</div>
+                    <div class="insight-content">
+                        <div class="insight-title">Few-shot Learning</div>
+                        <div class="insight-text">Dramatically <span class="highlight">improves</span> with scale</div>
+                    </div>
+                </div>
+                
+                <div class="tradeoff-box">
+                    <div class="tradeoff-title">
+                        <span>⚖️</span>
+                        <span>Trade-off</span>
+                    </div>
+                    <div class="tradeoff-text">
+                        <strong>Performance</strong> vs. <strong>Efficiency & Accessibility</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

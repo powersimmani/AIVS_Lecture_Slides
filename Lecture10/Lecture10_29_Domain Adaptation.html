@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Domain Adaptation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Aptos', 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            padding: 30px;
+        }
+        
+        .title {
+            font-size: 26px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .problem-box {
+            background: #F0F6FF;
+            border-left: 4px solid #1E64C8;
+            padding: 12px 20px;
+            margin-bottom: 20px;
+            font-size: 17px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .domain-comparison {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 18px 20px;
+            margin-bottom: 18px;
+        }
+        
+        .comp-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 14px;
+            text-align: center;
+        }
+        
+        .domains-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .domain-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 18px 20px;
+            text-align: center;
+            flex: 1;
+            max-width: 280px;
+        }
+        
+        .domain-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        
+        .domain-label {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .domain-desc {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.4;
+            margin-bottom: 8px;
+        }
+        
+        .domain-note {
+            background: #F0F6FF;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .shift-indicator {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .shift-icon {
+            color: #E74C3C;
+            font-size: 32px;
+            font-weight: bold;
+        }
+        
+        .shift-label {
+            background: #E74C3C;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .example-box {
+            background: #F0F6FF;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .example-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .example-text {
+            font-size: 16px;
+            color: #333;
+        }
+        
+        .techniques-section {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 16px 18px;
+            margin-bottom: 15px;
+        }
+        
+        .tech-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .tech-list {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .tech-tag {
+            background: #F0F6FF;
+            border: 2px solid #1E64C8;
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .benefit-card {
+            background: #1E64C8;
+            color: white;
+            border-radius: 8px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .benefit-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        
+        .benefit-text {
+            font-size: 15px;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Domain Adaptation</div>
+        
+        <div class="problem-box">
+            Addresses distribution shift between training (source) and test (target) domains
+        </div>
+        
+        <div class="domain-comparison">
+            <div class="comp-title">Domain Distribution Shift</div>
+            <div class="domains-flow">
+                <div class="domain-box">
+                    <div class="domain-icon">📚</div>
+                    <div class="domain-label">Source Domain</div>
+                    <div class="domain-desc">Training data distribution</div>
+                    <div class="domain-note">Labeled data available</div>
+                </div>
+                
+                <div class="shift-indicator">
+                    <div class="shift-icon">⚠️</div>
+                    <div class="shift-label">Distribution Shift</div>
+                </div>
+                
+                <div class="domain-box">
+                    <div class="domain-icon">🎯</div>
+                    <div class="domain-label">Target Domain</div>
+                    <div class="domain-desc">Test data distribution</div>
+                    <div class="domain-note">Limited/no labels</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="example-box">
+            <div class="example-title">📋 Example Scenario</div>
+            <div class="example-text">Train on synthetic data → Test on real data</div>
+        </div>
+        
+        <div class="techniques-section">
+            <div class="tech-title">🔧 Adaptation Techniques</div>
+            <div class="tech-list">
+                <div class="tech-tag">Domain Adversarial Training</div>
+                <div class="tech-tag">Self-Training</div>
+                <div class="tech-tag">Pseudo-Labeling</div>
+            </div>
+        </div>
+        
+        <div class="benefits-grid">
+            <div class="benefit-card">
+                <div class="benefit-icon">🎯</div>
+                <div class="benefit-text">Learn domain-invariant representations</div>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">🌍</div>
+                <div class="benefit-text">Important for real-world deployment</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

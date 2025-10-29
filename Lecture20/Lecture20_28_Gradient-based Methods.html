@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gradient-based Methods</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Aptos', 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+            padding: 25px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+        }
+        
+        .main-layout {
+            display: grid;
+            grid-template-rows: auto 1fr;
+            gap: 15px;
+            height: calc(100% - 60px);
+        }
+        
+        .methods-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        
+        .method-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .method-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .method-icon {
+            font-size: 20px;
+        }
+        
+        .method-name {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1E64C8;
+        }
+        
+        .method-visual {
+            background: #F8F9FA;
+            border-radius: 6px;
+            height: 100px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .gradient-pattern {
+            width: 100%;
+            height: 100%;
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            grid-template-rows: repeat(6, 1fr);
+            gap: 1px;
+        }
+        
+        .grad-cell {
+            transition: opacity 0.3s ease;
+        }
+        
+        .grad-cell:hover {
+            opacity: 0.7;
+        }
+        
+        /* Vanilla Gradients - noisy */
+        .vanilla .grad-cell:nth-child(odd) {
+            background: rgba(30, 100, 200, 0.7);
+        }
+        .vanilla .grad-cell:nth-child(even) {
+            background: rgba(230, 57, 70, 0.6);
+        }
+        
+        /* Integrated Gradients - smooth focused */
+        .integrated {
+            background: radial-gradient(circle at 45% 45%, 
+                rgba(230, 57, 70, 0.9) 0%, 
+                rgba(230, 57, 70, 0.6) 30%, 
+                rgba(230, 57, 70, 0.3) 60%, 
+                rgba(200, 200, 200, 0.2) 100%);
+        }
+        
+        /* SmoothGrad - less noisy */
+        .smoothgrad {
+            background: radial-gradient(circle at 50% 50%, 
+                rgba(30, 100, 200, 0.7) 0%, 
+                rgba(30, 100, 200, 0.5) 40%, 
+                rgba(30, 100, 200, 0.3) 70%, 
+                rgba(200, 200, 200, 0.1) 100%);
+        }
+        
+        /* Grad-CAM - heatmap style */
+        .gradcam {
+            background: linear-gradient(135deg, 
+                rgba(230, 57, 70, 0.9) 0%, 
+                rgba(244, 162, 97, 0.7) 50%, 
+                rgba(255, 223, 0, 0.5) 100%);
+        }
+        
+        .method-formula {
+            background: #E8F2FF;
+            border-radius: 4px;
+            padding: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            text-align: center;
+            color: #1E64C8;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        
+        .method-desc {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.4;
+        }
+        
+        .comparison-section {
+            background: #F8F9FA;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 15px;
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 15px;
+        }
+        
+        .comparison-table {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+        }
+        
+        .table-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .table-content {
+            font-size: 13px;
+        }
+        
+        .table-row {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            padding: 8px;
+            border-bottom: 1px solid #E0E0E0;
+        }
+        
+        .table-row:last-child {
+            border-bottom: none;
+        }
+        
+        .table-label {
+            font-weight: 700;
+            color: #1E64C8;
+        }
+        
+        .table-value {
+            color: #333;
+        }
+        
+        .check {
+            color: #28A745;
+            font-weight: 700;
+        }
+        
+        .cross {
+            color: #DC3545;
+            font-weight: 700;
+        }
+        
+        .code-section {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+        }
+        
+        .code-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .code-box {
+            background: #F8F9FA;
+            border: 1px solid #E0E0E0;
+            border-radius: 6px;
+            padding: 10px;
+            margin-bottom: 8px;
+        }
+        
+        .code-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #666;
+            margin-bottom: 4px;
+        }
+        
+        .code-content {
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .keyword {
+            color: #E63946;
+            font-weight: 600;
+        }
+        
+        .comment {
+            color: #28A745;
+        }
+        
+        .pros-cons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        
+        .pros-box, .cons-box {
+            background: white;
+            border-radius: 6px;
+            padding: 8px;
+        }
+        
+        .pros-box {
+            border: 2px solid #28A745;
+        }
+        
+        .cons-box {
+            border: 2px solid #DC3545;
+        }
+        
+        .box-title {
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+        
+        .pros-title {
+            color: #28A745;
+        }
+        
+        .cons-title {
+            color: #DC3545;
+        }
+        
+        .box-list {
+            font-size: 11px;
+            color: #666;
+            line-height: 1.5;
+        }
+        
+        .box-list div {
+            margin-bottom: 2px;
+            padding-left: 12px;
+            position: relative;
+        }
+        
+        .box-list div:before {
+            position: absolute;
+            left: 0;
+            font-weight: 700;
+        }
+        
+        .pros-box .box-list div:before {
+            content: "✓";
+            color: #28A745;
+        }
+        
+        .cons-box .box-list div:before {
+            content: "✗";
+            color: #DC3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Gradient-based Methods: Computing Feature Sensitivity</div>
+        
+        <div class="main-layout">
+            <!-- Methods Grid -->
+            <div class="methods-grid">
+                <!-- Vanilla Gradients -->
+                <div class="method-card">
+                    <div class="method-header">
+                        <div class="method-icon">📐</div>
+                        <div class="method-name">Vanilla Gradients</div>
+                    </div>
+                    <div class="method-visual">
+                        <div class="gradient-pattern vanilla">
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                            <div class="grad-cell"></div>
+                        </div>
+                    </div>
+                    <div class="method-formula">∂y/∂x</div>
+                    <div class="method-desc">Basic sensitivity, noisy</div>
+                </div>
+                
+                <!-- Integrated Gradients -->
+                <div class="method-card">
+                    <div class="method-header">
+                        <div class="method-icon">∫</div>
+                        <div class="method-name">Integrated Gradients</div>
+                    </div>
+                    <div class="method-visual integrated"></div>
+                    <div class="method-formula">∫₀¹ ∇f(x̄ + α(x-x̄)) dα</div>
+                    <div class="method-desc">Path integral, smooth</div>
+                </div>
+                
+                <!-- SmoothGrad -->
+                <div class="method-card">
+                    <div class="method-header">
+                        <div class="method-icon">〰️</div>
+                        <div class="method-name">SmoothGrad</div>
+                    </div>
+                    <div class="method-visual smoothgrad"></div>
+                    <div class="method-formula">E[∇f(x + N(0,σ²))]</div>
+                    <div class="method-desc">Averaged over noise</div>
+                </div>
+                
+                <!-- Grad-CAM -->
+                <div class="method-card">
+                    <div class="method-header">
+                        <div class="method-icon">🔥</div>
+                        <div class="method-name">Grad-CAM</div>
+                    </div>
+                    <div class="method-visual gradcam"></div>
+                    <div class="method-formula">ReLU(Σ αₖ Aₖ)</div>
+                    <div class="method-desc">Class activation map</div>
+                </div>
+            </div>
+            
+            <!-- Comparison Section -->
+            <div class="comparison-section">
+                <!-- Comparison Table -->
+                <div class="comparison-table">
+                    <div class="table-title">Method Comparison</div>
+                    <div class="table-content">
+                        <div class="table-row">
+                            <div class="table-label">Vanilla</div>
+                            <div class="table-value">Fast, noisy <span class="cross">✗</span></div>
+                        </div>
+                        <div class="table-row">
+                            <div class="table-label">Integrated</div>
+                            <div class="table-value">Smooth, slow <span class="check">✓</span></div>
+                        </div>
+                        <div class="table-row">
+                            <div class="table-label">SmoothGrad</div>
+                            <div class="table-value">Less noise <span class="check">✓</span></div>
+                        </div>
+                        <div class="table-row">
+                            <div class="table-label">Grad-CAM</div>
+                            <div class="table-value">CNN specific <span class="check">✓</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="pros-cons">
+                        <div class="pros-box">
+                            <div class="box-title pros-title">Strengths</div>
+                            <div class="box-list">
+                                <div>Model-agnostic</div>
+                                <div>Fast computation</div>
+                                <div>Differentiable</div>
+                            </div>
+                        </div>
+                        <div class="cons-box">
+                            <div class="box-title cons-title">Limitations</div>
+                            <div class="box-list">
+                                <div>Saturation issue</div>
+                                <div>Noise in vanilla</div>
+                                <div>Requires gradients</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Code Section -->
+                <div class="code-section">
+                    <div class="code-title">PyTorch Implementation</div>
+                    
+                    <div class="code-box">
+                        <div class="code-label">Vanilla Gradients</div>
+                        <div class="code-content">
+x.<span class="keyword">requires_grad_</span>()<br>
+output = model(x)<br>
+output.backward()<br>
+gradients = x.<span class="keyword">grad</span>
+                        </div>
+                    </div>
+                    
+                    <div class="code-box">
+                        <div class="code-label">Integrated Gradients</div>
+                        <div class="code-content">
+<span class="comment"># Path from baseline to input</span><br>
+alphas = torch.linspace(0, 1, steps=50)<br>
+<span class="keyword">for</span> alpha <span class="keyword">in</span> alphas:<br>
+&nbsp;&nbsp;x_step = baseline + alpha * (x - baseline)<br>
+&nbsp;&nbsp;<span class="comment"># Compute gradients at each step</span>
+                        </div>
+                    </div>
+                    
+                    <div class="code-box">
+                        <div class="code-label">SmoothGrad</div>
+                        <div class="code-content">
+<span class="comment"># Average over noisy samples</span><br>
+<span class="keyword">for</span> _ <span class="keyword">in</span> range(n_samples):<br>
+&nbsp;&nbsp;noise = torch.randn_like(x) * sigma<br>
+&nbsp;&nbsp;grads += compute_grad(x + noise)<br>
+smooth_grad = grads / n_samples
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

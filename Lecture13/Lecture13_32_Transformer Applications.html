@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transformer Applications</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 30px;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .applications-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            flex: 1;
+        }
+        
+        .app-card {
+            background: white;
+            border: 2px solid;
+            border-radius: 8px;
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .nlp-card {
+            border-color: #1E64C8;
+            background: #f0f7ff;
+        }
+        
+        .translation-card {
+            border-color: #16a34a;
+            background: #f0fdf4;
+        }
+        
+        .vision-card {
+            border-color: #7c3aed;
+            background: #f5f0ff;
+        }
+        
+        .speech-card {
+            border-color: #f59e0b;
+            background: #fff9f0;
+        }
+        
+        .multimodal-card {
+            border-color: #ec4899;
+            background: #fdf2f8;
+        }
+        
+        .timeseries-card {
+            border-color: #06b6d4;
+            background: #f0fdff;
+        }
+        
+        .code-card {
+            border-color: #84cc16;
+            background: #f7fee7;
+        }
+        
+        .biology-card {
+            border-color: #ef4444;
+            background: #fef2f2;
+        }
+        
+        .app-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid;
+        }
+        
+        .nlp-card .app-header { border-color: #1E64C8; }
+        .translation-card .app-header { border-color: #16a34a; }
+        .vision-card .app-header { border-color: #7c3aed; }
+        .speech-card .app-header { border-color: #f59e0b; }
+        .multimodal-card .app-header { border-color: #ec4899; }
+        .timeseries-card .app-header { border-color: #06b6d4; }
+        .code-card .app-header { border-color: #84cc16; }
+        .biology-card .app-header { border-color: #ef4444; }
+        
+        .app-icon {
+            font-size: 28px;
+        }
+        
+        .app-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .nlp-card .app-title { color: #1E64C8; }
+        .translation-card .app-title { color: #16a34a; }
+        .vision-card .app-title { color: #7c3aed; }
+        .speech-card .app-title { color: #f59e0b; }
+        .multimodal-card .app-title { color: #ec4899; }
+        .timeseries-card .app-title { color: #06b6d4; }
+        .code-card .app-title { color: #84cc16; }
+        .biology-card .app-title { color: #ef4444; }
+        
+        .app-examples {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .example-item {
+            display: flex;
+            align-items: start;
+            gap: 6px;
+        }
+        
+        .example-bullet {
+            font-size: 12px;
+            margin-top: 4px;
+            flex-shrink: 0;
+        }
+        
+        .example-text {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .model-name {
+            font-weight: 600;
+        }
+        
+        .nlp-card .model-name { color: #1E64C8; }
+        .translation-card .model-name { color: #16a34a; }
+        .vision-card .model-name { color: #7c3aed; }
+        .speech-card .model-name { color: #f59e0b; }
+        .multimodal-card .model-name { color: #ec4899; }
+        .timeseries-card .model-name { color: #06b6d4; }
+        .code-card .model-name { color: #84cc16; }
+        .biology-card .model-name { color: #ef4444; }
+        
+        .achievement-badge {
+            background: white;
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 4px;
+        }
+        
+        .translation-card .achievement-badge { 
+            color: #16a34a;
+            border: 1px solid #16a34a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Transformer Applications Across Domains</div>
+        
+        <div class="applications-grid">
+            <div class="app-card nlp-card">
+                <div class="app-header">
+                    <div class="app-icon">💬</div>
+                    <div class="app-title">Natural Language Processing</div>
+                </div>
+                <div class="app-examples">
+                    <div class="example-item">
+                        <div class="example-bullet">•</div>
+                        <div class="example-text">
+                            <span class="model-name">GPT</span> - Text generation
+                        </div>
+                    </div>
+                    <div class="example-item">
+                        <div class="example-bullet">•</div>
+                        <div class="example-text">
+                            <span class="model-name">BERT</span> - Language understanding
+                        </div>
+                    </div>
+                    <div class="example-item">
+                        <div class="example-bullet">•</div>
+                        <div class="example-text">
+                            <span class="model-name">T5</span> - Text-to-text framework
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="app-card translation-card">
+                <div class="app-header">
+                    <div class="app-icon">🌐</div>
+                    <div class="app-title">Machine Translation</div>
+                </div>
+                <div class="app-examples">
+                    <div class="example-item">
+                        <div class="example-bullet">•</div>
+                        <div class="example-text">
+                            High-quality translation systems
+                        </div>
+                    </div>
+                    <div class="achievement-badge">
+                        Near human-level performance
+                    </div>
+                </div>
+            </div>
+            
+            <div class="app-card vision-card">
+                <div class="app-header">
+                    <div class="app-icon">👁️</div>
+                    <div class="app-title">Computer Vision</div>
+                </div>
+                <div class="app-examples">
+                    <div class="example-item">
+                        <div class="example-bullet">•</div>
+                        <div class="example-text">
+                            <span class="model-name">ViT</span> - Vision Transformers
+                        </div>
+                    </div>
+                    <div class="example-item">
+                        <div class="example-bullet">•</div>
+                        <div class="example-text">
+                            <span class="model-name">DINO</span> - Self-supervised learning
+                        </div>
+                    </div>
+                    <div class="example-item">
+                        <div class="example-bullet">•</div>
+                        <div class="example-text">
+                            <span class="model-name">CLIP</span> - Vision-language models
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="app-card speech-card">
+                <div class="app-header">
+                    <div class="app-icon">🎤</div>
+                    <div class="app-title">Speech Processing</div>
+                </div>
+                <div class="app-examples">
+                    <div class="example-item">
+                        <div class="example-bullet">•</div>
+                        <div class="example-text">
+                            <span class="model-name">Whisper</span> - Speech transcription
+                        </div>
+                    </div>
+                    <div class="example-item">
+                        <div class="example-bullet">•</div>
+                        <div class="example-text">
+                            Audio generation systems
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="app-card multimodal-card">
+                <div class="app-header">
+                    <div class="app-icon">🎨</div>
+                    <div class="app-title">Multimodal AI</div>
+                </div>
+                <div class="app-examples">
+                    <div class="example-item">
+                        <div class="example-bullet">•</div>
+                        <div class="example-text">
+                            <span class="model-name">DALL-E</span> - Text-to-image
+                        </div>
+                    </div>
+                    <div class="example-item">
+                        <div class="example-bullet">•</div>
+                        <div class="example-text">
+                            <span class="model-name">GPT-4</span> - Multi-capability AI
+                        </div>
+                    </div>
+                    <div class="example-item">
+                        <div class="example-bullet">•</div>
+                        <div class="example-text">
+                            <span class="model-name">Flamingo</span> - Text + Image
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="app-card timeseries-card">
+                <div class="app-header">
+                    <div class="app-icon">📈</div>
+                    <div class="app-title">Time Series</div>
+                </div>
+                <div class="app-examples">
+                    <div class="example-item">
+                        <div class="example-bullet">•</div>
+                        <div class="example-text">
+                            <span class="model-name">Temporal Fusion Transformer</span>
+                        </div>
+                    </div>
+                    <div class="example-item">
+                        <div class="example-bullet">•</div>
+                        <div class="example-text">
+                            Forecasting and prediction
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="app-card code-card">
+                <div class="app-header">
+                    <div class="app-icon">💻</div>
+                    <div class="app-title">Code Generation</div>
+                </div>
+                <div class="app-examples">
+                    <div class="example-item">
+                        <div class="example-bullet">•</div>
+                        <div class="example-text">
+                            <span class="model-name">GitHub Copilot</span> - AI pair programming
+                        </div>
+                    </div>
+                    <div class="example-item">
+                        <div class="example-bullet">•</div>
+                        <div class="example-text">
+                            <span class="model-name">AlphaCode</span> - Competitive programming
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="app-card biology-card">
+                <div class="app-header">
+                    <div class="app-icon">🧬</div>
+                    <div class="app-title">Biology & Science</div>
+                </div>
+                <div class="app-examples">
+                    <div class="example-item">
+                        <div class="example-bullet">•</div>
+                        <div class="example-text">
+                            <span class="model-name">AlphaFold2</span>
+                        </div>
+                    </div>
+                    <div class="example-item">
+                        <div class="example-bullet">•</div>
+                        <div class="example-text">
+                            Protein structure prediction
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

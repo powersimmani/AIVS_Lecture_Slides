@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autoregressive (AR)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+            padding: 25px 45px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 25px;
+        }
+        
+        .concept-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874D8 100%);
+            color: white;
+            padding: 18px 30px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .concept-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .concept-text {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        
+        .formula-box {
+            background: #F8FAFE;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 20px 30px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .formula-label {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+        
+        .formula {
+            font-size: 20px;
+            color: #1E64C8;
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 0.5px;
+        }
+        
+        .properties-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+        
+        .property-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 18px 16px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 120px;
+        }
+        
+        .property-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .property-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .property-text {
+            font-size: 15px;
+            color: #2C3E50;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Autoregressive (AR)</div>
+        
+        <div class="concept-box">
+            <div class="concept-title">Core Concept: AR(p)</div>
+            <div class="concept-text">
+                Predicts current value from previous <strong>p</strong> values<br>
+                Linear combination of past observations
+            </div>
+        </div>
+        
+        <div class="formula-box">
+            <div class="formula-label">AR Model Formula</div>
+            <div class="formula">
+                X<sub>t</sub> = c + φ₁X<sub>t-1</sub> + φ₂X<sub>t-2</sub> + ... + φ<sub>p</sub>X<sub>t-p</sub> + ε<sub>t</sub>
+            </div>
+        </div>
+        
+        <div class="properties-grid">
+            <div class="property-card">
+                <div class="property-icon">📊</div>
+                <div class="property-title">Order Selection</div>
+                <div class="property-text">
+                    Via AIC/BIC criteria
+                </div>
+            </div>
+            
+            <div class="property-card">
+                <div class="property-icon">📈</div>
+                <div class="property-title">Stationarity</div>
+                <div class="property-text">
+                    Assumes stationary time series
+                </div>
+            </div>
+            
+            <div class="property-card">
+                <div class="property-icon">🔗</div>
+                <div class="property-title">Dependencies</div>
+                <div class="property-text">
+                    Good for linear temporal dependencies
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

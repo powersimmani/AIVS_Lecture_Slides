@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SimCLR Algorithm</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            padding: 25px;
+            gap: 20px;
+        }
+        
+        .title-section {
+            text-align: center;
+            margin-bottom: 5px;
+        }
+        
+        .main-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-top: 4px;
+        }
+        
+        .architecture {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex: 1;
+        }
+        
+        .image-source {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-width: 120px;
+            height: 100%;
+        }
+        
+        .image-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+        
+        .image-label {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+        }
+        
+        .augmentation-branch {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            flex: 1;
+        }
+        
+        .branch {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .arrow {
+            color: #1E64C8;
+            font-size: 24px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .aug-box {
+            background: #fff3e0;
+            border: 2px solid #ff9800;
+            border-radius: 10px;
+            padding: 16px;
+            flex: 1;
+            min-width: 140px;
+        }
+        
+        .aug-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #ff9800;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .aug-details {
+            font-size: 15px;
+            color: #555;
+            text-align: center;
+            line-height: 1.3;
+        }
+        
+        .encoder-box {
+            background: #e8f5e9;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-width: 110px;
+        }
+        
+        .encoder-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #4CAF50;
+            margin-bottom: 6px;
+        }
+        
+        .encoder-desc {
+            font-size: 15px;
+            color: #555;
+            text-align: center;
+        }
+        
+        .projection-box {
+            background: #f3e5f5;
+            border: 2px solid #9C27B0;
+            border-radius: 10px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-width: 110px;
+        }
+        
+        .projection-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #9C27B0;
+            margin-bottom: 6px;
+        }
+        
+        .projection-desc {
+            font-size: 15px;
+            color: #555;
+            text-align: center;
+        }
+        
+        .loss-section {
+            background: #ffebee;
+            border: 2px solid #f44336;
+            border-radius: 10px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+        
+        .loss-label {
+            font-size: 18px;
+            font-weight: 600;
+            color: #f44336;
+            flex-shrink: 0;
+        }
+        
+        .loss-desc {
+            font-size: 16px;
+            color: #555;
+        }
+        
+        .key-points {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        
+        .key-point {
+            background: #e8f4ff;
+            border-left: 3px solid #1E64C8;
+            padding: 10px 12px;
+            border-radius: 4px;
+        }
+        
+        .key-point-text {
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .positive-indicator {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #4CAF50;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .branch-container {
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">SimCLR: Simple Framework for Contrastive Learning</div>
+            <div class="subtitle">Self-Supervised Visual Representation Learning</div>
+        </div>
+        
+        <div class="architecture">
+            <div class="image-source">
+                <div class="image-icon">🖼️</div>
+                <div class="image-label">Input<br>Image</div>
+            </div>
+            
+            <div class="arrow">→</div>
+            
+            <div class="augmentation-branch">
+                <div class="branch branch-container">
+                    <div class="aug-box">
+                        <div class="aug-title">Augmentation 1</div>
+                        <div class="aug-details">Crop + Color + Blur</div>
+                    </div>
+                    <div class="arrow">→</div>
+                    <div class="encoder-box">
+                        <div class="encoder-title">Encoder</div>
+                        <div class="encoder-desc">ResNet</div>
+                    </div>
+                    <div class="arrow">→</div>
+                    <div class="projection-box">
+                        <div class="projection-title">Projection</div>
+                        <div class="projection-desc">MLP Head</div>
+                    </div>
+                    <div class="positive-indicator">Positive Pair</div>
+                </div>
+                
+                <div class="branch branch-container">
+                    <div class="aug-box">
+                        <div class="aug-title">Augmentation 2</div>
+                        <div class="aug-details">Crop + Color + Blur</div>
+                    </div>
+                    <div class="arrow">→</div>
+                    <div class="encoder-box">
+                        <div class="encoder-title">Encoder</div>
+                        <div class="encoder-desc">ResNet</div>
+                    </div>
+                    <div class="arrow">→</div>
+                    <div class="projection-box">
+                        <div class="projection-title">Projection</div>
+                        <div class="projection-desc">MLP Head</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="loss-section">
+            <div class="loss-label">NT-Xent Loss</div>
+            <div class="loss-desc">Maximize agreement between positive pairs with temperature scaling (τ)</div>
+        </div>
+        
+        <div class="key-points">
+            <div class="key-point">
+                <div class="key-point-text">🎯 Large batch size: 4096-8192</div>
+            </div>
+            <div class="key-point">
+                <div class="key-point-text">🔄 Strong data augmentation</div>
+            </div>
+            <div class="key-point">
+                <div class="key-point-text">🏆 SOTA on ImageNet (no labels)</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

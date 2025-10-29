@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Transfer - SCP and SFTP</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 28px 40px;
+            background: white;
+        }
+        
+        .title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .scp-intro {
+            background: #f0f5fc;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px 20px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        
+        .intro-text {
+            font-size: 17px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .intro-highlight {
+            color: #1E64C8;
+            font-weight: 700;
+        }
+        
+        .transfer-directions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 16px;
+        }
+        
+        .direction-card {
+            background: white;
+            border: 3px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px 18px;
+            transition: all 0.3s;
+        }
+        
+        .direction-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(30, 100, 200, 0.25);
+        }
+        
+        .direction-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .direction-icon {
+            font-size: 24px;
+        }
+        
+        .direction-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E64C8;
+        }
+        
+        .direction-flow {
+            text-align: center;
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .command-box {
+            background: #f8fbff;
+            border: 2px dashed #1E64C8;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-family: 'Courier New', monospace;
+            font-size: 15px;
+            color: #1E64C8;
+            font-weight: 600;
+            word-break: break-all;
+        }
+        
+        .recursive-section {
+            background: #fff4e6;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px 20px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        
+        .recursive-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .recursive-desc {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 8px;
+        }
+        
+        .recursive-cmd {
+            background: white;
+            border: 2px dashed #1E64C8;
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-family: 'Courier New', monospace;
+            font-size: 15px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .tools-comparison {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+        
+        .tool-card {
+            background: white;
+            border: 2.5px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px 16px;
+            transition: all 0.3s;
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 16px rgba(30, 100, 200, 0.2);
+        }
+        
+        .tool-name {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 6px;
+            text-align: center;
+        }
+        
+        .tool-desc {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.4;
+            text-align: center;
+        }
+        
+        .best-practices {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        
+        .practice-box {
+            background: #f8fbff;
+            border-left: 4px solid #1E64C8;
+            border-radius: 6px;
+            padding: 10px 14px;
+        }
+        
+        .practice-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .practice-desc {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">File Transfer - Using SCP and SFTP</div>
+        
+        <div class="scp-intro">
+            <span class="intro-text"><span class="intro-highlight">SCP</span> (Secure Copy): Command-line file transfer over SSH</span>
+        </div>
+        
+        <div class="transfer-directions">
+            <div class="direction-card">
+                <div class="direction-header">
+                    <span class="direction-icon">⬆️</span>
+                    <span class="direction-name">Upload</span>
+                </div>
+                <div class="direction-flow">Local → Remote Server</div>
+                <div class="command-box">scp local_file.py user@server:/remote/path/</div>
+            </div>
+            
+            <div class="direction-card">
+                <div class="direction-header">
+                    <span class="direction-icon">⬇️</span>
+                    <span class="direction-name">Download</span>
+                </div>
+                <div class="direction-flow">Remote Server → Local</div>
+                <div class="command-box">scp user@server:/remote/model.pth ./local/path/</div>
+            </div>
+        </div>
+        
+        <div class="recursive-section">
+            <div class="recursive-title">Recursive Transfer (Entire Directories)</div>
+            <div class="recursive-desc">Use -r flag to transfer directories</div>
+            <div class="recursive-cmd">scp -r ./dataset/ user@server:/data/</div>
+        </div>
+        
+        <div class="tools-comparison">
+            <div class="tool-card">
+                <div class="tool-name">SCP</div>
+                <div class="tool-desc">Simple command-line transfer over SSH</div>
+            </div>
+            
+            <div class="tool-card">
+                <div class="tool-name">SFTP</div>
+                <div class="tool-desc">Interactive file transfer (like FTP but secure)</div>
+            </div>
+            
+            <div class="tool-card">
+                <div class="tool-name">rsync</div>
+                <div class="tool-desc">Smart sync, only transfers changed files (efficient)</div>
+            </div>
+        </div>
+        
+        <div class="best-practices">
+            <div class="practice-box">
+                <div class="practice-title">Large Datasets</div>
+                <div class="practice-desc">Consider cloud storage (S3, GCS) or shared filesystems</div>
+            </div>
+            
+            <div class="practice-box">
+                <div class="practice-title">Compression Tip</div>
+                <div class="practice-desc">Compress before transfer (tar + gzip) for faster upload/download</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

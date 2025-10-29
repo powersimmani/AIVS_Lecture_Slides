@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hyperparameter Tuning</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: white;
+            font-family: Aptos, 'Segoe UI', sans-serif;
+        }
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+            padding: 30px;
+            box-sizing: border-box;
+        }
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 20px;
+        }
+        .methods-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-bottom: 20px;
+        }
+        .method-card {
+            background: #f8f9fb;
+            border-radius: 10px;
+            padding: 20px;
+            border-top: 5px solid #1E64C8;
+            transition: transform 0.3s ease;
+        }
+        .method-card:hover {
+            transform: translateY(-5px);
+        }
+        .method-card:nth-child(2) {
+            border-top-color: #4A90E2;
+        }
+        .method-card:nth-child(3) {
+            border-top-color: #7BB3F0;
+        }
+        .method-icon {
+            text-align: center;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        .method-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        .method-desc {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.6;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        .method-pros {
+            background: white;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .pros-title {
+            font-weight: 600;
+            color: #27ae60;
+            margin-bottom: 5px;
+        }
+        .pros-text {
+            color: #666;
+            line-height: 1.5;
+        }
+        
+        .workflow-section {
+            background: #f8f9fb;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 18px;
+        }
+        .workflow-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .workflow-steps {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        .workflow-step {
+            flex: 1;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border-left: 4px solid #1E64C8;
+        }
+        .step-number {
+            display: inline-block;
+            background: #1E64C8;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            line-height: 28px;
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        .step-text {
+            font-size: 15px;
+            color: #555;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+        .workflow-arrow {
+            font-size: 24px;
+            color: #1E64C8;
+            flex-shrink: 0;
+        }
+        
+        .best-practices {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+        }
+        .practices-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        .practices-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        .practice-item {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+        .practice-icon {
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Hyperparameter Tuning</div>
+        
+        <div class="methods-grid">
+            <!-- Grid Search -->
+            <div class="method-card">
+                <div class="method-icon">🔍</div>
+                <div class="method-name">Grid Search</div>
+                <div class="method-desc">
+                    Exhaustively searches through specified parameter combinations
+                </div>
+                <div class="method-pros">
+                    <div class="pros-title">✓ Advantages:</div>
+                    <div class="pros-text">Comprehensive, guaranteed to find best in grid</div>
+                </div>
+            </div>
+
+            <!-- Random Search -->
+            <div class="method-card">
+                <div class="method-icon">🎲</div>
+                <div class="method-name">Random Search</div>
+                <div class="method-desc">
+                    Randomly samples from parameter space for specified iterations
+                </div>
+                <div class="method-pros">
+                    <div class="pros-title">✓ Advantages:</div>
+                    <div class="pros-text">More efficient, explores wider range</div>
+                </div>
+            </div>
+
+            <!-- Bayesian Optimization -->
+            <div class="method-card">
+                <div class="method-icon">🧠</div>
+                <div class="method-name">Bayesian Optimization</div>
+                <div class="method-desc">
+                    Uses probabilistic model to guide search toward promising regions
+                </div>
+                <div class="method-pros">
+                    <div class="pros-title">✓ Advantages:</div>
+                    <div class="pros-text">Smart search, fewer iterations needed</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="workflow-section">
+            <div class="workflow-title">📋 Typical Tuning Workflow</div>
+            <div class="workflow-steps">
+                <div class="workflow-step">
+                    <div class="step-number">1</div>
+                    <div class="step-text">Define parameter space & ranges</div>
+                </div>
+                
+                <div class="workflow-arrow">→</div>
+                
+                <div class="workflow-step">
+                    <div class="step-number">2</div>
+                    <div class="step-text">Choose search strategy</div>
+                </div>
+                
+                <div class="workflow-arrow">→</div>
+                
+                <div class="workflow-step">
+                    <div class="step-number">3</div>
+                    <div class="step-text">Use cross-validation for each config</div>
+                </div>
+                
+                <div class="workflow-arrow">→</div>
+                
+                <div class="workflow-step">
+                    <div class="step-number">4</div>
+                    <div class="step-text">Select best parameters</div>
+                </div>
+                
+                <div class="workflow-arrow">→</div>
+                
+                <div class="workflow-step">
+                    <div class="step-number">5</div>
+                    <div class="step-text">Evaluate on test set</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="best-practices">
+            <div class="practices-title">🎯 Best Practices</div>
+            <div class="practices-grid">
+                <div class="practice-item">
+                    <div class="practice-icon">⚠️</div>
+                    <div>Use validation set, never test set for tuning</div>
+                </div>
+                <div class="practice-item">
+                    <div class="practice-icon">🔄</div>
+                    <div>Combine tuning with cross-validation</div>
+                </div>
+                <div class="practice-item">
+                    <div class="practice-icon">📊</div>
+                    <div>Start broad, then narrow search range</div>
+                </div>
+                <div class="practice-item">
+                    <div class="practice-icon">⏱️</div>
+                    <div>Consider computational budget</div>
+                </div>
+                <div class="practice-item">
+                    <div class="practice-icon">📈</div>
+                    <div>Log-scale for learning rates</div>
+                </div>
+                <div class="practice-item">
+                    <div class="practice-icon">✓</div>
+                    <div>Automate with tools (sklearn, optuna)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

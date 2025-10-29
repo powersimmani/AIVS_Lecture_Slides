@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tensor Operations Diagram</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 28px 40px;
+            background: white;
+        }
+        
+        .title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .definition-box {
+            background: #f0f5fc;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px 25px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .definition-text {
+            font-size: 17px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .definition-highlight {
+            color: #1E64C8;
+            font-weight: 700;
+        }
+        
+        .operations-section {
+            margin-bottom: 20px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .operations-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .operation-card {
+            background: white;
+            border: 2.5px solid #1E64C8;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .operation-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(30, 100, 200, 0.25);
+            background: #f8fbff;
+        }
+        
+        .operation-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+        
+        .operation-desc {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .parallelizable-badge {
+            display: inline-block;
+            background: #1E64C8;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+        
+        .memory-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 18px;
+        }
+        
+        .memory-card {
+            background: white;
+            border: 3px solid #1E64C8;
+            border-radius: 10px;
+            padding: 16px 20px;
+            transition: all 0.3s;
+        }
+        
+        .memory-card.good {
+            border-color: #1E64C8;
+        }
+        
+        .memory-card.bad {
+            border-color: #999;
+        }
+        
+        .memory-card:hover {
+            transform: scale(1.03);
+        }
+        
+        .memory-type {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .memory-card.bad .memory-type {
+            color: #999;
+        }
+        
+        .memory-visual {
+            display: flex;
+            justify-content: center;
+            gap: 3px;
+            margin: 12px 0;
+        }
+        
+        .memory-block {
+            width: 30px;
+            height: 30px;
+            background: #1E64C8;
+            border-radius: 4px;
+        }
+        
+        .memory-card.bad .memory-block {
+            background: #999;
+        }
+        
+        .memory-desc {
+            font-size: 16px;
+            color: #333;
+            text-align: center;
+            line-height: 1.4;
+        }
+        
+        .hardware-optimization {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 20px;
+        }
+        
+        .optimization-card {
+            background: white;
+            border: 2.5px solid #1E64C8;
+            border-radius: 10px;
+            padding: 16px 20px;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .optimization-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 8px;
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .optimization-item::before {
+            content: "✓";
+            color: #1E64C8;
+            font-weight: bold;
+            margin-right: 8px;
+            font-size: 17px;
+            flex-shrink: 0;
+        }
+        
+        .tensor-core-box {
+            background: #fff4e6;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 16px 20px;
+        }
+        
+        .tensor-core-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .tensor-core-desc {
+            font-size: 16px;
+            color: #333;
+            text-align: center;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Tensor Operations and Hardware Optimization</div>
+        
+        <div class="definition-box">
+            <span class="definition-text"><span class="definition-highlight">Tensor</span>: Multi-dimensional array </span>
+            <span class="definition-text">(Foundation of deep learning)</span>
+        </div>
+        
+        <div class="operations-section">
+            <div class="section-title">Common Tensor Operations</div>
+            <div class="operations-grid">
+                <div class="operation-card">
+                    <div class="operation-name">matmul</div>
+                    <div class="operation-desc">Matrix multiplication</div>
+                    <div class="parallelizable-badge">Parallelizable</div>
+                </div>
+                
+                <div class="operation-card">
+                    <div class="operation-name">conv2d</div>
+                    <div class="operation-desc">2D convolution</div>
+                    <div class="parallelizable-badge">Parallelizable</div>
+                </div>
+                
+                <div class="operation-card">
+                    <div class="operation-name">attention</div>
+                    <div class="operation-desc">Self-attention</div>
+                    <div class="parallelizable-badge">Parallelizable</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="memory-comparison">
+            <div class="memory-card good">
+                <div class="memory-type">Coalesced Access</div>
+                <div class="memory-visual">
+                    <div class="memory-block"></div>
+                    <div class="memory-block"></div>
+                    <div class="memory-block"></div>
+                    <div class="memory-block"></div>
+                    <div class="memory-block"></div>
+                </div>
+                <div class="memory-desc">Sequential memory reads<br>⚡ Fast & efficient</div>
+            </div>
+            
+            <div class="memory-card bad">
+                <div class="memory-type">Uncoalesced Access</div>
+                <div class="memory-visual">
+                    <div class="memory-block"></div>
+                    <div class="memory-block" style="margin-left: 8px;"></div>
+                    <div class="memory-block"></div>
+                    <div class="memory-block" style="margin-left: 8px;"></div>
+                    <div class="memory-block"></div>
+                </div>
+                <div class="memory-desc">Random memory reads<br>⚠️ Slow & inefficient</div>
+            </div>
+        </div>
+        
+        <div class="hardware-optimization">
+            <div class="optimization-card">
+                <div class="card-title">Optimization Strategies</div>
+                <div class="optimization-item">Batch operations together</div>
+                <div class="optimization-item">Maintain contiguous memory</div>
+                <div class="optimization-item">Minimize CPU-GPU transfers</div>
+            </div>
+            
+            <div class="tensor-core-box">
+                <div class="tensor-core-title">Tensor Cores</div>
+                <div class="tensor-core-desc">Specialized hardware for mixed-precision matmul</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

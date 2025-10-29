@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introduction to GPT Series</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: #ffffff;
+            padding: 25px 40px;
+        }
+        
+        .title {
+            font-size: 26px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .subtitle {
+            font-size: 18px;
+            color: #666666;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 25px;
+            height: 420px;
+        }
+        
+        /* Architecture Section */
+        .architecture-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .architecture-box {
+            background: #F8F9FA;
+            border: 3px solid #1E64C8;
+            border-radius: 12px;
+            padding: 18px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .arch-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 15px;
+        }
+        
+        .decoder-stack {
+            display: flex;
+            flex-direction: column-reverse;
+            gap: 8px;
+            margin: 10px 0;
+            width: 100%;
+        }
+        
+        .decoder-layer {
+            background: #1E64C8;
+            border: 2px solid #1557A8;
+            border-radius: 8px;
+            padding: 12px 20px;
+            text-align: center;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            position: relative;
+        }
+        
+        .decoder-layer.highlight {
+            background: #2E7FD8;
+            box-shadow: 0 0 15px rgba(30, 100, 200, 0.5);
+        }
+        
+        .causal-attention {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 10px 0;
+        }
+        
+        .causal-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .attention-visual {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 16px;
+            color: #333333;
+        }
+        
+        .arrow-right {
+            font-size: 24px;
+            color: #1E64C8;
+        }
+        
+        .input-sequence {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+            margin-top: 12px;
+        }
+        
+        .token {
+            background: #E8F4F8;
+            border: 2px solid #1E64C8;
+            border-radius: 6px;
+            padding: 5px 10px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #1E64C8;
+        }
+        
+        .token.output {
+            background: #C8E6C9;
+            border-color: #4CAF50;
+            color: #2E7D32;
+            font-weight: 600;
+        }
+        
+        /* Features and Evolution */
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .features-box {
+            background: #E8F4F8;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 15px 18px;
+        }
+        
+        .features-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+        }
+        
+        .feature-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 16px;
+            color: #333333;
+        }
+        
+        .feature-icon {
+            color: #1E64C8;
+            font-size: 18px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .evolution-box {
+            background: #F8F9FA;
+            border: 3px solid #1E64C8;
+            border-radius: 10px;
+            padding: 15px 18px;
+            flex: 1;
+        }
+        
+        .evolution-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .timeline-item {
+            background: white;
+            border-left: 4px solid #1E64C8;
+            border-radius: 6px;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .timeline-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(30, 100, 200, 0.2);
+        }
+        
+        .timeline-item.gpt3 {
+            background: #FFF9E6;
+            border-left-color: #FFC107;
+        }
+        
+        .timeline-year {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            min-width: 50px;
+        }
+        
+        .timeline-item.gpt3 .timeline-year {
+            color: #F57C00;
+        }
+        
+        .timeline-content {
+            flex: 1;
+        }
+        
+        .timeline-name {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .timeline-item.gpt3 .timeline-name {
+            color: #F57C00;
+        }
+        
+        .timeline-desc {
+            font-size: 15px;
+            color: #666666;
+        }
+        
+        .timeline-badge {
+            background: #C8E6C9;
+            border: 2px solid #4CAF50;
+            border-radius: 20px;
+            padding: 4px 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #2E7D32;
+        }
+        
+        .highlight {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">GPT: Generative Pre-trained Transformer</div>
+        <div class="subtitle">OpenAI - Autoregressive Decoder-only Architecture</div>
+        
+        <div class="main-layout">
+            <!-- Architecture Section -->
+            <div class="architecture-section">
+                <div class="architecture-box">
+                    <div class="arch-title">Decoder-Only Architecture</div>
+                    
+                    <div class="decoder-stack">
+                        <div class="decoder-layer">Decoder Layer 1</div>
+                        <div class="decoder-layer">Decoder Layer 2</div>
+                        <div class="decoder-layer">...</div>
+                        <div class="decoder-layer highlight">Decoder Layer N</div>
+                    </div>
+                    
+                    <div class="causal-attention">
+                        <div class="causal-title">Causal Masking</div>
+                        <div class="attention-visual">
+                            <span>Past</span>
+                            <span class="arrow-right">→</span>
+                            <span style="font-weight: 600; color: #1E64C8;">Present</span>
+                            <span style="color: #999999;">✗ Future</span>
+                        </div>
+                    </div>
+                    
+                    <div class="input-sequence">
+                        <div class="token">Token 1</div>
+                        <div class="token">Token 2</div>
+                        <div class="token">Token 3</div>
+                        <div class="token output">Next →</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Features and Evolution -->
+            <div class="right-section">
+                <div class="features-box">
+                    <div class="features-title">🎯 Key Features</div>
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <div class="feature-icon">→</div>
+                            <div><span class="highlight">Unidirectional</span> (left-to-right) attention</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">📝</div>
+                            <div>Optimized for <span class="highlight">text generation</span></div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">🔄</div>
+                            <div><span class="highlight">Autoregressive</span> prediction</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">🚀</div>
+                            <div>Decoder-only transformer stack</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="evolution-box">
+                    <div class="evolution-title">📈 GPT Evolution</div>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-year">2018</div>
+                            <div class="timeline-content">
+                                <div class="timeline-name">GPT-1</div>
+                                <div class="timeline-desc">117M params • Proof of concept</div>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-item">
+                            <div class="timeline-year">2019</div>
+                            <div class="timeline-content">
+                                <div class="timeline-name">GPT-2</div>
+                                <div class="timeline-desc">1.5B params • Impressive generation</div>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-item gpt3">
+                            <div class="timeline-year">2020</div>
+                            <div class="timeline-content">
+                                <div class="timeline-name">GPT-3</div>
+                                <div class="timeline-desc">175B params</div>
+                            </div>
+                            <div class="timeline-badge">⭐ Paradigm Shift</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

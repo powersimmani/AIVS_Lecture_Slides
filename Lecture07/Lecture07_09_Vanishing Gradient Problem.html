@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vanishing Gradient Problem</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            position: relative;
+            overflow: hidden;
+            padding: 20px 35px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 20px;
+        }
+        
+        .gradient-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 0 20px;
+        }
+        
+        .layer-node {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+        }
+        
+        .layer-circle {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid #1E64C8;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .layer-circle:hover {
+            transform: scale(1.08);
+        }
+        
+        .layer-node.output .layer-circle {
+            background: linear-gradient(135deg, #1E88E5 0%, #1565C0 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(30, 100, 200, 0.4);
+        }
+        
+        .layer-node.hidden3 .layer-circle {
+            background: linear-gradient(135deg, #42A5F5 0%, #1E88E5 100%);
+            color: white;
+        }
+        
+        .layer-node.hidden2 .layer-circle {
+            background: linear-gradient(135deg, #90CAF9 0%, #64B5F6 100%);
+            color: #333;
+        }
+        
+        .layer-node.hidden1 .layer-circle {
+            background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+            color: #333;
+        }
+        
+        .layer-node.input .layer-circle {
+            background: linear-gradient(135deg, #F5F5F5 0%, #E0E0E0 100%);
+            color: #666;
+            border-color: #999;
+        }
+        
+        .layer-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+        }
+        
+        .gradient-value {
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .gradient-amount {
+            font-size: 13px;
+            margin-top: -3px;
+        }
+        
+        .arrow-back {
+            font-size: 32px;
+            color: #E57373;
+            font-weight: 700;
+            position: relative;
+        }
+        
+        .arrow-label {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            color: #E57373;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        
+        .problem-section {
+            background: #FFEBEE;
+            border-left: 5px solid #E57373;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 18px;
+        }
+        
+        .problem-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #E57373;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .problem-title::before {
+            content: "⚠";
+            margin-right: 8px;
+            font-size: 20px;
+        }
+        
+        .problem-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+        
+        .problem-item {
+            font-size: 15px;
+            color: #333;
+            padding-left: 18px;
+            position: relative;
+            line-height: 1.4;
+        }
+        
+        .problem-item::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: #E57373;
+            font-weight: 700;
+        }
+        
+        .math-section {
+            background: #F0F6FF;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px 20px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .math-label {
+            font-size: 14px;
+            color: #1E64C8;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        
+        .math-formula {
+            font-size: 20px;
+            color: #333;
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .solutions-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        
+        .solution-card {
+            background: white;
+            border: 2px solid #4CAF50;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .solution-card:hover {
+            background: #E8F5E9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+        }
+        
+        .solution-card .icon {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
+        .solution-card .text {
+            font-size: 15px;
+            color: #333;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Vanishing Gradient Problem</div>
+        
+        <div class="gradient-flow">
+            <div class="layer-node output">
+                <div class="layer-circle">
+                    <div class="gradient-value">1.0</div>
+                    <div class="gradient-amount">100%</div>
+                </div>
+                <div class="layer-label">Output</div>
+            </div>
+            
+            <div class="arrow-back">
+                ←
+                <div class="arrow-label">Backprop</div>
+            </div>
+            
+            <div class="layer-node hidden3">
+                <div class="layer-circle">
+                    <div class="gradient-value">0.25</div>
+                    <div class="gradient-amount">25%</div>
+                </div>
+                <div class="layer-label">Hidden 3</div>
+            </div>
+            
+            <div class="arrow-back">←</div>
+            
+            <div class="layer-node hidden2">
+                <div class="layer-circle">
+                    <div class="gradient-value">0.06</div>
+                    <div class="gradient-amount">6%</div>
+                </div>
+                <div class="layer-label">Hidden 2</div>
+            </div>
+            
+            <div class="arrow-back">←</div>
+            
+            <div class="layer-node hidden1">
+                <div class="layer-circle">
+                    <div class="gradient-value">0.02</div>
+                    <div class="gradient-amount">2%</div>
+                </div>
+                <div class="layer-label">Hidden 1</div>
+            </div>
+            
+            <div class="arrow-back">←</div>
+            
+            <div class="layer-node input">
+                <div class="layer-circle">
+                    <div class="gradient-value">~0</div>
+                    <div class="gradient-amount">≈0%</div>
+                </div>
+                <div class="layer-label">Input</div>
+            </div>
+        </div>
+        
+        <div class="math-section">
+            <div class="math-label">MATHEMATICAL CAUSE</div>
+            <div class="math-formula">gradient ∝ ∏(∂aₗ/∂zₗ) → Product of many terms < 1</div>
+        </div>
+        
+        <div class="problem-section">
+            <div class="problem-title">Consequences</div>
+            <div class="problem-list">
+                <div class="problem-item">Early layers learn extremely slowly</div>
+                <div class="problem-item">Training loss plateaus</div>
+                <div class="problem-item">Weights barely change</div>
+                <div class="problem-item">Network behaves like shallow</div>
+            </div>
+        </div>
+        
+        <div class="solutions-grid">
+            <div class="solution-card">
+                <div class="icon">⚡</div>
+                <div class="text">ReLU Activation</div>
+            </div>
+            <div class="solution-card">
+                <div class="icon">🔗</div>
+                <div class="text">Skip Connections</div>
+            </div>
+            <div class="solution-card">
+                <div class="icon">🎯</div>
+                <div class="text">Careful Init</div>
+            </div>
+            <div class="solution-card">
+                <div class="icon">📊</div>
+                <div class="text">Batch Norm</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

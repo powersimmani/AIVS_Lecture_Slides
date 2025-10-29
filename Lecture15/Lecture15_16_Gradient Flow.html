@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gradient Flow</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            position: relative;
+            padding: 25px 40px;
+        }
+        
+        .header {
+            margin-bottom: 18px;
+        }
+        
+        .part-label {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .main-content {
+            display: flex;
+            gap: 25px;
+            margin-bottom: 18px;
+        }
+        
+        .left-panel {
+            flex: 1.2;
+        }
+        
+        .flow-diagram {
+            background: #F5F9FF;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 20px;
+            height: 100%;
+        }
+        
+        .diagram-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .network-flow {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 10px;
+            margin-bottom: 20px;
+        }
+        
+        .network-box {
+            background: white;
+            border: 3px solid #1E64C8;
+            border-radius: 10px;
+            padding: 18px 24px;
+            text-align: center;
+            min-width: 140px;
+        }
+        
+        .network-box.generator {
+            background: #FF6B6B;
+            color: white;
+            border-color: #FF6B6B;
+        }
+        
+        .network-label {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        
+        .network-param {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            opacity: 0.85;
+        }
+        
+        .flow-arrow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            max-width: 180px;
+        }
+        
+        .arrow-container {
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+        
+        .arrow-line {
+            flex: 1;
+            height: 3px;
+            background: #1E64C8;
+            position: relative;
+        }
+        
+        .arrow-head {
+            width: 0;
+            height: 0;
+            border-left: 14px solid #1E64C8;
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+        }
+        
+        .arrow-label {
+            font-size: 14px;
+            color: #1E64C8;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        
+        .backprop-arrow {
+            margin-top: 15px;
+        }
+        
+        .backprop-arrow .arrow-line {
+            background: #4CAF50;
+        }
+        
+        .backprop-arrow .arrow-head {
+            border-left: 14px solid #4CAF50;
+            transform: rotate(180deg);
+        }
+        
+        .backprop-arrow .arrow-label {
+            color: #4CAF50;
+        }
+        
+        .chain-rule {
+            background: white;
+            border: 2px solid #4CAF50;
+            border-radius: 8px;
+            padding: 12px 16px;
+            text-align: center;
+        }
+        
+        .chain-title {
+            font-size: 15px;
+            color: #4CAF50;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        
+        .chain-formula {
+            font-family: 'Courier New', monospace;
+            font-size: 15px;
+            color: #1E64C8;
+        }
+        
+        .right-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        
+        .info-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px 18px;
+        }
+        
+        .info-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin: 8px 0;
+            font-size: 15px;
+            color: #333;
+        }
+        
+        .bullet {
+            color: #1E64C8;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .bottom-section {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .issue-box {
+            flex: 1;
+            border-radius: 10px;
+            padding: 14px 18px;
+        }
+        
+        .issue-box.vanishing {
+            background: #FFE5E5;
+            border: 2px solid #FF6B6B;
+        }
+        
+        .issue-box.exploding {
+            background: #FFF4E5;
+            border: 2px solid #FF9800;
+        }
+        
+        .issue-box.solution {
+            background: #E8F5E9;
+            border: 2px solid #4CAF50;
+        }
+        
+        .issue-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .issue-title.vanishing {
+            color: #FF6B6B;
+        }
+        
+        .issue-title.exploding {
+            color: #FF9800;
+        }
+        
+        .issue-title.solution {
+            color: #4CAF50;
+        }
+        
+        .issue-text {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="part-label">Part 3/6: Training Algorithm</div>
+            <div class="title">Gradient Flow</div>
+        </div>
+        
+        <div class="main-content">
+            <div class="left-panel">
+                <div class="flow-diagram">
+                    <div class="diagram-title">Backpropagation Through Networks</div>
+                    
+                    <div class="network-flow">
+                        <div class="network-box generator">
+                            <div class="network-label">Generator</div>
+                            <div class="network-param">G(z; θ<sub>g</sub>)</div>
+                        </div>
+                        
+                        <div class="flow-arrow">
+                            <div class="arrow-container">
+                                <div class="arrow-line"></div>
+                                <div class="arrow-head"></div>
+                            </div>
+                            <div class="arrow-label">Fake samples</div>
+                        </div>
+                        
+                        <div class="network-box">
+                            <div class="network-label">Discriminator</div>
+                            <div class="network-param">D(x; θ<sub>d</sub>)</div>
+                        </div>
+                        
+                        <div class="flow-arrow">
+                            <div class="arrow-container">
+                                <div class="arrow-line"></div>
+                                <div class="arrow-head"></div>
+                            </div>
+                            <div class="arrow-label">Loss</div>
+                        </div>
+                        
+                        <div class="network-box" style="min-width: 100px;">
+                            <div class="network-label">L</div>
+                            <div class="network-param">Error</div>
+                        </div>
+                    </div>
+                    
+                    <div class="network-flow backprop-arrow" style="justify-content: flex-end; margin-top: -15px;">
+                        <div class="flow-arrow" style="max-width: 400px;">
+                            <div class="arrow-container">
+                                <div class="arrow-head"></div>
+                                <div class="arrow-line"></div>
+                            </div>
+                            <div class="arrow-label">Gradient Backpropagation</div>
+                        </div>
+                    </div>
+                    
+                    <div class="chain-rule">
+                        <div class="chain-title">Chain Rule</div>
+                        <div class="chain-formula">
+                            ∂L/∂G = ∂L/∂D × ∂D/∂G
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <div class="info-box">
+                    <div class="info-title">Gradient Signals</div>
+                    <div class="info-item">
+                        <span class="bullet">•</span>
+                        <span>Real vs fake classification error</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="bullet">•</span>
+                        <span>Chain rule application</span>
+                    </div>
+                </div>
+                
+                <div class="info-box">
+                    <div class="info-title">Key Challenge</div>
+                    <div class="info-item">
+                        <span class="bullet">•</span>
+                        <span>Gradient magnitude balance</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="bullet">•</span>
+                        <span>Stable signal propagation</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bottom-section">
+            <div class="issue-box vanishing">
+                <div class="issue-title vanishing">
+                    <span>⚠</span>
+                    <span>Vanishing Gradients</span>
+                </div>
+                <div class="issue-text">
+                    When D is too strong, gradients become too small for G to learn
+                </div>
+            </div>
+            
+            <div class="issue-box exploding">
+                <div class="issue-title exploding">
+                    <span>⚡</span>
+                    <span>Exploding Gradients</span>
+                </div>
+                <div class="issue-text">
+                    In early training, gradients can become unstable and too large
+                </div>
+            </div>
+            
+            <div class="issue-box solution">
+                <div class="issue-title solution">
+                    <span>✓</span>
+                    <span>Solutions</span>
+                </div>
+                <div class="issue-text">
+                    Gradient penalty techniques (e.g., WGAN-GP) help stabilize training
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

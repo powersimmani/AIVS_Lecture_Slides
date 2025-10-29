@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Limitations of Shallow Networks</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 35px;
+            padding-top: 20px;
+        }
+        
+        .content-wrapper {
+            padding: 0 40px;
+        }
+        
+        .theorem-box {
+            background: #F0F6FF;
+            border-left: 4px solid #1E64C8;
+            padding: 15px 20px;
+            margin-bottom: 30px;
+            border-radius: 4px;
+        }
+        
+        .theorem-box .label {
+            font-size: 14px;
+            color: #1E64C8;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .theorem-box .content {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .limitations-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        .limitation-card {
+            background: white;
+            border: 2px solid #E5E5E5;
+            border-radius: 8px;
+            padding: 16px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .limitation-card:hover {
+            border-color: #1E64C8;
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.1);
+        }
+        
+        .limitation-card .icon {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 28px;
+            height: 28px;
+            background: #1E64C8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .limitation-card .title-text {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            padding-right: 35px;
+            line-height: 1.3;
+        }
+        
+        .limitation-card .description {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.5;
+        }
+        
+        .arrow {
+            text-align: center;
+            color: #1E64C8;
+            font-size: 24px;
+            margin: 15px 0;
+            font-weight: bold;
+        }
+        
+        .example-section {
+            background: #FFF8E6;
+            border-left: 4px solid #FFA500;
+            padding: 12px 20px;
+            margin-top: 25px;
+            border-radius: 4px;
+        }
+        
+        .example-section .label {
+            font-size: 14px;
+            color: #CC8400;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .example-section .content {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Limitations of Shallow Networks</div>
+        
+        <div class="content-wrapper">
+            <div class="theorem-box">
+                <div class="label">UNIVERSAL APPROXIMATION THEOREM</div>
+                <div class="content">Single hidden layer networks can theoretically approximate any function<br>
+                    <strong>BUT</strong> exponentially many hidden units may be required</div>
+            </div>
+            
+            <div class="arrow">↓</div>
+            
+            <div class="limitations-grid">
+                <div class="limitation-card">
+                    <div class="icon">1</div>
+                    <div class="title-text">No Hierarchical Patterns</div>
+                    <div class="description">Cannot efficiently capture hierarchical structure in images and text</div>
+                </div>
+                
+                <div class="limitation-card">
+                    <div class="icon">2</div>
+                    <div class="title-text">Compositional Struggle</div>
+                    <div class="description">Must learn all combinations from scratch without reusing patterns</div>
+                </div>
+                
+                <div class="limitation-card">
+                    <div class="icon">3</div>
+                    <div class="title-text">Poor Generalization</div>
+                    <div class="description">Weak performance on high-dimensional data with limited samples</div>
+                </div>
+                
+                <div class="limitation-card">
+                    <div class="icon">4</div>
+                    <div class="title-text">Limited Abstraction</div>
+                    <div class="description">Manual feature engineering still required for complex tasks</div>
+                </div>
+            </div>
+            
+            <div class="example-section">
+                <div class="label">PRACTICAL EXAMPLE</div>
+                <div class="content">Face recognition: Shallow networks must learn all facial feature combinations simultaneously</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

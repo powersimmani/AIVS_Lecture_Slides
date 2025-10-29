@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-World Cases and Implementation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px;
+            position: relative;
+        }
+        
+        .title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .content-layout {
+            display: flex;
+            gap: 18px;
+            height: calc(100% - 50px);
+        }
+        
+        .left-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        
+        .applications-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            border-radius: 10px;
+            padding: 16px 18px;
+            color: white;
+        }
+        
+        .app-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .app-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+        }
+        
+        .app-tag {
+            background: white;
+            color: #1E64C8;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .code-box {
+            background: #f8f9fa;
+            border: 2px solid #28a745;
+            border-radius: 10px;
+            padding: 16px 18px;
+        }
+        
+        .code-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #28a745;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .code-snippet {
+            background: #2d2d2d;
+            border-radius: 6px;
+            padding: 12px 14px;
+            font-family: 'Courier New', monospace;
+            font-size: 15px;
+            color: #a8e6cf;
+            overflow-x: auto;
+        }
+        
+        .hyperparams-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px 16px;
+            flex: 1;
+        }
+        
+        .hp-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .hp-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .hp-item {
+            background: #f8f9fa;
+            border-left: 4px solid #1E64C8;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 15px;
+            color: #333;
+        }
+        
+        .right-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        
+        .metrics-box {
+            background: white;
+            border: 2px solid #9c27b0;
+            border-radius: 10px;
+            padding: 14px 16px;
+        }
+        
+        .metrics-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #9c27b0;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+        
+        .metric-tag {
+            background: #f3e5f5;
+            border: 2px solid #9c27b0;
+            border-radius: 6px;
+            padding: 8px 10px;
+            text-align: center;
+            font-size: 14px;
+            color: #9c27b0;
+            font-weight: 600;
+        }
+        
+        .considerations-box {
+            background: white;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 14px 16px;
+            flex: 1;
+        }
+        
+        .cons-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #f57c00;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .cons-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .cons-item {
+            background: white;
+            border: 2px solid #ffc107;
+            border-left: 5px solid #ffc107;
+            border-radius: 6px;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .cons-icon {
+            width: 24px;
+            height: 24px;
+            background: #ffc107;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .cons-text {
+            font-size: 15px;
+            color: #333;
+            flex: 1;
+        }
+        
+        .best-practices-box {
+            background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+            border-radius: 10px;
+            padding: 14px 16px;
+            color: white;
+        }
+        
+        .bp-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .bp-list {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .bp-tag {
+            background: white;
+            color: #28a745;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Real-World Cases and Implementation</div>
+        
+        <div class="content-layout">
+            <!-- Left Section -->
+            <div class="left-section">
+                <div class="applications-box">
+                    <div class="app-title">Applications:</div>
+                    <div class="app-list">
+                        <div class="app-tag">Spam Detection</div>
+                        <div class="app-tag">Medical Diagnosis</div>
+                        <div class="app-tag">Credit Scoring</div>
+                    </div>
+                </div>
+                
+                <div class="code-box">
+                    <div class="code-title">Scikit-learn Implementation:</div>
+                    <div class="code-snippet">
+                        LogisticRegression(<br>
+                        &nbsp;&nbsp;penalty='l2',<br>
+                        &nbsp;&nbsp;C=1.0<br>
+                        )
+                    </div>
+                </div>
+                
+                <div class="hyperparams-box">
+                    <div class="hp-title">Key Hyperparameters:</div>
+                    <div class="hp-list">
+                        <div class="hp-item">Regularization (C)</div>
+                        <div class="hp-item">Solver</div>
+                        <div class="hp-item">max_iter</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right Section -->
+            <div class="right-section">
+                <div class="metrics-box">
+                    <div class="metrics-title">Evaluation Metrics:</div>
+                    <div class="metrics-grid">
+                        <div class="metric-tag">Accuracy</div>
+                        <div class="metric-tag">Precision</div>
+                        <div class="metric-tag">Recall</div>
+                        <div class="metric-tag">F1-score</div>
+                        <div class="metric-tag" style="grid-column: span 2;">ROC-AUC</div>
+                    </div>
+                </div>
+                
+                <div class="considerations-box">
+                    <div class="cons-title">Important Considerations:</div>
+                    <div class="cons-list">
+                        <div class="cons-item">
+                            <div class="cons-icon">⚖</div>
+                            <div class="cons-text">
+                                <strong>Class imbalance:</strong> Use class_weight='balanced'
+                            </div>
+                        </div>
+                        <div class="cons-item">
+                            <div class="cons-icon">📏</div>
+                            <div class="cons-text">
+                                <strong>Feature scaling:</strong> Standardize for better convergence
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="best-practices-box">
+                    <div class="bp-title">Best Practices:</div>
+                    <div class="bp-list">
+                        <div class="bp-tag">Cross-validation</div>
+                        <div class="bp-tag">Calibration</div>
+                        <div class="bp-tag">Threshold tuning</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

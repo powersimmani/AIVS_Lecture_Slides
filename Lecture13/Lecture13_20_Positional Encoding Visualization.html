@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Positional Encoding Visualization</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 30px;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .main-content {
+            display: flex;
+            gap: 16px;
+            flex: 1;
+        }
+        
+        .visualization-section {
+            flex: 1.3;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .pattern-box {
+            background: #f0f7ff;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 16px;
+            flex: 1;
+        }
+        
+        .pattern-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .wave-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .wave-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .wave-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            min-width: 80px;
+        }
+        
+        .wave-visual {
+            flex: 1;
+            height: 30px;
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+            background: white;
+            border: 1px solid #d0d0d0;
+        }
+        
+        .wave {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .low-freq {
+            background: linear-gradient(90deg, 
+                #1E64C8 0%, #1E64C8 25%, 
+                white 25%, white 50%,
+                #1E64C8 50%, #1E64C8 75%,
+                white 75%, white 100%);
+        }
+        
+        .mid-freq {
+            background: linear-gradient(90deg, 
+                #2563eb 0%, #2563eb 12.5%, 
+                white 12.5%, white 25%,
+                #2563eb 25%, #2563eb 37.5%,
+                white 37.5%, white 50%,
+                #2563eb 50%, #2563eb 62.5%,
+                white 62.5%, white 75%,
+                #2563eb 75%, #2563eb 87.5%,
+                white 87.5%, white 100%);
+        }
+        
+        .high-freq {
+            background: linear-gradient(90deg, 
+                #3b82f6 0%, white 6.25%, #3b82f6 12.5%, white 18.75%,
+                #3b82f6 25%, white 31.25%, #3b82f6 37.5%, white 43.75%,
+                #3b82f6 50%, white 56.25%, #3b82f6 62.5%, white 68.75%,
+                #3b82f6 75%, white 81.25%, #3b82f6 87.5%, white 93.75%);
+        }
+        
+        .properties-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .property-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 14px 16px;
+            display: flex;
+            gap: 12px;
+            align-items: start;
+        }
+        
+        .property-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .property-content {
+            flex: 1;
+        }
+        
+        .property-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .property-text {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .highlight {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .frequency-info {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .freq-card {
+            flex: 1;
+            border-radius: 8px;
+            padding: 12px 14px;
+            text-align: center;
+            border: 2px solid;
+        }
+        
+        .freq-low {
+            background: #f0f7ff;
+            border-color: #1E64C8;
+        }
+        
+        .freq-high {
+            background: #f0fdf4;
+            border-color: #16a34a;
+        }
+        
+        .freq-icon {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+        
+        .freq-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .freq-low .freq-title {
+            color: #1E64C8;
+        }
+        
+        .freq-high .freq-title {
+            color: #16a34a;
+        }
+        
+        .freq-description {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.3;
+        }
+        
+        .addition-box {
+            background: #fff9f0;
+            border: 2px solid #f59e0b;
+            border-radius: 8px;
+            padding: 12px 16px;
+            text-align: center;
+        }
+        
+        .addition-text {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .addition-highlight {
+            font-weight: 600;
+            color: #d97700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Positional Encoding Visualization</div>
+        
+        <div class="main-content">
+            <div class="visualization-section">
+                <div class="pattern-box">
+                    <div class="pattern-title">🌊 Frequency Patterns Across Dimensions</div>
+                    <div class="wave-container">
+                        <div class="wave-row">
+                            <div class="wave-label">Low Freq</div>
+                            <div class="wave-visual">
+                                <div class="wave low-freq"></div>
+                            </div>
+                        </div>
+                        <div class="wave-row">
+                            <div class="wave-label">Mid Freq</div>
+                            <div class="wave-visual">
+                                <div class="wave mid-freq"></div>
+                            </div>
+                        </div>
+                        <div class="wave-row">
+                            <div class="wave-label">High Freq</div>
+                            <div class="wave-visual">
+                                <div class="wave high-freq"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="frequency-info">
+                    <div class="freq-card freq-low">
+                        <div class="freq-icon">🌍</div>
+                        <div class="freq-title">Low Frequencies</div>
+                        <div class="freq-description">
+                            Capture <strong>global position</strong><br>
+                            Overall sequence location
+                        </div>
+                    </div>
+                    
+                    <div class="freq-card freq-high">
+                        <div class="freq-icon">🎯</div>
+                        <div class="freq-title">High Frequencies</div>
+                        <div class="freq-description">
+                            Capture <strong>local position</strong><br>
+                            Fine-grained distinctions
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="properties-section">
+                <div class="property-card">
+                    <div class="property-icon">🔑</div>
+                    <div class="property-content">
+                        <div class="property-title">Unique Patterns</div>
+                        <div class="property-text">
+                            Each position has <span class="highlight">unique encoding pattern</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="property-card">
+                    <div class="property-icon">📈</div>
+                    <div class="property-content">
+                        <div class="property-title">Smooth Gradient</div>
+                        <div class="property-text">
+                            Allows model to learn <span class="highlight">relative positions</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="property-card">
+                    <div class="property-icon">🎵</div>
+                    <div class="property-content">
+                        <div class="property-title">Multiple Frequencies</div>
+                        <div class="property-text">
+                            <span class="highlight">Different frequencies</span> for different dimensions
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="property-card">
+                    <div class="property-icon">⚖️</div>
+                    <div class="property-content">
+                        <div class="property-title">Magnitude Balance</div>
+                        <div class="property-text">
+                            Magnitude <span class="highlight">comparable</span> to embedding values
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="addition-box">
+            <div class="addition-text">
+                <span class="addition-highlight">Element-wise addition</span> to token embeddings | 
+                Preserves both semantic and positional information
+            </div>
+        </div>
+    </div>
+</body>
+</html>

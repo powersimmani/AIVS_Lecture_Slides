@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unsupervised Learning Diagram</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .comparison-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            height: 200px;
+        }
+        
+        .learning-box {
+            border: 2px solid #1E64C8;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background: linear-gradient(135deg, #f8fbff 0%, #ffffff 100%);
+        }
+        
+        .learning-box.supervised {
+            border-color: #64B5F6;
+        }
+        
+        .learning-box h3 {
+            color: #1E64C8;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .learning-box.supervised h3 {
+            color: #64B5F6;
+        }
+        
+        .feature-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .feature-list li {
+            font-size: 16px;
+            color: #333;
+            padding-left: 20px;
+            position: relative;
+            line-height: 1.4;
+        }
+        
+        .feature-list li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #1E64C8;
+            font-size: 20px;
+        }
+        
+        .learning-box.supervised .feature-list li:before {
+            color: #64B5F6;
+        }
+        
+        .categories-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .categories-title {
+            color: #1E64C8;
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            flex: 1;
+        }
+        
+        .category-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: transform 0.2s;
+        }
+        
+        .category-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(30, 100, 200, 0.2);
+        }
+        
+        .category-icon {
+            font-size: 36px;
+            margin-bottom: 5px;
+        }
+        
+        .category-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+        }
+        
+        .category-desc {
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+            line-height: 1.3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Comparison Section -->
+        <div class="comparison-section">
+            <div class="learning-box supervised">
+                <h3>Supervised Learning</h3>
+                <ul class="feature-list">
+                    <li>Labeled training data</li>
+                    <li>Explicit target variables</li>
+                    <li>Learning from examples</li>
+                    <li>Ground truth labels</li>
+                </ul>
+            </div>
+            
+            <div class="learning-box">
+                <h3>Unsupervised Learning</h3>
+                <ul class="feature-list">
+                    <li>Unlabeled data only</li>
+                    <li>No target variables</li>
+                    <li>Discover hidden patterns</li>
+                    <li>Self-directed insights</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Categories Section -->
+        <div class="categories-section">
+            <div class="categories-title">Three Main Categories of Unsupervised Learning</div>
+            <div class="categories-grid">
+                <div class="category-card">
+                    <div class="category-icon">🔍</div>
+                    <div class="category-name">Clustering</div>
+                    <div class="category-desc">Group similar data points together</div>
+                </div>
+                
+                <div class="category-card">
+                    <div class="category-icon">📉</div>
+                    <div class="category-name">Dimensionality Reduction</div>
+                    <div class="category-desc">Reduce feature space complexity</div>
+                </div>
+                
+                <div class="category-card">
+                    <div class="category-icon">⚠️</div>
+                    <div class="category-name">Anomaly Detection</div>
+                    <div class="category-desc">Identify unusual patterns</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

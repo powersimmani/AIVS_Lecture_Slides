@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resource Monitoring Tools</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 28px 40px;
+            background: white;
+        }
+        
+        .title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .tools-categories {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 16px;
+        }
+        
+        .category-section {
+            background: white;
+            border: 3px solid #1E64C8;
+            border-radius: 10px;
+            padding: 16px 20px;
+        }
+        
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .category-icon {
+            font-size: 24px;
+        }
+        
+        .category-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E64C8;
+        }
+        
+        .tool-item {
+            background: #f8fbff;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 10px 14px;
+            margin-bottom: 8px;
+            transition: all 0.3s;
+        }
+        
+        .tool-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.2);
+        }
+        
+        .tool-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .tool-desc {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.4;
+        }
+        
+        .code-style {
+            font-family: 'Courier New', monospace;
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #1E64C8;
+        }
+        
+        .pytorch-section {
+            background: #fff4e6;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px 20px;
+            margin-bottom: 16px;
+        }
+        
+        .pytorch-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .pytorch-tools {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .pytorch-tool {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-family: 'Courier New', monospace;
+            font-size: 15px;
+            color: #1E64C8;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .pytorch-tool:hover {
+            background: #1E64C8;
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        .advanced-tools {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+        
+        .advanced-tool {
+            background: #f8fbff;
+            border-left: 4px solid #1E64C8;
+            border-radius: 6px;
+            padding: 12px 14px;
+            transition: all 0.3s;
+        }
+        
+        .advanced-tool:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.2);
+        }
+        
+        .advanced-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .advanced-desc {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.4;
+        }
+        
+        .practice-box {
+            background: #f0f5fc;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px 20px;
+            text-align: center;
+        }
+        
+        .practice-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .practice-items {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .practice-item {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 20px;
+            padding: 6px 14px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .arrow-separator {
+            color: #1E64C8;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Hands-on: Resource Monitoring Tools</div>
+        
+        <div class="tools-categories">
+            <div class="category-section">
+                <div class="category-header">
+                    <span class="category-icon">🖥️</span>
+                    <span class="category-title">GPU Monitoring</span>
+                </div>
+                
+                <div class="tool-item">
+                    <div class="tool-name"><span class="code-style">nvidia-smi</span></div>
+                    <div class="tool-desc">Real-time GPU utilization, memory, temperature</div>
+                </div>
+                
+                <div class="tool-item">
+                    <div class="tool-name"><span class="code-style">watch -n 1 nvidia-smi</span></div>
+                    <div class="tool-desc">Auto-refresh every second</div>
+                </div>
+            </div>
+            
+            <div class="category-section">
+                <div class="category-header">
+                    <span class="category-icon">💻</span>
+                    <span class="category-title">CPU & System</span>
+                </div>
+                
+                <div class="tool-item">
+                    <div class="tool-name"><span class="code-style">htop</span> / <span class="code-style">top</span></div>
+                    <div class="tool-desc">CPU and system memory monitoring</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="pytorch-section">
+            <div class="pytorch-title">PyTorch Memory Tools</div>
+            <div class="pytorch-tools">
+                <div class="pytorch-tool">torch.cuda.memory_summary()</div>
+                <div class="pytorch-tool">torch.cuda.memory_allocated()</div>
+            </div>
+        </div>
+        
+        <div class="advanced-tools">
+            <div class="advanced-tool">
+                <div class="advanced-name">TensorBoard</div>
+                <div class="advanced-desc">Visualize training metrics & memory over time</div>
+            </div>
+            
+            <div class="advanced-tool">
+                <div class="advanced-name">NVIDIA Nsight</div>
+                <div class="advanced-desc">Detailed profiling of GPU operations</div>
+            </div>
+            
+            <div class="advanced-tool">
+                <div class="advanced-name">W&B / MLflow</div>
+                <div class="advanced-desc">Track experiments & resource usage</div>
+            </div>
+        </div>
+        
+        <div class="practice-box">
+            <div class="practice-title">📊 Practice Workflow</div>
+            <div class="practice-items">
+                <div class="practice-item">Monitor during training</div>
+                <span class="arrow-separator">→</span>
+                <div class="practice-item">Identify bottlenecks</div>
+                <span class="arrow-separator">→</span>
+                <div class="practice-item">Optimize</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

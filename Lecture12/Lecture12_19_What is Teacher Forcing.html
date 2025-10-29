@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What is Teacher Forcing?</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #ffffff;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 40px;
+            position: relative;
+        }
+        
+        .main-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 24px;
+        }
+        
+        .content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            height: calc(100% - 50px);
+        }
+        
+        /* Definition Box */
+        .definition-box {
+            background: #e8f2ff;
+            border-left: 5px solid #1E64C8;
+            padding: 16px 20px;
+            border-radius: 8px;
+        }
+        
+        .definition-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+        }
+        
+        .definition-text {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.5;
+        }
+        
+        /* Comparison */
+        .comparison-section {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .method-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            border-top: 4px solid currentColor;
+        }
+        
+        .card-autoregressive {
+            color: #dc3545;
+        }
+        
+        .card-teacher {
+            color: #28a745;
+        }
+        
+        .method-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        
+        .method-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            background: currentColor;
+        }
+        
+        .method-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: currentColor;
+        }
+        
+        .method-subtitle {
+            font-size: 13px;
+            color: #666;
+            margin-top: 4px;
+        }
+        
+        /* Visual Demo */
+        .visual-demo {
+            flex: 1;
+            background: white;
+            border-radius: 8px;
+            padding: 16px;
+            border: 2px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .demo-step {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .step-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+            min-width: 50px;
+        }
+        
+        .step-boxes {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex: 1;
+        }
+        
+        .step-box {
+            width: 70px;
+            height: 45px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            border: 2px solid currentColor;
+        }
+        
+        .box-input {
+            background: #fff3cd;
+            border-color: #ffc107;
+            color: #856404;
+        }
+        
+        .box-predicted {
+            background: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+        
+        .box-ground-truth {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+        
+        .box-rnn {
+            background: #1E64C8;
+            color: white;
+            border-color: #1E64C8;
+        }
+        
+        .arrow-small {
+            font-size: 18px;
+            color: #999;
+        }
+        
+        .feedback-arrow {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: currentColor;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+        
+        /* Key Points */
+        .key-points {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .point-item {
+            display: flex;
+            align-items: start;
+            gap: 8px;
+            margin-top: 8px;
+            font-size: 15px;
+            color: #555;
+            line-height: 1.4;
+        }
+        
+        .point-icon {
+            flex-shrink: 0;
+            font-weight: bold;
+        }
+        
+        .icon-bad {
+            color: #dc3545;
+        }
+        
+        .icon-good {
+            color: #28a745;
+        }
+        
+        /* Bottom Info */
+        .info-banner {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .info-icon {
+            font-size: 24px;
+        }
+        
+        .info-text {
+            font-size: 15px;
+            color: #856404;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-title">What is Teacher Forcing?</div>
+        
+        <div class="content">
+            <!-- Definition -->
+            <div class="definition-box">
+                <div class="definition-title">📚 Definition</div>
+                <div class="definition-text">
+                    <strong>Teacher Forcing</strong> is a training strategy where the <strong>ground-truth (target) tokens</strong> from the training data are used as inputs to the decoder at each time step, instead of the model's own predictions.
+                </div>
+            </div>
+            
+            <!-- Comparison -->
+            <div class="comparison-section">
+                <!-- Without Teacher Forcing -->
+                <div class="method-card card-autoregressive">
+                    <div class="method-header">
+                        <div class="method-icon">✗</div>
+                        <div>
+                            <div class="method-title">Without Teacher Forcing</div>
+                            <div class="method-subtitle">(Autoregressive)</div>
+                        </div>
+                    </div>
+                    
+                    <div class="visual-demo">
+                        <div class="demo-step">
+                            <div class="step-label">Step 1:</div>
+                            <div class="step-boxes">
+                                <div class="step-box box-input">⟨START⟩</div>
+                                <div class="arrow-small">→</div>
+                                <div class="step-box box-rnn">RNN</div>
+                                <div class="arrow-small">→</div>
+                                <div class="step-box box-predicted">나는</div>
+                            </div>
+                        </div>
+                        
+                        <div class="demo-step">
+                            <div class="step-label">Step 2:</div>
+                            <div class="step-boxes">
+                                <div class="step-box box-predicted">나는</div>
+                                <div class="arrow-small">→</div>
+                                <div class="step-box box-rnn">RNN</div>
+                                <div class="arrow-small">→</div>
+                                <div class="step-box box-predicted">AI를?</div>
+                            </div>
+                        </div>
+                        
+                        <div class="demo-step">
+                            <div class="step-label">Step 3:</div>
+                            <div class="step-boxes">
+                                <div class="step-box box-predicted">AI를?</div>
+                                <div class="arrow-small">→</div>
+                                <div class="step-box box-rnn">RNN</div>
+                                <div class="arrow-small">→</div>
+                                <div class="step-box box-predicted">좋아해?</div>
+                            </div>
+                        </div>
+                        
+                        <div class="feedback-arrow card-autoregressive">
+                            ⤴ Uses own predictions (errors accumulate!)
+                        </div>
+                    </div>
+                    
+                    <div class="key-points">
+                        <div class="point-item">
+                            <span class="point-icon icon-bad">✗</span>
+                            <span>Errors compound over time</span>
+                        </div>
+                        <div class="point-item">
+                            <span class="point-icon icon-bad">✗</span>
+                            <span>Slower training convergence</span>
+                        </div>
+                        <div class="point-item">
+                            <span class="point-icon icon-bad">✗</span>
+                            <span>Exposure bias problem</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- With Teacher Forcing -->
+                <div class="method-card card-teacher">
+                    <div class="method-header">
+                        <div class="method-icon">✓</div>
+                        <div>
+                            <div class="method-title">With Teacher Forcing</div>
+                            <div class="method-subtitle">(Training Mode)</div>
+                        </div>
+                    </div>
+                    
+                    <div class="visual-demo">
+                        <div class="demo-step">
+                            <div class="step-label">Step 1:</div>
+                            <div class="step-boxes">
+                                <div class="step-box box-input">⟨START⟩</div>
+                                <div class="arrow-small">→</div>
+                                <div class="step-box box-rnn">RNN</div>
+                                <div class="arrow-small">→</div>
+                                <div class="step-box box-predicted">나는</div>
+                            </div>
+                        </div>
+                        
+                        <div class="demo-step">
+                            <div class="step-label">Step 2:</div>
+                            <div class="step-boxes">
+                                <div class="step-box box-ground-truth">나는</div>
+                                <div class="arrow-small">→</div>
+                                <div class="step-box box-rnn">RNN</div>
+                                <div class="arrow-small">→</div>
+                                <div class="step-box box-predicted">AI를</div>
+                            </div>
+                        </div>
+                        
+                        <div class="demo-step">
+                            <div class="step-label">Step 3:</div>
+                            <div class="step-boxes">
+                                <div class="step-box box-ground-truth">AI를</div>
+                                <div class="arrow-small">→</div>
+                                <div class="step-box box-rnn">RNN</div>
+                                <div class="arrow-small">→</div>
+                                <div class="step-box box-predicted">사랑해</div>
+                            </div>
+                        </div>
+                        
+                        <div class="feedback-arrow card-teacher">
+                            ⤴ Uses ground-truth targets (no error accumulation!)
+                        </div>
+                    </div>
+                    
+                    <div class="key-points">
+                        <div class="point-item">
+                            <span class="point-icon icon-good">✓</span>
+                            <span>Faster training convergence</span>
+                        </div>
+                        <div class="point-item">
+                            <span class="point-icon icon-good">✓</span>
+                            <span>Prevents error accumulation</span>
+                        </div>
+                        <div class="point-item">
+                            <span class="point-icon icon-good">✓</span>
+                            <span>More stable gradient flow</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bottom Info -->
+            <div class="info-banner">
+                <div class="info-icon">💡</div>
+                <div class="info-text">
+                    Teacher Forcing is used during <strong>training</strong> to speed up learning. During <strong>inference</strong>, the model uses its own predictions (autoregressive).
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

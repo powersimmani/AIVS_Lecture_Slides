@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feed-Forward Network & Layer Normalization</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 30px;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .main-content {
+            display: flex;
+            gap: 16px;
+            flex: 1;
+        }
+        
+        .ffn-section {
+            flex: 1.2;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .ffn-box {
+            background: #f0f7ff;
+            border: 3px solid #1E64C8;
+            border-radius: 12px;
+            padding: 18px 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .section-header {
+            text-align: center;
+            font-size: 19px;
+            font-weight: 600;
+            color: #1E64C8;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .formula-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+        
+        .formula {
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            color: #1E64C8;
+            font-weight: 600;
+            line-height: 1.6;
+        }
+        
+        .flow-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin: 8px 0;
+        }
+        
+        .flow-step {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 16px;
+            text-align: center;
+            flex: 1;
+        }
+        
+        .step-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+        
+        .step-value {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .arrow {
+            font-size: 24px;
+            color: #1E64C8;
+            font-weight: 700;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: start;
+            gap: 10px;
+            background: white;
+            border-radius: 6px;
+            padding: 10px 12px;
+        }
+        
+        .info-icon {
+            font-size: 18px;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+        
+        .info-text {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .highlight-blue {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .layernorm-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .layernorm-box {
+            background: #f0fdf4;
+            border: 3px solid #16a34a;
+            border-radius: 12px;
+            padding: 18px 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .layernorm-box .section-header {
+            color: #16a34a;
+            border-color: #16a34a;
+        }
+        
+        .property-card {
+            background: white;
+            border: 2px solid #16a34a;
+            border-radius: 8px;
+            padding: 12px 14px;
+            display: flex;
+            gap: 10px;
+            align-items: start;
+        }
+        
+        .property-icon {
+            font-size: 22px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .property-content {
+            flex: 1;
+        }
+        
+        .property-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #16a34a;
+            margin-bottom: 4px;
+        }
+        
+        .property-text {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.3;
+        }
+        
+        .highlight-green {
+            font-weight: 600;
+            color: #16a34a;
+        }
+        
+        .placement-box {
+            background: #fff9f0;
+            border: 2px solid #f59e0b;
+            border-radius: 8px;
+            padding: 12px 16px;
+            text-align: center;
+        }
+        
+        .placement-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #d97700;
+            margin-bottom: 4px;
+        }
+        
+        .placement-text {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .placement-highlight {
+            font-weight: 600;
+            color: #d97700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Feed-Forward Network & Layer Normalization</div>
+        
+        <div class="main-content">
+            <div class="ffn-section">
+                <div class="ffn-box">
+                    <div class="section-header">🔷 Feed-Forward Network (FFN)</div>
+                    
+                    <div class="formula-box">
+                        <div class="formula">
+                            FFN(x) = max(0, xW₁ + b₁)W₂ + b₂
+                        </div>
+                    </div>
+                    
+                    <div class="flow-diagram">
+                        <div class="flow-step">
+                            <div class="step-label">Input</div>
+                            <div class="step-value">d_model<br><span style="font-size: 14px;">(512)</span></div>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div class="flow-step">
+                            <div class="step-label">Hidden</div>
+                            <div class="step-value">4×d_model<br><span style="font-size: 14px;">(2048)</span></div>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div class="flow-step">
+                            <div class="step-label">Output</div>
+                            <div class="step-value">d_model<br><span style="font-size: 14px;">(512)</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-icon">🔧</div>
+                        <div class="info-text">
+                            Two <span class="highlight-blue">linear transformations</span> with <span class="highlight-blue">ReLU activation</span>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-icon">📐</div>
+                        <div class="info-text">
+                            Hidden dimension typically <span class="highlight-blue">4× d_model</span> (e.g., 2048)
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-icon">🎯</div>
+                        <div class="info-text">
+                            Applied <span class="highlight-blue">identically to each position</span> separately (position-wise)
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="layernorm-section">
+                <div class="layernorm-box">
+                    <div class="section-header">📊 Layer Normalization</div>
+                    
+                    <div class="property-card">
+                        <div class="property-icon">🔄</div>
+                        <div class="property-content">
+                            <div class="property-title">Normalization</div>
+                            <div class="property-text">
+                                Normalizes across <span class="highlight-green">feature dimension</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="property-card">
+                        <div class="property-icon">⚡</div>
+                        <div class="property-content">
+                            <div class="property-title">Training Benefits</div>
+                            <div class="property-text">
+                                <span class="highlight-green">Stabilizes training</span> and speeds convergence
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="property-card">
+                        <div class="property-icon">🎯</div>
+                        <div class="property-content">
+                            <div class="property-title">Application</div>
+                            <div class="property-text">
+                                Applied after each sub-layer with residual connections
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="placement-box">
+                    <div class="placement-title">⚙️ Placement Strategy</div>
+                    <div class="placement-text">
+                        <span class="placement-highlight">Post-LN</span> vs <span class="placement-highlight">Pre-LN</span><br>
+                        affects training dynamics
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

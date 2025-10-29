@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full Fine-tuning vs. Transfer Learning</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: #ffffff;
+            padding: 25px 40px;
+        }
+        
+        .title {
+            font-size: 26px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        /* Approaches Grid */
+        .approaches-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .approach-card {
+            background: #F8F9FA;
+            border: 3px solid #1E64C8;
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .card-header {
+            text-align: center;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .card-icon {
+            font-size: 32px;
+            margin-bottom: 6px;
+        }
+        
+        .card-title {
+            font-size: 19px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 3px;
+        }
+        
+        .card-subtitle {
+            font-size: 15px;
+            color: #666666;
+        }
+        
+        .layers-visual {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+            flex: 1;
+        }
+        
+        .layer-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .layer {
+            border-radius: 5px;
+            padding: 8px 12px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+            position: relative;
+        }
+        
+        .layer.trainable {
+            background: #C8E6C9;
+            border: 2px solid #4CAF50;
+            color: #2E7D32;
+        }
+        
+        .layer.frozen {
+            background: #E0E0E0;
+            border: 2px solid #999999;
+            color: #666666;
+        }
+        
+        .layer.partial {
+            background: #FFE0B2;
+            border: 2px solid #FF9800;
+            color: #E65100;
+        }
+        
+        .layer-label {
+            font-size: 13px;
+        }
+        
+        .feature-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 15px;
+            color: #333333;
+        }
+        
+        .feature-icon {
+            color: #1E64C8;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .feature-icon.pro {
+            color: #4CAF50;
+        }
+        
+        .feature-icon.con {
+            color: #FF9800;
+        }
+        
+        /* Comparison Table */
+        .comparison-section {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        
+        .comparison-card {
+            background: #E8F4F8;
+            border-left: 4px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 15px;
+        }
+        
+        .comparison-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .comparison-item {
+            font-size: 16px;
+            color: #333333;
+            line-height: 1.4;
+            margin-bottom: 4px;
+        }
+        
+        .comparison-value {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        /* Decision Box */
+        .decision-box {
+            background: #FFF9E6;
+            border: 3px solid #FFC107;
+            border-radius: 10px;
+            padding: 12px 18px;
+            text-align: center;
+        }
+        
+        .decision-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #F57C00;
+            margin-bottom: 6px;
+        }
+        
+        .decision-text {
+            font-size: 16px;
+            color: #555555;
+            line-height: 1.4;
+        }
+        
+        .highlight {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Fine-tuning Strategies Comparison</div>
+        
+        <div class="main-content">
+            <!-- Approaches Grid -->
+            <div class="approaches-grid">
+                <!-- Full Fine-tuning -->
+                <div class="approach-card">
+                    <div class="card-header">
+                        <div class="card-icon">🔓</div>
+                        <div class="card-title">Full Fine-tuning</div>
+                        <div class="card-subtitle">Update all parameters</div>
+                    </div>
+                    
+                    <div class="layers-visual">
+                        <div class="layer-stack">
+                            <div class="layer trainable">
+                                <div class="layer-label">Task Head ✓</div>
+                            </div>
+                            <div class="layer trainable">
+                                <div class="layer-label">Top Layers ✓</div>
+                            </div>
+                            <div class="layer trainable">
+                                <div class="layer-label">Middle Layers ✓</div>
+                            </div>
+                            <div class="layer trainable">
+                                <div class="layer-label">Bottom Layers ✓</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <div class="feature-icon pro">✓</div>
+                            <div>Best performance</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon con">⚠</div>
+                            <div>Slower training</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon con">⚠</div>
+                            <div>Risk of forgetting</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Feature Extraction -->
+                <div class="approach-card">
+                    <div class="card-header">
+                        <div class="card-icon">🔒</div>
+                        <div class="card-title">Feature Extraction</div>
+                        <div class="card-subtitle">Freeze base model</div>
+                    </div>
+                    
+                    <div class="layers-visual">
+                        <div class="layer-stack">
+                            <div class="layer trainable">
+                                <div class="layer-label">Task Head ✓</div>
+                            </div>
+                            <div class="layer frozen">
+                                <div class="layer-label">Top Layers ✗</div>
+                            </div>
+                            <div class="layer frozen">
+                                <div class="layer-label">Middle Layers ✗</div>
+                            </div>
+                            <div class="layer frozen">
+                                <div class="layer-label">Bottom Layers ✗</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <div class="feature-icon pro">✓</div>
+                            <div>Faster training</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon pro">✓</div>
+                            <div>No catastrophic forgetting</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon con">⚠</div>
+                            <div>Lower performance</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Gradual Unfreezing -->
+                <div class="approach-card">
+                    <div class="card-header">
+                        <div class="card-icon">🔄</div>
+                        <div class="card-title">Gradual Unfreezing</div>
+                        <div class="card-subtitle">Progressive unlocking</div>
+                    </div>
+                    
+                    <div class="layers-visual">
+                        <div class="layer-stack">
+                            <div class="layer trainable">
+                                <div class="layer-label">Task Head ✓</div>
+                            </div>
+                            <div class="layer partial">
+                                <div class="layer-label">Top Layers ⟳</div>
+                            </div>
+                            <div class="layer frozen">
+                                <div class="layer-label">Middle Layers →</div>
+                            </div>
+                            <div class="layer frozen">
+                                <div class="layer-label">Bottom Layers →</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <div class="feature-icon pro">✓</div>
+                            <div>Balanced approach</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon pro">✓</div>
+                            <div>Better stability</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">•</div>
+                            <div>Layer-by-layer control</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Discriminative Learning Rates -->
+                <div class="approach-card">
+                    <div class="card-header">
+                        <div class="card-icon">⚡</div>
+                        <div class="card-title">Discriminative LR</div>
+                        <div class="card-subtitle">Different rates per layer</div>
+                    </div>
+                    
+                    <div class="layers-visual">
+                        <div class="layer-stack">
+                            <div class="layer trainable" style="background: #81C784;">
+                                <div class="layer-label">Task Head (High LR)</div>
+                            </div>
+                            <div class="layer trainable" style="background: #AED581;">
+                                <div class="layer-label">Top Layers (Medium LR)</div>
+                            </div>
+                            <div class="layer trainable" style="background: #C5E1A5;">
+                                <div class="layer-label">Middle Layers (Low LR)</div>
+                            </div>
+                            <div class="layer trainable" style="background: #DCEDC8;">
+                                <div class="layer-label">Bottom Layers (Very Low LR)</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <div class="feature-icon pro">✓</div>
+                            <div>Fine-grained control</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon pro">✓</div>
+                            <div>Preserves lower features</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">•</div>
+                            <div>Requires tuning</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Comparison Table -->
+            <div class="comparison-section">
+                <div class="comparison-card">
+                    <div class="comparison-title">🎯 Performance</div>
+                    <div class="comparison-item">
+                        Full FT: <span class="comparison-value">Best</span>
+                    </div>
+                    <div class="comparison-item">
+                        Feature Ext: <span class="comparison-value">Good</span>
+                    </div>
+                </div>
+                
+                <div class="comparison-card">
+                    <div class="comparison-title">⚡ Speed</div>
+                    <div class="comparison-item">
+                        Feature Ext: <span class="comparison-value">Fastest</span>
+                    </div>
+                    <div class="comparison-item">
+                        Full FT: <span class="comparison-value">Slowest</span>
+                    </div>
+                </div>
+                
+                <div class="comparison-card">
+                    <div class="comparison-title">💾 Memory</div>
+                    <div class="comparison-item">
+                        Feature Ext: <span class="comparison-value">Low</span>
+                    </div>
+                    <div class="comparison-item">
+                        Full FT: <span class="comparison-value">High</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Decision Box -->
+            <div class="decision-box">
+                <div class="decision-title">💡 Decision Factors</div>
+                <div class="decision-text">
+                    Choice depends on <strong>data size</strong> and <strong>computational budget</strong> • Large data + resources → Full FT • Small data / limited resources → Feature Extraction
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

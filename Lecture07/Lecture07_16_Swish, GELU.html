@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swish & GELU</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            overflow-x: hidden;
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 960px;
+            width: 95vw;
+            min-height: 540px;
+            height: auto;
+            background: white;
+            position: relative;
+            overflow: hidden;
+            padding: 20px 35px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 18px;
+        }
+        
+        .function-card {
+            background: white;
+            border: 3px solid;
+            border-radius: 12px;
+            padding: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .function-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .function-card.swish {
+            background: linear-gradient(135deg, #F3E5F5 0%, #E1BEE7 100%);
+            border-color: #9C27B0;
+        }
+        
+        .function-card.gelu {
+            background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+            border-color: #4CAF50;
+        }
+        
+        .card-header {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .function-card.swish .card-header {
+            color: #6A1B9A;
+        }
+        
+        .function-card.gelu .card-header {
+            color: #2E7D32;
+        }
+        
+        .full-name {
+            font-size: 13px;
+            color: #666;
+            text-align: center;
+            margin-bottom: 10px;
+            font-style: italic;
+        }
+        
+        .formula-section {
+            background: white;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .formula-text {
+            font-size: 16px;
+            color: #333;
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+            line-height: 1.5;
+        }
+        
+        .graph-container {
+            width: 100%;
+            height: 85px;
+            background: white;
+            border-radius: 8px;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .graph-svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .feature-list {
+            list-style: none;
+        }
+        
+        .feature-item {
+            font-size: 15px;
+            color: #333;
+            padding-left: 22px;
+            position: relative;
+            margin-bottom: 5px;
+            line-height: 1.3;
+        }
+        
+        .feature-item::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            font-weight: 700;
+            font-size: 16px;
+        }
+        
+        .function-card.swish .feature-item::before {
+            color: #9C27B0;
+        }
+        
+        .function-card.gelu .feature-item::before {
+            color: #4CAF50;
+        }
+        
+        .adoption-box {
+            background: #FFF3E0;
+            border: 2px solid #FF9800;
+            border-radius: 8px;
+            padding: 10px 14px;
+            margin-top: 8px;
+        }
+        
+        .adoption-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #E65100;
+            margin-bottom: 4px;
+        }
+        
+        .adoption-text {
+            font-size: 14px;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .bottom-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .comparison-box {
+            background: #F0F6FF;
+            border: 3px solid #1E64C8;
+            border-radius: 12px;
+            padding: 14px 18px;
+        }
+        
+        .comparison-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .comparison-items {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .comparison-item {
+            display: flex;
+            align-items: center;
+            font-size: 15px;
+            color: #333;
+        }
+        
+        .comparison-item::before {
+            content: "▸";
+            color: #1E64C8;
+            font-weight: 700;
+            margin-right: 10px;
+        }
+        
+        .use-case-box {
+            background: #E8F5E9;
+            border: 3px solid #4CAF50;
+            border-radius: 12px;
+            padding: 14px 18px;
+        }
+        
+        .use-case-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #2E7D32;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .use-case-items {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .use-case-item {
+            display: flex;
+            align-items: center;
+            font-size: 15px;
+            color: #333;
+        }
+        
+        .use-case-item::before {
+            content: "🎯";
+            margin-right: 8px;
+        }
+    
+        
+        /* Responsive adjustments */
+        @media screen and (max-width: 1000px) {
+            .container {
+                width: 98vw !important;
+                max-width: 98vw !important;
+                padding: 15px 20px !important;
+            }
+        }
+        
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: 10px 15px !important;
+            }
+            
+            .title {
+                font-size: 20px !important;
+            }
+            
+            /* 그리드 레이아웃을 1열로 */
+            .challenges-grid,
+            .comparison-grid,
+            .solutions-grid,
+            .guide-grid,
+            .findings-section,
+            .benefits-grid,
+            .applications-section,
+            .guidelines-grid,
+            .components-section,
+            .techniques-grid,
+            .deployment-section {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .gradient-flow,
+            .network-visual,
+            .flow-steps,
+            .comparison-section {
+                flex-direction: column !important;
+                gap: 15px !important;
+            }
+            
+            .arrow-back,
+            .arrow,
+            .arrow-right,
+            .arrow-connector {
+                transform: rotate(90deg);
+                margin: 5px 0 !important;
+            }
+        }
+        
+        @media screen and (max-width: 480px) {
+            .container {
+                padding: 8px 10px !important;
+            }
+            
+            .title {
+                font-size: 18px !important;
+            }
+            
+            .card-header,
+            .scenario-label,
+            .card-title,
+            .function-title {
+                font-size: 16px !important;
+            }
+        }
+    
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Swish & GELU: Modern State-of-the-Art Activations</div>
+        
+        <div class="comparison-grid">
+            <div class="function-card swish">
+                <div class="card-header">Swish</div>
+                <div class="full-name">Self-Gating Activation</div>
+                
+                <div class="formula-section">
+                    <div class="formula-text">
+                        f(x) = x × σ(βx)<br>
+                        <span style="font-size: 14px; color: #666;">β = 1 (Swish-1)</span>
+                    </div>
+                </div>
+                
+                <div class="graph-container">
+                    <svg class="graph-svg" viewBox="0 0 200 70">
+                        <line x1="20" y1="35" x2="180" y2="35" stroke="#999" stroke-width="1.5"/>
+                        <line x1="100" y1="10" x2="100" y2="60" stroke="#999" stroke-width="1.5"/>
+                        <path d="M 20 42 Q 50 40, 80 38 Q 100 35, 120 28 Q 150 18, 180 12" fill="none" stroke="#9C27B0" stroke-width="3"/>
+                        <circle cx="100" cy="35" r="3" fill="#9C27B0"/>
+                        <text x="15" y="48" font-size="10" fill="#666">-x</text>
+                        <text x="175" y="17" font-size="10" fill="#666">+x</text>
+                    </svg>
+                </div>
+                
+                <ul class="feature-list">
+                    <li class="feature-item">Self-gating mechanism</li>
+                    <li class="feature-item">Smooth, non-monotonic</li>
+                    <li class="feature-item">Neural architecture search</li>
+                </ul>
+            </div>
+            
+            <div class="function-card gelu">
+                <div class="card-header">GELU</div>
+                <div class="full-name">Gaussian Error Linear Unit</div>
+                
+                <div class="formula-section">
+                    <div class="formula-text">
+                        f(x) = x × Φ(x)<br>
+                        <span style="font-size: 14px; color: #666;">Φ = Gaussian CDF</span>
+                    </div>
+                </div>
+                
+                <div class="graph-container">
+                    <svg class="graph-svg" viewBox="0 0 200 70">
+                        <line x1="20" y1="35" x2="180" y2="35" stroke="#999" stroke-width="1.5"/>
+                        <line x1="100" y1="10" x2="100" y2="60" stroke="#999" stroke-width="1.5"/>
+                        <path d="M 20 43 Q 50 41, 80 37 Q 100 34, 120 26 Q 150 16, 180 10" fill="none" stroke="#4CAF50" stroke-width="3"/>
+                        <circle cx="100" cy="34" r="3" fill="#4CAF50"/>
+                        <text x="15" y="49" font-size="10" fill="#666">-x</text>
+                        <text x="175" y="15" font-size="10" fill="#666">+x</text>
+                    </svg>
+                </div>
+                
+                <ul class="feature-list">
+                    <li class="feature-item">Probabilistic interpretation</li>
+                    <li class="feature-item">Smooth, non-monotonic</li>
+                    <li class="feature-item">State-of-the-art in NLP</li>
+                </ul>
+                
+                <div class="adoption-box">
+                    <div class="adoption-label">ADOPTION</div>
+                    <div class="adoption-text">BERT, GPT (Default)</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bottom-section">
+            <div class="comparison-box">
+                <div class="comparison-title">Key Properties</div>
+                <div class="comparison-items">
+                    <div class="comparison-item">Smooth everywhere</div>
+                    <div class="comparison-item">Outperform ReLU in Transformers</div>
+                    <div class="comparison-item">Higher computational cost</div>
+                </div>
+            </div>
+            
+            <div class="use-case-box">
+                <div class="use-case-title">Best Use Cases</div>
+                <div class="use-case-items">
+                    <div class="use-case-item">Transformer models</div>
+                    <div class="use-case-item">NLP tasks (BERT, GPT)</div>
+                    <div class="use-case-item">State-of-the-art performance</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

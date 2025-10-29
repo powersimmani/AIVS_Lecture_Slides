@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Forcing vs. Autoregressive</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #ffffff;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 40px;
+            position: relative;
+        }
+        
+        .main-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            height: calc(100% - 45px);
+        }
+        
+        /* Comparison Grid */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            flex: 1;
+        }
+        
+        .comparison-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            border-top: 5px solid currentColor;
+        }
+        
+        .card-teacher {
+            color: #28a745;
+        }
+        
+        .card-auto {
+            color: #1E64C8;
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .method-badge {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: currentColor;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .card-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: currentColor;
+        }
+        
+        .phase-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            background: white;
+            color: currentColor;
+            border: 2px solid currentColor;
+        }
+        
+        /* Characteristics Section */
+        .characteristics {
+            background: white;
+            border-radius: 8px;
+            padding: 14px;
+            margin-bottom: 12px;
+        }
+        
+        .char-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .char-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .char-item {
+            display: flex;
+            align-items: start;
+            gap: 8px;
+            font-size: 15px;
+            color: #555;
+            line-height: 1.4;
+        }
+        
+        .char-icon {
+            font-weight: bold;
+            flex-shrink: 0;
+            color: currentColor;
+        }
+        
+        /* Pros and Cons */
+        .pros-cons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex: 1;
+        }
+        
+        .pros-section, .cons-section {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+            flex: 1;
+        }
+        
+        .section-header {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .pros-header {
+            color: #28a745;
+        }
+        
+        .cons-header {
+            color: #dc3545;
+        }
+        
+        .item-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .item {
+            display: flex;
+            align-items: start;
+            gap: 6px;
+            font-size: 14px;
+            color: #555;
+            line-height: 1.3;
+        }
+        
+        .item-icon {
+            flex-shrink: 0;
+            font-size: 14px;
+        }
+        
+        .icon-pro {
+            color: #28a745;
+        }
+        
+        .icon-con {
+            color: #dc3545;
+        }
+        
+        /* Summary Table */
+        .summary-table {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 16px;
+            border: 2px solid #1E64C8;
+        }
+        
+        .summary-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: auto 1fr 1fr;
+            gap: 1px;
+            background: #d0d9e3;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        .summary-cell {
+            background: white;
+            padding: 10px 12px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .summary-header {
+            background: #1E64C8;
+            color: white;
+            font-weight: 600;
+            justify-content: center;
+        }
+        
+        .summary-label {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .summary-value {
+            color: #555;
+        }
+        
+        .highlight-teacher {
+            color: #28a745;
+            font-weight: 600;
+        }
+        
+        .highlight-auto {
+            color: #1E64C8;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-title">Teacher Forcing vs. Autoregressive Decoding</div>
+        
+        <div class="content">
+            <!-- Comparison Grid -->
+            <div class="comparison-grid">
+                <!-- Teacher Forcing -->
+                <div class="comparison-card card-teacher">
+                    <div class="card-header">
+                        <div class="header-left">
+                            <div class="method-badge">TF</div>
+                            <div class="card-title">Teacher Forcing</div>
+                        </div>
+                        <div class="phase-badge">Training</div>
+                    </div>
+                    
+                    <div class="characteristics">
+                        <div class="char-title">How it Works</div>
+                        <div class="char-list">
+                            <div class="char-item">
+                                <span class="char-icon card-teacher">•</span>
+                                <span>Uses <strong>ground-truth</strong> target tokens as input</span>
+                            </div>
+                            <div class="char-item">
+                                <span class="char-icon card-teacher">•</span>
+                                <span>Model receives correct previous token</span>
+                            </div>
+                            <div class="char-item">
+                                <span class="char-icon card-teacher">•</span>
+                                <span>No error accumulation during training</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="pros-cons">
+                        <div class="pros-section">
+                            <div class="section-header pros-header">
+                                <span>✓</span>
+                                <span>Advantages</span>
+                            </div>
+                            <div class="item-list">
+                                <div class="item">
+                                    <span class="item-icon icon-pro">+</span>
+                                    <span>Faster convergence</span>
+                                </div>
+                                <div class="item">
+                                    <span class="item-icon icon-pro">+</span>
+                                    <span>Stable gradients</span>
+                                </div>
+                                <div class="item">
+                                    <span class="item-icon icon-pro">+</span>
+                                    <span>Easier to train</span>
+                                </div>
+                                <div class="item">
+                                    <span class="item-icon icon-pro">+</span>
+                                    <span>Parallel processing</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="cons-section">
+                            <div class="section-header cons-header">
+                                <span>✗</span>
+                                <span>Disadvantages</span>
+                            </div>
+                            <div class="item-list">
+                                <div class="item">
+                                    <span class="item-icon icon-con">−</span>
+                                    <span>Exposure bias problem</span>
+                                </div>
+                                <div class="item">
+                                    <span class="item-icon icon-con">−</span>
+                                    <span>Train/test mismatch</span>
+                                </div>
+                                <div class="item">
+                                    <span class="item-icon icon-con">−</span>
+                                    <span>Less robust at inference</span>
+                                </div>
+                                <div class="item">
+                                    <span class="item-icon icon-con">−</span>
+                                    <span>Can't handle own errors</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Autoregressive -->
+                <div class="comparison-card card-auto">
+                    <div class="card-header">
+                        <div class="header-left">
+                            <div class="method-badge">AR</div>
+                            <div class="card-title">Autoregressive</div>
+                        </div>
+                        <div class="phase-badge">Inference</div>
+                    </div>
+                    
+                    <div class="characteristics">
+                        <div class="char-title">How it Works</div>
+                        <div class="char-list">
+                            <div class="char-item">
+                                <span class="char-icon card-auto">•</span>
+                                <span>Uses model's <strong>own predictions</strong> as input</span>
+                            </div>
+                            <div class="char-item">
+                                <span class="char-icon card-auto">•</span>
+                                <span>Each prediction feeds into next step</span>
+                            </div>
+                            <div class="char-item">
+                                <span class="char-icon card-auto">•</span>
+                                <span>Errors can compound over sequence</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="pros-cons">
+                        <div class="pros-section">
+                            <div class="section-header pros-header">
+                                <span>✓</span>
+                                <span>Advantages</span>
+                            </div>
+                            <div class="item-list">
+                                <div class="item">
+                                    <span class="item-icon icon-pro">+</span>
+                                    <span>Matches inference mode</span>
+                                </div>
+                                <div class="item">
+                                    <span class="item-icon icon-pro">+</span>
+                                    <span>More realistic training</span>
+                                </div>
+                                <div class="item">
+                                    <span class="item-icon icon-pro">+</span>
+                                    <span>Better generalization</span>
+                                </div>
+                                <div class="item">
+                                    <span class="item-icon icon-pro">+</span>
+                                    <span>No exposure bias</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="cons-section">
+                            <div class="section-header cons-header">
+                                <span>✗</span>
+                                <span>Disadvantages</span>
+                            </div>
+                            <div class="item-list">
+                                <div class="item">
+                                    <span class="item-icon icon-con">−</span>
+                                    <span>Slower training</span>
+                                </div>
+                                <div class="item">
+                                    <span class="item-icon icon-con">−</span>
+                                    <span>Unstable gradients</span>
+                                </div>
+                                <div class="item">
+                                    <span class="item-icon icon-con">−</span>
+                                    <span>Error accumulation</span>
+                                </div>
+                                <div class="item">
+                                    <span class="item-icon icon-con">−</span>
+                                    <span>Sequential processing</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Summary Table -->
+            <div class="summary-table">
+                <div class="summary-title">📊 Quick Comparison</div>
+                <div class="summary-grid">
+                    <div class="summary-cell summary-header">Aspect</div>
+                    <div class="summary-cell summary-header">Teacher Forcing</div>
+                    <div class="summary-cell summary-header">Autoregressive</div>
+                    
+                    <div class="summary-cell summary-label">Input Source</div>
+                    <div class="summary-cell summary-value"><span class="highlight-teacher">Ground truth</span></div>
+                    <div class="summary-cell summary-value"><span class="highlight-auto">Model predictions</span></div>
+                    
+                    <div class="summary-cell summary-label">Usage Phase</div>
+                    <div class="summary-cell summary-value"><span class="highlight-teacher">Training</span></div>
+                    <div class="summary-cell summary-value"><span class="highlight-auto">Inference</span></div>
+                    
+                    <div class="summary-cell summary-label">Training Speed</div>
+                    <div class="summary-cell summary-value"><span class="highlight-teacher">Fast ⚡</span></div>
+                    <div class="summary-cell summary-value">Slow 🐌</div>
+                    
+                    <div class="summary-cell summary-label">Robustness</div>
+                    <div class="summary-cell summary-value">Lower 📉</div>
+                    <div class="summary-cell summary-value"><span class="highlight-auto">Higher 📈</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

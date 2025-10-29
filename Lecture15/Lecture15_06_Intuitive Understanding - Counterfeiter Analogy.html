@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GAN Counterfeiter Analogy</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            position: relative;
+            padding: 25px 40px;
+        }
+        
+        .title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .main-diagram {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 35px;
+            position: relative;
+        }
+        
+        .actor-box {
+            width: 280px;
+            background: white;
+            border: 3px solid #1E64C8;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .actor-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+        
+        .actor-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .actor-subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 14px;
+        }
+        
+        .actor-goal {
+            background: #F5F9FF;
+            border-radius: 6px;
+            padding: 10px 12px;
+            font-size: 15px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .versus {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+        
+        .vs-circle {
+            width: 70px;
+            height: 70px;
+            background: #1E64C8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 10px;
+        }
+        
+        .competition-text {
+            font-size: 16px;
+            color: #1E64C8;
+            font-weight: 600;
+            text-align: center;
+            max-width: 140px;
+        }
+        
+        .arrow-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        .arrow {
+            position: absolute;
+            display: flex;
+            align-items: center;
+        }
+        
+        .arrow-line {
+            height: 2px;
+            background: #1E64C8;
+            flex-grow: 1;
+        }
+        
+        .arrow-head {
+            width: 0;
+            height: 0;
+            border-left: 10px solid #1E64C8;
+            border-top: 6px solid transparent;
+            border-bottom: 6px solid transparent;
+        }
+        
+        .arrow.left {
+            top: 30%;
+            left: 300px;
+            width: 160px;
+        }
+        
+        .arrow.right {
+            top: 70%;
+            right: 300px;
+            width: 160px;
+            flex-direction: row-reverse;
+        }
+        
+        .arrow.right .arrow-head {
+            transform: rotate(180deg);
+        }
+        
+        .arrow-label {
+            position: absolute;
+            font-size: 14px;
+            color: #1E64C8;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        
+        .arrow.left .arrow-label {
+            top: -20px;
+            left: 10px;
+        }
+        
+        .arrow.right .arrow-label {
+            bottom: -20px;
+            right: 10px;
+        }
+        
+        .process-section {
+            background: #F5F9FF;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 18px 24px;
+        }
+        
+        .process-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .process-steps {
+            display: flex;
+            justify-content: space-around;
+            gap: 15px;
+        }
+        
+        .step {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .step-number {
+            width: 32px;
+            height: 32px;
+            background: #1E64C8;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 16px;
+            margin: 0 auto 8px;
+        }
+        
+        .step-text {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .equilibrium-box {
+            position: absolute;
+            bottom: 25px;
+            right: 40px;
+            background: #1E64C8;
+            color: white;
+            border-radius: 8px;
+            padding: 14px 20px;
+            width: 260px;
+        }
+        
+        .equilibrium-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        
+        .equilibrium-text {
+            font-size: 15px;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">GAN: The Counterfeiter Analogy</div>
+        
+        <div class="main-diagram">
+            <div class="arrow-container">
+                <div class="arrow left">
+                    <span class="arrow-label">Creates Fakes</span>
+                    <div class="arrow-line"></div>
+                    <div class="arrow-head"></div>
+                </div>
+                <div class="arrow right">
+                    <span class="arrow-label">Feedback Signal</span>
+                    <div class="arrow-line"></div>
+                    <div class="arrow-head"></div>
+                </div>
+            </div>
+            
+            <div class="actor-box">
+                <div class="actor-icon">💵</div>
+                <div class="actor-title">Generator</div>
+                <div class="actor-subtitle">Counterfeiter</div>
+                <div class="actor-goal">
+                    Creates fake money<br>indistinguishable<br>from real bills
+                </div>
+            </div>
+            
+            <div class="versus">
+                <div class="vs-circle">VS</div>
+                <div class="competition-text">Zero-Sum Game</div>
+            </div>
+            
+            <div class="actor-box">
+                <div class="actor-icon">👮</div>
+                <div class="actor-title">Discriminator</div>
+                <div class="actor-subtitle">Police</div>
+                <div class="actor-goal">
+                    Detects fake bills<br>and distinguishes<br>from real money
+                </div>
+            </div>
+        </div>
+        
+        <div class="process-section">
+            <div class="process-title">Iterative Improvement Process</div>
+            <div class="process-steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-text">Generator creates fake samples</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-text">Discriminator learns to detect fakes</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-text">Generator improves based on feedback</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-text">Both improve through competition</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="equilibrium-box">
+            <div class="equilibrium-title">🎯 Equilibrium</div>
+            <div class="equilibrium-text">
+                Perfect fakes become indistinguishable from real data
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DDPM Sampling</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .title {
+            font-size: 26px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .sampling-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            flex-grow: 1;
+        }
+        
+        .flow-step {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border-left: 5px solid #1E64C8;
+            border-radius: 10px;
+            padding: 18px 25px;
+            box-shadow: 0 2px 8px rgba(30, 100, 200, 0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .flow-step:hover {
+            transform: translateX(8px);
+            box-shadow: 0 4px 15px rgba(30, 100, 200, 0.2);
+            border-left-width: 8px;
+        }
+        
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .step-number {
+            background: #1E64C8;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        
+        .step-title {
+            font-size: 19px;
+            font-weight: 700;
+            color: #1E64C8;
+        }
+        
+        .step-content {
+            font-size: 17px;
+            color: #555;
+            line-height: 1.5;
+            margin-left: 47px;
+        }
+        
+        .step-formula {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 8px 12px;
+            margin-top: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            color: #333;
+        }
+        
+        .iteration-box {
+            background: linear-gradient(135deg, #e6f2ff 0%, #f0f8ff 100%);
+            border: 3px solid #1E64C8;
+            border-radius: 10px;
+            padding: 20px 25px;
+        }
+        
+        .iteration-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        
+        .iteration-icon {
+            font-size: 28px;
+        }
+        
+        .iteration-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1E64C8;
+        }
+        
+        .iteration-range {
+            background: #1E64C8;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            margin-left: auto;
+        }
+        
+        .sub-steps {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .sub-step {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 15px;
+        }
+        
+        .sub-step-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+        
+        .sub-step-formula {
+            font-size: 15px;
+            font-family: 'Courier New', monospace;
+            color: #333;
+        }
+        
+        .highlight-step {
+            border-left-color: #27AE60;
+        }
+        
+        .highlight-step .step-number {
+            background: #27AE60;
+        }
+        
+        .highlight-step .step-title {
+            color: #27AE60;
+        }
+        
+        .complexity-box {
+            background: linear-gradient(135deg, #E74C3C 0%, #C0392B 100%);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 15px;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.25);
+        }
+        
+        .complexity-text {
+            font-size: 17px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">DDPM Sampling</div>
+            <div class="subtitle">Part 4/7: Sampling</div>
+        </div>
+        
+        <div class="sampling-flow">
+            <!-- Step 1: Initialize -->
+            <div class="flow-step">
+                <div class="step-header">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Initialize from Pure Noise</div>
+                </div>
+                <div class="step-content">
+                    <div class="step-formula">x_T ~ N(0, I)</div>
+                </div>
+            </div>
+            
+            <!-- Step 2: Iterative Denoising -->
+            <div class="iteration-box">
+                <div class="iteration-header">
+                    <div class="iteration-icon">🔄</div>
+                    <div class="iteration-title">Iterative Denoising</div>
+                    <div class="iteration-range">t = T, T-1, ..., 1</div>
+                </div>
+                
+                <div class="sub-steps">
+                    <div class="sub-step">
+                        <div class="sub-step-title">① Predict Noise</div>
+                        <div class="sub-step-formula">ε̂ = ε_θ(x_t, t)</div>
+                    </div>
+                    
+                    <div class="sub-step">
+                        <div class="sub-step-title">② Compute Mean</div>
+                        <div class="sub-step-formula">μ_θ(x_t, t)</div>
+                    </div>
+                    
+                    <div class="sub-step">
+                        <div class="sub-step-title">③ Sample Noise</div>
+                        <div class="sub-step-formula">z ~ N(0,I) if t>1, else z=0</div>
+                    </div>
+                    
+                    <div class="sub-step">
+                        <div class="sub-step-title">④ Update State</div>
+                        <div class="sub-step-formula">x_{t-1} = μ_θ(x_t,t) + σ_t·z</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 3: Final Output -->
+            <div class="flow-step highlight-step">
+                <div class="step-header">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Final Output</div>
+                </div>
+                <div class="step-content">
+                    x₀ is the generated sample
+                </div>
+            </div>
+        </div>
+        
+        <div class="complexity-box">
+            <div class="complexity-text">⏱️ Time Complexity: O(T) forward passes • Typically T = 1000</div>
+        </div>
+    </div>
+</body>
+</html>

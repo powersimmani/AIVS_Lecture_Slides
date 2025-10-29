@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perceptron Algorithm</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px;
+            position: relative;
+        }
+        
+        .title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .content-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            height: calc(100% - 50px);
+        }
+        
+        .intro-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            border-radius: 10px;
+            padding: 16px 24px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .intro-content {
+            flex: 1;
+        }
+        
+        .intro-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .intro-subtitle {
+            font-size: 16px;
+            opacity: 0.95;
+        }
+        
+        .year-badge {
+            background: white;
+            color: #1E64C8;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 16px;
+            font-weight: 700;
+        }
+        
+        .core-section {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .update-box {
+            flex: 1.2;
+            background: white;
+            border: 3px solid #1E64C8;
+            border-radius: 10px;
+            padding: 20px 24px;
+            text-align: center;
+        }
+        
+        .update-label {
+            font-size: 17px;
+            color: #666;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        
+        .update-formula {
+            font-size: 22px;
+            color: #1E64C8;
+            font-weight: 700;
+            font-style: italic;
+            letter-spacing: 0.5px;
+        }
+        
+        .activation-box {
+            flex: 0.8;
+            background: white;
+            border: 3px solid #28a745;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .activation-label {
+            font-size: 16px;
+            color: #666;
+            font-weight: 600;
+        }
+        
+        .activation-name {
+            font-size: 18px;
+            color: #28a745;
+            font-weight: 700;
+        }
+        
+        .activation-value {
+            font-size: 16px;
+            color: #555;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .feature-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-left: 5px solid #1E64C8;
+            border-radius: 8px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s;
+        }
+        
+        .feature-card:hover {
+            background: #f8fbff;
+            transform: translateX(3px);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.15);
+        }
+        
+        .feature-icon {
+            width: 32px;
+            height: 32px;
+            background: #1E64C8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        
+        .feature-text {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+            flex: 1;
+        }
+        
+        .limitation-card {
+            background: #fff5f5;
+            border-color: #dc3545;
+            border-left-color: #dc3545;
+        }
+        
+        .limitation-card .feature-icon {
+            background: #dc3545;
+        }
+        
+        .significance-card {
+            grid-column: span 2;
+            background: #fff8e6;
+            border-color: #ffc107;
+            border-left-color: #ffc107;
+        }
+        
+        .significance-card .feature-icon {
+            background: #ffc107;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Perceptron Algorithm</div>
+        
+        <div class="content-layout">
+            <!-- Introduction -->
+            <div class="intro-box">
+                <div class="intro-content">
+                    <div class="intro-title">Simplest Linear Classifier</div>
+                    <div class="intro-subtitle">Frank Rosenblatt</div>
+                </div>
+                <div class="year-badge">1957</div>
+            </div>
+            
+            <!-- Core Section -->
+            <div class="core-section">
+                <div class="update-box">
+                    <div class="update-label">Update Rule:</div>
+                    <div class="update-formula">w ← w + η(y - ŷ)x</div>
+                </div>
+                
+                <div class="activation-box">
+                    <div class="activation-label">Activation Function:</div>
+                    <div class="activation-name">Step Function</div>
+                    <div class="activation-value">(0 or 1)</div>
+                </div>
+            </div>
+            
+            <!-- Features Grid -->
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <div class="feature-text">
+                        Iteratively adjusts weights for misclassified points
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">✓</div>
+                    <div class="feature-text">
+                        Converges if data is linearly separable
+                    </div>
+                </div>
+                
+                <div class="feature-card limitation-card">
+                    <div class="feature-icon">⚠</div>
+                    <div class="feature-text">
+                        <strong>Limitation:</strong> No convergence for non-separable data
+                    </div>
+                </div>
+                
+                <div class="feature-card significance-card">
+                    <div class="feature-icon">🏛️</div>
+                    <div class="feature-text">
+                        <strong>Historical Significance:</strong> Foundation of neural networks
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

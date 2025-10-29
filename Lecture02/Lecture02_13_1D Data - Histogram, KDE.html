@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1D Data - Histogram & KDE</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #FFFFFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            padding: 25px 35px;
+        }
+        
+        .title-section {
+            text-align: center;
+            margin-bottom: 18px;
+        }
+        
+        .main-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .subtitle {
+            font-size: 17px;
+            color: #666666;
+        }
+        
+        .content-wrapper {
+            display: flex;
+            gap: 20px;
+            flex: 1;
+        }
+        
+        .left-panel {
+            flex: 1.2;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        
+        .comparison-section {
+            display: flex;
+            gap: 14px;
+            flex: 1;
+        }
+        
+        .chart-box {
+            flex: 1;
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 10px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+        
+        .chart-box:hover {
+            border-color: #1E64C8;
+            box-shadow: 0 4px 15px rgba(30, 100, 200, 0.15);
+        }
+        
+        .chart-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .chart-visual {
+            flex: 1;
+            background: #F8F8F8;
+            border-radius: 6px;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            padding: 10px;
+            overflow: hidden;
+        }
+        
+        /* Histogram with few bins */
+        .few-bins {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 4px;
+        }
+        
+        .bin-bar {
+            background: #1E64C8;
+            border-radius: 2px 2px 0 0;
+            transition: all 0.3s ease;
+        }
+        
+        .few-bins .bin-bar:nth-child(1) { width: 35px; height: 60px; }
+        .few-bins .bin-bar:nth-child(2) { width: 35px; height: 90px; }
+        .few-bins .bin-bar:nth-child(3) { width: 35px; height: 75px; }
+        .few-bins .bin-bar:nth-child(4) { width: 35px; height: 50px; }
+        
+        /* Histogram with optimal bins */
+        .optimal-bins {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 3px;
+        }
+        
+        .optimal-bins .bin-bar { width: 18px; }
+        .optimal-bins .bin-bar:nth-child(1) { height: 35px; }
+        .optimal-bins .bin-bar:nth-child(2) { height: 55px; }
+        .optimal-bins .bin-bar:nth-child(3) { height: 75px; }
+        .optimal-bins .bin-bar:nth-child(4) { height: 90px; }
+        .optimal-bins .bin-bar:nth-child(5) { height: 85px; }
+        .optimal-bins .bin-bar:nth-child(6) { height: 70px; }
+        .optimal-bins .bin-bar:nth-child(7) { height: 50px; }
+        .optimal-bins .bin-bar:nth-child(8) { height: 30px; }
+        
+        /* KDE curve */
+        .kde-visual {
+            position: relative;
+        }
+        
+        .kde-curve {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            right: 10px;
+            height: 100px;
+        }
+        
+        .kde-curve svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .chart-label {
+            text-align: center;
+            font-size: 16px;
+            color: #666;
+            margin-top: 8px;
+            padding: 6px;
+            background: #F0F0F0;
+            border-radius: 4px;
+        }
+        
+        .warning {
+            color: #F57C00;
+            font-weight: 600;
+        }
+        
+        .good {
+            color: #2E7D32;
+            font-weight: 600;
+        }
+        
+        .right-panel {
+            flex: 0.8;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        
+        .info-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 16px;
+        }
+        
+        .info-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .info-icon {
+            font-size: 20px;
+        }
+        
+        .info-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .bullet {
+            color: #1E64C8;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .rules-card {
+            background: #FFF9E6;
+            border: 2px solid #FFC107;
+            border-radius: 10px;
+            padding: 16px;
+        }
+        
+        .rules-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .rule-item {
+            background: white;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        
+        .rule-name {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .rule-formula {
+            color: #666;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .use-cases {
+            background: #E8F5E9;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            padding: 16px;
+        }
+        
+        .use-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2E7D32;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .use-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .use-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            color: #333;
+        }
+        
+        .check-icon {
+            color: #4CAF50;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .chart-box, .info-card, .rules-card, .use-cases {
+            animation: slideIn 0.5s ease forwards;
+        }
+        
+        .chart-box:nth-child(1) { animation-delay: 0.1s; }
+        .chart-box:nth-child(2) { animation-delay: 0.2s; }
+        .chart-box:nth-child(3) { animation-delay: 0.3s; }
+        .info-card { animation-delay: 0.4s; }
+        .rules-card { animation-delay: 0.5s; }
+        .use-cases { animation-delay: 0.6s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">1D Data: Histogram & KDE</div>
+            <div class="subtitle">Understanding Distribution Through Binning and Smoothing</div>
+        </div>
+        
+        <div class="content-wrapper">
+            <div class="left-panel">
+                <div class="comparison-section">
+                    <!-- Few Bins -->
+                    <div class="chart-box">
+                        <div class="chart-title">Few Bins</div>
+                        <div class="chart-visual">
+                            <div class="few-bins">
+                                <div class="bin-bar"></div>
+                                <div class="bin-bar"></div>
+                                <div class="bin-bar"></div>
+                                <div class="bin-bar"></div>
+                            </div>
+                        </div>
+                        <div class="chart-label"><span class="warning">⚠</span> Loses detail</div>
+                    </div>
+                    
+                    <!-- Optimal Bins -->
+                    <div class="chart-box">
+                        <div class="chart-title">Optimal Bins</div>
+                        <div class="chart-visual">
+                            <div class="optimal-bins">
+                                <div class="bin-bar"></div>
+                                <div class="bin-bar"></div>
+                                <div class="bin-bar"></div>
+                                <div class="bin-bar"></div>
+                                <div class="bin-bar"></div>
+                                <div class="bin-bar"></div>
+                                <div class="bin-bar"></div>
+                                <div class="bin-bar"></div>
+                            </div>
+                        </div>
+                        <div class="chart-label"><span class="good">✓</span> Clear pattern</div>
+                    </div>
+                    
+                    <!-- KDE -->
+                    <div class="chart-box">
+                        <div class="chart-title">KDE Curve</div>
+                        <div class="chart-visual kde-visual">
+                            <div class="kde-curve">
+                                <svg viewBox="0 0 200 100" preserveAspectRatio="none">
+                                    <path d="M 10,90 Q 50,20 100,30 T 190,90" 
+                                          fill="rgba(30, 100, 200, 0.3)" 
+                                          stroke="#1E64C8" 
+                                          stroke-width="3"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="chart-label"><span class="good">✓</span> Smooth & continuous</div>
+                    </div>
+                </div>
+                
+                <div class="rules-card">
+                    <div class="rules-title">📐 Bin Size Rules</div>
+                    <div class="rule-item">
+                        <span class="rule-name">Sturges' Rule:</span> 
+                        <span class="rule-formula">bins ≈ log₂(n) + 1</span>
+                    </div>
+                    <div class="rule-item">
+                        <span class="rule-name">Freedman-Diaconis:</span> 
+                        <span class="rule-formula">Based on IQR & sample size</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <div class="info-card">
+                    <div class="info-title">
+                        <span class="info-icon">📊</span>
+                        Key Concepts
+                    </div>
+                    <div class="info-list">
+                        <div class="info-item">
+                            <span class="bullet">•</span>
+                            <span>Histogram: Binned frequency distribution</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="bullet">•</span>
+                            <span>KDE: Smooth density curve</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="bullet">•</span>
+                            <span>Bandwidth affects smoothness</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="bullet">•</span>
+                            <span>Identify: normal, skewed, bimodal</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="bullet">•</span>
+                            <span>Overlay multiple distributions</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="use-cases">
+                    <div class="use-title">When to Use</div>
+                    <div class="use-list">
+                        <div class="use-item">
+                            <span class="check-icon">✓</span>
+                            <span>Exploring distribution</span>
+                        </div>
+                        <div class="use-item">
+                            <span class="check-icon">✓</span>
+                            <span>Detecting outliers</span>
+                        </div>
+                        <div class="use-item">
+                            <span class="check-icon">✓</span>
+                            <span>Understanding data spread</span>
+                        </div>
+                        <div class="use-item">
+                            <span class="check-icon">✓</span>
+                            <span>Comparing distributions</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

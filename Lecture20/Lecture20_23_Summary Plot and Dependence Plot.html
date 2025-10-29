@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Summary Plot and Dependence Plot</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Aptos', 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+            padding: 25px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+        }
+        
+        .plots-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 20px;
+            height: calc(100% - 60px);
+        }
+        
+        .plot-section {
+            background: #F8F9FA;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .plot-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        
+        .plot-icon {
+            font-size: 24px;
+        }
+        
+        .plot-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E64C8;
+        }
+        
+        .plot-visual {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            flex: 1;
+            margin-bottom: 12px;
+            position: relative;
+        }
+        
+        /* Summary Plot (Beeswarm) */
+        .summary-container {
+            height: 100%;
+            position: relative;
+            padding: 10px 40px 10px 120px;
+        }
+        
+        .summary-axis {
+            position: absolute;
+            left: 120px;
+            right: 40px;
+            top: 50%;
+            height: 2px;
+            background: #333;
+        }
+        
+        .axis-label {
+            position: absolute;
+            font-size: 12px;
+            color: #666;
+            font-weight: 600;
+        }
+        
+        .x-left {
+            left: 120px;
+            top: 55%;
+        }
+        
+        .x-center {
+            left: 50%;
+            transform: translateX(-50%);
+            top: 55%;
+        }
+        
+        .x-right {
+            right: 40px;
+            top: 55%;
+        }
+        
+        .feature-row {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 25px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .feature-name {
+            width: 110px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+            text-align: right;
+            padding-right: 10px;
+        }
+        
+        .beeswarm-area {
+            flex: 1;
+            position: relative;
+            height: 100%;
+            margin-right: 40px;
+        }
+        
+        .bee-point {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .color-high {
+            background: #DC3545;
+        }
+        
+        .color-mid {
+            background: #F4A261;
+        }
+        
+        .color-low {
+            background: #4A90E2;
+        }
+        
+        /* Feature rows positioning */
+        .row-1 { top: 5%; }
+        .row-2 { top: 15%; }
+        .row-3 { top: 25%; }
+        .row-4 { top: 35%; }
+        .row-5 { top: 45%; }
+        .row-6 { top: 60%; }
+        .row-7 { top: 70%; }
+        .row-8 { top: 80%; }
+        
+        /* Dependence Plot */
+        .dependence-container {
+            height: 100%;
+            position: relative;
+            padding: 30px 20px 35px 45px;
+        }
+        
+        .scatter-plot {
+            position: absolute;
+            left: 45px;
+            right: 20px;
+            top: 30px;
+            bottom: 35px;
+        }
+        
+        .scatter-point {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            border: 2px solid rgba(30, 100, 200, 0.5);
+        }
+        
+        .axes-container {
+            position: absolute;
+            left: 45px;
+            right: 20px;
+            top: 30px;
+            bottom: 35px;
+        }
+        
+        .y-axis {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #333;
+        }
+        
+        .x-axis {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 2px;
+            background: #333;
+        }
+        
+        .axis-label-y {
+            position: absolute;
+            left: -40px;
+            top: -25px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .axis-label-x {
+            position: absolute;
+            right: -35px;
+            bottom: -25px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 8px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+        }
+        
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+        }
+        
+        .info-box {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 10px;
+        }
+        
+        .info-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .info-items {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .info-items div {
+            margin-bottom: 3px;
+            padding-left: 16px;
+            position: relative;
+        }
+        
+        .info-items div:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #1E64C8;
+            font-weight: 700;
+        }
+        
+        .code-box {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 10px;
+        }
+        
+        .code-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .code-content {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #333;
+            background: #F8F9FA;
+            padding: 6px;
+            border-radius: 4px;
+        }
+        
+        .keyword {
+            color: #E63946;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Summary Plot and Dependence Plot: Global Analysis</div>
+        
+        <div class="plots-grid">
+            <!-- Summary Plot Section -->
+            <div class="plot-section">
+                <div class="plot-header">
+                    <div class="plot-icon">🐝</div>
+                    <div class="plot-title">Summary Plot (Beeswarm)</div>
+                </div>
+                
+                <div class="plot-visual">
+                    <div class="summary-container">
+                        <div class="summary-axis"></div>
+                        <div class="axis-label x-left">-0.3</div>
+                        <div class="axis-label x-center">0</div>
+                        <div class="axis-label x-right">+0.3</div>
+                        
+                        <!-- Feature rows -->
+                        <div class="feature-row row-1">
+                            <div class="feature-name">Income</div>
+                            <div class="beeswarm-area">
+                                <div class="bee-point color-high" style="left: 65%;"></div>
+                                <div class="bee-point color-high" style="left: 70%; top: 40%;"></div>
+                                <div class="bee-point color-mid" style="left: 60%; top: 60%;"></div>
+                                <div class="bee-point color-low" style="left: 55%;"></div>
+                                <div class="bee-point color-low" style="left: 52%; top: 35%;"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-row row-2">
+                            <div class="feature-name">Age</div>
+                            <div class="beeswarm-area">
+                                <div class="bee-point color-high" style="left: 35%;"></div>
+                                <div class="bee-point color-mid" style="left: 40%; top: 40%;"></div>
+                                <div class="bee-point color-low" style="left: 60%; top: 60%;"></div>
+                                <div class="bee-point color-low" style="left: 65%;"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-row row-3">
+                            <div class="feature-name">Credit Score</div>
+                            <div class="beeswarm-area">
+                                <div class="bee-point color-high" style="left: 62%;"></div>
+                                <div class="bee-point color-mid" style="left: 55%; top: 35%;"></div>
+                                <div class="bee-point color-low" style="left: 45%;"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-row row-4">
+                            <div class="feature-name">Debt Ratio</div>
+                            <div class="beeswarm-area">
+                                <div class="bee-point color-high" style="left: 38%;"></div>
+                                <div class="bee-point color-mid" style="left: 42%; top: 60%;"></div>
+                                <div class="bee-point color-low" style="left: 55%;"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-row row-5">
+                            <div class="feature-name">Employment</div>
+                            <div class="beeswarm-area">
+                                <div class="bee-point color-high" style="left: 58%;"></div>
+                                <div class="bee-point color-low" style="left: 48%;"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-row row-6">
+                            <div class="feature-name">Education</div>
+                            <div class="beeswarm-area">
+                                <div class="bee-point color-mid" style="left: 53%;"></div>
+                                <div class="bee-point color-low" style="left: 47%;"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-row row-7">
+                            <div class="feature-name">Location</div>
+                            <div class="beeswarm-area">
+                                <div class="bee-point color-high" style="left: 52%;"></div>
+                                <div class="bee-point color-low" style="left: 48%;"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-row row-8">
+                            <div class="feature-name">Gender</div>
+                            <div class="beeswarm-area">
+                                <div class="bee-point color-mid" style="left: 51%;"></div>
+                                <div class="bee-point color-low" style="left: 49%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-color color-high"></div>
+                        <span>High value</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color color-mid"></div>
+                        <span>Medium</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color color-low"></div>
+                        <span>Low value</span>
+                    </div>
+                </div>
+                
+                <div class="code-box">
+                    <div class="code-title">Code Example</div>
+                    <div class="code-content">
+shap.<span class="keyword">summary_plot</span>(shap_values, X)
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Dependence Plot Section -->
+            <div class="plot-section">
+                <div class="plot-header">
+                    <div class="plot-icon">📊</div>
+                    <div class="plot-title">Dependence Plot</div>
+                </div>
+                
+                <div class="plot-visual">
+                    <div class="dependence-container">
+                        <div class="axes-container">
+                            <div class="y-axis">
+                                <div class="axis-label-y">SHAP Value</div>
+                            </div>
+                            <div class="x-axis">
+                                <div class="axis-label-x">Feature Value</div>
+                            </div>
+                        </div>
+                        
+                        <div class="scatter-plot">
+                            <!-- Scatter points showing non-linear relationship -->
+                            <div class="scatter-point color-low" style="left: 10%; bottom: 20%;"></div>
+                            <div class="scatter-point color-low" style="left: 15%; bottom: 25%;"></div>
+                            <div class="scatter-point color-mid" style="left: 25%; bottom: 35%;"></div>
+                            <div class="scatter-point color-mid" style="left: 35%; bottom: 50%;"></div>
+                            <div class="scatter-point color-mid" style="left: 45%; bottom: 65%;"></div>
+                            <div class="scatter-point color-high" style="left: 55%; bottom: 75%;"></div>
+                            <div class="scatter-point color-high" style="left: 65%; bottom: 80%;"></div>
+                            <div class="scatter-point color-high" style="left: 70%; bottom: 78%;"></div>
+                            <div class="scatter-point color-high" style="left: 80%; bottom: 75%;"></div>
+                            <div class="scatter-point color-high" style="left: 90%; bottom: 70%;"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="info-box">
+                    <div class="info-title">Key Insights</div>
+                    <div class="info-items">
+                        <div>Non-linear patterns</div>
+                        <div>Feature interactions</div>
+                        <div>Optimal ranges</div>
+                        <div>Threshold effects</div>
+                    </div>
+                </div>
+                
+                <div class="info-box" style="margin-top: 10px;">
+                    <div class="info-title">Use Cases</div>
+                    <div class="info-items">
+                        <div>Understand feature behavior</div>
+                        <div>Identify sweet spots</div>
+                        <div>Detect interactions</div>
+                        <div>Validate model logic</div>
+                    </div>
+                </div>
+                
+                <div class="code-box">
+                    <div class="code-title">Code Example</div>
+                    <div class="code-content">
+shap.<span class="keyword">dependence_plot</span>(<br>
+&nbsp;&nbsp;"Income", shap_values, X<br>
+)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K-Means++ Initialization</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+            color: #666;
+            margin-top: -10px;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            flex: 1;
+        }
+        
+        .algorithm-section {
+            background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .section-title {
+            font-size: 19px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .step-item {
+            background: white;
+            border: 1px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .step-number {
+            min-width: 35px;
+            height: 35px;
+            background: #1E64C8;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .step-text {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .benefits-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .benefit-card {
+            background: white;
+            border: 2px solid;
+            border-radius: 10px;
+            padding: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s;
+        }
+        
+        .benefit-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .benefit-card.speed {
+            border-color: #4CAF50;
+            background: linear-gradient(135deg, #e8f5e9 0%, #ffffff 100%);
+        }
+        
+        .benefit-card.quality {
+            border-color: #9C27B0;
+            background: linear-gradient(135deg, #f3e5f5 0%, #ffffff 100%);
+        }
+        
+        .benefit-card.guarantee {
+            border-color: #FF9800;
+            background: linear-gradient(135deg, #fff3e0 0%, #ffffff 100%);
+        }
+        
+        .benefit-card.adoption {
+            border-color: #00897B;
+            background: linear-gradient(135deg, #e0f2f1 0%, #ffffff 100%);
+        }
+        
+        .benefit-icon {
+            font-size: 32px;
+            flex-shrink: 0;
+        }
+        
+        .benefit-content {
+            flex: 1;
+        }
+        
+        .benefit-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .benefit-card.speed .benefit-title {
+            color: #388E3C;
+        }
+        
+        .benefit-card.quality .benefit-title {
+            color: #9C27B0;
+        }
+        
+        .benefit-card.guarantee .benefit-title {
+            color: #F57C00;
+        }
+        
+        .benefit-card.adoption .benefit-title {
+            color: #00897B;
+        }
+        
+        .benefit-desc {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.3;
+        }
+        
+        .comparison-bar {
+            background: linear-gradient(135deg, #fff8e1 0%, #ffffff 100%);
+            border: 2px solid #FFA726;
+            border-radius: 10px;
+            padding: 14px;
+            text-align: center;
+        }
+        
+        .comparison-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #F57C00;
+            margin-bottom: 8px;
+        }
+        
+        .comparison-text {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.4;
+        }
+        
+        .formula-box {
+            background: white;
+            border: 2px dashed #1E64C8;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            margin-top: 8px;
+        }
+        
+        .formula-label {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+        
+        .formula {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">K-Means++ Initialization</div>
+        <div class="subtitle">Improved initialization strategy for K-Means</div>
+        
+        <div class="main-content">
+            <!-- Left: Algorithm -->
+            <div class="algorithm-section">
+                <div class="section-title">Algorithm Steps</div>
+                
+                <div class="step-item">
+                    <div class="step-number">1</div>
+                    <div class="step-text">
+                        <strong>First centroid:</strong> Choose randomly from data points
+                    </div>
+                </div>
+                
+                <div class="step-item">
+                    <div class="step-number">2</div>
+                    <div class="step-text">
+                        <strong>Subsequent centroids:</strong> Probability proportional to squared distance
+                    </div>
+                </div>
+                
+                <div class="step-item">
+                    <div class="step-number">3</div>
+                    <div class="step-text">
+                        <strong>Result:</strong> Spreads initial centroids far apart in data space
+                    </div>
+                </div>
+                
+                <div class="formula-box">
+                    <div class="formula-label">Selection Probability</div>
+                    <div class="formula">P(x) ∝ D(x)²</div>
+                    <div class="formula-label" style="font-size: 12px; margin-top: 4px;">D(x) = distance to nearest centroid</div>
+                </div>
+            </div>
+            
+            <!-- Right: Benefits -->
+            <div class="benefits-section">
+                <div class="benefit-card speed">
+                    <div class="benefit-icon">⚡</div>
+                    <div class="benefit-content">
+                        <div class="benefit-title">Faster Convergence</div>
+                        <div class="benefit-desc">Significantly reduces iterations to convergence</div>
+                    </div>
+                </div>
+                
+                <div class="benefit-card quality">
+                    <div class="benefit-icon">✨</div>
+                    <div class="benefit-content">
+                        <div class="benefit-title">Better Quality</div>
+                        <div class="benefit-desc">Large gains in clustering quality</div>
+                    </div>
+                </div>
+                
+                <div class="benefit-card guarantee">
+                    <div class="benefit-icon">🎯</div>
+                    <div class="benefit-content">
+                        <div class="benefit-title">Provable Guarantee</div>
+                        <div class="benefit-desc">O(log k) approximation to optimal solution</div>
+                    </div>
+                </div>
+                
+                <div class="benefit-card adoption">
+                    <div class="benefit-icon">🔧</div>
+                    <div class="benefit-content">
+                        <div class="benefit-title">Widely Adopted</div>
+                        <div class="benefit-desc">Default in scikit-learn and other libraries</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="comparison-bar">
+            <div class="comparison-title">⚖️ Trade-off Analysis</div>
+            <div class="comparison-text">Small overhead in initialization → Large gains in quality and speed</div>
+        </div>
+    </div>
+</body>
+</html>

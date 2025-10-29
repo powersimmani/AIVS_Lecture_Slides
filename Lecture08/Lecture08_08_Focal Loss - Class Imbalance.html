@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Focal Loss - Class Imbalance</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 30px;
+            background: #ffffff;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .main-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .main-content {
+            display: flex;
+            gap: 25px;
+            height: 430px;
+        }
+        
+        .left-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .problem-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.3);
+        }
+        
+        .problem-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .problem-desc {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .formula-box {
+            background: #f0f8ff;
+            border: 3px solid #1E64C8;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .formula-label {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .formula {
+            font-size: 24px;
+            color: #1E64C8;
+            font-weight: 600;
+            margin: 10px 0;
+            letter-spacing: 1px;
+        }
+        
+        .mechanism-box {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 18px;
+            flex: 1;
+        }
+        
+        .mechanism-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+        }
+        
+        .mechanism-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .mechanism-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 16px;
+            line-height: 1.5;
+            color: #2c3e50;
+        }
+        
+        .mechanism-icon {
+            background: #1E64C8;
+            color: white;
+            min-width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .right-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .parameters-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .parameter-card {
+            background: #e8f1fd;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 20px;
+            flex: 1;
+        }
+        
+        .param-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .param-symbol {
+            background: #1E64C8;
+            color: white;
+            min-width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 600;
+            margin-right: 12px;
+        }
+        
+        .param-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .param-desc {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+        
+        .param-value {
+            background: white;
+            border: 1px dashed #1E64C8;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 16px;
+            color: #1E64C8;
+            font-weight: 500;
+        }
+        
+        .applications {
+            background: #f0f8ff;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 16px 18px;
+        }
+        
+        .app-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+        }
+        
+        .app-item {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.5;
+            margin-bottom: 6px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="main-title">Focal Loss: Addressing Class Imbalance</div>
+            <div class="subtitle">Focusing on Hard Examples</div>
+        </div>
+        
+        <div class="main-content">
+            <div class="left-section">
+                <div class="problem-box">
+                    <div class="problem-title">🎯 Target Problem</div>
+                    <div class="problem-desc">
+                        Designed to solve severe class imbalance problems<br>
+                        Aligns learning with business metrics or task requirements
+                    </div>
+                </div>
+                
+                <div class="formula-box">
+                    <div class="formula-label">Focal Loss Formula</div>
+                    <div class="formula">FL = -α(1-p)<sup>γ</sup> log(p)</div>
+                </div>
+                
+                <div class="mechanism-box">
+                    <div class="mechanism-title">Working Mechanism</div>
+                    <div class="mechanism-list">
+                        <div class="mechanism-item">
+                            <div class="mechanism-icon">↓</div>
+                            <div>Down-weights loss for well-classified examples</div>
+                        </div>
+                        <div class="mechanism-item">
+                            <div class="mechanism-icon">↑</div>
+                            <div>Focuses learning on hard, misclassified examples</div>
+                        </div>
+                        <div class="mechanism-item">
+                            <div class="mechanism-icon">✓</div>
+                            <div>Greatly improves minority class performance</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-section">
+                <div class="parameters-title">Key Parameters</div>
+                
+                <div class="parameter-card">
+                    <div class="param-header">
+                        <div class="param-symbol">γ</div>
+                        <div class="param-name">Focusing Parameter</div>
+                    </div>
+                    <div class="param-desc">
+                        Controls down-weighting rate<br>
+                        Reduces contribution of well-classified examples
+                    </div>
+                    <div class="param-value">Typical value: γ = 2</div>
+                </div>
+                
+                <div class="parameter-card">
+                    <div class="param-header">
+                        <div class="param-symbol">α</div>
+                        <div class="param-name">Balancing Parameter</div>
+                    </div>
+                    <div class="param-desc">
+                        Addresses class imbalance problem<br>
+                        Adjusts per-class weights
+                    </div>
+                    <div class="param-value">Addresses class imbalance</div>
+                </div>
+                
+                <div class="applications">
+                    <div class="app-title">💡 Main Applications</div>
+                    <div class="app-item"><strong>•</strong> Object Detection (e.g., RetinaNet)</div>
+                    <div class="app-item"><strong>•</strong> Imbalanced Classification Tasks</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multidimensional Visualization</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #FFFFFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            padding: 25px 35px;
+        }
+        
+        .title-section {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        
+        .main-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .subtitle {
+            font-size: 17px;
+            color: #666666;
+        }
+        
+        .content-wrapper {
+            display: flex;
+            gap: 20px;
+            flex: 1;
+        }
+        
+        .left-panel {
+            flex: 1.5;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .chart-row {
+            display: flex;
+            gap: 12px;
+            flex: 1;
+        }
+        
+        .chart-card {
+            flex: 1;
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 10px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+        
+        .chart-card:hover {
+            border-color: #1E64C8;
+            box-shadow: 0 4px 15px rgba(30, 100, 200, 0.15);
+        }
+        
+        .chart-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .chart-visual {
+            flex: 1;
+            background: #F8F8F8;
+            border-radius: 6px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Parallel Coordinates */
+        .parallel-coords {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            padding: 20px 15px;
+        }
+        
+        .axis {
+            position: absolute;
+            bottom: 20px;
+            width: 2px;
+            height: calc(100% - 40px);
+            background: #666;
+        }
+        
+        .axis-label {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 13px;
+            color: #666;
+            font-weight: 600;
+        }
+        
+        .axis-1 { left: 15%; }
+        .axis-2 { left: 35%; }
+        .axis-3 { left: 55%; }
+        .axis-4 { left: 75%; }
+        
+        .data-line {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .data-line svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        /* Radar Chart */
+        .radar-chart {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        
+        .radar-chart svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .chart-description {
+            text-align: center;
+            font-size: 16px;
+            color: #666;
+            margin-top: 8px;
+            line-height: 1.3;
+        }
+        
+        .right-panel {
+            flex: 0.5;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .comparison-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .comparison-section {
+            margin-bottom: 12px;
+        }
+        
+        .section-header {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+            margin-bottom: 6px;
+            padding: 6px;
+            background: #F8FBFF;
+            border-radius: 4px;
+        }
+        
+        .feature-icon {
+            color: #1E64C8;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .limitations-card {
+            background: #FFF9E6;
+            border: 2px solid #FFC107;
+            border-radius: 10px;
+            padding: 14px;
+        }
+        
+        .limitations-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .limitation-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 6px;
+            line-height: 1.3;
+        }
+        
+        .warning-icon {
+            color: #F57C00;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        
+        .use-cases {
+            background: #E8F5E9;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            padding: 14px;
+        }
+        
+        .use-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2E7D32;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .use-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 6px;
+        }
+        
+        .check-icon {
+            color: #4CAF50;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .chart-card, .comparison-card, .limitations-card, .use-cases {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        .chart-card:nth-child(1) { animation-delay: 0.1s; }
+        .chart-card:nth-child(2) { animation-delay: 0.2s; }
+        .comparison-card { animation-delay: 0.3s; }
+        .limitations-card { animation-delay: 0.4s; }
+        .use-cases { animation-delay: 0.5s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Multidimensional: Parallel Coordinates & Radar Chart</div>
+            <div class="subtitle">Visualizing High-Dimensional Data</div>
+        </div>
+        
+        <div class="content-wrapper">
+            <div class="left-panel">
+                <div class="chart-row">
+                    <!-- Parallel Coordinates -->
+                    <div class="chart-card">
+                        <div class="chart-title">Parallel Coordinates</div>
+                        <div class="chart-visual">
+                            <div class="parallel-coords">
+                                <!-- Axes -->
+                                <div class="axis axis-1">
+                                    <div class="axis-label">Dim 1</div>
+                                </div>
+                                <div class="axis axis-2">
+                                    <div class="axis-label">Dim 2</div>
+                                </div>
+                                <div class="axis axis-3">
+                                    <div class="axis-label">Dim 3</div>
+                                </div>
+                                <div class="axis axis-4">
+                                    <div class="axis-label">Dim 4</div>
+                                </div>
+                                
+                                <!-- Data Lines -->
+                                <div class="data-line">
+                                    <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+                                        <!-- Line 1 (blue) -->
+                                        <polyline
+                                            points="15,20 35,40 55,30 75,15"
+                                            fill="none"
+                                            stroke="#1E64C8"
+                                            stroke-width="0.5"
+                                            opacity="0.7"/>
+                                        
+                                        <!-- Line 2 (blue) -->
+                                        <polyline
+                                            points="15,25 35,35 55,25 75,20"
+                                            fill="none"
+                                            stroke="#1E64C8"
+                                            stroke-width="0.5"
+                                            opacity="0.7"/>
+                                        
+                                        <!-- Line 3 (blue) -->
+                                        <polyline
+                                            points="15,30 35,45 55,35 75,25"
+                                            fill="none"
+                                            stroke="#1E64C8"
+                                            stroke-width="0.5"
+                                            opacity="0.7"/>
+                                        
+                                        <!-- Line 4 (green) -->
+                                        <polyline
+                                            points="15,70 35,60 55,65 75,70"
+                                            fill="none"
+                                            stroke="#4CAF50"
+                                            stroke-width="0.5"
+                                            opacity="0.7"/>
+                                        
+                                        <!-- Line 5 (green) -->
+                                        <polyline
+                                            points="15,75 35,65 55,70 75,75"
+                                            fill="none"
+                                            stroke="#4CAF50"
+                                            stroke-width="0.5"
+                                            opacity="0.7"/>
+                                        
+                                        <!-- Line 6 (green) -->
+                                        <polyline
+                                            points="15,80 35,70 55,75 75,80"
+                                            fill="none"
+                                            stroke="#4CAF50"
+                                            stroke-width="0.5"
+                                            opacity="0.7"/>
+                                        
+                                        <!-- Line 7 (orange - outlier) -->
+                                        <polyline
+                                            points="15,50 35,20 55,80 75,45"
+                                            fill="none"
+                                            stroke="#FF9800"
+                                            stroke-width="0.7"
+                                            opacity="0.9"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chart-description">Lines connect observations across dimensions</div>
+                    </div>
+                    
+                    <!-- Radar Chart -->
+                    <div class="chart-card">
+                        <div class="chart-title">Radar Chart</div>
+                        <div class="chart-visual">
+                            <div class="radar-chart">
+                                <svg viewBox="0 0 200 200">
+                                    <!-- Grid circles -->
+                                    <circle cx="100" cy="100" r="80" fill="none" stroke="#E0E0E0" stroke-width="1"/>
+                                    <circle cx="100" cy="100" r="60" fill="none" stroke="#E0E0E0" stroke-width="1"/>
+                                    <circle cx="100" cy="100" r="40" fill="none" stroke="#E0E0E0" stroke-width="1"/>
+                                    <circle cx="100" cy="100" r="20" fill="none" stroke="#E0E0E0" stroke-width="1"/>
+                                    
+                                    <!-- Axes -->
+                                    <line x1="100" y1="100" x2="100" y2="20" stroke="#666" stroke-width="1"/>
+                                    <line x1="100" y1="100" x2="169" y2="50" stroke="#666" stroke-width="1"/>
+                                    <line x1="100" y1="100" x2="169" y2="150" stroke="#666" stroke-width="1"/>
+                                    <line x1="100" y1="100" x2="100" y2="180" stroke="#666" stroke-width="1"/>
+                                    <line x1="100" y1="100" x2="31" y2="150" stroke="#666" stroke-width="1"/>
+                                    <line x1="100" y1="100" x2="31" y2="50" stroke="#666" stroke-width="1"/>
+                                    
+                                    <!-- Profile 1 (blue) -->
+                                    <polygon
+                                        points="100,40 150,60 150,130 100,160 50,130 60,60"
+                                        fill="rgba(30, 100, 200, 0.3)"
+                                        stroke="#1E64C8"
+                                        stroke-width="2"/>
+                                    
+                                    <!-- Profile 2 (green) -->
+                                    <polygon
+                                        points="100,50 140,70 160,140 100,150 40,140 50,70"
+                                        fill="rgba(76, 175, 80, 0.3)"
+                                        stroke="#4CAF50"
+                                        stroke-width="2"/>
+                                    
+                                    <!-- Axis labels -->
+                                    <text x="100" y="15" text-anchor="middle" font-size="11" fill="#666" font-weight="600">A</text>
+                                    <text x="175" y="50" text-anchor="start" font-size="11" fill="#666" font-weight="600">B</text>
+                                    <text x="175" y="155" text-anchor="start" font-size="11" fill="#666" font-weight="600">C</text>
+                                    <text x="100" y="195" text-anchor="middle" font-size="11" fill="#666" font-weight="600">D</text>
+                                    <text x="20" y="155" text-anchor="end" font-size="11" fill="#666" font-weight="600">E</text>
+                                    <text x="20" y="50" text-anchor="end" font-size="11" fill="#666" font-weight="600">F</text>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="chart-description">Circular layout comparing entity profiles</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <div class="comparison-card">
+                    <div class="card-title">
+                        <span>🔍</span>
+                        Comparison
+                    </div>
+                    
+                    <div class="comparison-section">
+                        <div class="section-header">
+                            <span>📊</span>
+                            <span>Parallel Coords</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">•</span>
+                            <span>Many dimensions</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">•</span>
+                            <span>Reveals clusters</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">•</span>
+                            <span>Color by class</span>
+                        </div>
+                    </div>
+                    
+                    <div class="comparison-section">
+                        <div class="section-header">
+                            <span>🕸️</span>
+                            <span>Radar Chart</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">•</span>
+                            <span>6-8 dimensions max</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">•</span>
+                            <span>Profile comparison</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">•</span>
+                            <span>Circular symmetry</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="limitations-card">
+                    <div class="limitations-title">⚠️ Limitations</div>
+                    <div class="limitation-item">
+                        <span class="warning-icon">▸</span>
+                        <span>Parallel: Axis order matters</span>
+                    </div>
+                    <div class="limitation-item">
+                        <span class="warning-icon">▸</span>
+                        <span>Radar: Limited dimensions</span>
+                    </div>
+                    <div class="limitation-item">
+                        <span class="warning-icon">▸</span>
+                        <span>Both: Can be cluttered</span>
+                    </div>
+                </div>
+                
+                <div class="use-cases">
+                    <div class="use-title">When to Use</div>
+                    <div class="use-item">
+                        <span class="check-icon">✓</span>
+                        <span>High-dim exploration</span>
+                    </div>
+                    <div class="use-item">
+                        <span class="check-icon">✓</span>
+                        <span>Pattern detection</span>
+                    </div>
+                    <div class="use-item">
+                        <span class="check-icon">✓</span>
+                        <span>Profile comparison</span>
+                    </div>
+                    <div class="use-item">
+                        <span class="check-icon">✓</span>
+                        <span>Player/product stats</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

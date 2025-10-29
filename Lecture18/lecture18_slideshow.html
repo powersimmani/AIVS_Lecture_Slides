@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture 18 - Complete Slideshow</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #1a1a1a;
+            overflow: hidden;
+        }
+        
+        .slideshow-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .slide {
+            display: none;
+            width: 100vw;
+            height: 100vh;
+            background: white;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        .slide.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        /* Navigation controls */
+        .nav-controls {
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 6px 15px;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+        }
+        
+        .nav-button {
+            background: #1E64C8;
+            color: white;
+            border: none;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-button:hover {
+            background: #2874d8;
+            transform: scale(1.1);
+        }
+        
+        .nav-button:active {
+            transform: scale(0.95);
+        }
+        
+        .nav-button:disabled {
+            background: #555;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+        
+        .slide-counter {
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            min-width: 60px;
+            text-align: center;
+        }
+        
+        /* Progress bar */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #1E64C8;
+            transition: width 0.3s ease;
+        }
+        
+        /* Keyboard hint */
+        .keyboard-hint {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
+            animation: fadeOut 3s ease-in-out forwards;
+            z-index: 1000;
+        }
+        
+        @keyframes fadeOut {
+            0%, 70% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                pointer-events: none;
+            }
+        }
+        
+        .key {
+            display: inline-block;
+            background: #333;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin: 0 4px;
+            font-family: monospace;
+            border: 1px solid #555;
+        }
+        
+        /* Slide title overlay */
+        .slide-title {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(30, 100, 200, 0.9);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+            max-width: 600px;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <!-- Progress bar -->
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+    
+    <!-- Keyboard hint -->
+    <div class="keyboard-hint">
+        Use <span class="key">←</span> <span class="key">→</span> or <span class="key">Space</span> to navigate
+    </div>
+    
+    <!-- Slide title -->
+    <div class="slide-title" id="slideTitle">Loading...</div>
+    
+    <!-- Slideshow container -->
+    <div class="slideshow-container">
+        <div id="slideContainer"></div>
+    </div>
+    
+    <!-- Navigation controls -->
+    <div class="nav-controls">
+        <button class="nav-button" id="prevBtn" onclick="changeSlide(-1)">◄</button>
+        <div class="slide-counter">
+            <span id="currentSlide">1</span> / <span id="totalSlides">32</span>
+        </div>
+        <button class="nav-button" id="nextBtn" onclick="changeSlide(1)">►</button>
+    </div>
+
+    <script>
+        let currentSlideIndex = 0;
+        
+        // 전체 슬라이드 순서 (PDF 순서대로)
+        const slides = [
+            { title: "Title", file: "Lecture18_01_Lecture 18 Advanced Unsupervised Learning.html", part: null },
+            { title: "Lecture Contents", file: "Lecture18_02_Lecture Contents.html", part: null },
+            
+            // Part 1
+            { title: "Self-Supervised Learning", file: "Lecture18_03_Part 1_4 Self-Supervised Learning.html", part: "1/4" },
+            { title: "Lecture Overview and Recap", file: "Lecture18_04_Lecture Overview and Recap.html", part: "1/4" },
+            { title: "What is Self-Supervised Learning?", file: "Lecture18_05_What is Self-Supervised Learning.html", part: "1/4" },
+            { title: "Contrastive Learning Principles", file: "Lecture18_06_Contrastive Learning Principles.html", part: "1/4" },
+            { title: "SimCLR Algorithm", file: "Lecture18_07_SimCLR Algorithm.html", part: "1/4" },
+            { title: "MoCo and BYOL", file: "Lecture18_08_MoCo and BYOL.html", part: "1/4" },
+            { title: "Self-Supervised Pretraining", file: "Lecture18_09_Self-Supervised Pretraining.html", part: "1/4" },
+            { title: "Hands-on: Image Representation Learning", file: "Lecture18_10_Hands-on Image Representation Learning.html", part: "1/4" },
+            
+            // Part 2
+            { title: "Time Series Clustering", file: "Lecture18_11_Part 2_4 Time Series Clustering.html", part: "2/4" },
+            { title: "Characteristics of Time Series Data", file: "Lecture18_12_Characteristics of Time Series Data.html", part: "2/4" },
+            { title: "DTW (Dynamic Time Warping) Principles", file: "Lecture18_13_DTW (Dynamic Time Warping) Principles.html", part: "2/4" },
+            { title: "DTW-based Clustering", file: "Lecture18_14_DTW-based Clustering.html", part: "2/4" },
+            { title: "K-Shape Algorithm", file: "Lecture18_15_K-Shape Algorithm.html", part: "2/4" },
+            { title: "Subsequence Clustering", file: "Lecture18_16_Subsequence Clustering.html", part: "2/4" },
+            { title: "Hands-on: Stock/Sensor Data Clustering", file: "Lecture18_17_Hands-on StockSensor Data Clustering.html", part: "2/4" },
+            
+            // Part 3
+            { title: "Graph Clustering", file: "Lecture18_18_Part 3_4 Graph Clustering.html", part: "3/4" },
+            { title: "Introduction to Graph Data", file: "Lecture18_19_Introduction to Graph Data.html", part: "3/4" },
+            { title: "Spectral Clustering", file: "Lecture18_20_Spectral Clustering.html", part: "3/4" },
+            { title: "Community Detection (Louvain)", file: "Lecture18_21_Community Detection (Louvain).html", part: "3/4" },
+            { title: "GNN Fundamentals", file: "Lecture18_22_GNN Fundamentals.html", part: "3/4" },
+            { title: "Clustering with GCN", file: "Lecture18_23_Clustering with GCN.html", part: "3/4" },
+            { title: "Deep Graph Infomax", file: "Lecture18_24_Deep Graph Infomax.html", part: "3/4" },
+            { title: "Hands-on: Social Network Analysis", file: "Lecture18_25_Hands-on Social Network Analysis.html", part: "3/4" },
+            
+            // Part 4
+            { title: "Advanced Topics and Applications", file: "Lecture18_26_Part 4_4 Advanced Topics and Applications.html", part: "4/4" },
+            { title: "Deep Clustering (DeepCluster, SwAV)", file: "Lecture18_27_Deep Clustering (DeepCluster, SwAV).html", part: "4/4" },
+            { title: "Multi-modal Clustering", file: "Lecture18_28_Multi-modal Clustering.html", part: "4/4" },
+            { title: "Large-Scale Clustering", file: "Lecture18_29_Large-Scale Clustering.html", part: "4/4" },
+            { title: "Real-world Applications (by Industry)", file: "Lecture18_30_Real-world Applications (by Industry).html", part: "4/4" },
+            { title: "Best Practices & Recent Research Trends", file: "Lecture18_31_Best Practices & Recent Research Trends.html", part: "4/4" },
+            
+            // Ending
+            { title: "Thank You", file: "Lecture18_32_Thank you.html", part: null }
+        ];
+        
+        function initializeSlides() {
+            const container = document.getElementById('slideContainer');
+            
+            // 모든 슬라이드를 미리 생성
+            slides.forEach((slide, index) => {
+                const slideDiv = document.createElement('div');
+                slideDiv.className = 'slide';
+                slideDiv.id = `slide-${index}`;
+                
+                const iframe = document.createElement('iframe');
+                iframe.src = encodeURI(slide.file);
+                
+                slideDiv.appendChild(iframe);
+                container.appendChild(slideDiv);
+            });
+            
+            // 첫 번째 슬라이드 표시
+            showSlide(0);
+        }
+        
+        function showSlide(index) {
+            // 모든 슬라이드 숨기기
+            const allSlides = document.querySelectorAll('.slide');
+            allSlides.forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            // 현재 슬라이드 표시
+            const currentSlide = document.getElementById(`slide-${index}`);
+            if (currentSlide) {
+                currentSlide.classList.add('active');
+            }
+            
+            // 제목 업데이트 (파트 정보 포함)
+            const slideInfo = slides[index];
+            let titleText = slideInfo.title;
+            if (slideInfo.part) {
+                titleText = `${slideInfo.title} | Part ${slideInfo.part}`;
+            }
+            document.getElementById('slideTitle').textContent = titleText;
+            
+            // 카운터 업데이트
+            document.getElementById('currentSlide').textContent = index + 1;
+            document.getElementById('totalSlides').textContent = slides.length;
+            
+            // 진행 바 업데이트
+            const progress = ((index + 1) / slides.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            
+            // 버튼 상태 업데이트
+            document.getElementById('prevBtn').disabled = index === 0;
+            document.getElementById('nextBtn').disabled = index === slides.length - 1;
+        }
+        
+        function changeSlide(direction) {
+            const newIndex = currentSlideIndex + direction;
+            
+            if (newIndex >= 0 && newIndex < slides.length) {
+                currentSlideIndex = newIndex;
+                showSlide(currentSlideIndex);
+            }
+        }
+        
+        // 키보드 네비게이션
+        document.addEventListener('keydown', (event) => {
+            switch(event.key) {
+                case 'ArrowLeft':
+                case 'ArrowUp':
+                    changeSlide(-1);
+                    break;
+                case 'ArrowRight':
+                case 'ArrowDown':
+                case ' ':
+                    event.preventDefault();
+                    changeSlide(1);
+                    break;
+                case 'Home':
+                    currentSlideIndex = 0;
+                    showSlide(currentSlideIndex);
+                    break;
+                case 'End':
+                    currentSlideIndex = slides.length - 1;
+                    showSlide(currentSlideIndex);
+                    break;
+            }
+        });
+        
+        // 페이지 로드 시 슬라이드 초기화
+        window.addEventListener('load', () => {
+            initializeSlides();
+        });
+        
+        // 스페이스바로 스크롤 방지
+        window.addEventListener('keydown', (e) => {
+            if(e.key === ' ' && e.target === document.body) {
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>

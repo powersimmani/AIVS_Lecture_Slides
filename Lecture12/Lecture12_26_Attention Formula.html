@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attention Formulas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #ffffff;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 40px;
+            position: relative;
+        }
+        
+        .main-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .content {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            height: calc(100% - 45px);
+        }
+        
+        /* Formula Steps */
+        .formula-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            flex: 1;
+        }
+        
+        .formula-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 16px 20px;
+            border-left: 5px solid #1E64C8;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .formula-card:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.15);
+        }
+        
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: #1E64C8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .formula-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .formula-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .formula-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .formula-badge {
+            padding: 4px 10px;
+            background: #e8f2ff;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .formula-box {
+            background: white;
+            padding: 12px 16px;
+            border-radius: 6px;
+            border: 2px solid #1E64C8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .formula-text {
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .formula-description {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.4;
+        }
+        
+        /* Summary Section */
+        .summary-section {
+            background: #e8f2ff;
+            border-radius: 8px;
+            padding: 16px 20px;
+            border: 2px solid #1E64C8;
+        }
+        
+        .summary-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+        }
+        
+        .summary-item {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 3px solid #1E64C8;
+        }
+        
+        .summary-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .summary-value {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #555;
+            line-height: 1.4;
+        }
+        
+        /* Variable Legend */
+        .variable-legend {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 12px 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+        }
+        
+        .legend-symbol {
+            font-family: 'Courier New', monospace;
+            font-weight: 700;
+            color: #856404;
+        }
+        
+        .legend-desc {
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-title">Attention Mechanism: Mathematical Formulas</div>
+        
+        <div class="content">
+            <!-- Formula Steps -->
+            <div class="formula-steps">
+                <!-- Step 1: Score -->
+                <div class="formula-card">
+                    <div class="step-number">1</div>
+                    <div class="formula-content">
+                        <div class="formula-header">
+                            <div class="formula-name">Compute Attention Scores</div>
+                            <div class="formula-badge">Similarity</div>
+                        </div>
+                        <div class="formula-box">
+                            <div class="formula-text">e<sub>t,i</sub> = score(s<sub>t</sub>, h<sub>i</sub>) = s<sub>t</sub><sup>T</sup> W<sub>a</sub> h<sub>i</sub></div>
+                        </div>
+                        <div class="formula-description">
+                            Calculate similarity between decoder state s<sub>t</sub> and each encoder hidden state h<sub>i</sub> using learnable weight matrix W<sub>a</sub>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Step 2: Attention Weights -->
+                <div class="formula-card">
+                    <div class="step-number">2</div>
+                    <div class="formula-content">
+                        <div class="formula-header">
+                            <div class="formula-name">Compute Attention Weights</div>
+                            <div class="formula-badge">Softmax</div>
+                        </div>
+                        <div class="formula-box">
+                            <div class="formula-text">α<sub>t,i</sub> = exp(e<sub>t,i</sub>) / Σ<sub>j</sub> exp(e<sub>t,j</sub>)</div>
+                        </div>
+                        <div class="formula-description">
+                            Normalize scores using softmax to obtain attention weights that sum to 1. Higher scores → higher attention weights
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Step 3: Context Vector -->
+                <div class="formula-card">
+                    <div class="step-number">3</div>
+                    <div class="formula-content">
+                        <div class="formula-header">
+                            <div class="formula-name">Compute Context Vector</div>
+                            <div class="formula-badge">Weighted Sum</div>
+                        </div>
+                        <div class="formula-box">
+                            <div class="formula-text">c<sub>t</sub> = Σ<sub>i</sub> α<sub>t,i</sub> × h<sub>i</sub></div>
+                        </div>
+                        <div class="formula-description">
+                            Weighted sum of encoder hidden states using attention weights. More relevant states contribute more to the context
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Step 4: Decoder Output -->
+                <div class="formula-card">
+                    <div class="step-number">4</div>
+                    <div class="formula-content">
+                        <div class="formula-header">
+                            <div class="formula-name">Generate Output</div>
+                            <div class="formula-badge">Prediction</div>
+                        </div>
+                        <div class="formula-box">
+                            <div class="formula-text">ŷ<sub>t</sub> = softmax(W<sub>o</sub> [s<sub>t</sub>; c<sub>t</sub>] + b<sub>o</sub>)</div>
+                        </div>
+                        <div class="formula-description">
+                            Concatenate decoder state and context vector, then pass through output layer to predict next token
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Summary Section -->
+            <div class="summary-section">
+                <div class="summary-title">🔑 Key Components Summary</div>
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <div class="summary-label">Input Dimensions</div>
+                        <div class="summary-value">
+                            s<sub>t</sub> ∈ ℝ<sup>d</sup><br/>
+                            h<sub>i</sub> ∈ ℝ<sup>d</sup><br/>
+                            W<sub>a</sub> ∈ ℝ<sup>d×d</sup>
+                        </div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Attention Properties</div>
+                        <div class="summary-value">
+                            Σ<sub>i</sub> α<sub>t,i</sub> = 1<br/>
+                            α<sub>t,i</sub> ∈ [0, 1]<br/>
+                            0 ≤ α<sub>t,i</sub> ≤ 1
+                        </div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Output</div>
+                        <div class="summary-value">
+                            c<sub>t</sub> ∈ ℝ<sup>d</sup><br/>
+                            Dynamic context<br/>
+                            Per time step
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Variable Legend -->
+            <div class="variable-legend">
+                <div class="legend-item">
+                    <span class="legend-symbol">s<sub>t</sub>:</span>
+                    <span class="legend-desc">Decoder hidden state</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-symbol">h<sub>i</sub>:</span>
+                    <span class="legend-desc">Encoder hidden state</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-symbol">e<sub>t,i</sub>:</span>
+                    <span class="legend-desc">Attention score</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-symbol">α<sub>t,i</sub>:</span>
+                    <span class="legend-desc">Attention weight</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-symbol">c<sub>t</sub>:</span>
+                    <span class="legend-desc">Context vector</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-symbol">W<sub>a</sub>:</span>
+                    <span class="legend-desc">Alignment weight matrix</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

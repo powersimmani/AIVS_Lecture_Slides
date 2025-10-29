@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Preprocessing and Scaling</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+        
+        .importance-box {
+            background: linear-gradient(135deg, #fff5f5 0%, #ffffff 100%);
+            border: 2px solid #e57373;
+            border-radius: 10px;
+            padding: 12px 18px;
+            text-align: center;
+        }
+        
+        .importance-text {
+            font-size: 16px;
+            color: #d32f2f;
+            font-weight: 600;
+        }
+        
+        .scalers-section {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .scaler-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: all 0.3s;
+        }
+        
+        .scaler-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(30, 100, 200, 0.2);
+        }
+        
+        .scaler-card.standard {
+            background: linear-gradient(135deg, #e3f2fd 0%, #ffffff 100%);
+            border-color: #1E64C8;
+        }
+        
+        .scaler-card.minmax {
+            background: linear-gradient(135deg, #f3e5f5 0%, #ffffff 100%);
+            border-color: #9C27B0;
+        }
+        
+        .scaler-card.robust {
+            background: linear-gradient(135deg, #e8f5e9 0%, #ffffff 100%);
+            border-color: #4CAF50;
+        }
+        
+        .scaler-icon {
+            font-size: 28px;
+            text-align: center;
+        }
+        
+        .scaler-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+        }
+        
+        .scaler-card.minmax .scaler-name {
+            color: #9C27B0;
+        }
+        
+        .scaler-card.robust .scaler-name {
+            color: #4CAF50;
+        }
+        
+        .scaler-formula {
+            font-size: 15px;
+            color: #666;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            background: rgba(0, 0, 0, 0.05);
+            padding: 8px;
+            border-radius: 5px;
+        }
+        
+        .scaler-features {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            font-size: 14px;
+        }
+        
+        .scaler-features li {
+            padding-left: 16px;
+            position: relative;
+            color: #444;
+            line-height: 1.3;
+        }
+        
+        .scaler-features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #1E64C8;
+            font-weight: bold;
+        }
+        
+        .scaler-card.minmax .scaler-features li:before {
+            color: #9C27B0;
+        }
+        
+        .scaler-card.robust .scaler-features li:before {
+            color: #4CAF50;
+        }
+        
+        .preprocessing-steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+        
+        .step-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+        
+        .step-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 3px 12px rgba(30, 100, 200, 0.15);
+        }
+        
+        .step-number {
+            width: 28px;
+            height: 28px;
+            background: #1E64C8;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .step-icon {
+            font-size: 24px;
+        }
+        
+        .step-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            line-height: 1.2;
+        }
+        
+        .step-desc {
+            font-size: 13px;
+            color: #666;
+            text-align: center;
+            line-height: 1.2;
+        }
+        
+        .section-header {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Data Preprocessing and Scaling</div>
+        
+        <div class="importance-box">
+            <div class="importance-text">⚠️ Feature scaling is critical: Distance-based algorithms are sensitive to scale</div>
+        </div>
+        
+        <div class="section-header">Scaling Methods</div>
+        
+        <div class="scalers-section">
+            <div class="scaler-card standard">
+                <div class="scaler-icon">📊</div>
+                <div class="scaler-name">StandardScaler</div>
+                <div class="scaler-formula">z = (x - μ) / σ</div>
+                <ul class="scaler-features">
+                    <li>Zero mean</li>
+                    <li>Unit variance</li>
+                    <li>Assumes Gaussian</li>
+                </ul>
+            </div>
+            
+            <div class="scaler-card minmax">
+                <div class="scaler-icon">📏</div>
+                <div class="scaler-name">MinMaxScaler</div>
+                <div class="scaler-formula">x' = (x - min) / (max - min)</div>
+                <ul class="scaler-features">
+                    <li>Scale to [0, 1]</li>
+                    <li>Preserves zero</li>
+                    <li>Bounded range</li>
+                </ul>
+            </div>
+            
+            <div class="scaler-card robust">
+                <div class="scaler-icon">🛡️</div>
+                <div class="scaler-name">RobustScaler</div>
+                <div class="scaler-formula">x' = (x - median) / IQR</div>
+                <ul class="scaler-features">
+                    <li>Uses median</li>
+                    <li>Uses IQR</li>
+                    <li>Robust to outliers</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="section-header">Preprocessing Pipeline</div>
+        
+        <div class="preprocessing-steps">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <div class="step-icon">🔍</div>
+                <div class="step-title">Missing Values</div>
+                <div class="step-desc">Imputation before clustering</div>
+            </div>
+            
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <div class="step-icon">⚠️</div>
+                <div class="step-title">Outlier Treatment</div>
+                <div class="step-desc">Remove or cap extremes</div>
+            </div>
+            
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <div class="step-icon">✂️</div>
+                <div class="step-title">Feature Selection</div>
+                <div class="step-desc">Remove irrelevant features</div>
+            </div>
+            
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <div class="step-icon">📉</div>
+                <div class="step-title">Dimensionality</div>
+                <div class="step-desc">Handle curse of dimensions</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

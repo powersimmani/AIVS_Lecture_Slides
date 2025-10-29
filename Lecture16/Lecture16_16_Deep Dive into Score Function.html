@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deep Dive into Score Function</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .core-definition {
+            background: linear-gradient(135deg, #1E64C8 0%, #4A90E2 100%);
+            color: white;
+            padding: 18px 25px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(30, 100, 200, 0.25);
+        }
+        
+        .def-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .def-formula {
+            font-size: 19px;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .def-desc {
+            font-size: 16px;
+            opacity: 0.95;
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            flex-grow: 1;
+        }
+        
+        .left-column {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .concept-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border-left: 5px solid #1E64C8;
+            border-radius: 8px;
+            padding: 15px 18px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(30, 100, 200, 0.08);
+        }
+        
+        .concept-card:hover {
+            transform: translateX(8px);
+            box-shadow: 0 4px 15px rgba(30, 100, 200, 0.2);
+            border-left-width: 8px;
+        }
+        
+        .concept-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        
+        .concept-icon {
+            font-size: 20px;
+        }
+        
+        .concept-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+        }
+        
+        .concept-desc {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.4;
+        }
+        
+        .concept-formula {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 8px 12px;
+            margin-top: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 15px;
+            color: #333;
+        }
+        
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .highlight-card {
+            border-left-color: #27AE60;
+        }
+        
+        .highlight-card .concept-title {
+            color: #27AE60;
+        }
+        
+        .unified-view {
+            background: linear-gradient(135deg, #27AE60 0%, #2ECC71 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(39, 174, 96, 0.25);
+            margin-top: auto;
+        }
+        
+        .unified-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        
+        .unified-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .unified-text {
+            font-size: 16px;
+            opacity: 0.95;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">Deep Dive into Score Function</div>
+            <div class="subtitle">Part 3/7: Reverse Process</div>
+        </div>
+        
+        <div class="core-definition">
+            <div class="def-title">📊 Score Definition</div>
+            <div class="def-formula">∇_x log p(x)</div>
+            <div class="def-desc">Indicates direction of density increase</div>
+        </div>
+        
+        <div class="content-grid">
+            <div class="left-column">
+                <div class="concept-card highlight-card">
+                    <div class="concept-header">
+                        <div class="concept-icon">🔗</div>
+                        <div class="concept-title">Connection</div>
+                    </div>
+                    <div class="concept-desc">Denoising ≈ Score matching</div>
+                </div>
+                
+                <div class="concept-card">
+                    <div class="concept-header">
+                        <div class="concept-icon">📐</div>
+                        <div class="concept-title">Tweedie's Formula</div>
+                    </div>
+                    <div class="concept-desc">Score relates to optimal denoising estimation</div>
+                </div>
+                
+                <div class="concept-card highlight-card">
+                    <div class="concept-header">
+                        <div class="concept-icon">🎯</div>
+                        <div class="concept-title">Score Estimation</div>
+                    </div>
+                    <div class="concept-formula">ε_θ(x_t,t) ≈ -√(1-ᾱ_t) · ∇_{x_t} log p(x_t)</div>
+                </div>
+            </div>
+            
+            <div class="right-column">
+                <div class="concept-card">
+                    <div class="concept-header">
+                        <div class="concept-icon">🌊</div>
+                        <div class="concept-title">Langevin Dynamics</div>
+                    </div>
+                    <div class="concept-desc">Reverse process as Langevin sampling from the score function</div>
+                </div>
+                
+                <div class="concept-card">
+                    <div class="concept-header">
+                        <div class="concept-icon">♾️</div>
+                        <div class="concept-title">Continuous Limit</div>
+                    </div>
+                    <div class="concept-desc">Score-based SDEs when T → ∞</div>
+                </div>
+                
+                <div class="unified-view">
+                    <div class="unified-icon">🔄</div>
+                    <div class="unified-title">Unified View</div>
+                    <div class="unified-text">Diffusion and score-based models are equivalent</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

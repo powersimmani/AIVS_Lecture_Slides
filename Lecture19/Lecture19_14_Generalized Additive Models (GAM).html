@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generalized Additive Models (GAM)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+            padding: 25px 35px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        /* Header */
+        .header {
+            text-align: center;
+        }
+        
+        .title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 15px;
+        }
+        
+        /* Equation section */
+        .equation-container {
+            background: linear-gradient(135deg, #F0F7FF 0%, #E5F1FF 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .equation {
+            font-size: 22px;
+            font-weight: 600;
+            color: #1E64C8;
+            letter-spacing: 0.5px;
+        }
+        
+        .subscript {
+            font-size: 16px;
+            vertical-align: sub;
+        }
+        
+        .equation-note {
+            font-size: 14px;
+            color: #666;
+            margin-top: 8px;
+            font-style: italic;
+        }
+        
+        /* Main content area */
+        .content {
+            display: flex;
+            gap: 25px;
+            flex: 1;
+        }
+        
+        /* Shape functions grid */
+        .functions-grid {
+            flex: 1.3;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        
+        .function-plot {
+            background: white;
+            border: 2px solid #E5E7EB;
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.2s;
+        }
+        
+        .function-plot:hover {
+            border-color: #1E64C8;
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.15);
+        }
+        
+        .plot-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .plot-canvas {
+            flex: 1;
+            position: relative;
+            background: #FAFAFA;
+            border-radius: 4px;
+        }
+        
+        svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .curve-path {
+            fill: none;
+            stroke: #1E64C8;
+            stroke-width: 2.5;
+        }
+        
+        .axis {
+            stroke: #999;
+            stroke-width: 1;
+        }
+        
+        .axis-label {
+            font-size: 10px;
+            fill: #666;
+        }
+        
+        .grid-line {
+            stroke: #E5E7EB;
+            stroke-width: 0.5;
+        }
+        
+        /* Key points section */
+        .key-points {
+            flex: 0.7;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .subtitle {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+        
+        .point-card {
+            background: #F8FAFC;
+            border-left: 4px solid #1E64C8;
+            border-radius: 6px;
+            padding: 12px 14px;
+            transition: all 0.2s;
+        }
+        
+        .point-card:hover {
+            background: #F0F7FF;
+            transform: translateX(4px);
+        }
+        
+        .point-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .point-desc {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="title">Generalized Additive Models (GAM)</div>
+        </div>
+        
+        <!-- Equation -->
+        <div class="equation-container">
+            <div class="equation">
+                y = β<span class="subscript">0</span> + f<span class="subscript">1</span>(x<span class="subscript">1</span>) + f<span class="subscript">2</span>(x<span class="subscript">2</span>) + f<span class="subscript">3</span>(x<span class="subscript">3</span>) + ...
+            </div>
+            <div class="equation-note">where f<span class="subscript">i</span> are smooth shape functions</div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="content">
+            <!-- Shape Functions Grid -->
+            <div class="functions-grid">
+                <!-- Function 1 - Linear increasing -->
+                <div class="function-plot">
+                    <div class="plot-title">f₁(Age)</div>
+                    <div class="plot-canvas">
+                        <svg viewBox="0 0 100 80">
+                            <!-- Grid -->
+                            <line x1="10" y1="70" x2="90" y2="70" class="axis"/>
+                            <line x1="10" y1="10" x2="10" y2="70" class="axis"/>
+                            <line x1="10" y1="40" x2="90" y2="40" class="grid-line"/>
+                            <!-- Curve - Linear increase -->
+                            <path d="M 10 70 L 30 55 L 50 40 L 70 25 L 90 10" class="curve-path"/>
+                            <!-- Labels -->
+                            <text x="50" y="78" class="axis-label" text-anchor="middle">Age</text>
+                            <text x="5" y="40" class="axis-label" text-anchor="end">Effect</text>
+                        </svg>
+                    </div>
+                </div>
+                
+                <!-- Function 2 - U-shaped -->
+                <div class="function-plot">
+                    <div class="plot-title">f₂(Income)</div>
+                    <div class="plot-canvas">
+                        <svg viewBox="0 0 100 80">
+                            <!-- Grid -->
+                            <line x1="10" y1="70" x2="90" y2="70" class="axis"/>
+                            <line x1="10" y1="10" x2="10" y2="70" class="axis"/>
+                            <line x1="10" y1="40" x2="90" y2="40" class="grid-line"/>
+                            <!-- Curve - U-shape -->
+                            <path d="M 10 20 Q 30 55 50 60 T 90 25" class="curve-path"/>
+                            <!-- Labels -->
+                            <text x="50" y="78" class="axis-label" text-anchor="middle">Income</text>
+                            <text x="5" y="40" class="axis-label" text-anchor="end">Effect</text>
+                        </svg>
+                    </div>
+                </div>
+                
+                <!-- Function 3 - S-curve -->
+                <div class="function-plot">
+                    <div class="plot-title">f₃(Credit)</div>
+                    <div class="plot-canvas">
+                        <svg viewBox="0 0 100 80">
+                            <!-- Grid -->
+                            <line x1="10" y1="70" x2="90" y2="70" class="axis"/>
+                            <line x1="10" y1="10" x2="10" y2="70" class="axis"/>
+                            <line x1="10" y1="40" x2="90" y2="40" class="grid-line"/>
+                            <!-- Curve - S-shape -->
+                            <path d="M 10 65 Q 30 60 40 45 T 70 20 Q 80 15 90 15" class="curve-path"/>
+                            <!-- Labels -->
+                            <text x="50" y="78" class="axis-label" text-anchor="middle">Credit</text>
+                            <text x="5" y="40" class="axis-label" text-anchor="end">Effect</text>
+                        </svg>
+                    </div>
+                </div>
+                
+                <!-- Function 4 - Bell curve -->
+                <div class="function-plot">
+                    <div class="plot-title">f₄(Experience)</div>
+                    <div class="plot-canvas">
+                        <svg viewBox="0 0 100 80">
+                            <!-- Grid -->
+                            <line x1="10" y1="70" x2="90" y2="70" class="axis"/>
+                            <line x1="10" y1="10" x2="10" y2="70" class="axis"/>
+                            <line x1="10" y1="40" x2="90" y2="40" class="grid-line"/>
+                            <!-- Curve - Bell shape -->
+                            <path d="M 10 60 Q 25 30 50 15 T 90 60" class="curve-path"/>
+                            <!-- Labels -->
+                            <text x="50" y="78" class="axis-label" text-anchor="middle">Experience</text>
+                            <text x="5" y="40" class="axis-label" text-anchor="end">Effect</text>
+                        </svg>
+                    </div>
+                </div>
+                
+                <!-- Function 5 - Step-like -->
+                <div class="function-plot">
+                    <div class="plot-title">f₅(Education)</div>
+                    <div class="plot-canvas">
+                        <svg viewBox="0 0 100 80">
+                            <!-- Grid -->
+                            <line x1="10" y1="70" x2="90" y2="70" class="axis"/>
+                            <line x1="10" y1="10" x2="10" y2="70" class="axis"/>
+                            <line x1="10" y1="40" x2="90" y2="40" class="grid-line"/>
+                            <!-- Curve - Step-like -->
+                            <path d="M 10 60 L 35 60 Q 40 50 45 35 L 70 35 Q 75 25 80 15 L 90 15" class="curve-path"/>
+                            <!-- Labels -->
+                            <text x="50" y="78" class="axis-label" text-anchor="middle">Education</text>
+                            <text x="5" y="40" class="axis-label" text-anchor="end">Effect</text>
+                        </svg>
+                    </div>
+                </div>
+                
+                <!-- Function 6 - Decay -->
+                <div class="function-plot">
+                    <div class="plot-title">f₆(Debt Ratio)</div>
+                    <div class="plot-canvas">
+                        <svg viewBox="0 0 100 80">
+                            <!-- Grid -->
+                            <line x1="10" y1="70" x2="90" y2="70" class="axis"/>
+                            <line x1="10" y1="10" x2="10" y2="70" class="axis"/>
+                            <line x1="10" y1="40" x2="90" y2="40" class="grid-line"/>
+                            <!-- Curve - Decay -->
+                            <path d="M 10 15 Q 30 25 50 45 T 90 65" class="curve-path"/>
+                            <!-- Labels -->
+                            <text x="50" y="78" class="axis-label" text-anchor="middle">Debt Ratio</text>
+                            <text x="5" y="40" class="axis-label" text-anchor="end">Effect</text>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Key Points -->
+            <div class="key-points">
+                <div class="subtitle">Key Features</div>
+                
+                <div class="point-card">
+                    <div class="point-title">Independent</div>
+                    <div class="point-desc">Each feature contributes separately</div>
+                </div>
+                
+                <div class="point-card">
+                    <div class="point-title">Non-linear</div>
+                    <div class="point-desc">Capture complex patterns via smooth functions</div>
+                </div>
+                
+                <div class="point-card">
+                    <div class="point-title">Interpretable</div>
+                    <div class="point-desc">Visualize individual feature effects</div>
+                </div>
+                
+                <div class="point-card">
+                    <div class="point-title">Separable</div>
+                    <div class="point-desc">Effects remain isolated and analyzable</div>
+                </div>
+                
+                <div class="point-card">
+                    <div class="point-title">Balanced</div>
+                    <div class="point-desc">Between linear and black-box models</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

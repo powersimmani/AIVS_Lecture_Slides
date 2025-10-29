@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expectation, Variance, and Covariance</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: #ffffff;
+            position: relative;
+            padding: 25px 35px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 18px;
+        }
+        
+        .header-title {
+            font-size: 20px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            flex: 1;
+        }
+        
+        .left-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 11px;
+        }
+        
+        .concept-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 15px;
+        }
+        
+        .concept-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .concept-desc {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 6px;
+        }
+        
+        .formula {
+            background: #f8fafb;
+            padding: 7px 10px;
+            border-radius: 4px;
+            font-size: 16px;
+            color: #333;
+            font-family: 'Courier New', monospace;
+            margin-top: 4px;
+        }
+        
+        .properties-box {
+            background: #f8fafb;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 15px;
+        }
+        
+        .prop-item {
+            font-size: 16px;
+            color: #333;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 6px;
+            padding: 5px 8px;
+            background: white;
+            border-radius: 3px;
+        }
+        
+        .right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 11px;
+        }
+        
+        .visual-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        
+        .visual-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .distribution-visual {
+            position: relative;
+            height: 100px;
+            background: #f8fafb;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+        }
+        
+        .bell-curve-small {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .curve-svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .mean-line {
+            position: absolute;
+            left: 50%;
+            top: 10%;
+            bottom: 10%;
+            width: 2px;
+            background: #1E64C8;
+            transform: translateX(-50%);
+        }
+        
+        .mean-label {
+            position: absolute;
+            left: 50%;
+            bottom: 5px;
+            transform: translateX(-50%);
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .spread-indicator {
+            position: absolute;
+            top: 50%;
+            left: 30%;
+            right: 30%;
+            height: 2px;
+            background: rgba(30, 100, 200, 0.4);
+            border-left: 2px solid #1E64C8;
+            border-right: 2px solid #1E64C8;
+        }
+        
+        .spread-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -120%);
+            font-size: 14px;
+            color: #1E64C8;
+            background: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        
+        .covariance-visual {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+        }
+        
+        .cov-example {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .cov-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .scatter-plot {
+            width: 100%;
+            height: 80px;
+            background: #f8fafb;
+            border-radius: 6px;
+            position: relative;
+            border: 1px solid #1E64C8;
+        }
+        
+        .dot {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #1E64C8;
+            border-radius: 50%;
+        }
+        
+        .positive-dots .dot:nth-child(1) { left: 20%; bottom: 20%; }
+        .positive-dots .dot:nth-child(2) { left: 35%; bottom: 35%; }
+        .positive-dots .dot:nth-child(3) { left: 50%; bottom: 50%; }
+        .positive-dots .dot:nth-child(4) { left: 65%; bottom: 65%; }
+        .positive-dots .dot:nth-child(5) { left: 80%; bottom: 80%; }
+        
+        .negative-dots .dot:nth-child(1) { left: 20%; bottom: 80%; }
+        .negative-dots .dot:nth-child(2) { left: 35%; bottom: 65%; }
+        .negative-dots .dot:nth-child(3) { left: 50%; bottom: 50%; }
+        .negative-dots .dot:nth-child(4) { left: 65%; bottom: 35%; }
+        .negative-dots .dot:nth-child(5) { left: 80%; bottom: 20%; }
+        
+        .trend-line {
+            position: absolute;
+            width: 70%;
+            height: 2px;
+            background: rgba(30, 100, 200, 0.5);
+            left: 15%;
+        }
+        
+        .positive-trend { 
+            bottom: 20%;
+            transform: rotate(30deg);
+            transform-origin: left center;
+        }
+        
+        .negative-trend { 
+            top: 20%;
+            transform: rotate(-30deg);
+            transform-origin: left center;
+        }
+        
+        .matrix-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 15px;
+        }
+        
+        .matrix-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .matrix-formula {
+            background: #f8fafb;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 16px;
+            color: #333;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+        }
+        
+        .ml-application {
+            background: #1E64C8;
+            color: white;
+            border-radius: 8px;
+            padding: 12px 15px;
+            text-align: center;
+        }
+        
+        .ml-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        
+        .ml-content {
+            font-size: 16px;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-title">Expectation, Variance, and Covariance</div>
+        </div>
+        
+        <div class="main-grid">
+            <div class="left-panel">
+                <div class="concept-box">
+                    <div class="concept-title">Expectation E[X]</div>
+                    <div class="concept-desc">Average value</div>
+                    <div class="formula">E[X] = Σ xP(X=x) or ∫ xf(x)dx</div>
+                </div>
+                
+                <div class="properties-box">
+                    <div class="concept-title">Properties</div>
+                    <div class="prop-item">E[aX + b] = aE[X] + b</div>
+                    <div class="prop-item">E[X + Y] = E[X] + E[Y]</div>
+                </div>
+                
+                <div class="concept-box">
+                    <div class="concept-title">Variance Var(X)</div>
+                    <div class="concept-desc">Spread around mean</div>
+                    <div class="formula">Var(X) = E[(X - μ)²]</div>
+                </div>
+                
+                <div class="concept-box">
+                    <div class="concept-title">Standard Deviation σ</div>
+                    <div class="formula">σ = √Var(X)</div>
+                </div>
+                
+                <div class="concept-box">
+                    <div class="concept-title">Covariance</div>
+                    <div class="formula">Cov(X,Y) = E[(X - μₓ)(Y - μᵧ)]</div>
+                    <div class="concept-desc" style="margin-top: 6px;">
+                        Positive: X and Y increase together
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <div class="visual-box">
+                    <div class="visual-title">Variance: Spread Around Mean</div>
+                    <div class="distribution-visual">
+                        <svg class="curve-svg" viewBox="0 0 200 80" preserveAspectRatio="none">
+                            <path d="M 0,80 Q 50,80 70,60 T 100,10 T 130,60 T 150,80 L 200,80" 
+                                  fill="rgba(30, 100, 200, 0.15)" 
+                                  stroke="#1E64C8" 
+                                  stroke-width="2"/>
+                        </svg>
+                        <div class="mean-line"></div>
+                        <div class="mean-label">μ (mean)</div>
+                        <div class="spread-indicator">
+                            <div class="spread-label">σ</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="visual-box">
+                    <div class="visual-title">Covariance Sign Interpretation</div>
+                    <div class="covariance-visual">
+                        <div class="cov-example">
+                            <div class="cov-label">Positive Cov</div>
+                            <div class="scatter-plot positive-dots">
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                                <div class="trend-line positive-trend"></div>
+                            </div>
+                        </div>
+                        <div class="cov-example">
+                            <div class="cov-label">Negative Cov</div>
+                            <div class="scatter-plot negative-dots">
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                                <div class="trend-line negative-trend"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="matrix-box">
+                    <div class="matrix-title">Covariance Matrix</div>
+                    <div class="matrix-formula">Σ = [Cov(Xᵢ, Xⱼ)]</div>
+                    <div style="font-size: 16px; color: #555; text-align: center; margin-top: 6px;">
+                        For multiple variables
+                    </div>
+                </div>
+                
+                <div class="ml-application">
+                    <div class="ml-title">Regression Application</div>
+                    <div class="ml-content">
+                        Understanding variable relationships
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Single-layer Perceptron Review</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Aptos', 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            padding: 40px;
+        }
+        
+        .main-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 25px;
+            flex: 1;
+        }
+        
+        .architecture-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .perceptron-diagram {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 25px;
+            border: 2px solid #1E64C8;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .perceptron-structure {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+        
+        .inputs-section {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        
+        .input-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .input-node {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: #e3f2fd;
+            border: 3px solid #1E64C8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .weight-line {
+            width: 70px;
+            height: 2px;
+            background: #1E64C8;
+            position: relative;
+        }
+        
+        .weight-label {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 14px;
+            font-weight: 600;
+            color: #1E64C8;
+            white-space: nowrap;
+        }
+        
+        .neuron-core {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .summation-node {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            border: 4px solid #1557b0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.3);
+        }
+        
+        .sum-symbol {
+            font-size: 32px;
+            font-weight: bold;
+        }
+        
+        .bias-label {
+            font-size: 13px;
+            margin-top: 2px;
+        }
+        
+        .activation-box {
+            background: #9c27b0;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .output-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .arrow-right {
+            font-size: 32px;
+            color: #1E64C8;
+            font-weight: bold;
+        }
+        
+        .output-node {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background: #4caf50;
+            border: 3px solid #388e3c;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 3px 10px rgba(76, 175, 80, 0.3);
+        }
+        
+        .formula-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .formula-box {
+            background: #f8f9fa;
+            border-left: 4px solid #1E64C8;
+            padding: 15px;
+            border-radius: 4px;
+        }
+        
+        .formula-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .formula-content {
+            font-size: 18px;
+            color: #333;
+            font-weight: 500;
+            text-align: center;
+            padding: 10px;
+            background: white;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .key-points {
+            background: #fff3cd;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            border-radius: 4px;
+        }
+        
+        .key-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #e65100;
+            margin-bottom: 8px;
+        }
+        
+        .key-list {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.8;
+        }
+        
+        .key-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin: 5px 0;
+        }
+        
+        .bullet {
+            color: #ff9800;
+            font-weight: bold;
+            margin-top: 2px;
+        }
+        
+        .limitation-box {
+            background: #ffebee;
+            border-left: 4px solid #d32f2f;
+            padding: 12px;
+            border-radius: 4px;
+        }
+        
+        .limitation-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #c62828;
+            margin-bottom: 5px;
+        }
+        
+        .limitation-text {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-title">Single-layer Perceptron Review</div>
+        
+        <div class="content-grid">
+            <!-- Architecture Diagram -->
+            <div class="architecture-section">
+                <div class="section-title">Architecture</div>
+                <div class="perceptron-diagram">
+                    <div class="perceptron-structure">
+                        <!-- Inputs -->
+                        <div class="inputs-section">
+                            <div class="input-row">
+                                <div class="input-node">x₁</div>
+                                <div class="weight-line">
+                                    <div class="weight-label">w₁</div>
+                                </div>
+                            </div>
+                            <div class="input-row">
+                                <div class="input-node">x₂</div>
+                                <div class="weight-line">
+                                    <div class="weight-label">w₂</div>
+                                </div>
+                            </div>
+                            <div class="input-row">
+                                <div class="input-node">x₃</div>
+                                <div class="weight-line">
+                                    <div class="weight-label">w₃</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Neuron Core -->
+                        <div class="neuron-core">
+                            <div class="summation-node">
+                                <div class="sum-symbol">Σ</div>
+                                <div class="bias-label">+ b</div>
+                            </div>
+                            <div class="activation-box">σ(z)</div>
+                        </div>
+                        
+                        <!-- Output -->
+                        <div class="output-section">
+                            <div class="arrow-right">→</div>
+                            <div class="output-node">ŷ</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Formulas and Key Points -->
+            <div class="formula-section">
+                <div class="section-title">Mathematical Form</div>
+                
+                <div class="formula-box">
+                    <div class="formula-title">Linear Combination</div>
+                    <div class="formula-content">z = Σ wᵢxᵢ + b</div>
+                </div>
+                
+                <div class="formula-box">
+                    <div class="formula-title">Activation</div>
+                    <div class="formula-content">ŷ = σ(z)</div>
+                </div>
+                
+                <div class="key-points">
+                    <div class="key-title">Key Components</div>
+                    <div class="key-list">
+                        <div class="key-item">
+                            <span class="bullet">•</span>
+                            <span><strong>Weights (w):</strong> Feature importance</span>
+                        </div>
+                        <div class="key-item">
+                            <span class="bullet">•</span>
+                            <span><strong>Bias (b):</strong> Decision threshold</span>
+                        </div>
+                        <div class="key-item">
+                            <span class="bullet">•</span>
+                            <span><strong>Activation (σ):</strong> Non-linearity</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="limitation-box">
+                    <div class="limitation-title">⚠️ Limitation</div>
+                    <div class="limitation-text">
+                        Only learns linear decision boundaries - cannot solve XOR problem
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

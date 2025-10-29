@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAPE, SMAPE</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: white;
+            font-family: Aptos, 'Segoe UI', sans-serif;
+        }
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+            padding: 30px;
+            box-sizing: border-box;
+        }
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 20px;
+        }
+        .metrics-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .metric-card {
+            background: #f8f9fb;
+            border-radius: 10px;
+            padding: 22px;
+            border-top: 5px solid #1E64C8;
+        }
+        .metric-card.smape {
+            border-top-color: #4A90E2;
+        }
+        .metric-header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .metric-name {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+        .smape .metric-name {
+            color: #4A90E2;
+        }
+        .metric-full-name {
+            font-size: 15px;
+            color: #666;
+            font-style: italic;
+        }
+        .formula-section {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+        .formula {
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            color: #2c3e50;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+        .formula-note {
+            font-size: 13px;
+            color: #888;
+            text-align: center;
+        }
+        .properties {
+            margin-top: 15px;
+        }
+        .property-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 10px;
+            font-size: 15px;
+            color: #555;
+            line-height: 1.5;
+        }
+        .icon {
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        
+        .comparison-table {
+            background: #f8f9fb;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        .table-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 1px;
+            background: #ddd;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .cell {
+            background: white;
+            padding: 12px;
+            font-size: 15px;
+        }
+        .header-cell {
+            background: #1E64C8;
+            color: white;
+            font-weight: 600;
+            text-align: center;
+        }
+        .row-header {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        .cell-center {
+            text-align: center;
+        }
+        .check {
+            color: #27ae60;
+            font-size: 18px;
+        }
+        .cross {
+            color: #e74c3c;
+            font-size: 18px;
+        }
+        
+        .use-case-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            color: white;
+            padding: 18px 25px;
+            border-radius: 10px;
+        }
+        .use-case-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        .use-case-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        .use-case-item {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 15px;
+        }
+        .use-case-icon {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">MAPE, SMAPE</div>
+        
+        <div class="metrics-comparison">
+            <!-- MAPE -->
+            <div class="metric-card">
+                <div class="metric-header">
+                    <div class="metric-name">MAPE</div>
+                    <div class="metric-full-name">Mean Absolute Percentage Error</div>
+                </div>
+                
+                <div class="formula-section">
+                    <div class="formula">
+                        (100/n) × Σ|yᵢ - ŷᵢ| / |yᵢ|
+                    </div>
+                    <div class="formula-note">Expressed as percentage (%)</div>
+                </div>
+                
+                <div class="properties">
+                    <div class="property-item">
+                        <span class="icon">📊</span>
+                        <span>Scale-independent metric</span>
+                    </div>
+                    <div class="property-item">
+                        <span class="icon">💬</span>
+                        <span>Easy to interpret & communicate</span>
+                    </div>
+                    <div class="property-item">
+                        <span class="icon">⚠️</span>
+                        <span>Undefined when actual = 0</span>
+                    </div>
+                    <div class="property-item">
+                        <span class="icon">⚖️</span>
+                        <span>Asymmetric (penalizes over-prediction more)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SMAPE -->
+            <div class="metric-card smape">
+                <div class="metric-header">
+                    <div class="metric-name">SMAPE</div>
+                    <div class="metric-full-name">Symmetric Mean Absolute Percentage Error</div>
+                </div>
+                
+                <div class="formula-section">
+                    <div class="formula">
+                        (100/n) × Σ|yᵢ - ŷᵢ| / [(|yᵢ| + |ŷᵢ|)/2]
+                    </div>
+                    <div class="formula-note">Bounded: 0% to 200%</div>
+                </div>
+                
+                <div class="properties">
+                    <div class="property-item">
+                        <span class="icon">📊</span>
+                        <span>Scale-independent metric</span>
+                    </div>
+                    <div class="property-item">
+                        <span class="icon">💬</span>
+                        <span>Easy to interpret & communicate</span>
+                    </div>
+                    <div class="property-item">
+                        <span class="icon">✓</span>
+                        <span>More stable than MAPE</span>
+                    </div>
+                    <div class="property-item">
+                        <span class="icon">⚖️</span>
+                        <span>Symmetric (treats over/under equally)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="comparison-table">
+            <div class="table-title">Key Differences</div>
+            <div class="comparison-grid">
+                <div class="cell header-cell">Feature</div>
+                <div class="cell header-cell">MAPE</div>
+                <div class="cell header-cell">SMAPE</div>
+                
+                <div class="cell row-header">Handles Zero Values</div>
+                <div class="cell cell-center"><span class="cross">✗</span></div>
+                <div class="cell cell-center"><span class="check">✓</span></div>
+                
+                <div class="cell row-header">Symmetric Treatment</div>
+                <div class="cell cell-center"><span class="cross">✗</span></div>
+                <div class="cell cell-center"><span class="check">✓</span></div>
+                
+                <div class="cell row-header">Bounded Range</div>
+                <div class="cell cell-center">0% - ∞</div>
+                <div class="cell cell-center">0% - 200%</div>
+                
+                <div class="cell row-header">Stability</div>
+                <div class="cell cell-center">Lower</div>
+                <div class="cell cell-center">Higher</div>
+            </div>
+        </div>
+
+        <div class="use-case-box">
+            <div class="use-case-title">💼 Why Use Percentage Metrics?</div>
+            <div class="use-case-grid">
+                <div class="use-case-item">
+                    <div class="use-case-icon">📈</div>
+                    <div>Compare across different scales</div>
+                </div>
+                <div class="use-case-item">
+                    <div class="use-case-icon">💬</div>
+                    <div>Easy business communication</div>
+                </div>
+                <div class="use-case-item">
+                    <div class="use-case-icon">🎯</div>
+                    <div>Intuitive interpretation</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

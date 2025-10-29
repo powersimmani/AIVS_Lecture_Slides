@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introduction to Graph Data</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 20px;
+            padding: 25px;
+        }
+        
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        
+        .definition-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #3a7bd5 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 18px;
+            text-align: center;
+        }
+        
+        .def-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .def-text {
+            font-size: 17px;
+            line-height: 1.4;
+            opacity: 0.95;
+        }
+        
+        .types-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 16px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .types-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        .type-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 10px 12px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            transition: all 0.3s ease;
+        }
+        
+        .type-card:hover {
+            background: #f0f6ff;
+            transform: scale(1.05);
+        }
+        
+        .properties-section {
+            background: #fff8f0;
+            border: 2px solid #ff9800;
+            border-radius: 12px;
+            padding: 16px;
+            flex: 1;
+        }
+        
+        .prop-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .prop-item {
+            background: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 16px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .prop-icon {
+            font-size: 20px;
+        }
+        
+        .prop-name {
+            font-weight: 600;
+            color: #ff9800;
+        }
+        
+        .challenge-box {
+            background: #ffebee;
+            border: 2px solid #f44336;
+            border-radius: 10px;
+            padding: 14px 16px;
+        }
+        
+        .challenge-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #f44336;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .challenge-text {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.4;
+        }
+        
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        
+        .examples-container {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 18px;
+            flex: 1;
+        }
+        
+        .examples-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 14px;
+            text-align: center;
+        }
+        
+        .graph-examples {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        
+        .graph-example {
+            background: white;
+            border-radius: 10px;
+            padding: 14px;
+            border: 2px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .graph-example:hover {
+            border-color: #1E64C8;
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.15);
+        }
+        
+        .graph-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+        }
+        
+        .graph-visual {
+            width: 100%;
+            height: 100px;
+            position: relative;
+        }
+        
+        .node {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background: #1E64C8;
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .edge {
+            position: absolute;
+            height: 2px;
+            background: #1E64C8;
+            transform-origin: left center;
+        }
+        
+        .directed-arrow {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 6px solid #1E64C8;
+            border-top: 4px solid transparent;
+            border-bottom: 4px solid transparent;
+        }
+        
+        .weighted-edge {
+            background: #ff9800;
+        }
+        
+        .weighted-label {
+            position: absolute;
+            font-size: 12px;
+            font-weight: 600;
+            color: #ff9800;
+            background: white;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+        
+        .representations-section {
+            background: #e8f5e9;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            padding: 14px 16px;
+        }
+        
+        .rep-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #4CAF50;
+            margin-bottom: 10px;
+        }
+        
+        .rep-types {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .rep-tag {
+            background: white;
+            color: #4CAF50;
+            padding: 8px 14px;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            border: 2px solid #4CAF50;
+            flex: 1;
+            text-align: center;
+        }
+        
+        .applications-section {
+            background: #f3e5f5;
+            border: 2px solid #9C27B0;
+            border-radius: 10px;
+            padding: 14px 16px;
+        }
+        
+        .app-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #9C27B0;
+            margin-bottom: 10px;
+        }
+        
+        .app-tags {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .app-tag {
+            background: white;
+            color: #9C27B0;
+            padding: 6px 14px;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 500;
+            border: 1px solid #9C27B0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left-section">
+            <div class="definition-box">
+                <div class="def-title">🕸️ Graph</div>
+                <div class="def-text">Nodes (vertices) connected by Edges</div>
+            </div>
+            
+            <div class="types-section">
+                <div class="section-title">Graph Types</div>
+                <div class="types-grid">
+                    <div class="type-card">Directed</div>
+                    <div class="type-card">Undirected</div>
+                    <div class="type-card">Weighted</div>
+                    <div class="type-card">Attributed</div>
+                </div>
+            </div>
+            
+            <div class="properties-section">
+                <div class="section-title" style="color: #ff9800; border-color: #ff9800;">Graph Properties</div>
+                <div class="prop-list">
+                    <div class="prop-item">
+                        <div class="prop-icon">🔢</div>
+                        <div><span class="prop-name">Degree:</span> # of connections</div>
+                    </div>
+                    <div class="prop-item">
+                        <div class="prop-icon">📊</div>
+                        <div><span class="prop-name">Density:</span> edge ratio</div>
+                    </div>
+                    <div class="prop-item">
+                        <div class="prop-icon">🔗</div>
+                        <div><span class="prop-name">Clustering coeff:</span> local structure</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="challenge-box">
+                <div class="challenge-title">
+                    <span>⚠️</span>
+                    <span>Challenge</span>
+                </div>
+                <div class="challenge-text">
+                    Traditional ML assumes Euclidean space → Need graph-specific algorithms
+                </div>
+            </div>
+        </div>
+        
+        <div class="right-section">
+            <div class="examples-container">
+                <div class="examples-title">Graph Structure Examples</div>
+                
+                <div class="graph-examples">
+                    <!-- Undirected Graph -->
+                    <div class="graph-example">
+                        <div class="graph-label">Undirected</div>
+                        <div class="graph-visual">
+                            <div class="node" style="top: 20%; left: 20%;"></div>
+                            <div class="node" style="top: 20%; left: 70%;"></div>
+                            <div class="node" style="top: 70%; left: 45%;"></div>
+                            <div class="edge" style="top: 30%; left: 25%; width: 45%; transform: rotate(0deg);"></div>
+                            <div class="edge" style="top: 35%; left: 25%; width: 30%; transform: rotate(55deg);"></div>
+                            <div class="edge" style="top: 35%; left: 70%; width: 30%; transform: rotate(125deg);"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Directed Graph -->
+                    <div class="graph-example">
+                        <div class="graph-label">Directed</div>
+                        <div class="graph-visual">
+                            <div class="node" style="top: 30%; left: 25%;"></div>
+                            <div class="node" style="top: 30%; left: 65%;"></div>
+                            <div class="node" style="top: 65%; left: 45%;"></div>
+                            <div class="edge" style="top: 38%; left: 30%; width: 35%; transform: rotate(0deg);"></div>
+                            <div class="directed-arrow" style="top: 36%; left: 64%;"></div>
+                            <div class="edge" style="top: 43%; left: 30%; width: 22%; transform: rotate(50deg);"></div>
+                            <div class="directed-arrow" style="top: 56%; left: 45%; transform: rotate(50deg);"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Weighted Graph -->
+                    <div class="graph-example">
+                        <div class="graph-label">Weighted</div>
+                        <div class="graph-visual">
+                            <div class="node" style="top: 25%; left: 30%;"></div>
+                            <div class="node" style="top: 25%; left: 60%;"></div>
+                            <div class="node" style="top: 60%; left: 45%;"></div>
+                            <div class="edge weighted-edge" style="top: 33%; left: 35%; width: 25%;"></div>
+                            <div class="weighted-label" style="top: 26%; left: 45%;">2.5</div>
+                            <div class="edge weighted-edge" style="top: 40%; left: 35%; width: 18%; transform: rotate(55deg);"></div>
+                            <div class="weighted-label" style="top: 45%; left: 32%;">1.8</div>
+                            <div class="edge weighted-edge" style="top: 40%; left: 60%; width: 18%; transform: rotate(125deg);"></div>
+                            <div class="weighted-label" style="top: 45%; left: 58%;">3.2</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Complete Graph -->
+                    <div class="graph-example">
+                        <div class="graph-label">Complete</div>
+                        <div class="graph-visual">
+                            <div class="node" style="top: 15%; left: 45%;"></div>
+                            <div class="node" style="top: 45%; left: 20%;"></div>
+                            <div class="node" style="top: 45%; left: 70%;"></div>
+                            <div class="node" style="top: 75%; left: 45%;"></div>
+                            <div class="edge" style="top: 25%; left: 30%; width: 20%; transform: rotate(-55deg);"></div>
+                            <div class="edge" style="top: 23%; left: 48%; width: 30%; transform: rotate(40deg);"></div>
+                            <div class="edge" style="top: 48%; left: 25%; width: 45%;"></div>
+                            <div class="edge" style="top: 60%; left: 30%; width: 20%; transform: rotate(55deg);"></div>
+                            <div class="edge" style="top: 60%; left: 60%; width: 20%; transform: rotate(125deg);"></div>
+                            <div class="edge" style="top: 55%; left: 48%; width: 30%; transform: rotate(-90deg);"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="representations-section">
+                <div class="rep-title">📋 Representations</div>
+                <div class="rep-types">
+                    <div class="rep-tag">Adjacency Matrix</div>
+                    <div class="rep-tag">Edge List</div>
+                </div>
+            </div>
+            
+            <div class="applications-section">
+                <div class="app-title">🎯 Applications</div>
+                <div class="app-tags">
+                    <div class="app-tag">Social Networks</div>
+                    <div class="app-tag">Molecules</div>
+                    <div class="app-tag">Knowledge Graphs</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classification Model Evaluation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #FFFFFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            padding: 25px 35px;
+        }
+        
+        .title-section {
+            text-align: center;
+            margin-bottom: 14px;
+        }
+        
+        .main-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .subtitle {
+            font-size: 17px;
+            color: #666666;
+        }
+        
+        .content-wrapper {
+            display: flex;
+            gap: 18px;
+            flex: 1;
+        }
+        
+        .left-panel {
+            flex: 1.6;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            flex: 1;
+        }
+        
+        .metric-card {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 10px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+        
+        .metric-card:hover {
+            border-color: #1E64C8;
+            box-shadow: 0 4px 15px rgba(30, 100, 200, 0.15);
+            transform: translateY(-3px);
+        }
+        
+        .metric-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .metric-visual {
+            flex: 1;
+            background: #F8F8F8;
+            border-radius: 6px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Confusion Matrix */
+        .confusion-matrix {
+            display: grid;
+            grid-template-columns: 75px 75px;
+            grid-template-rows: 75px 75px;
+            gap: 6px;
+            padding: 10px;
+        }
+        
+        .cm-cell {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .cm-cell:hover {
+            transform: scale(1.05);
+        }
+        
+        .cm-value {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+        
+        .cm-label {
+            font-size: 11px;
+            opacity: 0.8;
+        }
+        
+        .cm-tp {
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+        
+        .cm-fp {
+            background: #FFEBEE;
+            color: #C62828;
+        }
+        
+        .cm-fn {
+            background: #FFF9E6;
+            color: #F57C00;
+        }
+        
+        .cm-tn {
+            background: #E3F2FD;
+            color: #1565C0;
+        }
+        
+        .cm-labels {
+            position: absolute;
+            font-size: 12px;
+            font-weight: 600;
+            color: #666;
+        }
+        
+        .cm-label-actual {
+            top: 50%;
+            left: 5px;
+            transform: translateY(-50%) rotate(-90deg);
+        }
+        
+        .cm-label-predicted {
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        /* ROC & PR Curves */
+        .roc-curve svg,
+        .pr-curve svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .metric-description {
+            text-align: center;
+            font-size: 15px;
+            color: #666;
+            margin-top: 8px;
+            line-height: 1.3;
+        }
+        
+        .metric-score {
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-top: 6px;
+            padding: 4px 8px;
+            background: #F8FBFF;
+            border-radius: 4px;
+        }
+        
+        .right-panel {
+            flex: 0.4;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .interpretation-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .interp-section {
+            margin-bottom: 10px;
+        }
+        
+        .section-header {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .interp-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 16px;
+            color: #333;
+            line-height: 1.3;
+            margin-bottom: 6px;
+            padding: 6px 8px;
+            background: #F8FBFF;
+            border-radius: 4px;
+        }
+        
+        .interp-icon {
+            color: #1E64C8;
+            flex-shrink: 0;
+        }
+        
+        .when-to-use-card {
+            background: #FFF9E6;
+            border: 2px solid #FFC107;
+            border-radius: 10px;
+            padding: 14px;
+        }
+        
+        .wtu-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .wtu-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 6px;
+            line-height: 1.3;
+        }
+        
+        .wtu-icon {
+            color: #F57C00;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        
+        .tips-card {
+            background: #E8F5E9;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            padding: 14px;
+        }
+        
+        .tips-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2E7D32;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .tip-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 6px;
+        }
+        
+        .check-icon {
+            color: #4CAF50;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .metric-card, .interpretation-card, .when-to-use-card, .tips-card {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        .metric-card:nth-child(1) { animation-delay: 0.1s; }
+        .metric-card:nth-child(2) { animation-delay: 0.2s; }
+        .metric-card:nth-child(3) { animation-delay: 0.3s; }
+        .interpretation-card { animation-delay: 0.4s; }
+        .when-to-use-card { animation-delay: 0.5s; }
+        .tips-card { animation-delay: 0.6s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Classification Model Evaluation</div>
+            <div class="subtitle">Confusion Matrix, ROC, and Precision-Recall Curves</div>
+        </div>
+        
+        <div class="content-wrapper">
+            <div class="left-panel">
+                <div class="metrics-grid">
+                    <!-- Confusion Matrix -->
+                    <div class="metric-card">
+                        <div class="metric-title">Confusion Matrix</div>
+                        <div class="metric-visual">
+                            <div class="confusion-matrix">
+                                <div class="cm-cell cm-tp">
+                                    <div class="cm-value">85</div>
+                                    <div class="cm-label">TP</div>
+                                </div>
+                                <div class="cm-cell cm-fp">
+                                    <div class="cm-value">10</div>
+                                    <div class="cm-label">FP</div>
+                                </div>
+                                <div class="cm-cell cm-fn">
+                                    <div class="cm-value">15</div>
+                                    <div class="cm-label">FN</div>
+                                </div>
+                                <div class="cm-cell cm-tn">
+                                    <div class="cm-value">90</div>
+                                    <div class="cm-label">TN</div>
+                                </div>
+                            </div>
+                            <div class="cm-labels cm-label-actual">Actual</div>
+                            <div class="cm-labels cm-label-predicted">Predicted</div>
+                        </div>
+                        <div class="metric-description">Prediction outcomes grid</div>
+                        <div class="metric-score">Accuracy: 87.5%</div>
+                    </div>
+                    
+                    <!-- ROC Curve -->
+                    <div class="metric-card">
+                        <div class="metric-title">ROC Curve</div>
+                        <div class="metric-visual">
+                            <div class="roc-curve">
+                                <svg viewBox="0 0 100 100">
+                                    <line x1="10" y1="90" x2="90" y2="10" stroke="#999" stroke-width="1" stroke-dasharray="2,2"/>
+                                    <path d="M 10,90 L 15,70 L 20,50 L 30,30 L 45,18 L 60,12 L 75,8 L 90,5" fill="none" stroke="#1E64C8" stroke-width="3"/>
+                                    <path d="M 10,90 L 15,70 L 20,50 L 30,30 L 45,18 L 60,12 L 75,8 L 90,5 L 90,90 Z" fill="rgba(30, 100, 200, 0.2)"/>
+                                    <line x1="10" y1="90" x2="90" y2="90" stroke="#666" stroke-width="1"/>
+                                    <line x1="10" y1="90" x2="10" y2="10" stroke="#666" stroke-width="1"/>
+                                    <text x="50" y="98" text-anchor="middle" font-size="7" fill="#666">FPR</text>
+                                    <text x="5" y="50" text-anchor="middle" font-size="7" fill="#666" transform="rotate(-90 5 50)">TPR</text>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="metric-description">TPR vs FPR</div>
+                        <div class="metric-score">AUC: 0.92</div>
+                    </div>
+                    
+                    <!-- PR Curve -->
+                    <div class="metric-card">
+                        <div class="metric-title">PR Curve</div>
+                        <div class="metric-visual">
+                            <div class="pr-curve">
+                                <svg viewBox="0 0 100 100">
+                                    <line x1="10" y1="50" x2="90" y2="50" stroke="#999" stroke-width="1" stroke-dasharray="2,2"/>
+                                    <path d="M 10,10 L 20,12 L 30,15 L 40,20 L 50,28 L 60,38 L 70,50 L 80,65 L 90,85" fill="none" stroke="#4CAF50" stroke-width="3"/>
+                                    <path d="M 10,10 L 20,12 L 30,15 L 40,20 L 50,28 L 60,38 L 70,50 L 80,65 L 90,85 L 90,90 L 10,90 Z" fill="rgba(76, 175, 80, 0.2)"/>
+                                    <line x1="10" y1="90" x2="90" y2="90" stroke="#666" stroke-width="1"/>
+                                    <line x1="10" y1="90" x2="10" y2="10" stroke="#666" stroke-width="1"/>
+                                    <text x="50" y="98" text-anchor="middle" font-size="7" fill="#666">Recall</text>
+                                    <text x="5" y="50" text-anchor="middle" font-size="7" fill="#666" transform="rotate(-90 5 50)">Precision</text>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="metric-description">Precision vs Recall</div>
+                        <div class="metric-score">AP: 0.88</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <div class="interpretation-card">
+                    <div class="card-title">
+                        <span>📊</span>
+                        Metrics
+                    </div>
+                    
+                    <div class="interp-section">
+                        <div class="section-header">Confusion Matrix</div>
+                        <div class="interp-item">
+                            <span class="interp-icon">•</span>
+                            <span>TP, FP, FN, TN</span>
+                        </div>
+                        <div class="interp-item">
+                            <span class="interp-icon">•</span>
+                            <span>Normalize by row/col</span>
+                        </div>
+                    </div>
+                    
+                    <div class="interp-section">
+                        <div class="section-header">ROC Curve</div>
+                        <div class="interp-item">
+                            <span class="interp-icon">•</span>
+                            <span>Balanced classes</span>
+                        </div>
+                        <div class="interp-item">
+                            <span class="interp-icon">•</span>
+                            <span>AUC summarizes</span>
+                        </div>
+                    </div>
+                    
+                    <div class="interp-section">
+                        <div class="section-header">PR Curve</div>
+                        <div class="interp-item">
+                            <span class="interp-icon">•</span>
+                            <span>Imbalanced data</span>
+                        </div>
+                        <div class="interp-item">
+                            <span class="interp-icon">•</span>
+                            <span>Focus on positive</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="when-to-use-card">
+                    <div class="wtu-title">⚖️ When to Use</div>
+                    <div class="wtu-item">
+                        <span class="wtu-icon">▸</span>
+                        <span>ROC: balanced classes</span>
+                    </div>
+                    <div class="wtu-item">
+                        <span class="wtu-icon">▸</span>
+                        <span>PR: imbalanced datasets</span>
+                    </div>
+                    <div class="wtu-item">
+                        <span class="wtu-icon">▸</span>
+                        <span>CM: detailed breakdown</span>
+                    </div>
+                </div>
+                
+                <div class="tips-card">
+                    <div class="tips-title">✓ Best Practices</div>
+                    <div class="tip-item">
+                        <span class="check-icon">✓</span>
+                        <span>Compare models</span>
+                    </div>
+                    <div class="tip-item">
+                        <span class="check-icon">✓</span>
+                        <span>Select threshold</span>
+                    </div>
+                    <div class="tip-item">
+                        <span class="check-icon">✓</span>
+                        <span>Balance P & R by cost</span>
+                    </div>
+                    <div class="tip-item">
+                        <span class="check-icon">✓</span>
+                        <span>Multi-class: one-vs-rest</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

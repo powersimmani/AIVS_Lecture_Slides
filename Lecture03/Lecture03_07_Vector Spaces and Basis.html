@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vector Spaces and Basis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: #ffffff;
+            position: relative;
+            padding: 25px 35px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .header-title {
+            font-size: 20px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            flex: 1;
+        }
+        
+        .left-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .vector-space-box {
+            background: #f8fafb;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 18px;
+        }
+        
+        .box-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+        }
+        
+        .definition {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        
+        .examples {
+            font-size: 16px;
+            color: #555;
+            padding-left: 15px;
+        }
+        
+        .example-item {
+            margin: 4px 0;
+        }
+        
+        .concept-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .concept-card {
+            background: white;
+            border-left: 3px solid #1E64C8;
+            padding: 10px 15px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .concept-card:hover {
+            background: #f0f7ff;
+            transform: translateX(3px);
+        }
+        
+        .concept-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .concept-desc {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .visual-diagram {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .diagram-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .coordinate-system {
+            flex: 1;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .axes {
+            position: relative;
+            width: 200px;
+            height: 200px;
+        }
+        
+        .axis {
+            position: absolute;
+            background: #1E64C8;
+        }
+        
+        .x-axis {
+            width: 180px;
+            height: 2px;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .y-axis {
+            width: 2px;
+            height: 180px;
+            left: 50%;
+            top: 10px;
+            transform: translateX(-50%);
+        }
+        
+        .axis::after {
+            content: '';
+            position: absolute;
+            background: #1E64C8;
+        }
+        
+        .x-axis::after {
+            width: 0;
+            height: 0;
+            border-left: 8px solid #1E64C8;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            right: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .y-axis::after {
+            width: 0;
+            height: 0;
+            border-bottom: 8px solid #1E64C8;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .vector {
+            position: absolute;
+            width: 3px;
+            background: #1E64C8;
+            transform-origin: bottom center;
+        }
+        
+        .vector-e1 {
+            height: 70px;
+            left: 50%;
+            bottom: 50%;
+            transform: rotate(0deg) translateX(-50%);
+        }
+        
+        .vector-e2 {
+            height: 70px;
+            left: 50%;
+            bottom: 50%;
+            transform: rotate(90deg) translateX(-50%);
+        }
+        
+        .vector-label {
+            position: absolute;
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .label-e1 {
+            right: -25px;
+            bottom: 30px;
+        }
+        
+        .label-e2 {
+            left: -25px;
+            top: 30px;
+        }
+        
+        .basis-info {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .basis-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .basis-content {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .formula {
+            background: #f0f7ff;
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin-top: 8px;
+            font-family: 'Courier New', monospace;
+            color: #1E64C8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-title">Vector Spaces and Basis</div>
+        </div>
+        
+        <div class="main-grid">
+            <div class="left-panel">
+                <div class="vector-space-box">
+                    <div class="box-title">Vector Space V</div>
+                    <div class="definition">
+                        Set closed under <strong>addition</strong> and <strong>scalar multiplication</strong>
+                    </div>
+                    <div class="examples">
+                        <div class="example-item">• ℝⁿ (n-dimensional space)</div>
+                        <div class="example-item">• Polynomial space</div>
+                        <div class="example-item">• Function space</div>
+                    </div>
+                </div>
+                
+                <div class="concept-list">
+                    <div class="concept-card">
+                        <div class="concept-title">Linear Combination</div>
+                        <div class="concept-desc">v = c₁v₁ + c₂v₂ + ... + cₙvₙ</div>
+                    </div>
+                    
+                    <div class="concept-card">
+                        <div class="concept-title">Span</div>
+                        <div class="concept-desc">All possible linear combinations of vectors</div>
+                    </div>
+                    
+                    <div class="concept-card">
+                        <div class="concept-title">Linear Independence</div>
+                        <div class="concept-desc">No vector is combination of others</div>
+                    </div>
+                    
+                    <div class="concept-card">
+                        <div class="concept-title">Basis</div>
+                        <div class="concept-desc">Minimal spanning set (linearly independent)</div>
+                    </div>
+                    
+                    <div class="concept-card">
+                        <div class="concept-title">Dimension</div>
+                        <div class="concept-desc">Number of basis vectors</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <div class="visual-diagram">
+                    <div class="diagram-title">Standard Basis in ℝ²</div>
+                    <div class="coordinate-system">
+                        <div class="axes">
+                            <div class="axis x-axis"></div>
+                            <div class="axis y-axis"></div>
+                            <div class="vector vector-e1"></div>
+                            <div class="vector vector-e2"></div>
+                            <div class="vector-label label-e1">e₁</div>
+                            <div class="vector-label label-e2">e₂</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="basis-info">
+                    <div class="basis-title">Standard Basis in ℝⁿ</div>
+                    <div class="basis-content">
+                        <div class="formula">e₁ = (1, 0, ..., 0)</div>
+                        <div class="formula">e₂ = (0, 1, ..., 0)</div>
+                        <div style="margin-top: 10px; font-size: 16px;">
+                            Any vector v = c₁e₁ + c₂e₂ + ... + cₙeₙ
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

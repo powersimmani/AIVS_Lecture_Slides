@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xavier/Glorot Initialization</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: #ffffff;
+            padding: 20px 40px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 25px;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            height: 450px;
+        }
+        
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .activation-box {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .activation-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 15px;
+        }
+        
+        .activation-list {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 10px;
+        }
+        
+        .activation-item {
+            background: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            box-shadow: 0 2px 6px rgba(30, 100, 200, 0.15);
+        }
+        
+        .formula-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .formula-card {
+            background: #f8f9fb;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 18px;
+            flex: 1;
+        }
+        
+        .formula-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+        }
+        
+        .formula {
+            font-family: 'Courier New', monospace;
+            font-size: 17px;
+            color: #2c3e50;
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+            line-height: 1.6;
+        }
+        
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .section-header {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 5px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .benefit-card {
+            background: #f8f9fb;
+            border-left: 4px solid #1E64C8;
+            padding: 14px 16px;
+            border-radius: 6px;
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.5;
+            transition: all 0.3s ease;
+        }
+        
+        .benefit-card:hover {
+            background: #eef3fb;
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(30, 100, 200, 0.15);
+        }
+        
+        .highlight {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .variance-visual {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin: 15px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+        }
+        
+        .layer-variance {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .layer-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #1E64C8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .layer-label {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .arrow-right {
+            font-size: 24px;
+            color: #1E64C8;
+        }
+        
+        .variance-label {
+            font-size: 14px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Xavier/Glorot Initialization</div>
+        
+        <div class="main-content">
+            <div class="left-section">
+                <div class="activation-box">
+                    <div class="activation-title">Designed for Activations</div>
+                    <div class="activation-list">
+                        <div class="activation-item">sigmoid</div>
+                        <div class="activation-item">tanh</div>
+                    </div>
+                    
+                    <div class="variance-visual">
+                        <div class="layer-variance">
+                            <div class="layer-circle">Var</div>
+                            <div class="layer-label">Layer 1</div>
+                        </div>
+                        <div class="arrow-right">→</div>
+                        <div class="layer-variance">
+                            <div class="layer-circle">Var</div>
+                            <div class="layer-label">Layer 2</div>
+                        </div>
+                        <div class="arrow-right">→</div>
+                        <div class="layer-variance">
+                            <div class="layer-circle">Var</div>
+                            <div class="layer-label">Layer 3</div>
+                        </div>
+                    </div>
+                    <div class="variance-label">Variance maintained ≈ 1.0</div>
+                </div>
+                
+                <div class="formula-section">
+                    <div class="formula-card">
+                        <div class="formula-label">Uniform Distribution</div>
+                        <div class="formula">
+                            W ~ U(-√(6/(n<sub>in</sub> + n<sub>out</sub>)), √(6/(n<sub>in</sub> + n<sub>out</sub>)))
+                        </div>
+                    </div>
+                    
+                    <div class="formula-card">
+                        <div class="formula-label">Gaussian Distribution</div>
+                        <div class="formula">
+                            W ~ N(0, 2/(n<sub>in</sub> + n<sub>out</sub>))
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-section">
+                <div class="section-header">Key Properties</div>
+                
+                <div class="benefit-card">
+                    <span class="highlight">Variance maintained</span> across layers during forward/backward pass
+                </div>
+                
+                <div class="benefit-card">
+                    Keeps activation variance approximately <span class="highlight">1.0</span>
+                </div>
+                
+                <div class="benefit-card">
+                    <span class="highlight">Prevents saturation</span> in early training stages
+                </div>
+                
+                <div class="benefit-card">
+                    Standard for <span class="highlight">fully connected networks</span>
+                </div>
+                
+                <div class="benefit-card">
+                    Optimal for <span class="highlight">tanh/sigmoid</span> activation functions
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

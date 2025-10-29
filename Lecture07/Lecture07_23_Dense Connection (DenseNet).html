@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dense Connection (DenseNet)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            overflow-x: hidden;
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 960px;
+            width: 95vw;
+            min-height: 540px;
+            height: auto;
+            background: white;
+            position: relative;
+            overflow: hidden;
+            padding: 20px 35px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+        }
+        
+        .core-idea {
+            background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+            border: 3px solid #1E64C8;
+            border-radius: 12px;
+            padding: 12px 20px;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .core-label {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .core-text {
+            font-size: 17px;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .core-formula {
+            font-size: 16px;
+            color: #1E64C8;
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .architecture-section {
+            background: white;
+            border: 3px solid #4CAF50;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        
+        .arch-label {
+            text-align: center;
+            font-size: 15px;
+            font-weight: 700;
+            color: #2E7D32;
+            margin-bottom: 12px;
+        }
+        
+        .layers-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            position: relative;
+            height: 120px;
+        }
+        
+        .layer-node {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #66BB6A 0%, #4CAF50 100%);
+            border: 3px solid #2E7D32;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        }
+        
+        .connections-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        
+        .comparison-card {
+            background: white;
+            border: 2px solid;
+            border-radius: 10px;
+            padding: 12px 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .comparison-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .comparison-card.advantages {
+            border-color: #4CAF50;
+            background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+        }
+        
+        .comparison-card.efficiency {
+            border-color: #2196F3;
+            background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+        }
+        
+        .comparison-card.consideration {
+            border-color: #FF9800;
+            background: linear-gradient(135deg, #FFF3E0 0%, #FFE0B2 100%);
+        }
+        
+        .comparison-card.usecases {
+            border-color: #9C27B0;
+            background: linear-gradient(135deg, #F3E5F5 0%, #E1BEE7 100%);
+        }
+        
+        .card-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .comparison-card.advantages .card-title {
+            color: #2E7D32;
+        }
+        
+        .comparison-card.efficiency .card-title {
+            color: #1565C0;
+        }
+        
+        .comparison-card.consideration .card-title {
+            color: #E65100;
+        }
+        
+        .comparison-card.usecases .card-title {
+            color: #6A1B9A;
+        }
+        
+        .card-icon {
+            margin-right: 8px;
+            font-size: 18px;
+        }
+        
+        .card-content {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .growth-rate-box {
+            background: #FFF8E1;
+            border: 2px solid #FFC107;
+            border-radius: 10px;
+            padding: 10px 16px;
+            text-align: center;
+        }
+        
+        .growth-label {
+            font-size: 14px;
+            font-weight: 700;
+            color: #F57F17;
+            margin-bottom: 4px;
+        }
+        
+        .growth-text {
+            font-size: 15px;
+            color: #333;
+        }
+        
+        .highlight {
+            font-weight: 700;
+            color: #F57F17;
+        }
+    
+        
+        /* Responsive adjustments */
+        @media screen and (max-width: 1000px) {
+            .container {
+                width: 98vw !important;
+                max-width: 98vw !important;
+                padding: 15px 20px !important;
+            }
+        }
+        
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: 10px 15px !important;
+            }
+            
+            .title {
+                font-size: 20px !important;
+            }
+            
+            /* 그리드 레이아웃을 1열로 */
+            .challenges-grid,
+            .comparison-grid,
+            .solutions-grid,
+            .guide-grid,
+            .findings-section,
+            .benefits-grid,
+            .applications-section,
+            .guidelines-grid,
+            .components-section,
+            .techniques-grid,
+            .deployment-section,
+            .savings-grid,
+            .results-grid,
+            .functions-grid,
+            .features-grid,
+            .comparison-section,
+            .bottom-section {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .gradient-flow,
+            .network-visual,
+            .flow-steps,
+            .bottleneck-flow,
+            .example-flow,
+            .dimension-box,
+            .inception-structure .parallel-paths,
+            .comparison-section {
+                flex-direction: column !important;
+                gap: 15px !important;
+            }
+            
+            .arrow-back,
+            .arrow,
+            .arrow-right,
+            .arrow-connector,
+            .conv-arrow {
+                transform: rotate(90deg);
+                margin: 5px 0 !important;
+            }
+            
+            /* SVG와 layer 위치 조정 */
+            .layers-container,
+            .architecture-visual {
+                height: auto !important;
+                min-height: 300px !important;
+            }
+            
+            .layer-node {
+                position: relative !important;
+                left: auto !important;
+                margin: 10px 0 !important;
+            }
+        }
+        
+        @media screen and (max-width: 480px) {
+            .container {
+                padding: 8px 10px !important;
+            }
+            
+            .title {
+                font-size: 18px !important;
+            }
+            
+            .card-header,
+            .scenario-label,
+            .card-title,
+            .function-title,
+            .arch-title,
+            .flow-title {
+                font-size: 16px !important;
+            }
+            
+            .layer-box,
+            .conv-box,
+            .step-circle,
+            .layer-circle {
+                font-size: 14px !important;
+                padding: 8px !important;
+            }
+        }
+    
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Dense Connection (DenseNet): Maximum Connectivity</div>
+        
+        <div class="core-idea">
+            <div class="core-label">CORE IDEA</div>
+            <div class="core-text">Each layer connects to ALL subsequent layers</div>
+            <div class="core-formula">xₗ = Hₗ([x₀, x₁, ..., xₗ₋₁])</div>
+        </div>
+        
+        <div class="architecture-section">
+            <div class="arch-label">Dense Connectivity Pattern</div>
+            <div class="layers-container">
+                <svg class="connections-svg" viewBox="0 0 800 120">
+                    <!-- All connections from Layer 0 -->
+                    <line x1="100" y1="60" x2="250" y2="60" stroke="#4CAF50" stroke-width="2" opacity="0.6"/>
+                    <line x1="100" y1="60" x2="400" y2="60" stroke="#4CAF50" stroke-width="2" opacity="0.6"/>
+                    <line x1="100" y1="60" x2="550" y2="60" stroke="#4CAF50" stroke-width="2" opacity="0.6"/>
+                    <line x1="100" y1="60" x2="700" y2="60" stroke="#4CAF50" stroke-width="2" opacity="0.6"/>
+                    
+                    <!-- Connections from Layer 1 -->
+                    <line x1="250" y1="60" x2="400" y2="60" stroke="#66BB6A" stroke-width="2" opacity="0.6"/>
+                    <line x1="250" y1="60" x2="550" y2="60" stroke="#66BB6A" stroke-width="2" opacity="0.6"/>
+                    <line x1="250" y1="60" x2="700" y2="60" stroke="#66BB6A" stroke-width="2" opacity="0.6"/>
+                    
+                    <!-- Connections from Layer 2 -->
+                    <line x1="400" y1="60" x2="550" y2="60" stroke="#81C784" stroke-width="2" opacity="0.6"/>
+                    <line x1="400" y1="60" x2="700" y2="60" stroke="#81C784" stroke-width="2" opacity="0.6"/>
+                    
+                    <!-- Connection from Layer 3 -->
+                    <line x1="550" y1="60" x2="700" y2="60" stroke="#A5D6A7" stroke-width="2" opacity="0.6"/>
+                    
+                    <!-- Arrow markers -->
+                    <defs>
+                        <marker id="arrowgreen" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+                            <path d="M0,0 L0,8 L8,4 z" fill="#4CAF50"/>
+                        </marker>
+                    </defs>
+                </svg>
+                
+                <div class="layer-node" style="position: absolute; left: 70px;">L₀</div>
+                <div class="layer-node" style="position: absolute; left: 220px;">L₁</div>
+                <div class="layer-node" style="position: absolute; left: 370px;">L₂</div>
+                <div class="layer-node" style="position: absolute; left: 520px;">L₃</div>
+                <div class="layer-node" style="position: absolute; left: 670px;">L₄</div>
+            </div>
+        </div>
+        
+        <div class="comparison-grid">
+            <div class="comparison-card advantages">
+                <div class="card-title">
+                    <span class="card-icon">✓</span>
+                    Advantages
+                </div>
+                <div class="card-content">
+                    Maximum information flow · Feature reuse · Parameter efficiency
+                </div>
+            </div>
+            
+            <div class="comparison-card efficiency">
+                <div class="card-title">
+                    <span class="card-icon">📊</span>
+                    Efficiency
+                </div>
+                <div class="card-content">
+                    Fewer parameters than ResNet for same accuracy
+                </div>
+            </div>
+            
+            <div class="comparison-card consideration">
+                <div class="card-title">
+                    <span class="card-icon">⚠️</span>
+                    Memory Consideration
+                </div>
+                <div class="card-content">
+                    Requires storing all intermediate features (higher memory)
+                </div>
+            </div>
+            
+            <div class="comparison-card usecases">
+                <div class="card-title">
+                    <span class="card-icon">🎯</span>
+                    Use Cases
+                </div>
+                <div class="card-content">
+                    Image classification · Feature extraction · Limited parameters
+                </div>
+            </div>
+        </div>
+        
+        <div class="growth-rate-box">
+            <div class="growth-label">GROWTH RATE</div>
+            <div class="growth-text">
+                Each layer adds <span class="highlight">k feature maps</span> 
+                (typically k=12 or k=32)
+            </div>
+        </div>
+    </div>
+</body>
+</html>

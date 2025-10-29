@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Bytecode and ML Frameworks</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            padding: 28px 40px;
+            background: white;
+        }
+        
+        .title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .python-flow {
+            background: #f0f5fc;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 15px 25px;
+            margin-bottom: 18px;
+        }
+        
+        .flow-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .flow-steps {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .flow-box {
+            background: white;
+            border: 2.5px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 20px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            transition: all 0.3s;
+        }
+        
+        .flow-box:hover {
+            background: #1E64C8;
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        .arrow {
+            font-size: 24px;
+            color: #1E64C8;
+            font-weight: bold;
+        }
+        
+        .architecture-section {
+            background: white;
+            border: 3px solid #1E64C8;
+            border-radius: 10px;
+            padding: 16px 22px;
+            margin-bottom: 18px;
+        }
+        
+        .arch-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .arch-layers {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .layer-box {
+            flex: 1;
+            background: #f8fbff;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .layer-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(30, 100, 200, 0.2);
+        }
+        
+        .layer-name {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .layer-tech {
+            font-size: 16px;
+            color: #555;
+        }
+        
+        .plus-icon {
+            font-size: 28px;
+            color: #1E64C8;
+            font-weight: bold;
+        }
+        
+        .modes-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 16px;
+        }
+        
+        .mode-card {
+            background: white;
+            border: 2.5px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px 18px;
+        }
+        
+        .mode-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .mode-name {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+        }
+        
+        .mode-badge {
+            background: #1E64C8;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .mode-features {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 4px;
+        }
+        
+        .feature-item::before {
+            content: "•";
+            color: #1E64C8;
+            font-weight: bold;
+            margin-right: 6px;
+            font-size: 17px;
+            flex-shrink: 0;
+        }
+        
+        .insights-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .insight-box {
+            background: #f8fbff;
+            border-left: 4px solid #1E64C8;
+            border-radius: 6px;
+            padding: 12px 16px;
+        }
+        
+        .insight-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .insight-content {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .code-style {
+            font-family: 'Courier New', monospace;
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 15px;
+            color: #1E64C8;
+        }
+
+        /* Animation Section Styles */
+        .animation-section {
+            background: #f0f5fc;
+            border: 3px solid #1E64C8;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+
+        .animation-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .interpreter-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .interpreter-stage {
+            flex: 1;
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 15px;
+            min-height: 250px;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .interpreter-stage.active {
+            box-shadow: 0 0 20px rgba(30, 100, 200, 0.4);
+            transform: scale(1.02);
+            border-color: #ff6b35;
+            border-width: 3px;
+        }
+
+        .stage-header {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 15px;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .stage-content {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .code-line {
+            padding: 4px 8px;
+            margin: 4px 0;
+            border-radius: 4px;
+            transition: all 0.3s;
+            background: transparent;
+        }
+
+        .code-line.highlight {
+            background: #fffacd;
+            border-left: 3px solid #ff6b35;
+            animation: pulse 0.5s;
+            font-weight: 700;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .bytecode-item {
+            background: #f8fbff;
+            padding: 6px 10px;
+            margin: 6px 0;
+            border-radius: 5px;
+            border-left: 3px solid #1E64C8;
+            opacity: 0;
+            transform: translateX(-20px);
+            transition: all 0.3s;
+        }
+
+        .bytecode-item.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .bytecode-item.highlight {
+            background: #fffacd;
+            border-left: 3px solid #ff6b35;
+            font-weight: 700;
+        }
+
+        .vm-state {
+            background: #f8fbff;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 5px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .vm-label {
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+
+        .vm-value {
+            color: #333;
+            font-size: 15px;
+        }
+
+        .control-panel {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .control-btn {
+            background: #1E64C8;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .control-btn:hover:not(:disabled) {
+            background: #0d4fa3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.3);
+        }
+
+        .control-btn:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .control-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .control-btn.secondary {
+            background: #6c757d;
+        }
+
+        .control-btn.secondary:hover:not(:disabled) {
+            background: #545b62;
+        }
+
+        .step-indicator {
+            background: white;
+            border: 2px solid #1E64C8;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            color: #1E64C8;
+            font-size: 15px;
+        }
+
+        .explanation-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-top: 15px;
+            min-height: 80px;
+        }
+
+        .explanation-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+
+        .explanation-text {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #1E64C8, #4a9eff);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Python Bytecode and ML Frameworks</div>
+        
+        <div class="python-flow">
+            <div class="flow-title">Python Execution Flow</div>
+            <div class="flow-steps">
+                <div class="flow-box">Python Code</div>
+                <div class="arrow">→</div>
+                <div class="flow-box">Bytecode</div>
+                <div class="arrow">→</div>
+                <div class="flow-box">VM Execution</div>
+            </div>
+        </div>
+        
+        <div class="architecture-section">
+            <div class="arch-title">ML Framework Architecture</div>
+            <div class="arch-layers">
+                <div class="layer-box">
+                    <div class="layer-name">Frontend</div>
+                    <div class="layer-tech">Python API</div>
+                </div>
+                <div class="plus-icon">+</div>
+                <div class="layer-box">
+                    <div class="layer-name">Backend</div>
+                    <div class="layer-tech">C++ / CUDA</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="modes-comparison">
+            <div class="mode-card">
+                <div class="mode-header">
+                    <div class="mode-name">Eager Mode</div>
+                    <div class="mode-badge">Default</div>
+                </div>
+                <div class="mode-features">
+                    <div class="feature-item">Flexible execution</div>
+                    <div class="feature-item">Good for debugging</div>
+                    <div class="feature-item">Slower performance</div>
+                </div>
+            </div>
+            
+            <div class="mode-card">
+                <div class="mode-header">
+                    <div class="mode-name">Graph Mode</div>
+                    <div class="mode-badge">Optimized</div>
+                </div>
+                <div class="mode-features">
+                    <div class="feature-item">Pre-compiled graph</div>
+                    <div class="feature-item">Faster execution</div>
+                    <div class="feature-item">Production ready</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="insights-grid">
+            <div class="insight-box">
+                <div class="insight-title">JIT Compilation</div>
+                <div class="insight-content">
+                    <span class="code-style">torch.jit.script()</span> speeds up inference via Just-In-Time compilation
+                </div>
+            </div>
+            
+            <div class="insight-box">
+                <div class="insight-title">TorchScript</div>
+                <div class="insight-content">
+                    Serialize models for production (remove Python dependency)
+                </div>
+            </div>
+            
+            <div class="insight-box">
+                <div class="insight-title">Real Performance</div>
+                <div class="insight-content">
+                    CUDA kernels drive performance, not Python code
+                </div>
+            </div>
+            
+            <div class="insight-box">
+                <div class="insight-title">Python Overhead</div>
+                <div class="insight-content">
+                    Negligible for large tensor operations (batching helps)
+                </div>
+            </div>
+        </div>
+
+        <!-- Animation Section -->
+        <div class="animation-section">
+            <div class="animation-title">🔄 Interactive Interpreter Execution</div>
+            
+            <div class="interpreter-container">
+                <div class="interpreter-stage" id="pythonStage">
+                    <div class="stage-header">1️⃣ Python Source Code</div>
+                    <div class="stage-content" id="pythonCode">
+                        <div class="code-line" id="line1">def add(a, b):</div>
+                        <div class="code-line" id="line2">    return a + b</div>
+                        <div class="code-line" id="line3"></div>
+                        <div class="code-line" id="line4">result = add(3, 5)</div>
+                        <div class="code-line" id="line5">print(result)</div>
+                    </div>
+                </div>
+
+                <div class="interpreter-stage" id="bytecodeStage">
+                    <div class="stage-header">2️⃣ Bytecode</div>
+                    <div class="stage-content" id="bytecodeContent">
+                        <div class="bytecode-item">LOAD_CONST (3)</div>
+                        <div class="bytecode-item">LOAD_CONST (5)</div>
+                        <div class="bytecode-item">LOAD_NAME (add)</div>
+                        <div class="bytecode-item">CALL_FUNCTION (2)</div>
+                        <div class="bytecode-item">STORE_NAME (result)</div>
+                        <div class="bytecode-item">LOAD_NAME (print)</div>
+                        <div class="bytecode-item">LOAD_NAME (result)</div>
+                        <div class="bytecode-item">CALL_FUNCTION (1)</div>
+                    </div>
+                </div>
+
+                <div class="interpreter-stage" id="vmStage">
+                    <div class="stage-header">3️⃣ VM Execution</div>
+                    <div class="stage-content">
+                        <div class="vm-state">
+                            <div class="vm-label">Stack:</div>
+                            <div class="vm-value" id="stackValue">[ ]</div>
+                        </div>
+                        <div class="vm-state">
+                            <div class="vm-label">Variables:</div>
+                            <div class="vm-value" id="varsValue">{ }</div>
+                        </div>
+                        <div class="vm-state">
+                            <div class="vm-label">Output:</div>
+                            <div class="vm-value" id="outputValue">-</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-panel">
+                <button class="control-btn" id="prevBtn">
+                    <span>◀</span> Previous
+                </button>
+                <div class="step-indicator" id="stepIndicator">Step 1 / 9</div>
+                <button class="control-btn" id="nextBtn">
+                    Next <span>▶</span>
+                </button>
+                <button class="control-btn secondary" id="resetBtn">
+                    🔄 Reset
+                </button>
+            </div>
+
+            <div class="explanation-box">
+                <div class="explanation-title" id="explanationTitle">Step 1: Python Source Code</div>
+                <div class="explanation-text" id="explanationText">
+                    We define a simple Python function and call it. This code creates an add function that takes two numbers, then passes 3 and 5 as arguments and prints the result.
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 0;
+
+        const executionSteps = [
+            {
+                title: "Step 1: Python Source Code",
+                explanation: "We define a simple Python function and call it. This code creates an add function that takes two numbers, then passes 3 and 5 as arguments and prints the result.",
+                progress: 0,
+                pythonHighlight: ['line1', 'line2', 'line4', 'line5'],
+                pythonActive: true,
+                bytecodeActive: false,
+                showBytecode: [],
+                bytecodeHighlight: [],
+                vmActive: false,
+                stack: '[ ]',
+                vars: '{ }',
+                output: '-'
+            },
+            {
+                title: "Step 2: Compilation Begins",
+                explanation: "The Python interpreter reads the source code and starts parsing. During this process, it checks the syntax and creates an Abstract Syntax Tree (AST).",
+                progress: 12,
+                pythonHighlight: ['line4'],
+                pythonActive: true,
+                bytecodeActive: false,
+                showBytecode: [],
+                bytecodeHighlight: [],
+                vmActive: false,
+                stack: '[ ]',
+                vars: '{ }',
+                output: '-'
+            },
+            {
+                title: "Step 3: Bytecode Generation",
+                explanation: "Based on the AST, Python bytecode is generated. Bytecode is a low-level instruction set that the Python Virtual Machine (VM) can understand. It is stored in .pyc files for reuse.",
+                progress: 25,
+                pythonActive: false,
+                bytecodeActive: true,
+                showBytecode: [0, 1, 2, 3, 4, 5, 6, 7],
+                bytecodeHighlight: [],
+                vmActive: false,
+                stack: '[ ]',
+                vars: '{ }',
+                output: '-'
+            },
+            {
+                title: "Step 4: LOAD_CONST (3)",
+                explanation: "The first bytecode instruction executes. LOAD_CONST pushes the constant value 3 onto the stack. The stack is where the VM temporarily stores data during execution.",
+                progress: 35,
+                pythonActive: false,
+                bytecodeActive: true,
+                showBytecode: [0, 1, 2, 3, 4, 5, 6, 7],
+                bytecodeHighlight: [0],
+                vmActive: true,
+                stack: '[3]',
+                vars: '{ }',
+                output: '-'
+            },
+            {
+                title: "Step 5: LOAD_CONST (5)",
+                explanation: "The second constant value 5 is pushed onto the stack. Now the stack contains two values: 3 and 5.",
+                progress: 45,
+                pythonActive: false,
+                bytecodeActive: true,
+                showBytecode: [0, 1, 2, 3, 4, 5, 6, 7],
+                bytecodeHighlight: [1],
+                vmActive: true,
+                stack: '[3, 5]',
+                vars: '{ }',
+                output: '-'
+            },
+            {
+                title: "Step 6: Function Call Preparation",
+                explanation: "LOAD_NAME finds the 'add' function and pushes it onto the stack. Then CALL_FUNCTION(2) uses the top 2 values (3, 5) from the stack as arguments and calls the function.",
+                progress: 60,
+                pythonHighlight: ['line1', 'line2'],
+                pythonActive: true,
+                bytecodeActive: true,
+                showBytecode: [0, 1, 2, 3, 4, 5, 6, 7],
+                bytecodeHighlight: [2, 3],
+                vmActive: true,
+                stack: '[add, 3, 5] → [8]',
+                vars: '{ }',
+                output: '-'
+            },
+            {
+                title: "Step 7: Storing the Result",
+                explanation: "The function execution result 8 remains on the stack. STORE_NAME pops this value from the stack and stores it in the variable 'result'.",
+                progress: 75,
+                pythonActive: false,
+                bytecodeActive: true,
+                showBytecode: [0, 1, 2, 3, 4, 5, 6, 7],
+                bytecodeHighlight: [4],
+                vmActive: true,
+                stack: '[ ]',
+                vars: '{ result: 8 }',
+                output: '-'
+            },
+            {
+                title: "Step 8: Output Preparation",
+                explanation: "The print function and result variable are pushed onto the stack. CALL_FUNCTION(1) executes print(result) to display the output on the screen.",
+                progress: 90,
+                pythonHighlight: ['line5'],
+                pythonActive: true,
+                bytecodeActive: true,
+                showBytecode: [0, 1, 2, 3, 4, 5, 6, 7],
+                bytecodeHighlight: [5, 6, 7],
+                vmActive: true,
+                stack: '[print, 8]',
+                vars: '{ result: 8 }',
+                output: '8'
+            },
+            {
+                title: "Step 9: Execution Complete ✅",
+                explanation: "All bytecode instructions have been successfully executed. The Python VM interprets and executes code line by line in this manner. Through this process, you can understand how Python works under the hood.",
+                progress: 100,
+                pythonActive: false,
+                bytecodeActive: false,
+                showBytecode: [0, 1, 2, 3, 4, 5, 6, 7],
+                bytecodeHighlight: [],
+                vmActive: true,
+                stack: '[ ]',
+                vars: '{ result: 8 }',
+                output: '8'
+            }
+        ];
+
+        function updateDisplay() {
+            const step = executionSteps[currentStep];
+            
+            // Clear all highlights and active states
+            document.querySelectorAll('.code-line').forEach(line => {
+                line.classList.remove('highlight');
+            });
+            document.querySelectorAll('.interpreter-stage').forEach(stage => {
+                stage.classList.remove('active');
+            });
+            document.querySelectorAll('.bytecode-item').forEach(item => {
+                item.classList.remove('show', 'highlight');
+            });
+
+            // Update step indicator
+            document.getElementById('stepIndicator').textContent = `Step ${currentStep + 1} / ${executionSteps.length}`;
+            
+            // Update explanation
+            document.getElementById('explanationTitle').textContent = step.title;
+            document.getElementById('explanationText').textContent = step.explanation;
+            
+            // Update progress bar
+            document.getElementById('progressFill').style.width = step.progress + '%';
+
+            // Activate Python stage
+            if (step.pythonActive) {
+                document.getElementById('pythonStage').classList.add('active');
+            }
+            
+            // Highlight Python code
+            if (step.pythonHighlight && step.pythonHighlight.length > 0) {
+                step.pythonHighlight.forEach(lineId => {
+                    const element = document.getElementById(lineId);
+                    if (element) {
+                        element.classList.add('highlight');
+                    }
+                });
+            }
+
+            // Activate and show bytecode
+            if (step.bytecodeActive) {
+                document.getElementById('bytecodeStage').classList.add('active');
+            }
+            
+            if (step.showBytecode && step.showBytecode.length > 0) {
+                const bytecodeItems = document.querySelectorAll('.bytecode-item');
+                step.showBytecode.forEach(index => {
+                    if (bytecodeItems[index]) {
+                        bytecodeItems[index].classList.add('show');
+                    }
+                });
+            }
+
+            if (step.bytecodeHighlight && step.bytecodeHighlight.length > 0) {
+                const bytecodeItems = document.querySelectorAll('.bytecode-item');
+                step.bytecodeHighlight.forEach(index => {
+                    if (bytecodeItems[index]) {
+                        bytecodeItems[index].classList.add('show', 'highlight');
+                    }
+                });
+            }
+
+            // Activate VM stage
+            if (step.vmActive) {
+                document.getElementById('vmStage').classList.add('active');
+            }
+
+            // Update VM state
+            document.getElementById('stackValue').textContent = step.stack;
+            document.getElementById('varsValue').textContent = step.vars;
+            document.getElementById('outputValue').textContent = step.output;
+
+            // Update button states
+            document.getElementById('prevBtn').disabled = currentStep === 0;
+            document.getElementById('nextBtn').disabled = currentStep === executionSteps.length - 1;
+        }
+
+        function nextStep() {
+            if (currentStep < executionSteps.length - 1) {
+                currentStep++;
+                updateDisplay();
+            }
+        }
+
+        function previousStep() {
+            if (currentStep > 0) {
+                currentStep--;
+                updateDisplay();
+            }
+        }
+
+        function resetAnimation() {
+            currentStep = 0;
+            updateDisplay();
+        }
+
+        // Set up event listeners
+        document.getElementById('nextBtn').addEventListener('click', nextStep);
+        document.getElementById('prevBtn').addEventListener('click', previousStep);
+        document.getElementById('resetBtn').addEventListener('click', resetAnimation);
+
+        // Add keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') {
+                nextStep();
+            } else if (e.key === 'ArrowLeft') {
+                previousStep();
+            } else if (e.key === 'Home') {
+                resetAnimation();
+            }
+        });
+
+        // Initialize display on page load
+        window.addEventListener('load', () => {
+            updateDisplay();
+        });
+
+        // Initialize immediately as well
+        updateDisplay();
+    </script>
+</body>
+</html>

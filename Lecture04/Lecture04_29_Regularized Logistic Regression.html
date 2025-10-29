@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regularized Logistic Regression</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px;
+            position: relative;
+        }
+        
+        .title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .content-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            height: calc(100% - 50px);
+        }
+        
+        .goal-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            border-radius: 10px;
+            padding: 16px 20px;
+            color: white;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .methods-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+        
+        .method-card {
+            background: white;
+            border: 3px solid;
+            border-radius: 10px;
+            padding: 16px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: all 0.3s;
+        }
+        
+        .method-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+        
+        .l2-card {
+            border-color: #1565c0;
+        }
+        
+        .l1-card {
+            border-color: #2e7d32;
+        }
+        
+        .elastic-card {
+            border-color: #9c27b0;
+        }
+        
+        .method-header {
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .l2-header {
+            background: linear-gradient(135deg, #1565c0 0%, #1976d2 100%);
+        }
+        
+        .l1-header {
+            background: linear-gradient(135deg, #2e7d32 0%, #388e3c 100%);
+        }
+        
+        .elastic-header {
+            background: linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%);
+        }
+        
+        .method-formula {
+            background: #f8f9fa;
+            border-radius: 6px;
+            padding: 12px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 600;
+            font-style: italic;
+        }
+        
+        .l2-card .method-formula {
+            color: #1565c0;
+        }
+        
+        .l1-card .method-formula {
+            color: #2e7d32;
+        }
+        
+        .elastic-card .method-formula {
+            color: #9c27b0;
+        }
+        
+        .method-desc {
+            font-size: 15px;
+            color: #555;
+            text-align: center;
+            line-height: 1.4;
+        }
+        
+        .info-section {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .info-card {
+            background: white;
+            border: 2px solid #ffc107;
+            border-left: 5px solid #ffc107;
+            border-radius: 8px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .info-icon {
+            width: 32px;
+            height: 32px;
+            background: #ffc107;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .info-text {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+            flex: 1;
+        }
+        
+        .importance-card {
+            grid-column: span 2;
+            background: #fff5f5;
+            border-color: #dc3545;
+            border-left-color: #dc3545;
+        }
+        
+        .importance-card .info-icon {
+            background: #dc3545;
+        }
+        
+        .cv-box {
+            background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+            border-radius: 10px;
+            padding: 16px 20px;
+            color: white;
+            text-align: center;
+        }
+        
+        .cv-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            opacity: 0.95;
+        }
+        
+        .cv-text {
+            font-size: 17px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Regularized Logistic Regression</div>
+        
+        <div class="content-layout">
+            <!-- Goal -->
+            <div class="goal-box">
+                Prevent Overfitting with Penalty Terms
+            </div>
+            
+            <!-- Methods Grid -->
+            <div class="methods-grid">
+                <div class="method-card l2-card">
+                    <div class="method-header l2-header">
+                        L2 (Ridge)
+                    </div>
+                    <div class="method-formula">
+                        Loss + λ∑wᵢ²
+                    </div>
+                    <div class="method-desc">
+                        Smooth coefficient shrinkage
+                    </div>
+                </div>
+                
+                <div class="method-card l1-card">
+                    <div class="method-header l1-header">
+                        L1 (Lasso)
+                    </div>
+                    <div class="method-formula">
+                        Loss + λ∑|wᵢ|
+                    </div>
+                    <div class="method-desc">
+                        Feature selection
+                    </div>
+                </div>
+                
+                <div class="method-card elastic-card">
+                    <div class="method-header elastic-header">
+                        Elastic Net
+                    </div>
+                    <div class="method-formula">
+                        L1 + L2
+                    </div>
+                    <div class="method-desc">
+                        Combines L1 and L2 penalties
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Info Section -->
+            <div class="info-section">
+                <div class="info-card">
+                    <div class="info-icon">λ</div>
+                    <div class="info-text">
+                        Hyperparameter <strong>λ</strong>: Controls regularization strength
+                    </div>
+                </div>
+                
+                <div class="info-card importance-card">
+                    <div class="info-icon">⚠</div>
+                    <div class="info-text">
+                        Especially important with <strong>high-dimensional data</strong>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Cross-validation -->
+            <div class="cv-box">
+                <div class="cv-title">Choosing λ:</div>
+                <div class="cv-text">Cross-validation to choose optimal λ</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

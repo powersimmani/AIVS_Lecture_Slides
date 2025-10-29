@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contrastive Loss</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 30px;
+            background: #ffffff;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .main-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .content-wrapper {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 25px;
+            height: 430px;
+        }
+        
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .concept-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.3);
+        }
+        
+        .concept-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .concept-desc {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .mechanism-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            flex: 1;
+        }
+        
+        .mechanism-card {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .mechanism-card.similar {
+            border-color: #28a745;
+        }
+        
+        .mechanism-card.dissimilar {
+            border-color: #dc3545;
+        }
+        
+        .mechanism-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        
+        .mechanism-card.similar .mechanism-icon {
+            background: #d4edda;
+            color: #28a745;
+        }
+        
+        .mechanism-card.dissimilar .mechanism-icon {
+            background: #f8d7da;
+            color: #dc3545;
+        }
+        
+        .mechanism-label {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .mechanism-card.similar .mechanism-label {
+            color: #28a745;
+        }
+        
+        .mechanism-card.dissimilar .mechanism-label {
+            color: #dc3545;
+        }
+        
+        .mechanism-desc {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.5;
+            flex: 1;
+        }
+        
+        .mechanism-action {
+            background: white;
+            border: 2px dashed currentColor;
+            border-radius: 6px;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 16px;
+            font-weight: 500;
+            width: 100%;
+        }
+        
+        .mechanism-card.similar .mechanism-action {
+            color: #28a745;
+        }
+        
+        .mechanism-card.dissimilar .mechanism-action {
+            color: #dc3545;
+        }
+        
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .training-box {
+            background: #e8f1fd;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 18px;
+        }
+        
+        .training-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+        }
+        
+        .training-desc {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+        
+        .applications-box {
+            background: #f0f8ff;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 18px;
+            flex: 1;
+        }
+        
+        .app-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+        }
+        
+        .app-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .app-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+            color: #2c3e50;
+        }
+        
+        .app-icon {
+            background: #1E64C8;
+            color: white;
+            min-width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .foundation-box {
+            background: linear-gradient(135deg, #e8f1fd 0%, #f0f8ff 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+        
+        .foundation-text {
+            font-size: 16px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="main-title">Contrastive Loss</div>
+            <div class="subtitle">Learning Similarity Metrics in Embedding Space</div>
+        </div>
+        
+        <div class="content-wrapper">
+            <div class="left-section">
+                <div class="concept-box">
+                    <div class="concept-title">🎯 Core Concept</div>
+                    <div class="concept-desc">
+                        Learns meaningful representations in embedding space by training on sample pairs (similar/dissimilar)
+                    </div>
+                </div>
+                
+                <div class="mechanism-container">
+                    <div class="mechanism-card similar">
+                        <div class="mechanism-icon">↓</div>
+                        <div class="mechanism-label">Similar Pairs</div>
+                        <div class="mechanism-desc">
+                            Place similar samples close together in embedding space
+                        </div>
+                        <div class="mechanism-action">
+                            Minimize Distance
+                        </div>
+                    </div>
+                    
+                    <div class="mechanism-card dissimilar">
+                        <div class="mechanism-icon">→</div>
+                        <div class="mechanism-label">Dissimilar Pairs</div>
+                        <div class="mechanism-desc">
+                            Place dissimilar samples apart by a margin
+                        </div>
+                        <div class="mechanism-action">
+                            Maintain Margin
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-section">
+                <div class="training-box">
+                    <div class="training-title">📚 Training Approach</div>
+                    <div class="training-desc">
+                        Can learn meaningful representations without explicit labels
+                    </div>
+                </div>
+                
+                <div class="applications-box">
+                    <div class="app-title">💡 Applications</div>
+                    <div class="app-list">
+                        <div class="app-item">
+                            <div class="app-icon">1</div>
+                            <div>Face Recognition</div>
+                        </div>
+                        <div class="app-item">
+                            <div class="app-icon">2</div>
+                            <div>Signature Verification</div>
+                        </div>
+                        <div class="app-item">
+                            <div class="app-icon">3</div>
+                            <div>Image Retrieval</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="foundation-box">
+                    <div class="foundation-text">
+                        🔗 Foundation for Siamese Networks
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

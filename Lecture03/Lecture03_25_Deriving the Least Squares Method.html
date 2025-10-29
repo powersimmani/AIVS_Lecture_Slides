@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deriving the Least Squares Method</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: #ffffff;
+            position: relative;
+            padding: 25px 35px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .header-title {
+            font-size: 20px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            flex: 1;
+        }
+        
+        .left-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .loss-function-box {
+            background: #1E64C8;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .loss-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .loss-formula {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+        }
+        
+        .loss-subtitle {
+            font-size: 14px;
+            text-align: center;
+            margin-top: 8px;
+            opacity: 0.95;
+        }
+        
+        .concept-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 15px;
+        }
+        
+        .box-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .box-content {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .bullet-item {
+            display: flex;
+            align-items: start;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+        
+        .bullet {
+            color: #1E64C8;
+            font-weight: 600;
+            margin-top: 2px;
+        }
+        
+        .insight-box {
+            background: #f0f7ff;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 15px;
+            text-align: center;
+        }
+        
+        .insight-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .insight-content {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .derivation-flow {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 15px;
+            flex: 1;
+        }
+        
+        .flow-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .flow-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .flow-step {
+            background: #f8fafb;
+            border: 2px solid #1E64C8;
+            border-radius: 6px;
+            padding: 10px 12px;
+            position: relative;
+        }
+        
+        .step-number {
+            position: absolute;
+            left: -12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #1E64C8;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .step-content {
+            padding-left: 20px;
+        }
+        
+        .step-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .step-formula {
+            font-size: 15px;
+            color: #555;
+            font-family: 'Courier New', monospace;
+            background: white;
+            padding: 6px 8px;
+            border-radius: 4px;
+            margin-top: 4px;
+        }
+        
+        .arrow-down {
+            text-align: center;
+            font-size: 20px;
+            color: #1E64C8;
+            font-weight: 600;
+            padding: 2px 0;
+        }
+        
+        .solution-box {
+            background: #1E64C8;
+            color: white;
+            border-radius: 6px;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .solution-label {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .solution-content {
+            font-size: 15px;
+            opacity: 0.95;
+        }
+        
+        .connection-box {
+            background: #f8fafb;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 15px;
+            text-align: center;
+        }
+        
+        .connection-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .connection-content {
+            font-size: 16px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-title">Deriving the Least Squares Method</div>
+        </div>
+        
+        <div class="main-content">
+            <div class="left-panel">
+                <div class="loss-function-box">
+                    <div class="loss-title">Loss Function: Sum of Squared Errors</div>
+                    <div class="loss-formula">L(β₀, β₁) = Σᵢ(yᵢ - β₀ - β₁xᵢ)²</div>
+                    <div class="loss-subtitle">SSE: Sum of Squared Errors</div>
+                </div>
+                
+                <div class="concept-box">
+                    <div class="box-title">Why Squares?</div>
+                    <div class="box-content">
+                        <div class="bullet-item">
+                            <span class="bullet">•</span>
+                            <span>Penalizes large errors more heavily</span>
+                        </div>
+                        <div class="bullet-item">
+                            <span class="bullet">•</span>
+                            <span>Mathematically convenient (differentiable)</span>
+                        </div>
+                        <div class="bullet-item">
+                            <span class="bullet">•</span>
+                            <span>No cancellation of positive/negative errors</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="concept-box">
+                    <div class="box-title">Optimization Goal</div>
+                    <div class="box-content">
+                        Find β̂₀, β̂₁ that minimize L
+                    </div>
+                </div>
+                
+                <div class="insight-box">
+                    <div class="insight-title">Key Requirement</div>
+                    <div class="insight-content">
+                        Unique solution exists when<br>X has full rank
+                    </div>
+                </div>
+                
+                <div class="connection-box">
+                    <div class="connection-title">Statistical Connection</div>
+                    <div class="connection-content">
+                        Least Squares = Maximum Likelihood<br>under normal errors
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <div class="derivation-flow">
+                    <div class="flow-title">Derivation Steps</div>
+                    <div class="flow-steps">
+                        <div class="flow-step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <div class="step-label">Define Loss Function</div>
+                                <div class="step-formula">L(β₀, β₁) = Σ(yᵢ - β₀ - β₁xᵢ)²</div>
+                            </div>
+                        </div>
+                        
+                        <div class="arrow-down">↓</div>
+                        
+                        <div class="flow-step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <div class="step-label">Take Partial Derivatives</div>
+                                <div class="step-formula">∂L/∂β₀ = 0</div>
+                                <div class="step-formula">∂L/∂β₁ = 0</div>
+                            </div>
+                        </div>
+                        
+                        <div class="arrow-down">↓</div>
+                        
+                        <div class="flow-step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <div class="step-label">Solve System of Equations</div>
+                                <div class="step-formula">Normal Equations</div>
+                            </div>
+                        </div>
+                        
+                        <div class="arrow-down">↓</div>
+                        
+                        <div class="solution-box">
+                            <div class="solution-label">✓ Solution</div>
+                            <div class="solution-content">
+                                Optimal parameters β̂₀, β̂₁<br>
+                                that minimize prediction error
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

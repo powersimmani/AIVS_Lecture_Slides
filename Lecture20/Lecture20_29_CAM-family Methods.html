@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAM-family Methods</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Aptos', 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+            padding: 25px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+        }
+        
+        .main-layout {
+            display: grid;
+            grid-template-rows: auto 1fr;
+            gap: 15px;
+            height: calc(100% - 60px);
+        }
+        
+        .evolution-section {
+            background: #F8F9FA;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 15px;
+        }
+        
+        .section-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .timeline {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            padding: 20px 0;
+        }
+        
+        .timeline-line {
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            right: 10%;
+            height: 3px;
+            background: linear-gradient(90deg, #1E64C8 0%, #4A90E2 100%);
+            z-index: 0;
+        }
+        
+        .timeline-item {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+        }
+        
+        .timeline-node {
+            width: 50px;
+            height: 50px;
+            background: white;
+            border: 4px solid #1E64C8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .timeline-item:hover .timeline-node {
+            transform: scale(1.2);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.4);
+        }
+        
+        .timeline-label {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 4px;
+        }
+        
+        .timeline-desc {
+            font-size: 11px;
+            color: #666;
+            text-align: center;
+            line-height: 1.3;
+            max-width: 140px;
+        }
+        
+        .bottom-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .method-details {
+            background: #F8F9FA;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 15px;
+        }
+        
+        .detail-card {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+        }
+        
+        .detail-card:last-child {
+            margin-bottom: 0;
+        }
+        
+        .detail-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .detail-icon {
+            font-size: 20px;
+        }
+        
+        .detail-name {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1E64C8;
+        }
+        
+        .detail-content {
+            font-size: 13px;
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .detail-formula {
+            background: #E8F2FF;
+            border-radius: 4px;
+            padding: 6px;
+            margin-top: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            text-align: center;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .medical-example {
+            background: #F8F9FA;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 15px;
+        }
+        
+        .example-visual {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 12px;
+            height: 200px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .xray-box {
+            background: #F0F0F0;
+            border: 2px solid #E0E0E0;
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .xray-title {
+            background: #1E64C8;
+            color: white;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 6px;
+            text-align: center;
+        }
+        
+        .xray-image {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: #2C3E50;
+        }
+        
+        .xray-content {
+            font-size: 60px;
+            opacity: 0.7;
+        }
+        
+        .heatmap-overlay {
+            position: absolute;
+            top: 20%;
+            left: 30%;
+            width: 40%;
+            height: 40%;
+            background: radial-gradient(circle, 
+                rgba(230, 57, 70, 0.8) 0%, 
+                rgba(244, 162, 97, 0.6) 40%, 
+                rgba(255, 223, 0, 0.3) 70%, 
+                transparent 100%);
+            border-radius: 50%;
+        }
+        
+        .pathology-label {
+            position: absolute;
+            top: 10%;
+            right: 10%;
+            background: rgba(230, 57, 70, 0.9);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        
+        .application-box {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 10px;
+        }
+        
+        .app-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .app-list {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .app-list div {
+            margin-bottom: 4px;
+            padding-left: 16px;
+            position: relative;
+        }
+        
+        .app-list div:before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: #1E64C8;
+            font-weight: 700;
+        }
+        
+        .comparison-table {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 10px;
+        }
+        
+        .comp-row {
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            padding: 6px;
+            border-bottom: 1px solid #E0E0E0;
+            font-size: 12px;
+        }
+        
+        .comp-row:last-child {
+            border-bottom: none;
+        }
+        
+        .comp-label {
+            font-weight: 700;
+            color: #1E64C8;
+        }
+        
+        .comp-value {
+            color: #333;
+        }
+        
+        .highlight {
+            color: #28A745;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">CAM-family Methods: Evolution of Class Activation Mapping</div>
+        
+        <div class="main-layout">
+            <!-- Evolution Timeline -->
+            <div class="evolution-section">
+                <div class="section-title">Evolution: CAM → Grad-CAM → Grad-CAM++ → Score-CAM → Layer-CAM</div>
+                
+                <div class="timeline">
+                    <div class="timeline-line"></div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-node">📍</div>
+                        <div class="timeline-label">CAM</div>
+                        <div class="timeline-desc">2016<br>Global average pooling required</div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-node">🔍</div>
+                        <div class="timeline-label">Grad-CAM</div>
+                        <div class="timeline-desc">2017<br>Any CNN architecture</div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-node">➕</div>
+                        <div class="timeline-label">Grad-CAM++</div>
+                        <div class="timeline-desc">2018<br>Better localization</div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-node">🎯</div>
+                        <div class="timeline-label">Score-CAM</div>
+                        <div class="timeline-desc">2020<br>Gradient-free</div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-node">📊</div>
+                        <div class="timeline-label">Layer-CAM</div>
+                        <div class="timeline-desc">2021<br>Layer-wise mapping</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bottom Section -->
+            <div class="bottom-section">
+                <!-- Method Details -->
+                <div class="method-details">
+                    <div class="section-title">Key Methods</div>
+                    
+                    <div class="detail-card">
+                        <div class="detail-header">
+                            <div class="detail-icon">📍</div>
+                            <div class="detail-name">CAM</div>
+                        </div>
+                        <div class="detail-content">
+                            Global average pooling + linear layer weights
+                        </div>
+                        <div class="detail-formula">L_CAM = Σ w_k · A_k</div>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <div class="detail-header">
+                            <div class="detail-icon">🔍</div>
+                            <div class="detail-name">Grad-CAM</div>
+                        </div>
+                        <div class="detail-content">
+                            Gradient-weighted class activation
+                        </div>
+                        <div class="detail-formula">L = ReLU(Σ α_k · A_k), α_k = 1/Z Σᵢ Σⱼ ∂y^c/∂A_k^ij</div>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <div class="detail-header">
+                            <div class="detail-icon">🎯</div>
+                            <div class="detail-name">Score-CAM</div>
+                        </div>
+                        <div class="detail-content">
+                            Ablation-based, no gradients needed
+                        </div>
+                        <div class="detail-formula">L = ReLU(Σ w_k · A_k), w_k from forward pass</div>
+                    </div>
+                    
+                    <div class="comparison-table">
+                        <div class="comp-row">
+                            <div class="comp-label">Best for:</div>
+                            <div class="comp-value">CNNs, visual tasks</div>
+                        </div>
+                        <div class="comp-row">
+                            <div class="comp-label">Advantage:</div>
+                            <div class="comp-value"><span class="highlight">Fast</span> computation</div>
+                        </div>
+                        <div class="comp-row">
+                            <div class="comp-label">Limitation:</div>
+                            <div class="comp-value">CNN-specific</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Medical Example -->
+                <div class="medical-example">
+                    <div class="section-title">Application: Medical X-ray</div>
+                    
+                    <div class="example-visual">
+                        <div class="xray-box">
+                            <div class="xray-title">Original X-ray</div>
+                            <div class="xray-image">
+                                <div class="xray-content">🫁</div>
+                            </div>
+                        </div>
+                        
+                        <div class="xray-box">
+                            <div class="xray-title">Grad-CAM Heatmap</div>
+                            <div class="xray-image">
+                                <div class="xray-content">🫁</div>
+                                <div class="heatmap-overlay"></div>
+                                <div class="pathology-label">Pneumonia</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="application-box">
+                        <div class="app-title">Key Applications</div>
+                        <div class="app-list">
+                            <div><strong>Medical Imaging:</strong> Pathology localization</div>
+                            <div><strong>Object Detection:</strong> Region proposals</div>
+                            <div><strong>Segmentation:</strong> Boundary refinement</div>
+                            <div><strong>Quality Control:</strong> Defect detection</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

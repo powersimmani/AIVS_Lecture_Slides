@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>U-Net Structure</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .title {
+            font-size: 26px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .unet-diagram {
+            position: relative;
+            height: 280px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .path-container {
+            display: flex;
+            justify-content: space-between;
+            height: 100%;
+        }
+        
+        .encoder-path, .decoder-path {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex: 1;
+        }
+        
+        .encoder-path {
+            align-items: flex-start;
+        }
+        
+        .decoder-path {
+            align-items: flex-end;
+        }
+        
+        .level-box {
+            background: #1E64C8;
+            color: white;
+            border-radius: 8px;
+            padding: 12px 16px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(30, 100, 200, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .level-box:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(30, 100, 200, 0.4);
+        }
+        
+        .level-1 { width: 140px; }
+        .level-2 { width: 120px; }
+        .level-3 { width: 100px; }
+        .level-4 { width: 80px; }
+        
+        .level-label {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 3px;
+        }
+        
+        .level-size {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+        
+        .bottleneck {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #E74C3C 0%, #C0392B 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 20px 25px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+            z-index: 10;
+        }
+        
+        .bottleneck-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .bottleneck-desc {
+            font-size: 14px;
+            opacity: 0.95;
+        }
+        
+        .path-label {
+            position: absolute;
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E64C8;
+        }
+        
+        .encoder-label {
+            top: 5px;
+            left: 20px;
+        }
+        
+        .decoder-label {
+            top: 5px;
+            right: 20px;
+        }
+        
+        .skip-line {
+            position: absolute;
+            height: 2px;
+            background: #27AE60;
+            top: 50%;
+            left: 20%;
+            right: 20%;
+            border-radius: 1px;
+        }
+        
+        .skip-badge {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #27AE60;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            z-index: 5;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+        
+        .feature-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            border-color: #1E64C8;
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.15);
+            transform: translateY(-3px);
+        }
+        
+        .feature-icon {
+            font-size: 22px;
+            margin-bottom: 6px;
+        }
+        
+        .feature-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .feature-desc {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">U-Net Structure</div>
+            <div class="subtitle">Part 5/7: Architecture</div>
+        </div>
+        
+        <div class="unet-diagram">
+            <div class="path-label encoder-label">⬇️ Encoder Path</div>
+            <div class="path-label decoder-label">⬆️ Decoder Path</div>
+            
+            <div class="path-container">
+                <!-- Encoder Path -->
+                <div class="encoder-path">
+                    <div class="level-box level-1">
+                        <div class="level-label">Level 1</div>
+                        <div class="level-size">256×256</div>
+                    </div>
+                    <div class="level-box level-2">
+                        <div class="level-label">Level 2</div>
+                        <div class="level-size">128×128</div>
+                    </div>
+                    <div class="level-box level-3">
+                        <div class="level-label">Level 3</div>
+                        <div class="level-size">64×64</div>
+                    </div>
+                    <div class="level-box level-4">
+                        <div class="level-label">Level 4</div>
+                        <div class="level-size">32×32</div>
+                    </div>
+                </div>
+                
+                <!-- Decoder Path -->
+                <div class="decoder-path">
+                    <div class="level-box level-1">
+                        <div class="level-label">Level 1</div>
+                        <div class="level-size">256×256</div>
+                    </div>
+                    <div class="level-box level-2">
+                        <div class="level-label">Level 2</div>
+                        <div class="level-size">128×128</div>
+                    </div>
+                    <div class="level-box level-3">
+                        <div class="level-label">Level 3</div>
+                        <div class="level-size">64×64</div>
+                    </div>
+                    <div class="level-box level-4">
+                        <div class="level-label">Level 4</div>
+                        <div class="level-size">32×32</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bottleneck -->
+            <div class="bottleneck">
+                <div class="bottleneck-title">⚡ Bottleneck</div>
+                <div class="bottleneck-desc">16×16<br>Highest channels</div>
+            </div>
+            
+            <!-- Skip Connection -->
+            <div class="skip-line"></div>
+            <div class="skip-badge">🔗 Skip Connections</div>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🔲</div>
+                <div class="feature-title">ResNet Blocks</div>
+                <div class="feature-desc">Two conv + residual</div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <div class="feature-title">Normalization</div>
+                <div class="feature-desc">Group norm</div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">⏰</div>
+                <div class="feature-title">Time Embedding</div>
+                <div class="feature-desc">Adaptive norm</div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🔗</div>
+                <div class="feature-title">Concatenation</div>
+                <div class="feature-desc">Encoder features</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

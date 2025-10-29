@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inner Product and Orthogonality</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: #ffffff;
+            position: relative;
+            padding: 25px 35px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .header-title {
+            font-size: 20px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            flex: 1;
+        }
+        
+        .left-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .concept-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .concept-card:hover {
+            background: #f0f7ff;
+            transform: translateX(3px);
+        }
+        
+        .concept-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .concept-formula {
+            font-size: 16px;
+            color: #333;
+            font-family: 'Courier New', monospace;
+            background: #f8fafb;
+            padding: 6px 10px;
+            border-radius: 4px;
+            margin-top: 4px;
+        }
+        
+        .concept-desc {
+            font-size: 16px;
+            color: #555;
+            margin-top: 6px;
+            line-height: 1.4;
+        }
+        
+        .right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .visual-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 18px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .visual-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .geometric-diagram {
+            flex: 1;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .vector-space {
+            position: relative;
+            width: 240px;
+            height: 160px;
+        }
+        
+        .origin {
+            position: absolute;
+            left: 20px;
+            bottom: 20px;
+            width: 6px;
+            height: 6px;
+            background: #1E64C8;
+            border-radius: 50%;
+        }
+        
+        .vector-line {
+            position: absolute;
+            left: 20px;
+            bottom: 20px;
+            background: #1E64C8;
+            transform-origin: left center;
+        }
+        
+        .vector-x {
+            width: 140px;
+            height: 3px;
+            transform: rotate(-25deg);
+        }
+        
+        .vector-y {
+            width: 100px;
+            height: 3px;
+            transform: rotate(35deg);
+        }
+        
+        .vector-line::after {
+            content: '';
+            position: absolute;
+            right: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-left: 8px solid #1E64C8;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+        }
+        
+        .vector-label {
+            position: absolute;
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .label-x {
+            left: 160px;
+            bottom: 55px;
+        }
+        
+        .label-y {
+            left: 85px;
+            bottom: 125px;
+        }
+        
+        .angle-arc {
+            position: absolute;
+            left: 20px;
+            bottom: 20px;
+            width: 40px;
+            height: 40px;
+            border: 2px solid #1E64C8;
+            border-radius: 50%;
+            clip-path: polygon(50% 50%, 100% 50%, 100% 0%, 50% 0%);
+            opacity: 0.3;
+        }
+        
+        .angle-label {
+            position: absolute;
+            left: 50px;
+            bottom: 35px;
+            font-size: 16px;
+            color: #1E64C8;
+            font-style: italic;
+        }
+        
+        .projection-line {
+            position: absolute;
+            left: 105px;
+            bottom: 70px;
+            width: 2px;
+            height: 50px;
+            background: #1E64C8;
+            opacity: 0.4;
+            border-left: 2px dashed #1E64C8;
+            transform: rotate(25deg);
+        }
+        
+        .ml-application {
+            background: #1E64C8;
+            color: white;
+            border-radius: 8px;
+            padding: 15px 18px;
+        }
+        
+        .ml-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .ml-content {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        
+        .bullet {
+            margin: 4px 0;
+            padding-left: 15px;
+            position: relative;
+        }
+        
+        .bullet::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-title">Inner Product and Orthogonality</div>
+        </div>
+        
+        <div class="main-grid">
+            <div class="left-panel">
+                <div class="concept-card">
+                    <div class="concept-title">Inner Product (Dot Product)</div>
+                    <div class="concept-formula">⟨x, y⟩ = x₁y₁ + x₂y₂ + ... + xₙyₙ</div>
+                </div>
+                
+                <div class="concept-card">
+                    <div class="concept-title">Geometric Interpretation</div>
+                    <div class="concept-formula">⟨x, y⟩ = ‖x‖‖y‖cos(θ)</div>
+                    <div class="concept-desc">Measures alignment between vectors</div>
+                </div>
+                
+                <div class="concept-card">
+                    <div class="concept-title">Norm (Length)</div>
+                    <div class="concept-formula">‖x‖ = √(⟨x, x⟩) = √(x₁² + x₂² + ... + xₙ²)</div>
+                </div>
+                
+                <div class="concept-card">
+                    <div class="concept-title">Orthogonality</div>
+                    <div class="concept-formula">x ⊥ y when ⟨x, y⟩ = 0</div>
+                    <div class="concept-desc">Vectors are perpendicular (θ = 90°)</div>
+                </div>
+                
+                <div class="concept-card">
+                    <div class="concept-title">Orthonormal Basis</div>
+                    <div class="concept-desc">Basis vectors with unit length, mutually orthogonal</div>
+                </div>
+                
+                <div class="concept-card">
+                    <div class="concept-title">Projection</div>
+                    <div class="concept-formula">proj_y(x) = (⟨x,y⟩/⟨y,y⟩)y</div>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <div class="visual-box">
+                    <div class="visual-title">Geometric Interpretation</div>
+                    <div class="geometric-diagram">
+                        <div class="vector-space">
+                            <div class="origin"></div>
+                            <div class="vector-line vector-x"></div>
+                            <div class="vector-line vector-y"></div>
+                            <div class="vector-label label-x">x</div>
+                            <div class="vector-label label-y">y</div>
+                            <div class="angle-arc"></div>
+                            <div class="angle-label">θ</div>
+                            <div class="projection-line"></div>
+                        </div>
+                    </div>
+                    <div style="text-align: center; font-size: 16px; color: #555; margin-top: 10px;">
+                        Inner product measures the "shadow" of one vector on another
+                    </div>
+                </div>
+                
+                <div class="ml-application">
+                    <div class="ml-title">Key for Regression</div>
+                    <div class="ml-content">
+                        <div class="bullet">Projecting data onto subspaces</div>
+                        <div class="bullet">Residuals are orthogonal to fitted values</div>
+                        <div class="bullet">Minimizing distance = maximizing projection</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T5 - Text-to-Text Framework</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: #ffffff;
+            padding: 25px 40px;
+        }
+        
+        .title {
+            font-size: 26px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .subtitle {
+            font-size: 17px;
+            color: #666666;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .main-layout {
+            display: grid;
+            grid-template-columns: 0.8fr 1.2fr;
+            gap: 20px;
+            height: 430px;
+        }
+        
+        /* Architecture Section */
+        .architecture-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .arch-box {
+            background: #F8F9FA;
+            border: 3px solid #1E64C8;
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .arch-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+        }
+        
+        .transformer-stack {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .stack-box {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .stack-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 4px;
+        }
+        
+        .layer {
+            background: #1E64C8;
+            border: 2px solid #1557A8;
+            border-radius: 6px;
+            padding: 8px;
+            text-align: center;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .arrow-right-large {
+            font-size: 32px;
+            color: #1E64C8;
+        }
+        
+        .info-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .info-card {
+            background: #E8F4F8;
+            border-left: 4px solid #1E64C8;
+            border-radius: 6px;
+            padding: 10px 12px;
+        }
+        
+        .info-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 3px;
+        }
+        
+        .info-text {
+            font-size: 14px;
+            color: #333333;
+            line-height: 1.3;
+        }
+        
+        /* Tasks Section */
+        .tasks-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .unified-title {
+            background: linear-gradient(135deg, #1E64C8, #2E7FD8);
+            color: white;
+            border-radius: 10px;
+            padding: 12px 15px;
+            text-align: center;
+            font-size: 19px;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(30, 100, 200, 0.3);
+        }
+        
+        .tasks-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            flex: 1;
+        }
+        
+        .task-card {
+            background: #F8F9FA;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .task-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(30, 100, 200, 0.2);
+        }
+        
+        .task-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        
+        .task-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .task-prefix {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .task-example {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+        
+        .input-text {
+            color: #666666;
+            flex: 1;
+        }
+        
+        .arrow-small {
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .output-text {
+            color: #2E7D32;
+            font-weight: 500;
+        }
+        
+        .models-row {
+            background: #FFF9E6;
+            border: 2px solid #FFC107;
+            border-radius: 8px;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .models-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #F57C00;
+        }
+        
+        .models-list {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            flex: 1;
+        }
+        
+        .model-tag {
+            background: white;
+            border: 2px solid #FF9800;
+            border-radius: 5px;
+            padding: 4px 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #E65100;
+        }
+        
+        .highlight {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">T5: Text-to-Text Transfer Transformer</div>
+        <div class="subtitle">Google - Unified Framework for All NLP Tasks</div>
+        
+        <div class="main-layout">
+            <!-- Architecture Section -->
+            <div class="architecture-section">
+                <div class="arch-box">
+                    <div class="arch-title">Full Transformer</div>
+                    <div class="transformer-stack">
+                        <div class="stack-box">
+                            <div class="stack-label">Encoder</div>
+                            <div class="layer">Layer N</div>
+                            <div class="layer">...</div>
+                            <div class="layer">Layer 1</div>
+                        </div>
+                        
+                        <div class="arrow-right-large">→</div>
+                        
+                        <div class="stack-box">
+                            <div class="stack-label">Decoder</div>
+                            <div class="layer">Layer N</div>
+                            <div class="layer">...</div>
+                            <div class="layer">Layer 1</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="info-cards">
+                    <div class="info-card">
+                        <div class="info-title">📚 Pre-training</div>
+                        <div class="info-text">
+                            <span class="highlight">C4 corpus</span> (750GB)<br>
+                            Span corruption objective
+                        </div>
+                    </div>
+                    
+                    <div class="info-card">
+                        <div class="info-title">📏 Scalability</div>
+                        <div class="info-text">
+                            T5-Base → T5-11B<br>
+                            Multiple model sizes
+                        </div>
+                    </div>
+                    
+                    <div class="info-card">
+                        <div class="info-title">🎯 Performance</div>
+                        <div class="info-text">
+                            Strong results across<br>
+                            diverse NLP tasks
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tasks Section -->
+            <div class="tasks-section">
+                <div class="unified-title">
+                    🔄 All Tasks → Text Generation
+                </div>
+                
+                <div class="tasks-grid">
+                    <div class="task-card">
+                        <div class="task-icon">🌐</div>
+                        <div class="task-content">
+                            <div class="task-prefix">translate English to German:</div>
+                            <div class="task-example">
+                                <span class="input-text">That is good.</span>
+                                <span class="arrow-small">→</span>
+                                <span class="output-text">Das ist gut.</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="task-card">
+                        <div class="task-icon">📝</div>
+                        <div class="task-content">
+                            <div class="task-prefix">summarize:</div>
+                            <div class="task-example">
+                                <span class="input-text">Long article text...</span>
+                                <span class="arrow-small">→</span>
+                                <span class="output-text">Brief summary</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="task-card">
+                        <div class="task-icon">😊</div>
+                        <div class="task-content">
+                            <div class="task-prefix">sentiment:</div>
+                            <div class="task-example">
+                                <span class="input-text">I love this movie!</span>
+                                <span class="arrow-small">→</span>
+                                <span class="output-text">positive</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="task-card">
+                        <div class="task-icon">❓</div>
+                        <div class="task-content">
+                            <div class="task-prefix">question answering:</div>
+                            <div class="task-example">
+                                <span class="input-text">What is the capital?</span>
+                                <span class="arrow-small">→</span>
+                                <span class="output-text">Paris</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="models-row">
+                    <div class="models-label">📊 Model Sizes:</div>
+                    <div class="models-list">
+                        <div class="model-tag">T5-Small</div>
+                        <div class="model-tag">T5-Base</div>
+                        <div class="model-tag">T5-Large</div>
+                        <div class="model-tag">T5-3B</div>
+                        <div class="model-tag">T5-11B</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loss Function Role & Importance</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: #ffffff;
+        }
+        
+        .central-node {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            background: #1E64C8;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 20px;
+            font-weight: 600;
+            text-align: center;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.3);
+            z-index: 10;
+        }
+        
+        .role-item {
+            position: absolute;
+            width: 260px;
+            padding: 16px 20px;
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            font-size: 16px;
+            line-height: 1.4;
+            color: #2c3e50;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .role-item strong {
+            color: #1E64C8;
+            display: block;
+            margin-bottom: 4px;
+        }
+        
+        /* 6 item positions (circular layout) */
+        .role-1 {
+            left: 60px;
+            top: 50px;
+        }
+        
+        .role-2 {
+            right: 60px;
+            top: 50px;
+        }
+        
+        .role-3 {
+            right: 20px;
+            top: 240px;
+        }
+        
+        .role-4 {
+            right: 60px;
+            bottom: 50px;
+        }
+        
+        .role-5 {
+            left: 60px;
+            bottom: 50px;
+        }
+        
+        .role-6 {
+            left: 20px;
+            top: 240px;
+        }
+        
+        /* Connecting lines */
+        .connector {
+            position: absolute;
+            background: #1E64C8;
+            opacity: 0.3;
+            z-index: 1;
+        }
+        
+        .conn-1 {
+            left: 235px;
+            top: 115px;
+            width: 2px;
+            height: 120px;
+            transform: rotate(-35deg);
+            transform-origin: top;
+        }
+        
+        .conn-2 {
+            right: 235px;
+            top: 115px;
+            width: 2px;
+            height: 120px;
+            transform: rotate(35deg);
+            transform-origin: top;
+        }
+        
+        .conn-3 {
+            right: 155px;
+            top: 270px;
+            width: 135px;
+            height: 2px;
+        }
+        
+        .conn-4 {
+            right: 235px;
+            bottom: 115px;
+            width: 2px;
+            height: 120px;
+            transform: rotate(-35deg);
+            transform-origin: bottom;
+        }
+        
+        .conn-5 {
+            left: 235px;
+            bottom: 115px;
+            width: 2px;
+            height: 120px;
+            transform: rotate(35deg);
+            transform-origin: bottom;
+        }
+        
+        .conn-6 {
+            left: 155px;
+            top: 270px;
+            width: 135px;
+            height: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Central node -->
+        <div class="central-node">
+            <div>Loss Function</div>
+            <div style="font-size: 16px; font-weight: 400; margin-top: 8px;">Role & Importance</div>
+        </div>
+        
+        <!-- Connecting lines -->
+        <div class="connector conn-1"></div>
+        <div class="connector conn-2"></div>
+        <div class="connector conn-3"></div>
+        <div class="connector conn-4"></div>
+        <div class="connector conn-5"></div>
+        <div class="connector conn-6"></div>
+        
+        <!-- Role items -->
+        <div class="role-item role-1">
+            <strong>1. Quantification</strong>
+            Quantifies difference between predicted and actual values
+        </div>
+        
+        <div class="role-item role-2">
+            <strong>2. Gradient Direction</strong>
+            Guides optimization process by providing gradient direction
+        </div>
+        
+        <div class="role-item role-3">
+            <strong>3. Task-Specific Design</strong>
+            Different loss functions needed per task (regression vs classification)
+        </div>
+        
+        <div class="role-item role-4">
+            <strong>4. Performance Impact</strong>
+            Direct impact on model performance and behavior
+        </div>
+        
+        <div class="role-item role-5">
+            <strong>5. Objective Function</strong>
+            Acts as the objective function that the model seeks to minimize
+        </div>
+        
+        <div class="role-item role-6">
+            <strong>6. Convergence & Accuracy</strong>
+            Affects convergence speed and final model accuracy
+        </div>
+    </div>
+</body>
+</html>

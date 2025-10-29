@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Warm-up and Linear Schedule</title>
+    <style>* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: Aptos, 'Segoe UI', sans-serif; background: #ffffff; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+.container { width: 960px; height: 540px; padding: 30px; background: #ffffff; }
+.header { text-align: center; margin-bottom: 20px; }
+.main-title { font-size: 20px; font-weight: 600; color: #1E64C8; margin-bottom: 6px; }
+.subtitle { font-size: 16px; color: #666; }
+.content-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; height: 440px; }
+.left-section, .right-section { display: flex; flex-direction: column; gap: 15px; }
+.concept-box { background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%); color: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 12px rgba(30, 100, 200, 0.3); }
+.concept-title { font-size: 18px; font-weight: 600; margin-bottom: 10px; }
+.concept-desc { font-size: 16px; line-height: 1.6; }
+        .phase-box { background: #f8f9fa; border: 2px solid #1E64C8; border-radius: 8px; padding: 18px; flex: 1; }
+        .phase-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 2px solid #1E64C8; }
+        .phase-number { background: #1E64C8; color: white; min-width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 18px; flex-shrink: 0; }
+        .phase-title { font-size: 18px; font-weight: 600; color: #1E64C8; }
+        .phase-content { display: flex; flex-direction: column; gap: 8px; }
+        .phase-item { display: flex; align-items: flex-start; gap: 10px; }
+        .phase-icon { background: #1E64C8; color: white; min-width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0; margin-top: 2px; }
+        .phase-text { font-size: 16px; color: #2c3e50; line-height: 1.5; }
+        .combined-box { background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%); color: white; padding: 18px 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(30, 100, 200, 0.3); }
+        .combined-title { font-size: 17px; font-weight: 600; margin-bottom: 8px; text-align: center; }
+        .combined-desc { font-size: 16px; line-height: 1.6; text-align: center; }
+        .visual-box { background: #f8f9fa; border: 2px solid #1E64C8; border-radius: 8px; padding: 18px; }
+        .visual-title { font-size: 17px; font-weight: 600; color: #1E64C8; margin-bottom: 12px; text-align: center; }
+        .benefits-box { background: #f8f9fa; border: 2px solid #1E64C8; border-radius: 8px; padding: 18px; flex: 1; }
+        .benefits-title { font-size: 17px; font-weight: 600; color: #1E64C8; margin-bottom: 12px; }
+        .benefit-list { display: flex; flex-direction: column; gap: 8px; }
+        .benefit-item { display: flex; align-items: flex-start; gap: 10px; }
+        .benefit-icon { background: #28a745; color: white; min-width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0; margin-top: 2px; }
+        .benefit-text { font-size: 16px; color: #2c3e50; line-height: 1.5; }
+        .usage-box { background: linear-gradient(135deg, #e8f1fd 0%, #f0f8ff 100%); border: 2px solid #1E64C8; border-radius: 8px; padding: 16px 18px; }
+        .usage-title { font-size: 16px; font-weight: 600; color: #1E64C8; margin-bottom: 10px; text-align: center; }
+        .usage-examples { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+        .usage-tag { background: white; padding: 6px 12px; border-radius: 16px; font-size: 16px; color: #2c3e50; border: 1px solid #1E64C8; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="main-title">Warm-up and Linear Schedule</div>
+            <div class="subtitle">Gradual Start with Progressive Decay</div>
+        </div>
+        
+        <div class="content-layout">
+            <div class="left-section">
+                <div class="phase-box">
+                    <div class="phase-header">
+                        <div class="phase-number">1</div>
+                        <div class="phase-title">Warm-up Phase</div>
+                    </div>
+                    <div class="phase-content">
+                        <div class="phase-item">
+                            <div class="phase-icon">↑</div>
+                            <div class="phase-text">
+                                Gradual increase from low value
+                            </div>
+                        </div>
+                        <div class="phase-item">
+                            <div class="phase-icon">🛡️</div>
+                            <div class="phase-text">
+                                Prevents large gradient updates from random initialization
+                            </div>
+                        </div>
+                        <div class="phase-item">
+                            <div class="phase-icon">📊</div>
+                            <div class="phase-text">
+                                Typically first 5-10% of training
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="phase-box">
+                    <div class="phase-header">
+                        <div class="phase-number">2</div>
+                        <div class="phase-title">Linear Decay Phase</div>
+                    </div>
+                    <div class="phase-content">
+                        <div class="phase-item">
+                            <div class="phase-icon">↓</div>
+                            <div class="phase-text">
+                                Linear decrease from peak to minimum
+                            </div>
+                        </div>
+                        <div class="phase-item">
+                            <div class="phase-icon">🎯</div>
+                            <div class="phase-text">
+                                Remaining 90-95% of training
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="combined-box">
+                    <div class="combined-title">🔗 Combined Schedule</div>
+                    <div class="combined-desc">
+                        Warm-up → Linear or Cosine Decay
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-section">
+                <div class="visual-box">
+                    <div class="visual-title">Schedule Visualization</div>
+                    <div style="background: white; border-radius: 6px; padding: 15px; height: 140px;">
+                        <div style="font-size: 14px; color: #666; text-align: center;">LR increases during warm-up, then decreases linearly</div>
+                    </div>
+                </div>
+                
+                <div class="benefits-box">
+                    <div class="benefits-title">✨ Key Benefits</div>
+                    <div class="benefit-list">
+                        <div class="benefit-item">
+                            <div class="benefit-icon">✓</div>
+                            <div class="benefit-text">
+                                Stabilizes training in early phase
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-icon">✓</div>
+                            <div class="benefit-text">
+                                Especially effective with large batch sizes
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-icon">✓</div>
+                            <div class="benefit-text">
+                                Essential for large-scale model training
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="usage-box">
+                    <div class="usage-title">🎯 Essential For</div>
+                    <div class="usage-examples">
+                        <div class="usage-tag">BERT</div>
+                        <div class="usage-tag">GPT</div>
+                        <div class="usage-tag">Vision Transformers</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

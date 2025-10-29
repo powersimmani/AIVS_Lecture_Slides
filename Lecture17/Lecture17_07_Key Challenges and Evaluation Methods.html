@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluation Framework</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+        
+        .flowchart {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            position: relative;
+        }
+        
+        .flow-row {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            position: relative;
+        }
+        
+        .flow-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 18px 22px;
+            min-width: 280px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .flow-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(30, 100, 200, 0.2);
+        }
+        
+        .flow-box.challenge {
+            background: linear-gradient(135deg, #fff5f5 0%, #ffffff 100%);
+            border-color: #e57373;
+        }
+        
+        .flow-box.decision {
+            background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 100%);
+            border-color: #1E64C8;
+            min-width: 320px;
+        }
+        
+        .flow-box.method {
+            background: linear-gradient(135deg, #f1f8f4 0%, #ffffff 100%);
+            border-color: #81C784;
+            flex: 1;
+            min-width: 220px;
+        }
+        
+        .flow-box.validation {
+            background: linear-gradient(135deg, #fff8e1 0%, #ffffff 100%);
+            border-color: #FFB74D;
+            flex: 1;
+            min-width: 220px;
+        }
+        
+        .box-icon {
+            font-size: 24px;
+            text-align: center;
+        }
+        
+        .box-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+        }
+        
+        .flow-box.challenge .box-title {
+            color: #e57373;
+        }
+        
+        .flow-box.method .box-title {
+            color: #81C784;
+        }
+        
+        .flow-box.validation .box-title {
+            color: #FFB74D;
+        }
+        
+        .box-content {
+            font-size: 15px;
+            color: #444;
+            line-height: 1.4;
+            text-align: center;
+        }
+        
+        .metric-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 14px;
+            color: #555;
+        }
+        
+        .metric-list li {
+            padding-left: 16px;
+            position: relative;
+            line-height: 1.3;
+        }
+        
+        .metric-list li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #1E64C8;
+            font-size: 18px;
+        }
+        
+        .flow-box.method .metric-list li:before {
+            color: #81C784;
+        }
+        
+        .flow-box.validation .metric-list li:before {
+            color: #FFB74D;
+        }
+        
+        /* Arrows */
+        .arrow {
+            position: absolute;
+            color: #1E64C8;
+            font-size: 28px;
+            z-index: 1;
+        }
+        
+        .arrow-down {
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: -23px;
+        }
+        
+        .arrow-split {
+            position: absolute;
+            width: 2px;
+            background: #1E64C8;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .methods-row {
+            position: relative;
+        }
+        
+        .methods-row::before {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent 0%, #1E64C8 20%, #1E64C8 80%, transparent 100%);
+        }
+        
+        .validation-row {
+            position: relative;
+        }
+        
+        .validation-row::before {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent 0%, #1E64C8 15%, #1E64C8 85%, transparent 100%);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Evaluation Framework for Unsupervised Learning</div>
+        
+        <div class="flowchart">
+            <!-- Challenge -->
+            <div class="flow-row">
+                <div class="flow-box challenge">
+                    <div class="box-icon">⚠️</div>
+                    <div class="box-title">Key Challenge</div>
+                    <div class="box-content">No ground truth available<br>Cannot compute accuracy</div>
+                    <div class="arrow arrow-down">↓</div>
+                </div>
+            </div>
+            
+            <!-- Decision Point -->
+            <div class="flow-row">
+                <div class="flow-box decision">
+                    <div class="box-icon">🔍</div>
+                    <div class="box-title">Evaluation Question</div>
+                    <div class="box-content">What makes a 'good' clustering?</div>
+                    <div class="arrow arrow-down">↓</div>
+                </div>
+            </div>
+            
+            <!-- Evaluation Methods -->
+            <div class="flow-row methods-row">
+                <div class="flow-box method">
+                    <div class="box-icon">📊</div>
+                    <div class="box-title">Internal Metrics</div>
+                    <ul class="metric-list">
+                        <li>Silhouette Score</li>
+                        <li>Davies-Bouldin Index</li>
+                        <li>Inertia</li>
+                    </ul>
+                </div>
+                
+                <div class="flow-box method">
+                    <div class="box-icon">🏷️</div>
+                    <div class="box-title">External Metrics</div>
+                    <div class="box-content" style="font-size: 14px; margin-bottom: 4px;">When labels available:</div>
+                    <ul class="metric-list">
+                        <li>ARI (Adjusted Rand Index)</li>
+                        <li>NMI (Normalized Mutual Info)</li>
+                        <li>Purity</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Validation Methods -->
+            <div class="flow-row validation-row">
+                <div class="flow-box validation">
+                    <div class="box-icon">👁️</div>
+                    <div class="box-title">Visual Inspection</div>
+                    <div class="box-content">Plot clusters in 2D/3D space</div>
+                </div>
+                
+                <div class="flow-box validation">
+                    <div class="box-icon">💼</div>
+                    <div class="box-title">Domain Validation</div>
+                    <div class="box-content">Do clusters make business sense?</div>
+                </div>
+                
+                <div class="flow-box validation">
+                    <div class="box-icon">🔄</div>
+                    <div class="box-title">Stability Analysis</div>
+                    <div class="box-content">Consistent results across runs?</div>
+                </div>
+                
+                <div class="flow-box validation">
+                    <div class="box-icon">💡</div>
+                    <div class="box-title">Interpretability</div>
+                    <div class="box-content">Can we explain patterns?</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

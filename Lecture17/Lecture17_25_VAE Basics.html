@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VAE Basics</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+            color: #666;
+            margin-top: -8px;
+        }
+        
+        .architecture-section {
+            background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 12px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        
+        .arch-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        
+        .arch-component {
+            background: white;
+            border: 2px solid;
+            border-radius: 10px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            transition: all 0.3s;
+        }
+        
+        .arch-component:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .arch-component.input {
+            border-color: #4CAF50;
+            background: linear-gradient(135deg, #e8f5e9 0%, #ffffff 100%);
+        }
+        
+        .arch-component.encoder {
+            border-color: #1E64C8;
+            background: linear-gradient(135deg, #e3f2fd 0%, #ffffff 100%);
+        }
+        
+        .arch-component.latent {
+            border-color: #9C27B0;
+            background: linear-gradient(135deg, #f3e5f5 0%, #ffffff 100%);
+            flex: 1.2;
+        }
+        
+        .arch-component.decoder {
+            border-color: #FF9800;
+            background: linear-gradient(135deg, #fff3e0 0%, #ffffff 100%);
+        }
+        
+        .arch-component.output {
+            border-color: #00897B;
+            background: linear-gradient(135deg, #e0f2f1 0%, #ffffff 100%);
+        }
+        
+        .comp-icon {
+            font-size: 28px;
+        }
+        
+        .comp-name {
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .arch-component.input .comp-name {
+            color: #388E3C;
+        }
+        
+        .arch-component.encoder .comp-name {
+            color: #1E64C8;
+        }
+        
+        .arch-component.latent .comp-name {
+            color: #9C27B0;
+        }
+        
+        .arch-component.decoder .comp-name {
+            color: #F57C00;
+        }
+        
+        .arch-component.output .comp-name {
+            color: #00897B;
+        }
+        
+        .comp-desc {
+            font-size: 13px;
+            color: #666;
+            text-align: center;
+            line-height: 1.2;
+        }
+        
+        .latent-params {
+            display: flex;
+            gap: 8px;
+            margin-top: 4px;
+        }
+        
+        .param-badge {
+            background: white;
+            border: 1px solid #9C27B0;
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 14px;
+            color: #9C27B0;
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .arrow {
+            font-size: 28px;
+            color: #1E64C8;
+            flex-shrink: 0;
+        }
+        
+        .loss-box {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffffff 100%);
+            border: 2px solid #FF9800;
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .loss-formula {
+            font-size: 16px;
+            font-weight: 600;
+            color: #F57C00;
+            margin-bottom: 4px;
+        }
+        
+        .loss-parts {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+        
+        .key-concepts-box {
+            background: linear-gradient(135deg, #f3e5f5 0%, #ffffff 100%);
+            border: 2px solid #9C27B0;
+            border-radius: 12px;
+            padding: 16px;
+        }
+        
+        .box-header {
+            font-size: 18px;
+            font-weight: 600;
+            color: #9C27B0;
+            text-align: center;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #9C27B0;
+        }
+        
+        .concept-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .concept-item {
+            background: white;
+            border: 1px solid #9C27B0;
+            border-radius: 8px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .concept-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        
+        .concept-text {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.3;
+        }
+        
+        .applications-box {
+            background: linear-gradient(135deg, #e8f5e9 0%, #ffffff 100%);
+            border: 2px solid #4CAF50;
+            border-radius: 12px;
+            padding: 16px;
+        }
+        
+        .applications-box .box-header {
+            color: #388E3C;
+            border-color: #4CAF50;
+        }
+        
+        .app-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+        }
+        
+        .app-item {
+            background: white;
+            border: 1px solid #4CAF50;
+            border-radius: 8px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .app-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        
+        .app-text {
+            font-size: 15px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">VAE: Variational Autoencoder</div>
+        <div class="subtitle">Probabilistic generative model with latent distribution</div>
+        
+        <div class="architecture-section">
+            <div class="arch-flow">
+                <div class="arch-component input">
+                    <div class="comp-icon">📥</div>
+                    <div class="comp-name">Input</div>
+                    <div class="comp-desc">Data x</div>
+                </div>
+                
+                <div class="arrow">→</div>
+                
+                <div class="arch-component encoder">
+                    <div class="comp-icon">🧠</div>
+                    <div class="comp-name">Encoder</div>
+                    <div class="comp-desc">Learns distribution</div>
+                </div>
+                
+                <div class="arrow">→</div>
+                
+                <div class="arch-component latent">
+                    <div class="comp-icon">🎲</div>
+                    <div class="comp-name">Latent Space</div>
+                    <div class="comp-desc">Probabilistic representation</div>
+                    <div class="latent-params">
+                        <div class="param-badge">μ (mean)</div>
+                        <div class="param-badge">σ² (var)</div>
+                    </div>
+                </div>
+                
+                <div class="arrow">→</div>
+                
+                <div class="arch-component decoder">
+                    <div class="comp-icon">🔮</div>
+                    <div class="comp-name">Decoder</div>
+                    <div class="comp-desc">Generate from z</div>
+                </div>
+                
+                <div class="arrow">→</div>
+                
+                <div class="arch-component output">
+                    <div class="comp-icon">📤</div>
+                    <div class="comp-name">Output</div>
+                    <div class="comp-desc">Reconstructed x̂</div>
+                </div>
+            </div>
+            
+            <div class="loss-box">
+                <div class="loss-formula">Loss = Reconstruction Loss + KL Divergence</div>
+                <div class="loss-parts">
+                    <span>📊 Minimize reconstruction error</span>
+                    <span>•</span>
+                    <span>📐 Regularize to Gaussian prior</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bottom-grid">
+            <div class="key-concepts-box">
+                <div class="box-header">🔑 Key Concepts</div>
+                <div class="concept-list">
+                    <div class="concept-item">
+                        <div class="concept-icon">🎯</div>
+                        <div class="concept-text"><strong>Probabilistic:</strong> Distribution over latent space</div>
+                    </div>
+                    
+                    <div class="concept-item">
+                        <div class="concept-icon">⚡</div>
+                        <div class="concept-text"><strong>Reparameterization:</strong> Enables backpropagation</div>
+                    </div>
+                    
+                    <div class="concept-item">
+                        <div class="concept-icon">🌊</div>
+                        <div class="concept-text"><strong>Generation:</strong> Sample latent → new data</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="applications-box">
+                <div class="box-header">🎯 Applications</div>
+                <div class="app-grid">
+                    <div class="app-item">
+                        <div class="app-icon">🖼️</div>
+                        <div class="app-text">Image generation</div>
+                    </div>
+                    
+                    <div class="app-item">
+                        <div class="app-icon">📊</div>
+                        <div class="app-text">Data augmentation</div>
+                    </div>
+                    
+                    <div class="app-item">
+                        <div class="app-icon">🏷️</div>
+                        <div class="app-text">Semi-supervised learning</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

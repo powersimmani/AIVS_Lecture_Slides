@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHAP for Text and Images</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Aptos', 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+            padding: 25px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+        }
+        
+        .examples-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            height: calc(100% - 60px);
+        }
+        
+        .example-section {
+            background: #F8F9FA;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .example-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        
+        .example-icon {
+            font-size: 26px;
+        }
+        
+        .example-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E64C8;
+        }
+        
+        .example-visual {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            flex: 1;
+            margin-bottom: 12px;
+            position: relative;
+        }
+        
+        /* Text SHAP Visualization */
+        .text-container {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .text-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .text-content {
+            font-size: 16px;
+            line-height: 2;
+            text-align: justify;
+        }
+        
+        .word {
+            display: inline-block;
+            padding: 4px 6px;
+            margin: 2px;
+            border-radius: 4px;
+            transition: transform 0.2s ease;
+        }
+        
+        .word:hover {
+            transform: scale(1.1);
+        }
+        
+        .word-positive-high {
+            background: #DC3545;
+            color: white;
+            font-weight: 700;
+        }
+        
+        .word-positive-med {
+            background: #FF6B6B;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .word-positive-low {
+            background: #FFB3B3;
+            color: #333;
+        }
+        
+        .word-neutral {
+            background: #F0F0F0;
+            color: #666;
+        }
+        
+        .word-negative-low {
+            background: #B3D9FF;
+            color: #333;
+        }
+        
+        .word-negative-med {
+            background: #4A90E2;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .word-negative-high {
+            background: #1E64C8;
+            color: white;
+            font-weight: 700;
+        }
+        
+        .prediction-box {
+            background: #E8F2FF;
+            border: 2px solid #1E64C8;
+            border-radius: 6px;
+            padding: 10px;
+            text-align: center;
+            margin-top: 12px;
+        }
+        
+        .prediction-label {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+        
+        .prediction-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E64C8;
+        }
+        
+        /* Image SHAP Visualization */
+        .image-container {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        
+        .image-display {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .image-box {
+            background: #F8F9FA;
+            border: 2px solid #E0E0E0;
+            border-radius: 6px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .image-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: #666;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .image-placeholder {
+            flex: 1;
+            background: white;
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .original-img {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+        
+        .heatmap-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            grid-template-rows: repeat(6, 1fr);
+            gap: 1px;
+        }
+        
+        .heatmap-cell {
+            transition: opacity 0.3s ease;
+        }
+        
+        .heatmap-cell:hover {
+            opacity: 0.7;
+        }
+        
+        .heat-high {
+            background: rgba(220, 53, 69, 0.8);
+        }
+        
+        .heat-med {
+            background: rgba(244, 162, 97, 0.6);
+        }
+        
+        .heat-low {
+            background: rgba(74, 144, 226, 0.4);
+        }
+        
+        .heat-none {
+            background: rgba(200, 200, 200, 0.1);
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+        }
+        
+        .legend-box {
+            width: 20px;
+            height: 14px;
+            border-radius: 3px;
+        }
+        
+        .info-section {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 10px;
+        }
+        
+        .info-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .info-items {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .info-items div {
+            margin-bottom: 2px;
+            padding-left: 14px;
+            position: relative;
+        }
+        
+        .info-items div:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #1E64C8;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">SHAP for Text and Images: High-Dimensional Explanations</div>
+        
+        <div class="examples-grid">
+            <!-- Text Example -->
+            <div class="example-section">
+                <div class="example-header">
+                    <div class="example-icon">📝</div>
+                    <div class="example-title">Text (NLP Model)</div>
+                </div>
+                
+                <div class="example-visual">
+                    <div class="text-container">
+                        <div class="text-label">Sentiment Analysis: Movie Review</div>
+                        <div class="text-content">
+                            <span class="word word-neutral">This</span>
+                            <span class="word word-positive-high">brilliant</span>
+                            <span class="word word-neutral">film</span>
+                            <span class="word word-positive-med">captivates</span>
+                            <span class="word word-neutral">with</span>
+                            <span class="word word-positive-low">stunning</span>
+                            <span class="word word-neutral">visuals</span>
+                            <span class="word word-neutral">but</span>
+                            <span class="word word-negative-med">disappoints</span>
+                            <span class="word word-neutral">with</span>
+                            <span class="word word-negative-high">weak</span>
+                            <span class="word word-neutral">plot</span>
+                            <span class="word word-neutral">development</span>
+                        </div>
+                        
+                        <div class="prediction-box">
+                            <div class="prediction-label">Model Prediction</div>
+                            <div class="prediction-value">Mixed (0.58 Positive)</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-box" style="background: #DC3545;"></div>
+                        <span>Strong Positive</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-box" style="background: #FFB3B3;"></div>
+                        <span>Weak Positive</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-box" style="background: #F0F0F0;"></div>
+                        <span>Neutral</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-box" style="background: #B3D9FF;"></div>
+                        <span>Weak Negative</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-box" style="background: #1E64C8;"></div>
+                        <span>Strong Negative</span>
+                    </div>
+                </div>
+                
+                <div class="info-section" style="margin-top: 12px;">
+                    <div class="info-title">Text SHAP Features</div>
+                    <div class="info-items">
+                        <div>Token-level attributions</div>
+                        <div>Color-coded importance</div>
+                        <div>Transformer + SHAP</div>
+                        <div>Context-aware explanations</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Image Example -->
+            <div class="example-section">
+                <div class="example-header">
+                    <div class="example-icon">🖼️</div>
+                    <div class="example-title">Image (CNN Model)</div>
+                </div>
+                
+                <div class="example-visual">
+                    <div class="image-container">
+                        <div class="image-display">
+                            <div class="image-box">
+                                <div class="image-title">Original Image</div>
+                                <div class="image-placeholder">
+                                    <div class="original-img">🐕</div>
+                                </div>
+                            </div>
+                            
+                            <div class="image-box">
+                                <div class="image-title">SHAP Heatmap</div>
+                                <div class="image-placeholder">
+                                    <div class="heatmap-overlay">
+                                        <!-- Creating heatmap grid -->
+                                        <div class="heatmap-cell heat-none"></div>
+                                        <div class="heatmap-cell heat-none"></div>
+                                        <div class="heatmap-cell heat-low"></div>
+                                        <div class="heatmap-cell heat-med"></div>
+                                        <div class="heatmap-cell heat-med"></div>
+                                        <div class="heatmap-cell heat-low"></div>
+                                        <div class="heatmap-cell heat-none"></div>
+                                        <div class="heatmap-cell heat-none"></div>
+                                        
+                                        <div class="heatmap-cell heat-none"></div>
+                                        <div class="heatmap-cell heat-low"></div>
+                                        <div class="heatmap-cell heat-med"></div>
+                                        <div class="heatmap-cell heat-high"></div>
+                                        <div class="heatmap-cell heat-high"></div>
+                                        <div class="heatmap-cell heat-med"></div>
+                                        <div class="heatmap-cell heat-low"></div>
+                                        <div class="heatmap-cell heat-none"></div>
+                                        
+                                        <div class="heatmap-cell heat-low"></div>
+                                        <div class="heatmap-cell heat-med"></div>
+                                        <div class="heatmap-cell heat-high"></div>
+                                        <div class="heatmap-cell heat-high"></div>
+                                        <div class="heatmap-cell heat-high"></div>
+                                        <div class="heatmap-cell heat-high"></div>
+                                        <div class="heatmap-cell heat-med"></div>
+                                        <div class="heatmap-cell heat-low"></div>
+                                        
+                                        <div class="heatmap-cell heat-low"></div>
+                                        <div class="heatmap-cell heat-med"></div>
+                                        <div class="heatmap-cell heat-high"></div>
+                                        <div class="heatmap-cell heat-high"></div>
+                                        <div class="heatmap-cell heat-high"></div>
+                                        <div class="heatmap-cell heat-high"></div>
+                                        <div class="heatmap-cell heat-med"></div>
+                                        <div class="heatmap-cell heat-low"></div>
+                                        
+                                        <div class="heatmap-cell heat-none"></div>
+                                        <div class="heatmap-cell heat-low"></div>
+                                        <div class="heatmap-cell heat-med"></div>
+                                        <div class="heatmap-cell heat-med"></div>
+                                        <div class="heatmap-cell heat-med"></div>
+                                        <div class="heatmap-cell heat-med"></div>
+                                        <div class="heatmap-cell heat-low"></div>
+                                        <div class="heatmap-cell heat-none"></div>
+                                        
+                                        <div class="heatmap-cell heat-none"></div>
+                                        <div class="heatmap-cell heat-none"></div>
+                                        <div class="heatmap-cell heat-low"></div>
+                                        <div class="heatmap-cell heat-low"></div>
+                                        <div class="heatmap-cell heat-low"></div>
+                                        <div class="heatmap-cell heat-low"></div>
+                                        <div class="heatmap-cell heat-none"></div>
+                                        <div class="heatmap-cell heat-none"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="prediction-box">
+                            <div class="prediction-label">Model Prediction</div>
+                            <div class="prediction-value">Dog (0.95 confidence)</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-box heat-high"></div>
+                        <span>High Importance</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-box heat-med"></div>
+                        <span>Medium</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-box heat-low"></div>
+                        <span>Low</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-box heat-none"></div>
+                        <span>Minimal</span>
+                    </div>
+                </div>
+                
+                <div class="info-section" style="margin-top: 12px;">
+                    <div class="info-title">Image SHAP Features</div>
+                    <div class="info-items">
+                        <div>Pixel/superpixel attributions</div>
+                        <div>Partition masking</div>
+                        <div>Heatmap overlay</div>
+                        <div>Region importance</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

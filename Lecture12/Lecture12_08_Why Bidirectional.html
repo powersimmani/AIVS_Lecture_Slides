@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why Bidirectional?</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #ffffff;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 40px;
+            position: relative;
+        }
+        
+        .main-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            height: calc(100% - 50px);
+        }
+        
+        .comparison-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        
+        .card-unidirectional {
+            border-top: 4px solid #dc3545;
+        }
+        
+        .card-bidirectional {
+            border-top: 4px solid #1E64C8;
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .title-unidirectional {
+            color: #dc3545;
+        }
+        
+        .title-bidirectional {
+            color: #1E64C8;
+        }
+        
+        .direction-indicator {
+            font-size: 24px;
+            padding: 4px 12px;
+            background: white;
+            border-radius: 6px;
+        }
+        
+        .example-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .sentence {
+            background: white;
+            padding: 16px;
+            border-radius: 6px;
+            font-size: 16px;
+            text-align: center;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .word {
+            display: inline-block;
+            padding: 4px 8px;
+            margin: 0 4px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .word-target {
+            background: #fff3cd;
+            font-weight: 600;
+            border: 2px solid #ffc107;
+        }
+        
+        .word-context-left {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .word-context-right {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .word-context-both {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .context-explanation {
+            background: white;
+            padding: 16px;
+            border-radius: 6px;
+            border-left: 4px solid currentColor;
+        }
+        
+        .context-unidirectional {
+            border-color: #dc3545;
+        }
+        
+        .context-bidirectional {
+            border-color: #1E64C8;
+        }
+        
+        .context-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .context-title-unidirectional {
+            color: #dc3545;
+        }
+        
+        .context-title-bidirectional {
+            color: #1E64C8;
+        }
+        
+        .context-text {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.5;
+        }
+        
+        .limitations {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .limitation-item {
+            display: flex;
+            align-items: start;
+            gap: 8px;
+            margin-top: 8px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .icon-bad {
+            color: #dc3545;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .icon-good {
+            color: #28a745;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .advantages {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .advantage-item {
+            display: flex;
+            align-items: start;
+            gap: 8px;
+            margin-top: 8px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .visual-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin: 12px 0;
+        }
+        
+        .flow-box {
+            width: 60px;
+            height: 40px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .flow-uni {
+            background: #dc3545;
+        }
+        
+        .flow-bi {
+            background: #1E64C8;
+        }
+        
+        .flow-arrow {
+            font-size: 20px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-title">Context Matters: Unidirectional vs Bidirectional Processing</div>
+        
+        <div class="comparison">
+            <!-- Unidirectional RNN -->
+            <div class="comparison-card card-unidirectional">
+                <div class="card-header">
+                    <div class="card-title title-unidirectional">Unidirectional RNN</div>
+                    <div class="direction-indicator">→</div>
+                </div>
+                
+                <div class="example-section">
+                    <div class="sentence">
+                        <span class="word word-context-left">The</span>
+                        <span class="word word-context-left">cat</span>
+                        <span class="word word-context-left">sat</span>
+                        <span class="word word-context-left">on</span>
+                        <span class="word word-context-left">the</span>
+                        <span class="word word-target">bank</span>
+                        <span class="word">of</span>
+                        <span class="word">the</span>
+                        <span class="word">river</span>
+                    </div>
+                    
+                    <div class="visual-flow">
+                        <div class="flow-box flow-uni">t₁</div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-box flow-uni">t₂</div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-box flow-uni">t₃</div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-box flow-uni" style="opacity: 0.5;">...</div>
+                    </div>
+                    
+                    <div class="context-explanation context-unidirectional">
+                        <div class="context-title context-title-unidirectional">Limited Context</div>
+                        <div class="context-text">
+                            Only sees <strong>past</strong> words. At "bank", cannot see "river" yet.
+                        </div>
+                        <div class="limitations">
+                            <div class="limitation-item">
+                                <span class="icon-bad">✗</span>
+                                <span>Cannot disambiguate without future context</span>
+                            </div>
+                            <div class="limitation-item">
+                                <span class="icon-bad">✗</span>
+                                <span>Incomplete understanding at each time step</span>
+                            </div>
+                            <div class="limitation-item">
+                                <span class="icon-bad">✗</span>
+                                <span>Poor performance on tasks requiring full sentence context</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bidirectional RNN -->
+            <div class="comparison-card card-bidirectional">
+                <div class="card-header">
+                    <div class="card-title title-bidirectional">Bidirectional RNN</div>
+                    <div class="direction-indicator">⇄</div>
+                </div>
+                
+                <div class="example-section">
+                    <div class="sentence">
+                        <span class="word word-context-both">The</span>
+                        <span class="word word-context-both">cat</span>
+                        <span class="word word-context-both">sat</span>
+                        <span class="word word-context-both">on</span>
+                        <span class="word word-context-both">the</span>
+                        <span class="word word-target">bank</span>
+                        <span class="word word-context-both">of</span>
+                        <span class="word word-context-both">the</span>
+                        <span class="word word-context-both">river</span>
+                    </div>
+                    
+                    <div class="visual-flow">
+                        <div style="display: flex; flex-direction: column; gap: 4px; align-items: center;">
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <div class="flow-box flow-bi">t₁</div>
+                                <div class="flow-arrow">→</div>
+                                <div class="flow-box flow-bi">t₂</div>
+                                <div class="flow-arrow">→</div>
+                                <div class="flow-box flow-bi">t₃</div>
+                            </div>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <div class="flow-box flow-bi" style="background: #5088d4;">t₁</div>
+                                <div class="flow-arrow">←</div>
+                                <div class="flow-box flow-bi" style="background: #5088d4;">t₂</div>
+                                <div class="flow-arrow">←</div>
+                                <div class="flow-box flow-bi" style="background: #5088d4;">t₃</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="context-explanation context-bidirectional">
+                        <div class="context-title context-title-bidirectional">Full Context</div>
+                        <div class="context-text">
+                            Sees <strong>both past and future</strong> words. At "bank", also sees "river".
+                        </div>
+                        <div class="advantages">
+                            <div class="advantage-item">
+                                <span class="icon-good">✓</span>
+                                <span>Complete context for better disambiguation</span>
+                            </div>
+                            <div class="advantage-item">
+                                <span class="icon-good">✓</span>
+                                <span>Richer representations at each time step</span>
+                            </div>
+                            <div class="advantage-item">
+                                <span class="icon-good">✓</span>
+                                <span>Superior for NER, POS tagging, sentiment analysis</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Layer Normalization</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: #ffffff;
+            padding: 20px 40px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 25px;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1.1fr 1fr;
+            gap: 25px;
+            height: 450px;
+        }
+        
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        
+        .comparison-box {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 12px;
+            padding: 20px;
+            flex: 1;
+        }
+        
+        .comparison-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .visual-comparison {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            gap: 20px;
+            margin: 15px 0;
+        }
+        
+        .norm-type {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .norm-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .sample-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        
+        .feature-cell {
+            width: 35px;
+            height: 35px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+            border: 2px solid;
+        }
+        
+        .batch-norm-cell {
+            background: #90caf9;
+            border-color: #42a5f5;
+        }
+        
+        .layer-norm-cell {
+            background: #4caf50;
+            border-color: #388e3c;
+        }
+        
+        .highlight-row {
+            background: #66bb6a !important;
+            border-color: #2e7d32 !important;
+        }
+        
+        .sample-label {
+            font-size: 13px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .key-difference {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            font-size: 15px;
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+        
+        .diff-highlight {
+            font-weight: 600;
+            color: #4caf50;
+        }
+        
+        .independence-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 14px;
+            text-align: center;
+        }
+        
+        .independence-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #f57c00;
+            margin-bottom: 8px;
+        }
+        
+        .independence-text {
+            font-size: 15px;
+            color: #2c3e50;
+        }
+        
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .section-header {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 5px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .feature-card {
+            background: #f8f9fb;
+            border-left: 4px solid #1E64C8;
+            padding: 13px 16px;
+            border-radius: 6px;
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.5;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            background: #eef3fb;
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(30, 100, 200, 0.15);
+        }
+        
+        .highlight {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .usage-box {
+            background: #e8f5e9;
+            border: 2px solid #4caf50;
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin-top: 10px;
+        }
+        
+        .usage-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #4caf50;
+            margin-bottom: 8px;
+        }
+        
+        .usage-text {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Layer Normalization (Layer Norm)</div>
+        
+        <div class="main-content">
+            <div class="left-section">
+                <div class="comparison-box">
+                    <div class="comparison-title">Batch Norm vs Layer Norm</div>
+                    
+                    <div class="visual-comparison">
+                        <div class="norm-type">
+                            <div class="norm-label">Batch Norm</div>
+                            <div class="sample-grid">
+                                <div class="feature-cell batch-norm-cell highlight-row">F1</div>
+                                <div class="feature-cell batch-norm-cell">F2</div>
+                                <div class="feature-cell batch-norm-cell">F3</div>
+                                <div class="feature-cell batch-norm-cell highlight-row">F1</div>
+                                <div class="feature-cell batch-norm-cell">F2</div>
+                                <div class="feature-cell batch-norm-cell">F3</div>
+                                <div class="feature-cell batch-norm-cell highlight-row">F1</div>
+                                <div class="feature-cell batch-norm-cell">F2</div>
+                                <div class="feature-cell batch-norm-cell">F3</div>
+                            </div>
+                            <div class="sample-label">Across Batch ↓</div>
+                        </div>
+                        
+                        <div class="norm-type">
+                            <div class="norm-label">Layer Norm</div>
+                            <div class="sample-grid">
+                                <div class="feature-cell layer-norm-cell highlight-row">F1</div>
+                                <div class="feature-cell layer-norm-cell highlight-row">F2</div>
+                                <div class="feature-cell layer-norm-cell highlight-row">F3</div>
+                                <div class="feature-cell layer-norm-cell">F1</div>
+                                <div class="feature-cell layer-norm-cell">F2</div>
+                                <div class="feature-cell layer-norm-cell">F3</div>
+                                <div class="feature-cell layer-norm-cell">F1</div>
+                                <div class="feature-cell layer-norm-cell">F2</div>
+                                <div class="feature-cell layer-norm-cell">F3</div>
+                            </div>
+                            <div class="sample-label">Across Features →</div>
+                        </div>
+                    </div>
+                    
+                    <div class="key-difference">
+                        Normalizes across <span class="diff-highlight">feature dimension</span> per sample
+                    </div>
+                </div>
+                
+                <div class="independence-box">
+                    <div class="independence-title">✓ Independent of Batch Size</div>
+                    <div class="independence-text">
+                        Works with batch size = 1<br>
+                        Each sample normalized independently
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-section">
+                <div class="section-header">Key Features</div>
+                
+                <div class="feature-card">
+                    <span class="highlight">Independent</span> of batch size during training/inference
+                </div>
+                
+                <div class="feature-card">
+                    Each sample normalized <span class="highlight">independently</span>
+                </div>
+                
+                <div class="feature-card">
+                    No dependence on <span class="highlight">batch statistics</span>
+                </div>
+                
+                <div class="feature-card">
+                    Essential for <span class="highlight">RNNs and Transformers</span> (sequential models)
+                </div>
+                
+                <div class="usage-box">
+                    <div class="usage-title">✓ Standard in NLP</div>
+                    <div class="usage-text">
+                        Used in modern NLP architectures:<br>
+                        <strong>BERT, GPT, and Transformers</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

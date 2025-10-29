@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenges of Deep Networks</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            overflow-x: hidden;
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 960px;
+            width: 95vw;
+            min-height: 540px;
+            height: auto;
+            background: white;
+            position: relative;
+            overflow: hidden;
+            padding: 20px 35px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 25px;
+        }
+        
+        .challenges-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .challenge-category {
+            background: white;
+            border: 3px solid #1E64C8;
+            border-radius: 12px;
+            padding: 18px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .challenge-category:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(30, 100, 200, 0.15);
+        }
+        
+        .challenge-category.training {
+            background: linear-gradient(135deg, #FFF3E0 0%, #FFE0B2 100%);
+            border-color: #FF9800;
+        }
+        
+        .challenge-category.gradient {
+            background: linear-gradient(135deg, #FCE4EC 0%, #F8BBD0 100%);
+            border-color: #E91E63;
+        }
+        
+        .challenge-category.generalization {
+            background: linear-gradient(135deg, #F3E5F5 0%, #E1BEE7 100%);
+            border-color: #9C27B0;
+        }
+        
+        .challenge-category.configuration {
+            background: linear-gradient(135deg, #E0F2F1 0%, #B2DFDB 100%);
+            border-color: #009688;
+        }
+        
+        .category-icon {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .category-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            padding-right: 45px;
+        }
+        
+        .challenge-category.training .category-title {
+            color: #FF9800;
+        }
+        
+        .challenge-category.gradient .category-title {
+            color: #E91E63;
+        }
+        
+        .challenge-category.generalization .category-title {
+            color: #9C27B0;
+        }
+        
+        .challenge-category.configuration .category-title {
+            color: #009688;
+        }
+        
+        .challenge-list {
+            list-style: none;
+        }
+        
+        .challenge-item {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.5;
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .challenge-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .challenge-item::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            font-weight: 700;
+        }
+        
+        .challenge-category.training .challenge-item::before {
+            color: #FF9800;
+        }
+        
+        .challenge-category.gradient .challenge-item::before {
+            color: #E91E63;
+        }
+        
+        .challenge-category.generalization .challenge-item::before {
+            color: #9C27B0;
+        }
+        
+        .challenge-category.configuration .challenge-item::before {
+            color: #009688;
+        }
+        
+        .historical-note {
+            background: #FFEBEE;
+            border-left: 5px solid #D32F2F;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        
+        .historical-note .label {
+            font-size: 15px;
+            font-weight: 700;
+            color: #D32F2F;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .historical-note .label::before {
+            content: "⚠";
+            margin-right: 8px;
+            font-size: 18px;
+        }
+        
+        .historical-note .content {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .summary-box {
+            background: #F0F6FF;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px 20px;
+            text-align: center;
+            margin-top: 15px;
+        }
+        
+        .summary-box .text {
+            font-size: 17px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+    
+        
+        /* Responsive adjustments */
+        @media screen and (max-width: 1000px) {
+            .container {
+                width: 98vw !important;
+                max-width: 98vw !important;
+                padding: 15px 20px !important;
+            }
+        }
+        
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: 10px 15px !important;
+            }
+            
+            .title {
+                font-size: 20px !important;
+            }
+            
+            /* 그리드 레이아웃을 1열로 */
+            .challenges-grid,
+            .comparison-grid,
+            .solutions-grid,
+            .guide-grid,
+            .findings-section,
+            .benefits-grid,
+            .applications-section,
+            .guidelines-grid,
+            .components-section,
+            .techniques-grid,
+            .deployment-section {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .gradient-flow,
+            .network-visual,
+            .flow-steps,
+            .comparison-section {
+                flex-direction: column !important;
+                gap: 15px !important;
+            }
+            
+            .arrow-back,
+            .arrow,
+            .arrow-right,
+            .arrow-connector {
+                transform: rotate(90deg);
+                margin: 5px 0 !important;
+            }
+        }
+        
+        @media screen and (max-width: 480px) {
+            .container {
+                padding: 8px 10px !important;
+            }
+            
+            .title {
+                font-size: 18px !important;
+            }
+            
+            .card-header,
+            .scenario-label,
+            .card-title,
+            .function-title {
+                font-size: 16px !important;
+            }
+        }
+    
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Challenges of Deep Networks</div>
+        
+        <div class="challenges-grid">
+            <div class="challenge-category training">
+                <div class="category-icon">⚙️</div>
+                <div class="category-title">Training Complexity</div>
+                <ul class="challenge-list">
+                    <li class="challenge-item">Non-convex optimization</li>
+                    <li class="challenge-item">Longer training time</li>
+                    <li class="challenge-item">High computational cost</li>
+                </ul>
+            </div>
+            
+            <div class="challenge-category gradient">
+                <div class="category-icon">📉</div>
+                <div class="category-title">Gradient Problems</div>
+                <ul class="challenge-list">
+                    <li class="challenge-item">Vanishing gradients in early layers</li>
+                    <li class="challenge-item">Exploding gradients</li>
+                    <li class="challenge-item">Unstable parameter updates</li>
+                </ul>
+            </div>
+            
+            <div class="challenge-category generalization">
+                <div class="category-icon">📊</div>
+                <div class="category-title">Generalization Issues</div>
+                <ul class="challenge-list">
+                    <li class="challenge-item">Overfitting risk</li>
+                    <li class="challenge-item">Memorizing training data</li>
+                    <li class="challenge-item">Poor test performance</li>
+                </ul>
+            </div>
+            
+            <div class="challenge-category configuration">
+                <div class="category-icon">🔧</div>
+                <div class="category-title">Configuration Sensitivity</div>
+                <ul class="challenge-list">
+                    <li class="challenge-item">Critical initialization requirements</li>
+                    <li class="challenge-item">Hyperparameter sensitivity</li>
+                    <li class="challenge-item">Architecture design choices</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="historical-note">
+            <div class="label">HISTORICAL BARRIER (Pre-2006)</div>
+            <div class="content">Deep networks often performed worse than shallow ones due to these challenges</div>
+        </div>
+        
+        <div class="summary-box">
+            <div class="text">These challenges motivated research into better training techniques and architectures</div>
+        </div>
+    </div>
+</body>
+</html>

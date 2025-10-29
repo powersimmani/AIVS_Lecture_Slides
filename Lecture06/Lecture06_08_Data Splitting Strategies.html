@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Splitting Strategies</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: white;
+            font-family: Aptos, 'Segoe UI', sans-serif;
+        }
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+            padding: 30px;
+            box-sizing: border-box;
+        }
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 25px;
+        }
+        .strategies-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .strategy-card {
+            background: #f8f9fb;
+            border-radius: 10px;
+            padding: 20px;
+            border-top: 4px solid #1E64C8;
+            position: relative;
+        }
+        .strategy-card:nth-child(2) {
+            border-top-color: #4A90E2;
+        }
+        .strategy-card:nth-child(3) {
+            border-top-color: #7BB3F0;
+        }
+        .strategy-card:nth-child(4) {
+            border-top-color: #9FC5E8;
+        }
+        .strategy-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .strategy-icon {
+            font-size: 24px;
+        }
+        .strategy-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        .strategy-description {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+        .visual-representation {
+            display: flex;
+            gap: 4px;
+            height: 40px;
+            margin-top: 10px;
+        }
+        .data-block {
+            flex: 1;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+            color: white;
+        }
+        .train-block { background: #1E64C8; }
+        .val-block { background: #4A90E2; }
+        .test-block { background: #7BB3F0; }
+        
+        /* Random Split - mixed colors */
+        .random .data-block:nth-child(odd) { background: #1E64C8; }
+        .random .data-block:nth-child(even) { background: #4A90E2; }
+        .random .data-block:nth-child(3n) { background: #7BB3F0; }
+        
+        /* Stratified Split - alternating patterns */
+        .stratified .data-block {
+            background: linear-gradient(to bottom, #1E64C8 0%, #1E64C8 60%, #e74c3c 60%, #e74c3c 100%);
+        }
+        
+        /* Time-based Split - gradient */
+        .temporal .data-block:nth-child(1),
+        .temporal .data-block:nth-child(2),
+        .temporal .data-block:nth-child(3),
+        .temporal .data-block:nth-child(4),
+        .temporal .data-block:nth-child(5) { background: #1E64C8; }
+        .temporal .data-block:nth-child(6),
+        .temporal .data-block:nth-child(7) { background: #4A90E2; }
+        .temporal .data-block:nth-child(8),
+        .temporal .data-block:nth-child(9) { background: #7BB3F0; }
+        
+        /* Group-based Split - grouped colors */
+        .grouped .data-block:nth-child(1),
+        .grouped .data-block:nth-child(2),
+        .grouped .data-block:nth-child(3) { background: #1E64C8; border-right: 2px solid white; }
+        .grouped .data-block:nth-child(4),
+        .grouped .data-block:nth-child(5),
+        .grouped .data-block:nth-child(6) { background: #4A90E2; border-right: 2px solid white; }
+        .grouped .data-block:nth-child(7),
+        .grouped .data-block:nth-child(8),
+        .grouped .data-block:nth-child(9) { background: #7BB3F0; }
+        
+        .use-case {
+            font-size: 15px;
+            color: #1E64C8;
+            font-weight: 500;
+            margin-top: 8px;
+        }
+        .bottom-notes {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        .note-card {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .note-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        .note-text {
+            font-size: 15px;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Data Splitting Strategies</div>
+        
+        <div class="strategies-grid">
+            <!-- Random Split -->
+            <div class="strategy-card">
+                <div class="strategy-header">
+                    <span class="strategy-icon">🎲</span>
+                    <span class="strategy-name">Random Split</span>
+                </div>
+                <div class="strategy-description">
+                    Simplest approach for large, i.i.d. datasets
+                </div>
+                <div class="visual-representation random">
+                    <div class="data-block"></div>
+                    <div class="data-block"></div>
+                    <div class="data-block"></div>
+                    <div class="data-block"></div>
+                    <div class="data-block"></div>
+                    <div class="data-block"></div>
+                    <div class="data-block"></div>
+                    <div class="data-block"></div>
+                    <div class="data-block"></div>
+                </div>
+                <div class="use-case">✓ Best for: Large, independent datasets</div>
+            </div>
+
+            <!-- Stratified Split -->
+            <div class="strategy-card">
+                <div class="strategy-header">
+                    <span class="strategy-icon">⚖️</span>
+                    <span class="strategy-name">Stratified Split</span>
+                </div>
+                <div class="strategy-description">
+                    Maintains class distribution in each subset
+                </div>
+                <div class="visual-representation stratified">
+                    <div class="data-block"></div>
+                    <div class="data-block"></div>
+                    <div class="data-block"></div>
+                    <div class="data-block"></div>
+                    <div class="data-block"></div>
+                    <div class="data-block"></div>
+                    <div class="data-block"></div>
+                    <div class="data-block"></div>
+                    <div class="data-block"></div>
+                </div>
+                <div class="use-case">✓ Best for: Imbalanced classification</div>
+            </div>
+
+            <!-- Time-based Split -->
+            <div class="strategy-card">
+                <div class="strategy-header">
+                    <span class="strategy-icon">📅</span>
+                    <span class="strategy-name">Time-based Split</span>
+                </div>
+                <div class="strategy-description">
+                    Essential for temporal or sequential data
+                </div>
+                <div class="visual-representation temporal">
+                    <div class="data-block"></div>
+                    <div class="data-block"></div>
+                    <div class="data-block"></div>
+                    <div class="data-block"></div>
+                    <div class="data-block"></div>
+                    <div class="data-block"></div>
+                    <div class="data-block"></div>
+                    <div class="data-block"></div>
+                    <div class="data-block"></div>
+                </div>
+                <div class="use-case">✓ Best for: Time series, forecasting</div>
+            </div>
+
+            <!-- Group-based Split -->
+            <div class="strategy-card">
+                <div class="strategy-header">
+                    <span class="strategy-icon">👥</span>
+                    <span class="strategy-name">Group-based Split</span>
+                </div>
+                <div class="strategy-description">
+                    Prevents data leakage from related samples
+                </div>
+                <div class="visual-representation grouped">
+                    <div class="data-block"></div>
+                    <div class="data-block"></div>
+                    <div class="data-block"></div>
+                    <div class="data-block"></div>
+                    <div class="data-block"></div>
+                    <div class="data-block"></div>
+                    <div class="data-block"></div>
+                    <div class="data-block"></div>
+                    <div class="data-block"></div>
+                </div>
+                <div class="use-case">✓ Best for: Patient/user-level data</div>
+            </div>
+        </div>
+
+        <div class="bottom-notes">
+            <div class="note-card">
+                <div class="note-title">⚠️ Dataset Size Consideration</div>
+                <div class="note-text">Larger datasets allow smaller validation/test percentages</div>
+            </div>
+            <div class="note-card">
+                <div class="note-title">✓ Key Principle</div>
+                <div class="note-text">All splits must be representative of population</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

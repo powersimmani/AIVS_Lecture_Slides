@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BERT Family Models</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: #ffffff;
+            padding: 25px 40px;
+        }
+        
+        .title {
+            font-size: 26px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .tree-structure {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        /* Root BERT */
+        .bert-root {
+            background: linear-gradient(135deg, #1E64C8, #2E7FD8);
+            border-radius: 12px;
+            padding: 15px 30px;
+            color: white;
+            font-size: 22px;
+            font-weight: 600;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.3);
+        }
+        
+        .connector-line {
+            width: 3px;
+            height: 20px;
+            background: #1E64C8;
+        }
+        
+        .branches-container {
+            display: flex;
+            gap: 40px;
+            position: relative;
+        }
+        
+        /* Horizontal line connecting branches */
+        .branches-container::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 10%;
+            right: 10%;
+            height: 3px;
+            background: #1E64C8;
+        }
+        
+        .branch {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .branch::before {
+            content: '';
+            width: 3px;
+            height: 20px;
+            background: #1E64C8;
+        }
+        
+        .branch-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+        
+        .models-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            width: 100%;
+        }
+        
+        .model-card {
+            background: #F8F9FA;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 10px 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .model-card:hover {
+            background: #E8F4F8;
+            transform: translateX(3px);
+            box-shadow: 0 2px 8px rgba(30, 100, 200, 0.2);
+        }
+        
+        .model-name {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 3px;
+        }
+        
+        .model-feature {
+            font-size: 15px;
+            color: #666666;
+            line-height: 1.3;
+        }
+        
+        .domain-card {
+            background: #FFF4E6;
+            border: 2px solid #FF9800;
+        }
+        
+        .domain-card .model-name {
+            color: #E65100;
+        }
+        
+        .multilingual-card {
+            background: #E8F5E9;
+            border: 2px solid #4CAF50;
+        }
+        
+        .multilingual-card .model-name {
+            color: #2E7D32;
+        }
+        
+        .highlight {
+            font-weight: 600;
+        }
+        
+        /* Special categories row */
+        .special-categories {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 10px;
+            width: 100%;
+        }
+        
+        .category-box {
+            border-radius: 10px;
+            padding: 12px 15px;
+            border: 3px solid;
+        }
+        
+        .category-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .category-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .category-item {
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .domain-box {
+            background: #FFF4E6;
+            border-color: #FF9800;
+        }
+        
+        .domain-box .category-title {
+            color: #E65100;
+        }
+        
+        .domain-box .category-item {
+            background: white;
+            border: 2px solid #FF9800;
+            color: #E65100;
+        }
+        
+        .multilingual-box {
+            background: #E8F5E9;
+            border-color: #4CAF50;
+        }
+        
+        .multilingual-box .category-title {
+            color: #2E7D32;
+        }
+        
+        .multilingual-box .category-item {
+            background: white;
+            border: 2px solid #4CAF50;
+            color: #2E7D32;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">BERT Family: Variants and Improvements</div>
+        
+        <div class="tree-structure">
+            <!-- Root BERT -->
+            <div class="bert-root">
+                🧠 BERT (2018)
+            </div>
+            
+            <div class="connector-line"></div>
+            
+            <!-- Main Branches -->
+            <div class="branches-container">
+                <!-- Optimization Branch -->
+                <div class="branch">
+                    <div class="branch-title">⚡ Optimization</div>
+                    <div class="models-group">
+                        <div class="model-card">
+                            <div class="model-name">RoBERTa</div>
+                            <div class="model-feature">No NSP • Dynamic masking • Larger batches</div>
+                        </div>
+                        
+                        <div class="model-card">
+                            <div class="model-name">ALBERT</div>
+                            <div class="model-feature">Parameter sharing • Factorized embeddings</div>
+                        </div>
+                        
+                        <div class="model-card">
+                            <div class="model-name">DistilBERT</div>
+                            <div class="model-feature">6 layers • <span class="highlight">40% smaller</span> • 97% performance</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Innovation Branch -->
+                <div class="branch">
+                    <div class="branch-title">🚀 Innovation</div>
+                    <div class="models-group">
+                        <div class="model-card">
+                            <div class="model-name">ELECTRA</div>
+                            <div class="model-feature">Discriminative pre-training • More efficient</div>
+                        </div>
+                        
+                        <div class="model-card">
+                            <div class="model-name">DeBERTa</div>
+                            <div class="model-feature">Disentangled attention • Enhanced mask decoder</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Special Categories -->
+            <div class="special-categories">
+                <!-- Domain-Specific -->
+                <div class="category-box domain-box">
+                    <div class="category-title">
+                        <span>🏥</span>
+                        <span>Domain-Specific</span>
+                    </div>
+                    <div class="category-items">
+                        <div class="category-item">BioBERT</div>
+                        <div class="category-item">SciBERT</div>
+                        <div class="category-item">ClinicalBERT</div>
+                    </div>
+                </div>
+                
+                <!-- Multilingual -->
+                <div class="category-box multilingual-box">
+                    <div class="category-title">
+                        <span>🌍</span>
+                        <span>Multilingual</span>
+                    </div>
+                    <div class="category-items">
+                        <div class="category-item">mBERT</div>
+                        <div class="category-item">XLM-R</div>
+                        <div class="category-item" style="grid-column: 1 / -1; text-align: center;">100+ languages</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

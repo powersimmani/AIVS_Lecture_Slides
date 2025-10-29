@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Theory and Accessibility</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #FFFFFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            padding: 30px 40px;
+        }
+        
+        .title-section {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .main-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .subtitle {
+            font-size: 17px;
+            color: #666666;
+        }
+        
+        .content-wrapper {
+            display: flex;
+            gap: 30px;
+            flex: 1;
+        }
+        
+        .left-section {
+            flex: 1.2;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        
+        .palette-card {
+            background: #FFFFFF;
+            border: 2px solid #E0E0E0;
+            border-radius: 10px;
+            padding: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .palette-card:hover {
+            border-color: #1E64C8;
+            box-shadow: 0 4px 15px rgba(30, 100, 200, 0.1);
+        }
+        
+        .palette-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        
+        .palette-icon {
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #1E64C8;
+            color: white;
+            border-radius: 6px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .palette-info {
+            flex: 1;
+        }
+        
+        .palette-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 2px;
+        }
+        
+        .palette-description {
+            font-size: 16px;
+            color: #666666;
+        }
+        
+        .color-strip {
+            display: flex;
+            height: 35px;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .color-block {
+            flex: 1;
+            transition: transform 0.2s ease;
+        }
+        
+        .color-block:hover {
+            transform: scale(1.05);
+            z-index: 1;
+        }
+        
+        /* Sequential Colors */
+        .sequential-1 { background: #E3F2FD; }
+        .sequential-2 { background: #90CAF9; }
+        .sequential-3 { background: #42A5F5; }
+        .sequential-4 { background: #1E88E5; }
+        .sequential-5 { background: #1565C0; }
+        .sequential-6 { background: #0D47A1; }
+        
+        /* Diverging Colors */
+        .diverging-1 { background: #D32F2F; }
+        .diverging-2 { background: #EF5350; }
+        .diverging-3 { background: #FFCDD2; }
+        .diverging-4 { background: #E3F2FD; }
+        .diverging-5 { background: #42A5F5; }
+        .diverging-6 { background: #1565C0; }
+        
+        /* Categorical Colors */
+        .categorical-1 { background: #1E64C8; }
+        .categorical-2 { background: #FF6B6B; }
+        .categorical-3 { background: #4ECDC4; }
+        .categorical-4 { background: #FFD93D; }
+        .categorical-5 { background: #95E1D3; }
+        .categorical-6 { background: #F38181; }
+        
+        .right-section {
+            flex: 0.8;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        
+        .accessibility-card {
+            background: #FFF9E6;
+            border: 2px solid #FFC107;
+            border-radius: 10px;
+            padding: 18px;
+            flex: 1;
+        }
+        
+        .accessibility-title {
+            font-size: 19px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .warning-icon {
+            font-size: 22px;
+        }
+        
+        .accessibility-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .accessibility-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .bullet {
+            width: 6px;
+            height: 6px;
+            background: #1E64C8;
+            border-radius: 50%;
+            margin-top: 7px;
+            flex-shrink: 0;
+        }
+        
+        .accessibility-text {
+            font-size: 16px;
+            color: #333333;
+            line-height: 1.4;
+        }
+        
+        .accessibility-text strong {
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .stats-box {
+            background: #FFE8E8;
+            border: 2px solid #FF6B6B;
+            border-radius: 8px;
+            padding: 14px;
+            text-align: center;
+        }
+        
+        .stats-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: #D32F2F;
+            margin-bottom: 4px;
+        }
+        
+        .stats-text {
+            font-size: 16px;
+            color: #666666;
+            line-height: 1.3;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .palette-card {
+            animation: slideIn 0.5s ease forwards;
+        }
+        
+        .palette-card:nth-child(1) { animation-delay: 0.1s; }
+        .palette-card:nth-child(2) { animation-delay: 0.2s; }
+        .palette-card:nth-child(3) { animation-delay: 0.3s; }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .accessibility-card {
+            animation: fadeIn 0.5s ease forwards;
+            animation-delay: 0.4s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Color Theory and Accessibility</div>
+            <div class="subtitle">Choosing the Right Color Palette for Inclusive Visualization</div>
+        </div>
+        
+        <div class="content-wrapper">
+            <div class="left-section">
+                <!-- Sequential Palette -->
+                <div class="palette-card">
+                    <div class="palette-header">
+                        <div class="palette-icon">S</div>
+                        <div class="palette-info">
+                            <div class="palette-name">Sequential</div>
+                            <div class="palette-description">Single hue, varying lightness (temperatures)</div>
+                        </div>
+                    </div>
+                    <div class="color-strip">
+                        <div class="color-block sequential-1"></div>
+                        <div class="color-block sequential-2"></div>
+                        <div class="color-block sequential-3"></div>
+                        <div class="color-block sequential-4"></div>
+                        <div class="color-block sequential-5"></div>
+                        <div class="color-block sequential-6"></div>
+                    </div>
+                </div>
+                
+                <!-- Diverging Palette -->
+                <div class="palette-card">
+                    <div class="palette-header">
+                        <div class="palette-icon">D</div>
+                        <div class="palette-info">
+                            <div class="palette-name">Diverging</div>
+                            <div class="palette-description">Two hues meeting at neutral (gains/losses)</div>
+                        </div>
+                    </div>
+                    <div class="color-strip">
+                        <div class="color-block diverging-1"></div>
+                        <div class="color-block diverging-2"></div>
+                        <div class="color-block diverging-3"></div>
+                        <div class="color-block diverging-4"></div>
+                        <div class="color-block diverging-5"></div>
+                        <div class="color-block diverging-6"></div>
+                    </div>
+                </div>
+                
+                <!-- Categorical Palette -->
+                <div class="palette-card">
+                    <div class="palette-header">
+                        <div class="palette-icon">C</div>
+                        <div class="palette-info">
+                            <div class="palette-name">Categorical</div>
+                            <div class="palette-description">Distinct hues for different categories</div>
+                        </div>
+                    </div>
+                    <div class="color-strip">
+                        <div class="color-block categorical-1"></div>
+                        <div class="color-block categorical-2"></div>
+                        <div class="color-block categorical-3"></div>
+                        <div class="color-block categorical-4"></div>
+                        <div class="color-block categorical-5"></div>
+                        <div class="color-block categorical-6"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-section">
+                <div class="stats-box">
+                    <div class="stats-number">~8%</div>
+                    <div class="stats-text">of males have color vision deficiency</div>
+                </div>
+                
+                <div class="accessibility-card">
+                    <div class="accessibility-title">
+                        <span class="warning-icon">⚠️</span>
+                        Accessibility Guidelines
+                    </div>
+                    <div class="accessibility-list">
+                        <div class="accessibility-item">
+                            <div class="bullet"></div>
+                            <div class="accessibility-text"><strong>Avoid</strong> red-green combinations</div>
+                        </div>
+                        <div class="accessibility-item">
+                            <div class="bullet"></div>
+                            <div class="accessibility-text">Use <strong>ColorBrewer</strong> or <strong>Viridis</strong> palettes</div>
+                        </div>
+                        <div class="accessibility-item">
+                            <div class="bullet"></div>
+                            <div class="accessibility-text">Add <strong>texture/patterns</strong> as redundant encoding</div>
+                        </div>
+                        <div class="accessibility-item">
+                            <div class="bullet"></div>
+                            <div class="accessibility-text">Test with <strong>color blindness simulators</strong></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

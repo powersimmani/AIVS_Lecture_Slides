@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RNN (Recurrent Neural Network)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+            padding: 25px 45px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 25px;
+        }
+        
+        .architecture-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874D8 100%);
+            color: white;
+            padding: 18px 30px;
+            border-radius: 8px;
+            margin-bottom: 22px;
+        }
+        
+        .arch-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .arch-diagram {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            font-size: 16px;
+        }
+        
+        .arch-node {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+        
+        .arch-arrow {
+            font-size: 24px;
+        }
+        
+        .formula-box {
+            background: #F8FAFE;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 16px 25px;
+            margin-bottom: 22px;
+            text-align: center;
+        }
+        
+        .formula-label {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        
+        .formula {
+            font-size: 18px;
+            color: #1E64C8;
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .feature-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .feature-icon {
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+        
+        .feature-text {
+            font-size: 16px;
+            color: #2C3E50;
+            line-height: 1.4;
+        }
+        
+        .challenges-box {
+            background: #FDECEA;
+            border: 2px solid #E74C3C;
+            border-radius: 8px;
+            padding: 14px 22px;
+        }
+        
+        .challenges-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #E74C3C;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .challenges-list {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+        }
+        
+        .challenge-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            color: #2C3E50;
+        }
+        
+        .challenge-bullet {
+            color: #E74C3C;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">RNN (Recurrent Neural Network)</div>
+        
+        <div class="architecture-box">
+            <div class="arch-title">Core Architecture</div>
+            <div class="arch-diagram">
+                <div class="arch-node">x<sub>t</sub></div>
+                <span class="arch-arrow">→</span>
+                <div class="arch-node">h<sub>t</sub></div>
+                <span class="arch-arrow">↻</span>
+                <div class="arch-node">h<sub>t+1</sub></div>
+            </div>
+        </div>
+        
+        <div class="formula-box">
+            <div class="formula-label">Hidden State Update Formula</div>
+            <div class="formula">
+                h<sub>t</sub> = tanh(W<sub>hh</sub> × h<sub>t-1</sub> + W<sub>xh</sub> × x<sub>t</sub>)
+            </div>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">💾</div>
+                <div class="feature-text">
+                    <strong>Hidden state</strong> maintains sequence memory
+                </div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🔄</div>
+                <div class="feature-text">
+                    <strong>Weight sharing:</strong> same weights at each timestep
+                </div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">↔️</div>
+                <div class="feature-text">
+                    <strong>Bidirectional RNN:</strong> forward & backward processing
+                </div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">⏱️</div>
+                <div class="feature-text">
+                    <strong>Sequential processing:</strong> models temporal dependencies
+                </div>
+            </div>
+        </div>
+        
+        <div class="challenges-box">
+            <div class="challenges-title">
+                <span>⚠️</span>
+                <span>Training Challenges</span>
+            </div>
+            <div class="challenges-list">
+                <div class="challenge-item">
+                    <span class="challenge-bullet">•</span>
+                    <span>Vanishing/exploding gradients</span>
+                </div>
+                <div class="challenge-item">
+                    <span class="challenge-bullet">•</span>
+                    <span>Difficult to train for long sequences</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

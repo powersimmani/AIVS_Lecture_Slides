@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spectral Normalization</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: #ffffff;
+            padding: 20px 40px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 25px;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1.1fr 1fr;
+            gap: 25px;
+            height: 450px;
+        }
+        
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        
+        .concept-box {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 12px;
+            padding: 22px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 18px;
+        }
+        
+        .concept-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+        }
+        
+        .formula-display {
+            font-family: 'Courier New', monospace;
+            font-size: 22px;
+            color: #2c3e50;
+            background: white;
+            padding: 18px;
+            border-radius: 10px;
+            text-align: center;
+            line-height: 1.8;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .explanation {
+            background: white;
+            border-radius: 8px;
+            padding: 14px;
+            text-align: center;
+            font-size: 15px;
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+        
+        .exp-highlight {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .lipschitz-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 14px;
+            text-align: center;
+        }
+        
+        .lipschitz-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #f57c00;
+            margin-bottom: 8px;
+        }
+        
+        .lipschitz-text {
+            font-size: 15px;
+            color: #2c3e50;
+        }
+        
+        .gan-box {
+            background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+            border: 2px solid #9c27b0;
+            border-radius: 10px;
+            padding: 18px;
+        }
+        
+        .gan-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #6a1b9a;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        
+        .gan-visual {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 12px 0;
+        }
+        
+        .gan-component {
+            text-align: center;
+        }
+        
+        .component-box {
+            width: 100px;
+            height: 70px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 8px;
+        }
+        
+        .generator {
+            background: linear-gradient(135deg, #66bb6a 0%, #4caf50 100%);
+            border: 2px solid #2e7d32;
+        }
+        
+        .discriminator {
+            background: linear-gradient(135deg, #ab47bc 0%, #9c27b0 100%);
+            border: 2px solid #6a1b9a;
+        }
+        
+        .component-label {
+            font-size: 14px;
+            color: #2c3e50;
+        }
+        
+        .spectral-badge {
+            background: #9c27b0;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .arrow-gan {
+            font-size: 24px;
+            color: #9c27b0;
+        }
+        
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .section-header {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 5px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .feature-card {
+            background: #f8f9fb;
+            border-left: 4px solid #1E64C8;
+            padding: 13px 16px;
+            border-radius: 6px;
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.5;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            background: #eef3fb;
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(30, 100, 200, 0.15);
+        }
+        
+        .highlight {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .usage-box {
+            background: #e8f5e9;
+            border: 2px solid #4caf50;
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin-top: 10px;
+        }
+        
+        .usage-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #4caf50;
+            margin-bottom: 8px;
+        }
+        
+        .usage-text {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Spectral Normalization</div>
+        
+        <div class="main-content">
+            <div class="left-section">
+                <div class="concept-box">
+                    <div class="concept-title">Constrains Spectral Norm</div>
+                    
+                    <div class="formula-display">
+                        W<sub>SN</sub> = W / σ(W)
+                    </div>
+                    
+                    <div class="explanation">
+                        Divides weights by <span class="exp-highlight">largest singular value</span> (σ)
+                    </div>
+                </div>
+                
+                <div class="lipschitz-box">
+                    <div class="lipschitz-title">✓ Ensures Lipschitz Continuity</div>
+                    <div class="lipschitz-text">
+                        Controls gradient flow through network layers
+                    </div>
+                </div>
+                
+                <div class="gan-box">
+                    <div class="gan-title">Critical for GAN Training</div>
+                    
+                    <div class="gan-visual">
+                        <div class="gan-component">
+                            <div class="component-box generator">
+                                Generator
+                            </div>
+                            <div class="component-label">Creates images</div>
+                        </div>
+                        
+                        <div class="arrow-gan">→</div>
+                        
+                        <div class="gan-component">
+                            <div class="component-box discriminator">
+                                Discriminator
+                            </div>
+                            <div class="component-label">
+                                <div class="spectral-badge">Spectral Norm</div>
+                                Evaluates images
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-section">
+                <div class="section-header">Key Features</div>
+                
+                <div class="feature-card">
+                    Constrains <span class="highlight">spectral norm</span> of weight matrices
+                </div>
+                
+                <div class="feature-card">
+                    Ensures <span class="highlight">Lipschitz continuity</span> of network layers
+                </div>
+                
+                <div class="feature-card">
+                    <span class="highlight">Prevents gradient explosion</span> in discriminator
+                </div>
+                
+                <div class="feature-card">
+                    Improves training stability <span class="highlight">without batch statistics</span>
+                </div>
+                
+                <div class="usage-box">
+                    <div class="usage-title">✓ Standard in GANs</div>
+                    <div class="usage-text">
+                        Used in modern GAN architectures: <strong>BigGAN, StyleGAN</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

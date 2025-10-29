@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hypothesis Testing and Confidence Intervals</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: #ffffff;
+            position: relative;
+            padding: 25px 35px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .header-title {
+            font-size: 20px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            flex: 1;
+        }
+        
+        .left-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 11px;
+        }
+        
+        .section-header {
+            background: #1E64C8;
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .hypothesis-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 15px;
+        }
+        
+        .hyp-label {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+        
+        .hyp-desc {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .hyp-example {
+            background: #f8fafb;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 15px;
+            color: #555;
+            margin-top: 5px;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+        }
+        
+        .concept-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 11px 15px;
+        }
+        
+        .concept-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+        
+        .concept-content {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .decision-flow {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 15px;
+            flex: 1;
+        }
+        
+        .flow-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .flow-diagram {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+        }
+        
+        .flow-step {
+            background: #f8fafb;
+            border: 2px solid #1E64C8;
+            border-radius: 6px;
+            padding: 10px 15px;
+            width: 100%;
+            text-align: center;
+            font-size: 16px;
+            color: #333;
+        }
+        
+        .flow-arrow {
+            font-size: 20px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .decision-box {
+            background: #1E64C8;
+            color: white;
+            border-radius: 6px;
+            padding: 10px 15px;
+            width: 100%;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .branches {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            width: 100%;
+        }
+        
+        .branch {
+            background: #f0f7ff;
+            border: 2px solid #1E64C8;
+            border-radius: 6px;
+            padding: 8px 10px;
+            text-align: center;
+            font-size: 15px;
+            color: #333;
+        }
+        
+        .right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 11px;
+        }
+        
+        .ci-visual {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 15px;
+            flex: 1;
+        }
+        
+        .ci-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .ci-diagram {
+            position: relative;
+            height: 100px;
+            background: #f8fafb;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        
+        .ci-line {
+            position: absolute;
+            height: 4px;
+            background: #1E64C8;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .ci-range {
+            width: 70%;
+            left: 15%;
+        }
+        
+        .ci-point {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #1E64C8;
+            border-radius: 50%;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+        
+        .ci-endpoint {
+            position: absolute;
+            width: 4px;
+            height: 24px;
+            background: #1E64C8;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .ci-left {
+            left: 15%;
+        }
+        
+        .ci-right {
+            right: 15%;
+        }
+        
+        .ci-label {
+            position: absolute;
+            font-size: 15px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .label-center {
+            left: 50%;
+            bottom: 10px;
+            transform: translateX(-50%);
+        }
+        
+        .label-left {
+            left: 15%;
+            bottom: 10px;
+            transform: translateX(-50%);
+            font-size: 14px;
+        }
+        
+        .label-right {
+            right: 15%;
+            bottom: 10px;
+            transform: translateX(50%);
+            font-size: 14px;
+        }
+        
+        .ci-formula {
+            background: #f0f7ff;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 16px;
+            color: #1E64C8;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .interpretation-box {
+            background: #f8fafb;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 15px;
+            text-align: center;
+        }
+        
+        .interp-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .interp-content {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-title">Hypothesis Testing and Confidence Intervals</div>
+        </div>
+        
+        <div class="main-grid">
+            <div class="left-panel">
+                <div class="section-header">Hypothesis Testing</div>
+                
+                <div class="hypothesis-box">
+                    <div class="hyp-label">H₀: Null Hypothesis</div>
+                    <div class="hyp-desc">Default assumption</div>
+                    <div class="hyp-example">e.g., β = 0</div>
+                </div>
+                
+                <div class="hypothesis-box">
+                    <div class="hyp-label">H₁: Alternative Hypothesis</div>
+                    <div class="hyp-desc">Claim to test</div>
+                    <div class="hyp-example">e.g., β ≠ 0</div>
+                </div>
+                
+                <div class="concept-box">
+                    <div class="concept-title">Test Statistic</div>
+                    <div class="concept-content">Measure computed from data (t-stat, z-stat)</div>
+                </div>
+                
+                <div class="concept-box">
+                    <div class="concept-title">p-value</div>
+                    <div class="concept-content">P(observe data or more extreme | H₀ true)</div>
+                </div>
+                
+                <div class="decision-flow">
+                    <div class="flow-title">Decision Process</div>
+                    <div class="flow-diagram">
+                        <div class="flow-step">Set significance level α<br>(typically 0.05)</div>
+                        <div class="flow-arrow">↓</div>
+                        <div class="flow-step">Compute test statistic</div>
+                        <div class="flow-arrow">↓</div>
+                        <div class="flow-step">Calculate p-value</div>
+                        <div class="flow-arrow">↓</div>
+                        <div class="decision-box">p-value < α ?</div>
+                        <div class="branches">
+                            <div class="branch"><strong>Yes:</strong><br>Reject H₀</div>
+                            <div class="branch"><strong>No:</strong><br>Fail to reject H₀</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <div class="section-header">Confidence Intervals</div>
+                
+                <div class="ci-visual">
+                    <div class="ci-title">95% Confidence Interval</div>
+                    <div class="ci-diagram">
+                        <div class="ci-line ci-range"></div>
+                        <div class="ci-endpoint ci-left"></div>
+                        <div class="ci-endpoint ci-right"></div>
+                        <div class="ci-point"></div>
+                        <div class="ci-label label-center">θ̂</div>
+                        <div class="ci-label label-left">θ̂ - 1.96SE</div>
+                        <div class="ci-label label-right">θ̂ + 1.96SE</div>
+                    </div>
+                    <div class="ci-formula">[θ̂ - 1.96SE, θ̂ + 1.96SE]</div>
+                </div>
+                
+                <div class="interpretation-box">
+                    <div class="interp-title">Interpretation</div>
+                    <div class="interp-content">
+                        Range likely containing true parameter<br>
+                        <strong>95%</strong> of such intervals contain θ
+                    </div>
+                </div>
+                
+                <div class="concept-box">
+                    <div class="concept-title">Connection to Testing</div>
+                    <div class="concept-content">
+                        If H₀: θ = θ₀ is not in the CI,<br>
+                        then reject H₀ at α = 0.05
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

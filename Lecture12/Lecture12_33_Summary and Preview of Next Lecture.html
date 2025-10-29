@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Summary and Preview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #ffffff;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 35px;
+            position: relative;
+        }
+        
+        .main-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .content {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            height: calc(100% - 45px);
+        }
+        
+        /* Summary Section */
+        .summary-section {
+            flex: 1;
+            background: #e8f2ff;
+            border-radius: 10px;
+            padding: 18px;
+            border-top: 5px solid #1E64C8;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+        
+        .header-icon {
+            width: 36px;
+            height: 36px;
+            background: #1E64C8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        /* Key Topics Grid */
+        .topics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            flex: 1;
+        }
+        
+        .topic-card {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+            border-left: 4px solid #1E64C8;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            transition: all 0.3s ease;
+        }
+        
+        .topic-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 16px rgba(30, 100, 200, 0.15);
+        }
+        
+        .topic-number {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1E64C8;
+        }
+        
+        .topic-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+            line-height: 1.2;
+        }
+        
+        .topic-items {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .topic-item {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.3;
+            padding-left: 12px;
+            position: relative;
+        }
+        
+        .topic-item::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #1E64C8;
+            font-weight: bold;
+        }
+        
+        /* Preview Section */
+        .preview-section {
+            background: #d4edda;
+            border-radius: 10px;
+            padding: 16px;
+            border-top: 5px solid #28a745;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .preview-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .preview-icon {
+            width: 36px;
+            height: 36px;
+            background: #28a745;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+        
+        .preview-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #155724;
+        }
+        
+        .preview-content {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+        
+        .preview-card {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+            border-left: 4px solid #28a745;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            text-align: center;
+        }
+        
+        .preview-emoji {
+            font-size: 28px;
+        }
+        
+        .preview-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #155724;
+            line-height: 1.2;
+        }
+        
+        /* Key Takeaway */
+        .takeaway-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .takeaway-icon {
+            font-size: 28px;
+        }
+        
+        .takeaway-text {
+            font-size: 15px;
+            color: #856404;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-title">Advanced Sequence Models: Summary & Preview</div>
+        
+        <div class="content">
+            <!-- Summary Section -->
+            <div class="summary-section">
+                <div class="section-header">
+                    <div class="header-icon">📚</div>
+                    <div class="section-title">What We Learned Today</div>
+                </div>
+                
+                <div class="topics-grid">
+                    <!-- Topic 1 -->
+                    <div class="topic-card">
+                        <div class="topic-number">1️⃣</div>
+                        <div class="topic-title">Seq2Seq Architecture</div>
+                        <div class="topic-items">
+                            <div class="topic-item">Encoder-Decoder</div>
+                            <div class="topic-item">Context vector</div>
+                            <div class="topic-item">Variable length I/O</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Topic 2 -->
+                    <div class="topic-card">
+                        <div class="topic-number">2️⃣</div>
+                        <div class="topic-title">RNN Variants</div>
+                        <div class="topic-items">
+                            <div class="topic-item">LSTM cells</div>
+                            <div class="topic-item">GRU cells</div>
+                            <div class="topic-item">Gradient flow</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Topic 3 -->
+                    <div class="topic-card">
+                        <div class="topic-number">3️⃣</div>
+                        <div class="topic-title">Bidirectional RNN</div>
+                        <div class="topic-items">
+                            <div class="topic-item">Forward + Backward</div>
+                            <div class="topic-item">Context from both</div>
+                            <div class="topic-item">Better encoding</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Topic 4 -->
+                    <div class="topic-card">
+                        <div class="topic-number">4️⃣</div>
+                        <div class="topic-title">Teacher Forcing</div>
+                        <div class="topic-items">
+                            <div class="topic-item">Training strategy</div>
+                            <div class="topic-item">Exposure bias</div>
+                            <div class="topic-item">Scheduled sampling</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Topic 5 -->
+                    <div class="topic-card">
+                        <div class="topic-number">5️⃣</div>
+                        <div class="topic-title">Attention Mechanism</div>
+                        <div class="topic-items">
+                            <div class="topic-item">Query, Key, Value</div>
+                            <div class="topic-item">Dynamic context</div>
+                            <div class="topic-item">Alignment weights</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Topic 6 -->
+                    <div class="topic-card">
+                        <div class="topic-number">6️⃣</div>
+                        <div class="topic-title">Implementation</div>
+                        <div class="topic-items">
+                            <div class="topic-item">Batching & Padding</div>
+                            <div class="topic-item">Masking strategies</div>
+                            <div class="topic-item">Practical tips</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Preview Section -->
+            <div class="preview-section">
+                <div class="preview-header">
+                    <div class="preview-icon">🚀</div>
+                    <div class="preview-title">Next Lecture: Transformers & Modern Architectures</div>
+                </div>
+                
+                <div class="preview-content">
+                    <div class="preview-card">
+                        <div class="preview-emoji">🔄</div>
+                        <div class="preview-label">Self-Attention</div>
+                    </div>
+                    <div class="preview-card">
+                        <div class="preview-emoji">⚡</div>
+                        <div class="preview-label">Transformer Architecture</div>
+                    </div>
+                    <div class="preview-card">
+                        <div class="preview-emoji">🎯</div>
+                        <div class="preview-label">Multi-Head Attention</div>
+                    </div>
+                    <div class="preview-card">
+                        <div class="preview-emoji">🏗️</div>
+                        <div class="preview-label">BERT & GPT</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Key Takeaway -->
+            <div class="takeaway-box">
+                <div class="takeaway-icon">💡</div>
+                <div class="takeaway-text">
+                    <strong>Key Takeaway:</strong> Attention mechanism revolutionized sequence modeling by allowing models to selectively focus on relevant parts of input, solving the information bottleneck problem!
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

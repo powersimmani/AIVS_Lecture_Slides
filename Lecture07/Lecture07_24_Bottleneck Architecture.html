@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bottleneck Architecture</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            overflow-x: hidden;
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 960px;
+            width: 95vw;
+            min-height: 540px;
+            height: auto;
+            background: white;
+            position: relative;
+            overflow: hidden;
+            padding: 20px 35px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+        }
+        
+        .purpose-box {
+            background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+            border: 3px solid #1E64C8;
+            border-radius: 12px;
+            padding: 12px 20px;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .purpose-label {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .purpose-text {
+            font-size: 16px;
+            color: #333;
+        }
+        
+        .architecture-visual {
+            background: white;
+            border: 3px solid #1E64C8;
+            border-radius: 12px;
+            padding: 18px 25px;
+            margin-bottom: 15px;
+        }
+        
+        .arch-title {
+            text-align: center;
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 15px;
+        }
+        
+        .bottleneck-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            position: relative;
+        }
+        
+        .layer-block {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .conv-box {
+            border: 3px solid;
+            border-radius: 10px;
+            padding: 15px 20px;
+            text-align: center;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .conv-box:hover {
+            transform: scale(1.05);
+        }
+        
+        .layer-block.input .conv-box {
+            width: 120px;
+            height: 100px;
+            background: linear-gradient(135deg, #64B5F6 0%, #42A5F5 100%);
+            border-color: #1E88E5;
+            color: white;
+        }
+        
+        .layer-block.reduce .conv-box {
+            width: 90px;
+            height: 80px;
+            background: linear-gradient(135deg, #FFB74D 0%, #FF9800 100%);
+            border-color: #F57C00;
+            color: white;
+        }
+        
+        .layer-block.process .conv-box {
+            width: 90px;
+            height: 80px;
+            background: linear-gradient(135deg, #81C784 0%, #66BB6A 100%);
+            border-color: #43A047;
+            color: white;
+        }
+        
+        .layer-block.expand .conv-box {
+            width: 120px;
+            height: 100px;
+            background: linear-gradient(135deg, #9575CD 0%, #7E57C2 100%);
+            border-color: #5E35B1;
+            color: white;
+        }
+        
+        .conv-type {
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+        
+        .conv-channels {
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .layer-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+        }
+        
+        .arrow {
+            font-size: 32px;
+            color: #1E64C8;
+            font-weight: 700;
+        }
+        
+        .example-box {
+            background: #FFF8E1;
+            border: 2px solid #FFC107;
+            border-radius: 10px;
+            padding: 10px 16px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .example-label {
+            font-size: 14px;
+            font-weight: 700;
+            color: #F57F17;
+            margin-bottom: 5px;
+        }
+        
+        .example-flow {
+            font-size: 17px;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .channel-num {
+            color: #F57F17;
+            font-weight: 700;
+        }
+        
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        
+        .benefit-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .benefit-card:hover {
+            background: #F0F6FF;
+            transform: translateY(-2px);
+        }
+        
+        .benefit-icon {
+            font-size: 24px;
+            margin-bottom: 6px;
+        }
+        
+        .benefit-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .benefit-value {
+            font-size: 16px;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .adoption-note {
+            background: #E8F5E9;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            padding: 10px 16px;
+            text-align: center;
+        }
+        
+        .adoption-text {
+            font-size: 16px;
+            color: #333;
+        }
+        
+        .highlight {
+            font-weight: 700;
+            color: #2E7D32;
+        }
+    
+        
+        /* Responsive adjustments */
+        @media screen and (max-width: 1000px) {
+            .container {
+                width: 98vw !important;
+                max-width: 98vw !important;
+                padding: 15px 20px !important;
+            }
+        }
+        
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: 10px 15px !important;
+            }
+            
+            .title {
+                font-size: 20px !important;
+            }
+            
+            /* 그리드 레이아웃을 1열로 */
+            .challenges-grid,
+            .comparison-grid,
+            .solutions-grid,
+            .guide-grid,
+            .findings-section,
+            .benefits-grid,
+            .applications-section,
+            .guidelines-grid,
+            .components-section,
+            .techniques-grid,
+            .deployment-section,
+            .savings-grid,
+            .results-grid,
+            .functions-grid,
+            .features-grid,
+            .comparison-section,
+            .bottom-section {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .gradient-flow,
+            .network-visual,
+            .flow-steps,
+            .bottleneck-flow,
+            .example-flow,
+            .dimension-box,
+            .inception-structure .parallel-paths,
+            .comparison-section {
+                flex-direction: column !important;
+                gap: 15px !important;
+            }
+            
+            .arrow-back,
+            .arrow,
+            .arrow-right,
+            .arrow-connector,
+            .conv-arrow {
+                transform: rotate(90deg);
+                margin: 5px 0 !important;
+            }
+            
+            /* SVG와 layer 위치 조정 */
+            .layers-container,
+            .architecture-visual {
+                height: auto !important;
+                min-height: 300px !important;
+            }
+            
+            .layer-node {
+                position: relative !important;
+                left: auto !important;
+                margin: 10px 0 !important;
+            }
+        }
+        
+        @media screen and (max-width: 480px) {
+            .container {
+                padding: 8px 10px !important;
+            }
+            
+            .title {
+                font-size: 18px !important;
+            }
+            
+            .card-header,
+            .scenario-label,
+            .card-title,
+            .function-title,
+            .arch-title,
+            .flow-title {
+                font-size: 16px !important;
+            }
+            
+            .layer-box,
+            .conv-box,
+            .step-circle,
+            .layer-circle {
+                font-size: 14px !important;
+                padding: 8px !important;
+            }
+        }
+    
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Bottleneck Architecture: Efficient Design</div>
+        
+        <div class="purpose-box">
+            <div class="purpose-label">PURPOSE</div>
+            <div class="purpose-text">Reduce computational cost while maintaining expressiveness</div>
+        </div>
+        
+        <div class="architecture-visual">
+            <div class="arch-title">Bottleneck Structure</div>
+            <div class="bottleneck-flow">
+                <div class="layer-block input">
+                    <div class="conv-box">
+                        <div class="conv-type">Input</div>
+                        <div class="conv-channels">256</div>
+                    </div>
+                    <div class="layer-label">High Dim</div>
+                </div>
+                
+                <div class="arrow">→</div>
+                
+                <div class="layer-block reduce">
+                    <div class="conv-box">
+                        <div class="conv-type">1×1</div>
+                        <div class="conv-channels">64</div>
+                    </div>
+                    <div class="layer-label">Reduce</div>
+                </div>
+                
+                <div class="arrow">→</div>
+                
+                <div class="layer-block process">
+                    <div class="conv-box">
+                        <div class="conv-type">3×3</div>
+                        <div class="conv-channels">64</div>
+                    </div>
+                    <div class="layer-label">Process</div>
+                </div>
+                
+                <div class="arrow">→</div>
+                
+                <div class="layer-block expand">
+                    <div class="conv-box">
+                        <div class="conv-type">1×1</div>
+                        <div class="conv-channels">256</div>
+                    </div>
+                    <div class="layer-label">Expand</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="example-box">
+            <div class="example-label">DIMENSIONAL FLOW EXAMPLE</div>
+            <div class="example-flow">
+                <span class="channel-num">256</span> channels → 
+                <span class="channel-num">64</span> channels → 
+                <span class="channel-num">64</span> channels → 
+                <span class="channel-num">256</span> channels
+            </div>
+        </div>
+        
+        <div class="benefits-grid">
+            <div class="benefit-card">
+                <div class="benefit-icon">💾</div>
+                <div class="benefit-title">Computational Savings</div>
+                <div class="benefit-value">~70% fewer FLOPs</div>
+            </div>
+            
+            <div class="benefit-card">
+                <div class="benefit-icon">⚡</div>
+                <div class="benefit-title">Trade-off</div>
+                <div class="benefit-value">More layers, fewer ops</div>
+            </div>
+            
+            <div class="benefit-card">
+                <div class="benefit-icon">🏗️</div>
+                <div class="benefit-title">Used In</div>
+                <div class="benefit-value">ResNet, Inception, etc.</div>
+            </div>
+        </div>
+        
+        <div class="adoption-note" style="margin-top: 15px;">
+            <div class="adoption-text">
+                <span class="highlight">Modern Standard:</span> Almost all efficient architectures use bottlenecks
+            </div>
+        </div>
+    </div>
+</body>
+</html>

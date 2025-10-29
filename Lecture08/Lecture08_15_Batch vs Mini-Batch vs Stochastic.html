@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batch vs Mini-Batch vs Stochastic</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 30px;
+            background: #ffffff;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .main-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-bottom: 18px;
+        }
+        
+        .method-card {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            height: 220px;
+        }
+        
+        .method-card.highlight {
+            background: linear-gradient(135deg, #e8f1fd 0%, #f0f8ff 100%);
+            border: 3px solid #1E64C8;
+        }
+        
+        .method-header {
+            text-align: center;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .method-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .method-data {
+            font-size: 16px;
+            color: #666;
+            font-style: italic;
+        }
+        
+        .method-features {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+        
+        .feature-icon {
+            min-width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .feature-icon.pro {
+            background: #d4edda;
+            color: #28a745;
+        }
+        
+        .feature-icon.con {
+            background: #f8d7da;
+            color: #dc3545;
+        }
+        
+        .batch-sizes-section {
+            background: #f0f8ff;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 15px;
+        }
+        
+        .sizes-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .sizes-list {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .size-badge {
+            background: #1E64C8;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .effects-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .effect-card {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 14px 16px;
+        }
+        
+        .effect-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .effect-comparison {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .effect-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            color: #2c3e50;
+        }
+        
+        .effect-label {
+            font-weight: 600;
+            min-width: 100px;
+        }
+        
+        .effect-arrow {
+            color: #1E64C8;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="main-title">Batch vs Mini-Batch vs Stochastic Gradient Descent</div>
+            <div class="subtitle">Balancing Speed, Stability, and Generalization</div>
+        </div>
+        
+        <div class="comparison-grid">
+            <!-- Batch GD -->
+            <div class="method-card">
+                <div class="method-header">
+                    <div class="method-name">Batch GD</div>
+                    <div class="method-data">Entire Dataset</div>
+                </div>
+                <div class="method-features">
+                    <div class="feature-item">
+                        <div class="feature-icon pro">✓</div>
+                        <div>Accurate gradient</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon pro">✓</div>
+                        <div>Stable convergence</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon con">✗</div>
+                        <div>Slow speed</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon con">✗</div>
+                        <div>Sharp minima</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Mini-Batch GD (Highlighted) -->
+            <div class="method-card highlight">
+                <div class="method-header">
+                    <div class="method-name">Mini-Batch GD</div>
+                    <div class="method-data">Subset of Data</div>
+                </div>
+                <div class="method-features">
+                    <div class="feature-item">
+                        <div class="feature-icon pro">✓</div>
+                        <div>Balances speed and stability</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon pro">✓</div>
+                        <div>GPU parallel processing</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon pro">✓</div>
+                        <div>Better generalization</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon pro">✓</div>
+                        <div>Practical choice</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Stochastic GD -->
+            <div class="method-card">
+                <div class="method-header">
+                    <div class="method-name">Stochastic GD</div>
+                    <div class="method-data">Single Sample</div>
+                </div>
+                <div class="method-features">
+                    <div class="feature-item">
+                        <div class="feature-icon pro">✓</div>
+                        <div>Fast updates</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon pro">✓</div>
+                        <div>Flat minima</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon con">✗</div>
+                        <div>Noisy gradient</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon con">✗</div>
+                        <div>Unstable convergence</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="batch-sizes-section">
+            <div class="sizes-title">📊 Typical Mini-Batch Sizes</div>
+            <div class="sizes-list">
+                <div class="size-badge">32</div>
+                <div class="size-badge">64</div>
+                <div class="size-badge">128</div>
+                <div class="size-badge">256</div>
+            </div>
+        </div>
+        
+        <div class="effects-grid">
+            <div class="effect-card">
+                <div class="effect-title">Larger Batches</div>
+                <div class="effect-comparison">
+                    <div class="effect-item">
+                        <span class="effect-label">Gradients:</span>
+                        <span class="effect-arrow">→</span>
+                        <span>More stable</span>
+                    </div>
+                    <div class="effect-item">
+                        <span class="effect-label">Hardware:</span>
+                        <span class="effect-arrow">→</span>
+                        <span>More efficient</span>
+                    </div>
+                    <div class="effect-item">
+                        <span class="effect-label">Minima:</span>
+                        <span class="effect-arrow">→</span>
+                        <span>Sharp</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="effect-card">
+                <div class="effect-title">Smaller Batches</div>
+                <div class="effect-comparison">
+                    <div class="effect-item">
+                        <span class="effect-label">Gradients:</span>
+                        <span class="effect-arrow">→</span>
+                        <span>Noisier</span>
+                    </div>
+                    <div class="effect-item">
+                        <span class="effect-label">Generalization:</span>
+                        <span class="effect-arrow">→</span>
+                        <span>Better</span>
+                    </div>
+                    <div class="effect-item">
+                        <span class="effect-label">Minima:</span>
+                        <span class="effect-arrow">→</span>
+                        <span>Flat</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

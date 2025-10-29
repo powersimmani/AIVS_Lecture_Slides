@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sequence-to-Sequence Models</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+            padding: 25px 45px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 25px;
+        }
+        
+        .concept-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874D8 100%);
+            color: white;
+            padding: 16px 30px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 22px;
+        }
+        
+        .concept-text {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        
+        .concept-sub {
+            font-size: 15px;
+            opacity: 0.95;
+        }
+        
+        .architecture-diagram {
+            background: #F8FAFE;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 20px 30px;
+            margin-bottom: 22px;
+        }
+        
+        .diagram-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            font-size: 16px;
+        }
+        
+        .flow-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            padding: 14px 20px;
+            border-radius: 6px;
+            text-align: center;
+            min-width: 150px;
+        }
+        
+        .flow-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .flow-text {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .arrow {
+            font-size: 28px;
+            color: #1E64C8;
+        }
+        
+        .features-apps {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            margin-bottom: 18px;
+        }
+        
+        .section-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 16px 20px;
+        }
+        
+        .section-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .item-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .item {
+            font-size: 16px;
+            color: #2C3E50;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .bullet {
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .challenge-box {
+            background: #FDECEA;
+            border: 2px solid #E74C3C;
+            border-radius: 8px;
+            padding: 14px 22px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .challenge-icon {
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+        
+        .challenge-content {
+            flex-grow: 1;
+        }
+        
+        .challenge-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #E74C3C;
+            margin-bottom: 4px;
+        }
+        
+        .challenge-text {
+            font-size: 15px;
+            color: #2C3E50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Sequence-to-Sequence Models</div>
+        
+        <div class="concept-box">
+            <div class="concept-text">Maps input sequence to output sequence</div>
+            <div class="concept-sub">Different lengths allowed (input ≠ output)</div>
+        </div>
+        
+        <div class="architecture-diagram">
+            <div class="diagram-flow">
+                <div class="flow-box">
+                    <div class="flow-title">Input Sequence</div>
+                    <div class="flow-text">Variable length</div>
+                </div>
+                <span class="arrow">→</span>
+                <div class="flow-box">
+                    <div class="flow-title">Encoder</div>
+                    <div class="flow-text">Processes input</div>
+                </div>
+                <span class="arrow">→</span>
+                <div class="flow-box">
+                    <div class="flow-title">Decoder</div>
+                    <div class="flow-text">Generates output</div>
+                </div>
+                <span class="arrow">→</span>
+                <div class="flow-box">
+                    <div class="flow-title">Output Sequence</div>
+                    <div class="flow-text">Variable length</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="features-apps">
+            <div class="section-card">
+                <div class="section-title">
+                    <span>🎯</span>
+                    <span>Key Feature</span>
+                </div>
+                <div class="item-list">
+                    <div class="item">
+                        <span class="bullet">•</span>
+                        <span>Handles variable-length sequences</span>
+                    </div>
+                    <div class="item">
+                        <span class="bullet">•</span>
+                        <span>End-to-end learning</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section-card">
+                <div class="section-title">
+                    <span>💼</span>
+                    <span>Applications</span>
+                </div>
+                <div class="item-list">
+                    <div class="item">
+                        <span class="bullet">•</span>
+                        <span>Machine Translation</span>
+                    </div>
+                    <div class="item">
+                        <span class="bullet">•</span>
+                        <span>Text Summarization</span>
+                    </div>
+                    <div class="item">
+                        <span class="bullet">•</span>
+                        <span>Conversation Systems</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="challenge-box">
+            <div class="challenge-icon">⚠️</div>
+            <div class="challenge-content">
+                <div class="challenge-title">Bottleneck Challenge</div>
+                <div class="challenge-text">
+                    Entire input compressed to fixed vector → Attention mechanism addresses this
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

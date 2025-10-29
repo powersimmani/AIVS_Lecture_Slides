@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Docker Basics - ML Containerization</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 28px 40px;
+            background: white;
+            margin-bottom: 40px;
+        }
+        
+        .title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .docker-intro {
+            background: #f0f5fc;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px 20px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        
+        .intro-text {
+            font-size: 17px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .intro-highlight {
+            color: #1E64C8;
+            font-weight: 700;
+        }
+        
+        .benefits-box {
+            background: #fff4e6;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px 20px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        
+        .benefits-text {
+            font-size: 16px;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .concepts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 16px;
+        }
+        
+        .concept-card {
+            background: white;
+            border: 3px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px 18px;
+            transition: all 0.3s;
+        }
+        
+        .concept-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(30, 100, 200, 0.25);
+        }
+        
+        .concept-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .concept-icon {
+            font-size: 22px;
+        }
+        
+        .concept-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E64C8;
+        }
+        
+        .concept-desc {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+        
+        .concept-example {
+            background: #f8fbff;
+            border: 1px dashed #1E64C8;
+            border-radius: 6px;
+            padding: 6px 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #1E64C8;
+            font-weight: 600;
+            word-break: break-all;
+        }
+        
+        .dockerfile-section {
+            background: white;
+            border: 2.5px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px 20px;
+            margin-bottom: 16px;
+        }
+        
+        .section-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .dockerfile-commands {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        
+        .dockerfile-cmd {
+            background: #f8fbff;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 8px 12px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .dockerfile-cmd:hover {
+            background: #1E64C8;
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        .cmd-name {
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+        }
+        
+        .dockerfile-cmd:hover .cmd-name {
+            color: white;
+        }
+        
+        .advanced-features {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        
+        .feature-box {
+            background: #f8fbff;
+            border-left: 4px solid #1E64C8;
+            border-radius: 6px;
+            padding: 10px 14px;
+        }
+        
+        .feature-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .feature-desc {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.4;
+            margin-bottom: 6px;
+        }
+        
+        .feature-code {
+            font-family: 'Courier New', monospace;
+            background: white;
+            border: 1px dashed #1E64C8;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+
+        /* Animation Section Styles */
+        .animation-container {
+            width: 880px;
+            background: white;
+            border: 2.5px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px 20px;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .animation-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .comparison-wrapper {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .comparison-side {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .comparison-header {
+            padding: 12px;
+            border-radius: 10px 10px 0 0;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .comparison-header.without {
+            background: linear-gradient(135deg, #fc4a1a 0%, #f7b733 100%);
+            color: white;
+        }
+
+        .comparison-header.with {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+
+        .header-icon {
+            font-size: 20px;
+        }
+
+        .scenario-container {
+            background: #f7fafc;
+            border: 3px solid #e2e8f0;
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+            padding: 15px;
+            min-height: 340px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .computer-row {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+
+        .mini-computer {
+            text-align: center;
+        }
+
+        .computer-screen {
+            font-size: 36px;
+            margin-bottom: 6px;
+        }
+
+        .computer-label {
+            font-size: 13px;
+            color: #4a5568;
+            font-weight: 600;
+        }
+
+        .action-steps {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .step-item {
+            background: white;
+            border-left: 4px solid #cbd5e0;
+            border-radius: 6px;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: all 0.5s ease;
+        }
+
+        .step-icon {
+            font-size: 20px;
+        }
+
+        .step-text {
+            font-size: 14px;
+            color: #2d3748;
+            font-weight: 600;
+        }
+
+        .result-box {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            border: 3px solid #e2e8f0;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .result-box.fail {
+            border-color: #fc8181;
+            background: #fff5f5;
+        }
+
+        .result-box.success {
+            border-color: #68d391;
+            background: #f0fff4;
+        }
+
+        .vs-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 900;
+            color: #1E64C8;
+            background: white;
+            border: 3px solid #1E64C8;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            align-self: center;
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.3);
+            z-index: 10;
+        }
+
+        .bottom-explanation {
+            background: #f0f5fc;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px 18px;
+            text-align: center;
+            margin-bottom: 10px;
+            min-height: 70px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            color: #1E64C8;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .control-btn {
+            padding: 10px 24px;
+            font-size: 15px;
+            font-weight: 600;
+            border: 2px solid #1E64C8;
+            background: white;
+            color: #1E64C8;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .control-btn:hover {
+            background: #1E64C8;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.3);
+        }
+
+        .control-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Docker Basics - ML Environment Containerization</div>
+        
+        <div class="docker-intro">
+            <span class="intro-text"><span class="intro-highlight">Docker</span>: Package application + dependencies into portable container</span>
+        </div>
+        
+        <div class="benefits-box">
+            <span class="benefits-text">✓ Consistent environment • No "works on my machine" issues</span>
+        </div>
+        
+        <div class="concepts-grid">
+            <div class="concept-card">
+                <div class="concept-header">
+                    <span class="concept-icon">📦</span>
+                    <span class="concept-name">Image</span>
+                </div>
+                <div class="concept-desc">Template (read-only)</div>
+                <div class="concept-example">pytorch/pytorch:2.0-cuda11.8-cudnn8-runtime</div>
+            </div>
+            
+            <div class="concept-card">
+                <div class="concept-header">
+                    <span class="concept-icon">🚀</span>
+                    <span class="concept-name">Container</span>
+                </div>
+                <div class="concept-desc">Running instance of image (isolated process)</div>
+            </div>
+            
+            <div class="concept-card">
+                <div class="concept-header">
+                    <span class="concept-icon">📝</span>
+                    <span class="concept-name">Dockerfile</span>
+                </div>
+                <div class="concept-desc">Recipe to build custom images</div>
+            </div>
+            
+            <div class="concept-card">
+                <div class="concept-header">
+                    <span class="concept-icon">💾</span>
+                    <span class="concept-name">Volume</span>
+                </div>
+                <div class="concept-desc">Mount local directory for data persistence</div>
+            </div>
+        </div>
+        
+        <div class="dockerfile-section">
+            <div class="section-title">Dockerfile Commands</div>
+            <div class="dockerfile-commands">
+                <div class="dockerfile-cmd">
+                    <div class="cmd-name">FROM</div>
+                </div>
+                <div class="dockerfile-cmd">
+                    <div class="cmd-name">RUN</div>
+                </div>
+                <div class="dockerfile-cmd">
+                    <div class="cmd-name">COPY</div>
+                </div>
+                <div class="dockerfile-cmd">
+                    <div class="cmd-name">CMD</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="advanced-features">
+            <div class="feature-box">
+                <div class="feature-title">GPU Access</div>
+                <div class="feature-desc">Enable GPU support in containers</div>
+                <div class="feature-code">docker run --gpus all</div>
+                <div style="font-size: 13px; color: #666; margin-top: 4px;">(requires nvidia-docker)</div>
+            </div>
+            
+            <div class="feature-box">
+                <div class="feature-title">Use Case</div>
+                <div class="feature-desc">Share reproducible ML environments across team/clusters</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Animation Section -->
+    <div class="animation-container">
+        <div class="animation-title">🤔 Without Docker vs With Docker</div>
+        
+        <div class="comparison-wrapper">
+            <!-- WITHOUT DOCKER -->
+            <div class="comparison-side">
+                <div class="comparison-header without">
+                    <span class="header-icon">❌</span>
+                    <span class="header-text">Without Docker</span>
+                </div>
+                
+                <div class="scenario-container" id="withoutDocker">
+                    <div class="computer-row">
+                        <div class="mini-computer">
+                            <div class="computer-screen">💻</div>
+                            <div class="computer-label">Computer A</div>
+                        </div>
+                    </div>
+                    
+                    <div class="action-steps" id="withoutSteps">
+                        <!-- Steps will be added dynamically -->
+                    </div>
+                    
+                    <div class="result-box fail" id="withoutResult">
+                        <!-- Result will be shown here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- VS Divider -->
+            <div class="vs-divider">VS</div>
+
+            <!-- WITH DOCKER -->
+            <div class="comparison-side">
+                <div class="comparison-header with">
+                    <span class="header-icon">✅</span>
+                    <span class="header-text">With Docker</span>
+                </div>
+                
+                <div class="scenario-container" id="withDocker">
+                    <div class="computer-row">
+                        <div class="mini-computer">
+                            <div class="computer-screen">💻</div>
+                            <div class="computer-label">Computer A</div>
+                        </div>
+                    </div>
+                    
+                    <div class="action-steps" id="withSteps">
+                        <!-- Steps will be added dynamically -->
+                    </div>
+                    
+                    <div class="result-box success" id="withResult">
+                        <!-- Result will be shown here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom explanation -->
+        <div class="bottom-explanation" id="explanation">
+            Click to see the difference 👇
+        </div>
+
+        <div class="controls">
+            <button class="control-btn" id="playBtn">▶️ Start Comparison</button>
+            <button class="control-btn" id="resetBtn">🔄 Reset</button>
+        </div>
+    </div>
+
+    <script>
+        const withoutDockerSteps = [
+            { icon: '📝', text: 'Download program', color: '#718096' },
+            { icon: '❓', text: 'Install Python?', color: '#e53e3e' },
+            { icon: '❓', text: 'Right version?', color: '#e53e3e' },
+            { icon: '❓', text: '100 libraries?', color: '#e53e3e' },
+            { icon: '😰', text: 'Errors!', color: '#c53030' }
+        ];
+
+        const withDockerSteps = [
+            { icon: '📦', text: 'Download Docker image', color: '#2b6cb0' },
+            { icon: '✨', text: 'Everything ready!', color: '#38a169' },
+            { icon: '▶️', text: 'Run instantly', color: '#38a169' },
+            { icon: '😊', text: 'Works perfectly!', color: '#2f855a' }
+        ];
+
+        let isAnimating = false;
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        function createStep(data) {
+            const step = document.createElement('div');
+            step.className = 'step-item';
+            step.style.borderLeftColor = data.color;
+            step.innerHTML = `
+                <span class="step-icon">${data.icon}</span>
+                <span class="step-text">${data.text}</span>
+            `;
+            return step;
+        }
+
+        async function animateWithoutDocker() {
+            const container = document.getElementById('withoutSteps');
+            const resultBox = document.getElementById('withoutResult');
+            
+            container.innerHTML = '';
+            resultBox.innerHTML = '';
+            resultBox.style.opacity = '0';
+
+            for (let i = 0; i < withoutDockerSteps.length; i++) {
+                const step = createStep(withoutDockerSteps[i]);
+                container.appendChild(step);
+                
+                await sleep(100);
+                step.style.opacity = '1';
+                step.style.transform = 'translateX(0)';
+                
+                await sleep(800);
+            }
+
+            await sleep(300);
+            resultBox.innerHTML = `
+                <div style="font-size: 24px; margin-bottom: 6px;">😱</div>
+                <div style="font-size: 15px; font-weight: 700; color: #c53030;">Doesn't work!</div>
+                <div style="font-size: 12px; color: #666; margin-top: 4px;">"It works on my machine..."</div>
+            `;
+            resultBox.style.opacity = '1';
+        }
+
+        async function animateWithDocker() {
+            const container = document.getElementById('withSteps');
+            const resultBox = document.getElementById('withResult');
+            
+            container.innerHTML = '';
+            resultBox.innerHTML = '';
+            resultBox.style.opacity = '0';
+
+            for (let i = 0; i < withDockerSteps.length; i++) {
+                const step = createStep(withDockerSteps[i]);
+                container.appendChild(step);
+                
+                await sleep(100);
+                step.style.opacity = '1';
+                step.style.transform = 'translateX(0)';
+                
+                await sleep(800);
+            }
+
+            await sleep(300);
+            resultBox.innerHTML = `
+                <div style="font-size: 24px; margin-bottom: 6px;">🎉</div>
+                <div style="font-size: 15px; font-weight: 700; color: #2f855a;">Works perfectly!</div>
+                <div style="font-size: 12px; color: #666; margin-top: 4px;">On any computer!</div>
+            `;
+            resultBox.style.opacity = '1';
+        }
+
+        async function animate() {
+            if (isAnimating) return;
+            isAnimating = true;
+            
+            const playBtn = document.getElementById('playBtn');
+            const explanation = document.getElementById('explanation');
+            
+            playBtn.disabled = true;
+            playBtn.textContent = '⏳ Comparing...';
+
+            // Show explanation
+            explanation.innerHTML = `
+                <div style="font-size: 16px; color: #1E64C8; font-weight: 700; margin-bottom: 8px;">
+                    Watch the difference!
+                </div>
+                <div style="font-size: 14px; color: #555;">
+                    Left: Complex & errors 😰 → Right: Simple & perfect! 🎉
+                </div>
+            `;
+
+            // Animate both scenarios simultaneously
+            await Promise.all([
+                animateWithoutDocker(),
+                animateWithDocker()
+            ]);
+
+            await sleep(2000);
+
+            explanation.innerHTML = `
+                <div style="font-size: 16px; color: #38a169; font-weight: 700; margin-bottom: 8px;">
+                    💡 Docker = Package programs to run anywhere instantly!
+                </div>
+                <div style="font-size: 13px; color: #666;">
+                    No installation, no errors, works the same for everyone
+                </div>
+            `;
+
+            playBtn.textContent = '▶️ Start Comparison';
+            playBtn.disabled = false;
+            isAnimating = false;
+        }
+
+        function reset() {
+            document.getElementById('withoutSteps').innerHTML = '';
+            document.getElementById('withSteps').innerHTML = '';
+            document.getElementById('withoutResult').innerHTML = '';
+            document.getElementById('withResult').innerHTML = '';
+            document.getElementById('withoutResult').style.opacity = '0';
+            document.getElementById('withResult').style.opacity = '0';
+            
+            document.getElementById('explanation').textContent = 'Click to see the difference 👇';
+            
+            isAnimating = false;
+        }
+
+        document.getElementById('playBtn').addEventListener('click', animate);
+        document.getElementById('resetBtn').addEventListener('click', reset);
+
+        // Auto-play on load
+        window.addEventListener('load', () => {
+            setTimeout(animate, 1000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPT-3 and Few-shot Learning</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: #ffffff;
+            padding: 25px 40px;
+        }
+        
+        .title {
+            font-size: 26px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .subtitle {
+            font-size: 17px;
+            color: #666666;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        /* Learning Types Grid */
+        .learning-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        
+        .learning-card {
+            background: #F8F9FA;
+            border: 3px solid #1E64C8;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            height: 260px;
+        }
+        
+        .card-header {
+            text-align: center;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .card-icon {
+            font-size: 32px;
+            margin-bottom: 6px;
+        }
+        
+        .card-title {
+            font-size: 19px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 3px;
+        }
+        
+        .card-subtitle {
+            font-size: 15px;
+            color: #666666;
+        }
+        
+        .example-box {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 12px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .example-item {
+            font-size: 15px;
+            line-height: 1.4;
+        }
+        
+        .prompt-label {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .example-text {
+            color: #333333;
+            background: #F5F5F5;
+            padding: 6px 8px;
+            border-radius: 4px;
+            margin-top: 4px;
+            font-size: 14px;
+        }
+        
+        .task-desc {
+            background: #E8F4F8;
+            padding: 6px 8px;
+            border-radius: 4px;
+            border-left: 3px solid #1E64C8;
+            color: #333333;
+            font-size: 14px;
+        }
+        
+        .response {
+            background: #C8E6C9;
+            padding: 6px 8px;
+            border-radius: 4px;
+            border-left: 3px solid #4CAF50;
+            color: #2E7D32;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        .divider {
+            height: 1px;
+            background: #E0E0E0;
+            margin: 4px 0;
+        }
+        
+        /* Key Points */
+        .key-points {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .point-card {
+            background: #E8F4F8;
+            border-left: 4px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .point-icon {
+            font-size: 22px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .point-content {
+            flex: 1;
+        }
+        
+        .point-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 3px;
+        }
+        
+        .point-text {
+            font-size: 16px;
+            color: #333333;
+            line-height: 1.3;
+        }
+        
+        /* Bottom Highlight */
+        .highlight-box {
+            background: #FFF9E6;
+            border: 3px solid #FFC107;
+            border-radius: 10px;
+            padding: 12px 18px;
+            text-align: center;
+        }
+        
+        .highlight-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #F57C00;
+            margin-bottom: 4px;
+        }
+        
+        .highlight-text {
+            font-size: 16px;
+            color: #555555;
+            line-height: 1.4;
+        }
+        
+        .highlight {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">GPT-3 and Few-shot Learning</div>
+        <div class="subtitle">175B parameters • 300B tokens • In-context Learning</div>
+        
+        <div class="main-content">
+            <!-- Learning Types -->
+            <div class="learning-grid">
+                <!-- Zero-shot -->
+                <div class="learning-card">
+                    <div class="card-header">
+                        <div class="card-icon">0️⃣</div>
+                        <div class="card-title">Zero-shot</div>
+                        <div class="card-subtitle">Task description only</div>
+                    </div>
+                    
+                    <div class="example-box">
+                        <div class="task-desc">
+                            Translate to French:
+                        </div>
+                        <div class="example-text">
+                            "Hello, how are you?"
+                        </div>
+                        <div class="divider"></div>
+                        <div class="response">
+                            → Bonjour, comment allez-vous?
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- One-shot -->
+                <div class="learning-card">
+                    <div class="card-header">
+                        <div class="card-icon">1️⃣</div>
+                        <div class="card-title">One-shot</div>
+                        <div class="card-subtitle">Single example</div>
+                    </div>
+                    
+                    <div class="example-box">
+                        <div class="task-desc">
+                            Translate to French:
+                        </div>
+                        <div class="example-text">
+                            "Good morning" → "Bonjour"
+                        </div>
+                        <div class="divider"></div>
+                        <div class="example-text">
+                            "Thank you"
+                        </div>
+                        <div class="response">
+                            → Merci
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Few-shot -->
+                <div class="learning-card">
+                    <div class="card-header">
+                        <div class="card-icon">🎯</div>
+                        <div class="card-title">Few-shot</div>
+                        <div class="card-subtitle">Multiple examples</div>
+                    </div>
+                    
+                    <div class="example-box">
+                        <div class="task-desc">
+                            Translate to French:
+                        </div>
+                        <div class="example-text" style="font-size: 13px;">
+                            "Hello" → "Bonjour"<br>
+                            "Thank you" → "Merci"<br>
+                            "Goodbye" → "Au revoir"
+                        </div>
+                        <div class="divider"></div>
+                        <div class="example-text">
+                            "Please"
+                        </div>
+                        <div class="response">
+                            → S'il vous plaît
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Key Points -->
+            <div class="key-points">
+                <div class="point-card">
+                    <div class="point-icon">🧠</div>
+                    <div class="point-content">
+                        <div class="point-title">In-context Learning</div>
+                        <div class="point-text">
+                            Learn from context <span class="highlight">without weight updates</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="point-card">
+                    <div class="point-icon">✨</div>
+                    <div class="point-content">
+                        <div class="point-title">Emergent Capabilities</div>
+                        <div class="point-text">
+                            Arithmetic, translation, <span class="highlight">reasoning</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bottom Highlight -->
+            <div class="highlight-box">
+                <div class="highlight-title">🚀 Democratization of AI</div>
+                <div class="highlight-text">
+                    <strong>Natural language interfaces</strong> enable users to interact with AI without technical expertise
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

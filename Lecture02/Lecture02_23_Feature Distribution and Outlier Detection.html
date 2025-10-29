@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feature Distribution & Outlier Detection</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #FFFFFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            padding: 25px 35px;
+        }
+        
+        .title-section {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        
+        .main-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .subtitle {
+            font-size: 17px;
+            color: #666666;
+        }
+        
+        .content-wrapper {
+            display: flex;
+            gap: 18px;
+            flex: 1;
+        }
+        
+        .left-panel {
+            flex: 1.6;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .plots-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            flex: 1;
+        }
+        
+        .plot-card {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 10px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+        
+        .plot-card:hover {
+            border-color: #1E64C8;
+            box-shadow: 0 4px 15px rgba(30, 100, 200, 0.15);
+            transform: translateY(-3px);
+        }
+        
+        .plot-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .plot-visual {
+            flex: 1;
+            background: #F8F8F8;
+            border-radius: 6px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .plot-visual svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .plot-description {
+            text-align: center;
+            font-size: 16px;
+            color: #666;
+            margin-top: 8px;
+            line-height: 1.3;
+        }
+        
+        .methods-section {
+            background: #F8FBFF;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px 16px;
+        }
+        
+        .methods-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .methods-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        
+        .method-box {
+            background: white;
+            padding: 8px 10px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 16px;
+            color: #333;
+            border-left: 3px solid #1E64C8;
+        }
+        
+        .method-name {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .right-panel {
+            flex: 0.4;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .detection-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .detection-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+            margin-bottom: 8px;
+            padding: 8px;
+            background: #F8FBFF;
+            border-radius: 4px;
+        }
+        
+        .detection-icon {
+            color: #1E64C8;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .decision-card {
+            background: #FFF9E6;
+            border: 2px solid #FFC107;
+            border-radius: 10px;
+            padding: 14px;
+        }
+        
+        .decision-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .decision-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 8px;
+            padding: 8px;
+            background: white;
+            border-radius: 4px;
+        }
+        
+        .decision-type {
+            font-weight: 600;
+        }
+        
+        .decision-action {
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .transformation-card {
+            background: #E8F5E9;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            padding: 14px;
+        }
+        
+        .transformation-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2E7D32;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .transform-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 6px;
+        }
+        
+        .check-icon {
+            color: #4CAF50;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .tests-card {
+            background: #FFEBEE;
+            border: 2px solid #F44336;
+            border-radius: 10px;
+            padding: 14px;
+        }
+        
+        .tests-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #C62828;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .test-item {
+            background: white;
+            padding: 6px 10px;
+            border-radius: 4px;
+            margin-bottom: 6px;
+            font-size: 16px;
+            text-align: center;
+            color: #333;
+            border-left: 3px solid #F44336;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .plot-card, .methods-section, .detection-card, .decision-card, .transformation-card, .tests-card {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        .plot-card:nth-child(1) { animation-delay: 0.1s; }
+        .plot-card:nth-child(2) { animation-delay: 0.2s; }
+        .plot-card:nth-child(3) { animation-delay: 0.3s; }
+        .methods-section { animation-delay: 0.4s; }
+        .detection-card { animation-delay: 0.5s; }
+        .decision-card { animation-delay: 0.6s; }
+        .transformation-card { animation-delay: 0.7s; }
+        .tests-card { animation-delay: 0.8s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Feature Distribution & Outlier Detection</div>
+            <div class="subtitle">Assessing Normality and Identifying Anomalies</div>
+        </div>
+        
+        <div class="content-wrapper">
+            <div class="left-panel">
+                <div class="plots-grid">
+                    <!-- Histogram -->
+                    <div class="plot-card">
+                        <div class="plot-title">Histogram</div>
+                        <div class="plot-visual">
+                            <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+                                <!-- Bars -->
+                                <rect x="10" y="70" width="8" height="20" fill="#1E64C8"/>
+                                <rect x="18" y="55" width="8" height="35" fill="#1E64C8"/>
+                                <rect x="26" y="40" width="8" height="50" fill="#1E64C8"/>
+                                <rect x="34" y="25" width="8" height="65" fill="#1E64C8"/>
+                                <rect x="42" y="15" width="8" height="75" fill="#1E64C8"/>
+                                <rect x="50" y="20" width="8" height="70" fill="#1E64C8"/>
+                                <rect x="58" y="30" width="8" height="60" fill="#1E64C8"/>
+                                <rect x="66" y="45" width="8" height="45" fill="#1E64C8"/>
+                                <rect x="74" y="60" width="8" height="30" fill="#1E64C8"/>
+                                <rect x="82" y="75" width="8" height="15" fill="#1E64C8"/>
+                                
+                                <!-- Baseline -->
+                                <line x1="5" y1="90" x2="95" y2="90" stroke="#666" stroke-width="1"/>
+                            </svg>
+                        </div>
+                        <div class="plot-description">Shows distribution shape</div>
+                    </div>
+                    
+                    <!-- Q-Q Plot -->
+                    <div class="plot-card">
+                        <div class="plot-title">Q-Q Plot</div>
+                        <div class="plot-visual">
+                            <svg viewBox="0 0 100 100">
+                                <!-- Diagonal reference line -->
+                                <line x1="10" y1="90" x2="90" y2="10" stroke="#999" stroke-width="1" stroke-dasharray="2,2"/>
+                                
+                                <!-- Data points following line (normal) -->
+                                <circle cx="15" cy="85" r="2" fill="#1E64C8" opacity="0.7"/>
+                                <circle cx="22" cy="78" r="2" fill="#1E64C8" opacity="0.7"/>
+                                <circle cx="30" cy="70" r="2" fill="#1E64C8" opacity="0.7"/>
+                                <circle cx="38" cy="62" r="2" fill="#1E64C8" opacity="0.7"/>
+                                <circle cx="46" cy="54" r="2" fill="#1E64C8" opacity="0.7"/>
+                                <circle cx="54" cy="46" r="2" fill="#1E64C8" opacity="0.7"/>
+                                <circle cx="62" cy="38" r="2" fill="#1E64C8" opacity="0.7"/>
+                                <circle cx="70" cy="30" r="2" fill="#1E64C8" opacity="0.7"/>
+                                <circle cx="78" cy="22" r="2" fill="#1E64C8" opacity="0.7"/>
+                                <circle cx="85" cy="15" r="2" fill="#1E64C8" opacity="0.7"/>
+                                
+                                <!-- Outliers -->
+                                <circle cx="12" cy="70" r="2.5" fill="#F57C00"/>
+                                <circle cx="88" cy="30" r="2.5" fill="#F57C00"/>
+                                
+                                <!-- Axes -->
+                                <line x1="10" y1="90" x2="90" y2="90" stroke="#666" stroke-width="1"/>
+                                <line x1="10" y1="90" x2="10" y2="10" stroke="#666" stroke-width="1"/>
+                            </svg>
+                        </div>
+                        <div class="plot-description">Tests normality assumption</div>
+                    </div>
+                    
+                    <!-- Box Plot -->
+                    <div class="plot-card">
+                        <div class="plot-title">Box Plot</div>
+                        <div class="plot-visual">
+                            <svg viewBox="0 0 100 100">
+                                <!-- Whisker top -->
+                                <line x1="50" y1="15" x2="50" y2="30" stroke="#1E64C8" stroke-width="2"/>
+                                <line x1="40" y1="15" x2="60" y2="15" stroke="#1E64C8" stroke-width="2"/>
+                                
+                                <!-- Box -->
+                                <rect x="35" y="30" width="30" height="35" 
+                                      fill="rgba(30, 100, 200, 0.2)" 
+                                      stroke="#1E64C8" 
+                                      stroke-width="2"/>
+                                
+                                <!-- Median -->
+                                <line x1="35" y1="47" x2="65" y2="47" stroke="#C62828" stroke-width="3"/>
+                                
+                                <!-- Whisker bottom -->
+                                <line x1="50" y1="65" x2="50" y2="80" stroke="#1E64C8" stroke-width="2"/>
+                                <line x1="40" y1="80" x2="60" y2="80" stroke="#1E64C8" stroke-width="2"/>
+                                
+                                <!-- Outliers -->
+                                <circle cx="50" cy="5" r="2.5" fill="#F57C00"/>
+                                <circle cx="50" cy="90" r="2.5" fill="#F57C00"/>
+                                <circle cx="50" cy="95" r="2.5" fill="#F57C00"/>
+                            </svg>
+                        </div>
+                        <div class="plot-description">Highlights outliers & IQR</div>
+                    </div>
+                </div>
+                
+                <div class="methods-section">
+                    <div class="methods-title">Outlier Detection Methods</div>
+                    <div class="methods-grid">
+                        <div class="method-box">
+                            <div class="method-name">IQR Method</div>
+                        </div>
+                        <div class="method-box">
+                            <div class="method-name">Z-Score</div>
+                        </div>
+                        <div class="method-box">
+                            <div class="method-name">Isolation Forest</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <div class="detection-card">
+                    <div class="card-title">
+                        <span>🔍</span>
+                        Key Insights
+                    </div>
+                    <div class="detection-item">
+                        <span class="detection-icon">•</span>
+                        <span>Reveals skewness & modality</span>
+                    </div>
+                    <div class="detection-item">
+                        <span class="detection-icon">•</span>
+                        <span>Identifies outliers & quartiles</span>
+                    </div>
+                    <div class="detection-item">
+                        <span class="detection-icon">•</span>
+                        <span>Q-Q: diagonal = normal</span>
+                    </div>
+                </div>
+                
+                <div class="tests-card">
+                    <div class="tests-title">Statistical Tests</div>
+                    <div class="test-item">Shapiro-Wilk</div>
+                    <div class="test-item">Anderson-Darling</div>
+                </div>
+                
+                <div class="decision-card">
+                    <div class="decision-title">⚖️ Decision</div>
+                    <div class="decision-row">
+                        <span class="decision-type">Errors</span>
+                        <span class="decision-action">Remove</span>
+                    </div>
+                    <div class="decision-row">
+                        <span class="decision-type">Extreme</span>
+                        <span class="decision-action">Keep/Investigate</span>
+                    </div>
+                </div>
+                
+                <div class="transformation-card">
+                    <div class="transformation-title">Transformations</div>
+                    <div class="transform-item">
+                        <span class="check-icon">✓</span>
+                        <span>Log transform</span>
+                    </div>
+                    <div class="transform-item">
+                        <span class="check-icon">✓</span>
+                        <span>Box-Cox</span>
+                    </div>
+                    <div class="transform-item">
+                        <span class="check-icon">✓</span>
+                        <span>Feature scaling</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

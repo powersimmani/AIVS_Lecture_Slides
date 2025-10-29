@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Central Limit Theorem and Law of Large Numbers</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: #ffffff;
+            position: relative;
+            padding: 25px 35px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .header-title {
+            font-size: 20px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .content-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            flex: 1;
+        }
+        
+        .top-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .theorem-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        
+        .theorem-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .theorem-statement {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+        
+        .theorem-formula {
+            background: #f8fafb;
+            padding: 8px 10px;
+            border-radius: 4px;
+            font-size: 16px;
+            color: #333;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            margin-top: 6px;
+        }
+        
+        .clt-visual {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 15px;
+            flex: 1;
+        }
+        
+        .visual-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .transformation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 180px;
+        }
+        
+        .dist-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .dist-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .dist-graphic {
+            width: 100%;
+            height: 130px;
+            background: #f8fafb;
+            border: 2px solid #1E64C8;
+            border-radius: 6px;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding: 10px;
+        }
+        
+        .uniform-bars {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .uniform-bar {
+            width: 12%;
+            background: #1E64C8;
+            border-radius: 2px 2px 0 0;
+            height: 70%;
+        }
+        
+        .normal-curve {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .curve-path {
+            fill: rgba(30, 100, 200, 0.15);
+            stroke: #1E64C8;
+            stroke-width: 2;
+        }
+        
+        .transform-arrow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0 15px;
+        }
+        
+        .arrow-symbol {
+            font-size: 32px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .arrow-label {
+            font-size: 14px;
+            color: #1E64C8;
+            margin-top: 5px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .n-label {
+            font-size: 14px;
+            color: #555;
+            margin-top: 5px;
+        }
+        
+        .bottom-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .insight-box {
+            background: #f0f7ff;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 15px;
+            text-align: center;
+        }
+        
+        .insight-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .insight-content {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .ml-application {
+            background: #1E64C8;
+            color: white;
+            border-radius: 8px;
+            padding: 12px 15px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .ml-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        
+        .ml-content {
+            font-size: 16px;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-title">Central Limit Theorem and Law of Large Numbers</div>
+        </div>
+        
+        <div class="content-layout">
+            <div class="top-section">
+                <div class="theorem-box">
+                    <div class="theorem-title">Law of Large Numbers</div>
+                    <div class="theorem-statement">
+                        Sample mean converges to population mean
+                    </div>
+                    <div class="theorem-formula">X̄ₙ → μ as n → ∞</div>
+                    <div style="font-size: 15px; color: #555; text-align: center; margin-top: 8px;">
+                        Convergence in probability
+                    </div>
+                </div>
+                
+                <div class="theorem-box">
+                    <div class="theorem-title">Central Limit Theorem</div>
+                    <div class="theorem-statement">
+                        Sum of random variables approaches normal distribution
+                    </div>
+                    <div class="theorem-formula">√n(X̄ₙ - μ) / σ → N(0,1)</div>
+                    <div style="font-size: 15px; color: #555; text-align: center; margin-top: 8px;">
+                        as n → ∞
+                    </div>
+                </div>
+            </div>
+            
+            <div class="clt-visual">
+                <div class="visual-title">CLT: Any Distribution → Normal Distribution</div>
+                <div class="transformation">
+                    <div class="dist-container">
+                        <div class="dist-label">Original Distribution<br><span class="n-label">(any shape)</span></div>
+                        <div class="dist-graphic">
+                            <div class="uniform-bars">
+                                <div class="uniform-bar"></div>
+                                <div class="uniform-bar"></div>
+                                <div class="uniform-bar"></div>
+                                <div class="uniform-bar"></div>
+                                <div class="uniform-bar"></div>
+                                <div class="uniform-bar"></div>
+                                <div class="uniform-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="transform-arrow">
+                        <div class="arrow-symbol">→</div>
+                        <div class="arrow-label">Take means<br>n → ∞</div>
+                    </div>
+                    
+                    <div class="dist-container">
+                        <div class="dist-label">Distribution of Means<br><span class="n-label">(normal)</span></div>
+                        <div class="dist-graphic">
+                            <svg class="normal-curve" viewBox="0 0 200 100" preserveAspectRatio="none">
+                                <path class="curve-path" 
+                                      d="M 0,100 Q 20,100 40,85 T 60,60 T 80,35 T 100,15 T 120,35 T 140,60 T 160,85 T 180,100 L 200,100 Z" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bottom-section">
+                <div class="insight-box">
+                    <div class="insight-title">Key Insight</div>
+                    <div class="insight-content">
+                        Averages are approximately normal with large n
+                    </div>
+                </div>
+                
+                <div class="insight-box">
+                    <div class="insight-title">Regression Use</div>
+                    <div class="insight-content">
+                        Justifies normal assumption in residuals
+                    </div>
+                </div>
+                
+                <div class="ml-application">
+                    <div class="ml-title">Enables</div>
+                    <div class="ml-content">
+                        Confidence intervals<br>& hypothesis tests
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

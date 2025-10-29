@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model Assumptions and Diagnostics</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: #ffffff;
+            position: relative;
+            padding: 25px 35px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .header-title {
+            font-size: 20px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            flex: 1;
+        }
+        
+        .left-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .section-header {
+            background: #1E64C8;
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 17px;
+            font-weight: 600;
+        }
+        
+        .assumptions-list {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 15px;
+            flex: 1;
+        }
+        
+        .assumption-item {
+            background: #f8fafb;
+            border-left: 4px solid #1E64C8;
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+        }
+        
+        .assumption-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 3px;
+        }
+        
+        .assumption-desc {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.3;
+        }
+        
+        .diagnostics-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 15px;
+        }
+        
+        .diag-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .diag-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+        
+        .diag-item {
+            background: #f0f7ff;
+            padding: 8px 10px;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 15px;
+            color: #333;
+            border: 1px solid #1E64C8;
+        }
+        
+        .right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .visual-diagnostics {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 15px;
+            flex: 1;
+        }
+        
+        .visual-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .plots-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .plot-box {
+            background: #f8fafb;
+            border: 2px solid #1E64C8;
+            border-radius: 6px;
+            padding: 8px;
+            height: 100px;
+            position: relative;
+        }
+        
+        .plot-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 5px;
+        }
+        
+        .plot-visual {
+            position: relative;
+            height: 70px;
+            background: white;
+            border-radius: 4px;
+        }
+        
+        .axis {
+            position: absolute;
+            background: #1E64C8;
+        }
+        
+        .x-axis {
+            bottom: 10px;
+            left: 10px;
+            right: 10px;
+            height: 1px;
+        }
+        
+        .y-axis {
+            left: 10px;
+            bottom: 10px;
+            top: 10px;
+            width: 1px;
+        }
+        
+        .residual-point {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #1E64C8;
+            border-radius: 50%;
+        }
+        
+        .p1 { left: 20%; bottom: 45%; }
+        .p2 { left: 30%; bottom: 35%; }
+        .p3 { left: 40%; bottom: 50%; }
+        .p4 { left: 50%; bottom: 40%; }
+        .p5 { left: 60%; bottom: 55%; }
+        .p6 { left: 70%; bottom: 45%; }
+        .p7 { left: 80%; bottom: 50%; }
+        
+        .qq-diagonal {
+            position: absolute;
+            left: 15px;
+            bottom: 15px;
+            width: calc(100% - 30px);
+            height: calc(100% - 30px);
+            border-top: 2px solid rgba(30, 100, 200, 0.3);
+            transform: rotate(45deg);
+            transform-origin: bottom left;
+        }
+        
+        .remedies-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 11px 15px;
+        }
+        
+        .remedy-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 7px;
+            text-align: center;
+        }
+        
+        .remedy-list {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .remedy-item {
+            background: #f8fafb;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 15px;
+            color: #333;
+            border-left: 3px solid #1E64C8;
+        }
+        
+        .validation-box {
+            background: #1E64C8;
+            color: white;
+            border-radius: 8px;
+            padding: 11px 15px;
+        }
+        
+        .val-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            text-align: center;
+        }
+        
+        .val-methods {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 6px;
+        }
+        
+        .val-method {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-title">Model Assumptions and Diagnostics</div>
+        </div>
+        
+        <div class="main-grid">
+            <div class="left-panel">
+                <div class="section-header">Key Assumptions</div>
+                
+                <div class="assumptions-list">
+                    <div class="assumption-item">
+                        <div class="assumption-title">1. Linearity</div>
+                        <div class="assumption-desc">True relationship is linear (or approximately)</div>
+                    </div>
+                    
+                    <div class="assumption-item">
+                        <div class="assumption-title">2. Independence</div>
+                        <div class="assumption-desc">Observations are independent</div>
+                    </div>
+                    
+                    <div class="assumption-item">
+                        <div class="assumption-title">3. Homoscedasticity</div>
+                        <div class="assumption-desc">Constant error variance across X</div>
+                    </div>
+                    
+                    <div class="assumption-item">
+                        <div class="assumption-title">4. Normality</div>
+                        <div class="assumption-desc">Errors ~ N(0, σ²)</div>
+                    </div>
+                    
+                    <div class="assumption-item">
+                        <div class="assumption-title">5. No Multicollinearity</div>
+                        <div class="assumption-desc">Predictors not highly correlated</div>
+                    </div>
+                </div>
+                
+                <div class="diagnostics-box">
+                    <div class="diag-title">Diagnostic Tools</div>
+                    <div class="diag-grid">
+                        <div class="diag-item">Residual Plots</div>
+                        <div class="diag-item">Q-Q Plots</div>
+                        <div class="diag-item">Leverage Plots</div>
+                        <div class="diag-item">VIF Scores</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <div class="section-header">Visual Diagnostics</div>
+                
+                <div class="visual-diagnostics">
+                    <div class="visual-title">Example Diagnostic Plots</div>
+                    <div class="plots-grid">
+                        <div class="plot-box">
+                            <div class="plot-label">Residual Plot (Good)</div>
+                            <div class="plot-visual">
+                                <div class="axis x-axis"></div>
+                                <div class="axis y-axis"></div>
+                                <div class="residual-point p1"></div>
+                                <div class="residual-point p2"></div>
+                                <div class="residual-point p3"></div>
+                                <div class="residual-point p4"></div>
+                                <div class="residual-point p5"></div>
+                                <div class="residual-point p6"></div>
+                                <div class="residual-point p7"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="plot-box">
+                            <div class="plot-label">Q-Q Plot</div>
+                            <div class="plot-visual">
+                                <div class="axis x-axis"></div>
+                                <div class="axis y-axis"></div>
+                                <div class="qq-diagonal"></div>
+                                <div class="residual-point" style="left: 20%; bottom: 20%;"></div>
+                                <div class="residual-point" style="left: 35%; bottom: 35%;"></div>
+                                <div class="residual-point" style="left: 50%; bottom: 50%;"></div>
+                                <div class="residual-point" style="left: 65%; bottom: 65%;"></div>
+                                <div class="residual-point" style="left: 80%; bottom: 80%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="font-size: 13px; color: #555; text-align: center; margin-top: 8px;">
+                        Random scatter in residual plot = Good fit<br>
+                        Points on diagonal in Q-Q = Normal errors
+                    </div>
+                </div>
+                
+                <div class="remedies-box">
+                    <div class="remedy-title">Violations & Remedies</div>
+                    <div class="remedy-list">
+                        <div class="remedy-item">Transformations (log, sqrt)</div>
+                        <div class="remedy-item">Robust regression methods</div>
+                        <div class="remedy-item">Regularization (Ridge, Lasso)</div>
+                    </div>
+                </div>
+                
+                <div class="validation-box">
+                    <div class="val-title">Model Validation</div>
+                    <div class="val-methods">
+                        <div class="val-method">Train-Test<br>Split</div>
+                        <div class="val-method">Cross-<br>Validation</div>
+                        <div class="val-method">Bootstrap</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

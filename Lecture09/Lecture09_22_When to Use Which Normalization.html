@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>When to Use Which Normalization</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: #ffffff;
+            padding: 20px 40px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 25px;
+        }
+        
+        .decision-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+            margin-bottom: 20px;
+        }
+        
+        .decision-card {
+            background: linear-gradient(135deg, #f8f9fb 0%, #e8f4ff 100%);
+            border-left: 5px solid #1E64C8;
+            border-radius: 10px;
+            padding: 18px 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .decision-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(30, 100, 200, 0.15);
+            background: linear-gradient(135deg, #e8f4ff 0%, #d1e9ff 100%);
+        }
+        
+        .card-scenario {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .scenario-icon {
+            font-size: 20px;
+        }
+        
+        .card-condition {
+            font-size: 17px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+        
+        .arrow-down {
+            text-align: center;
+            font-size: 20px;
+            color: #1E64C8;
+            margin: 5px 0;
+        }
+        
+        .card-solution {
+            background: #1E64C8;
+            color: white;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 17px;
+            font-weight: 600;
+            text-align: center;
+            box-shadow: 0 2px 6px rgba(30, 100, 200, 0.3);
+        }
+        
+        .considerations-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin-top: 20px;
+        }
+        
+        .considerations-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #f57c00;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .considerations-items {
+            display: flex;
+            justify-content: space-around;
+            gap: 15px;
+        }
+        
+        .consideration-item {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .consideration-icon {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        
+        .consideration-text {
+            font-size: 15px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">When to Use Which Normalization?</div>
+        
+        <div class="decision-grid">
+            <div class="decision-card">
+                <div class="card-scenario">
+                    <span class="scenario-icon">🖼️</span>
+                    <span>Large Batch CNNs</span>
+                </div>
+                <div class="card-condition">
+                    Training CNNs with large batch sizes
+                </div>
+                <div class="arrow-down">↓</div>
+                <div class="card-solution">Batch Normalization</div>
+            </div>
+            
+            <div class="decision-card">
+                <div class="card-scenario">
+                    <span class="scenario-icon">🔤</span>
+                    <span>Transformers / RNNs</span>
+                </div>
+                <div class="card-condition">
+                    Sequential models, language tasks
+                </div>
+                <div class="arrow-down">↓</div>
+                <div class="card-solution">Layer Normalization</div>
+            </div>
+            
+            <div class="decision-card">
+                <div class="card-scenario">
+                    <span class="scenario-icon">🎨</span>
+                    <span>Style Transfer</span>
+                </div>
+                <div class="card-condition">
+                    Artistic tasks, style manipulation
+                </div>
+                <div class="arrow-down">↓</div>
+                <div class="card-solution">Instance Normalization</div>
+            </div>
+            
+            <div class="decision-card">
+                <div class="card-scenario">
+                    <span class="scenario-icon">🔍</span>
+                    <span>Small Batch Detection</span>
+                </div>
+                <div class="card-condition">
+                    Object detection, segmentation
+                </div>
+                <div class="arrow-down">↓</div>
+                <div class="card-solution">Group Normalization</div>
+            </div>
+            
+            <div class="decision-card">
+                <div class="card-scenario">
+                    <span class="scenario-icon">🎭</span>
+                    <span>GANs</span>
+                </div>
+                <div class="card-condition">
+                    Discriminator stability in GANs
+                </div>
+                <div class="arrow-down">↓</div>
+                <div class="card-solution">Spectral Normalization</div>
+            </div>
+            
+            <div class="decision-card">
+                <div class="card-scenario">
+                    <span class="scenario-icon">📊</span>
+                    <span>Online Learning</span>
+                </div>
+                <div class="card-condition">
+                    Single sample or streaming data
+                </div>
+                <div class="arrow-down">↓</div>
+                <div class="card-solution">Layer / Group Norm</div>
+            </div>
+        </div>
+        
+        <div class="considerations-box">
+            <div class="considerations-title">⚠️ Key Considerations</div>
+            <div class="considerations-items">
+                <div class="consideration-item">
+                    <div class="consideration-icon">📦</div>
+                    <div class="consideration-text">Batch Size<br>Constraints</div>
+                </div>
+                <div class="consideration-item">
+                    <div class="consideration-icon">⚡</div>
+                    <div class="consideration-text">Computational<br>Cost</div>
+                </div>
+                <div class="consideration-item">
+                    <div class="consideration-icon">🏗️</div>
+                    <div class="consideration-text">Architecture<br>Type</div>
+                </div>
+                <div class="consideration-item">
+                    <div class="consideration-icon">🎯</div>
+                    <div class="consideration-text">Task<br>Requirements</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polynomial Regression</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px;
+            position: relative;
+        }
+        
+        .title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .main-layout {
+            display: flex;
+            gap: 20px;
+            height: calc(100% - 50px);
+        }
+        
+        .left-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .concept-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            border-radius: 10px;
+            padding: 20px;
+            color: white;
+            text-align: center;
+        }
+        
+        .concept-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .concept-desc {
+            font-size: 16px;
+            line-height: 1.5;
+            opacity: 0.95;
+        }
+        
+        .transformation-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 18px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .transform-label {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+        
+        .transform-visual {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-size: 18px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .arrow-icon {
+            font-size: 24px;
+            color: #1E64C8;
+        }
+        
+        .equation-box {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .equation-label {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .equation {
+            font-size: 18px;
+            color: #1E64C8;
+            font-weight: 500;
+            font-style: italic;
+        }
+        
+        .right-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .info-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-left: 5px solid #1E64C8;
+            border-radius: 8px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s;
+        }
+        
+        .info-card:hover {
+            background: #f8fbff;
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.15);
+        }
+        
+        .info-icon {
+            width: 32px;
+            height: 32px;
+            background: #1E64C8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .info-text {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+            flex: 1;
+        }
+        
+        .tradeoff-card {
+            border-color: #ffc107;
+            border-left-color: #ffc107;
+        }
+        
+        .tradeoff-card .info-icon {
+            background: #ffc107;
+        }
+        
+        .basis-card {
+            border-color: #6c757d;
+            border-left-color: #6c757d;
+        }
+        
+        .basis-card .info-icon {
+            background: #6c757d;
+            font-size: 14px;
+        }
+        
+        .highlight {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Polynomial Regression & Basis Expansion</div>
+        
+        <div class="main-layout">
+            <div class="left-section">
+                <div class="concept-box">
+                    <div class="concept-title">Key Insight</div>
+                    <div class="concept-desc">
+                        Linear models can fit non-linear relationships
+                    </div>
+                </div>
+                
+                <div class="transformation-box">
+                    <div class="transform-label">Transform Features:</div>
+                    <div class="transform-visual">
+                        <span>x</span>
+                        <span class="arrow-icon">→</span>
+                        <span>x, x², x³, ...</span>
+                    </div>
+                </div>
+                
+                <div class="equation-box">
+                    <div class="equation-label">Example Equation:</div>
+                    <div class="equation">
+                        y = β₀ + β₁x + β₂x² + β₃x³
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-icon">✓</div>
+                    <div class="info-text">
+                        Still <span class="highlight">"linear"</span> in parameters (coefficients)
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-section">
+                <div class="info-card tradeoff-card">
+                    <div class="info-icon">⚖</div>
+                    <div class="info-text">
+                        <strong>Trade-off:</strong> Model flexibility vs. overfitting risk
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-icon">🎯</div>
+                    <div class="info-text">
+                        Choosing polynomial degree: validation approach
+                    </div>
+                </div>
+                
+                <div class="info-card basis-card">
+                    <div class="info-icon">f(x)</div>
+                    <div class="info-text">
+                        <strong>Other basis functions:</strong><br>
+                        Logarithmic, Exponential, Trigonometric
+                    </div>
+                </div>
+                
+                <div style="background: #e8f5e9; border: 2px solid #28a745; border-radius: 8px; padding: 16px; text-align: center; margin-top: auto;">
+                    <div style="font-size: 17px; font-weight: 600; color: #28a745;">
+                        Extends Linear Regression Capabilities
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSH Remote Server Connection</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 28px 40px;
+            background: white;
+        }
+        
+        .title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .ssh-intro {
+            background: #f0f5fc;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px 20px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        
+        .intro-text {
+            font-size: 17px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .intro-highlight {
+            color: #1E64C8;
+            font-weight: 700;
+        }
+        
+        .connection-flow {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 16px;
+        }
+        
+        .flow-node {
+            background: white;
+            border: 3px solid #1E64C8;
+            border-radius: 10px;
+            padding: 16px 20px;
+            text-align: center;
+            transition: all 0.3s;
+            flex: 1;
+            max-width: 200px;
+        }
+        
+        .flow-node:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(30, 100, 200, 0.25);
+            background: #f8fbff;
+        }
+        
+        .flow-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        
+        .flow-label {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+        }
+        
+        .flow-arrow {
+            font-size: 28px;
+            color: #1E64C8;
+            font-weight: bold;
+        }
+        
+        .basic-command {
+            background: #fff4e6;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px 20px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        
+        .command-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .command-code {
+            font-family: 'Courier New', monospace;
+            background: white;
+            border: 2px dashed #1E64C8;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 16px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .key-auth-section {
+            background: white;
+            border: 2.5px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px 20px;
+            margin-bottom: 16px;
+        }
+        
+        .section-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .key-steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        
+        .key-step {
+            background: #f8fbff;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 14px;
+            transition: all 0.3s;
+        }
+        
+        .key-step:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.2);
+        }
+        
+        .step-number {
+            display: inline-block;
+            background: #1E64C8;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 24px;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .step-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .step-cmd {
+            font-family: 'Courier New', monospace;
+            background: white;
+            border: 1px dashed #1E64C8;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #1E64C8;
+            font-weight: 600;
+            word-break: break-all;
+        }
+        
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        
+        .tip-box {
+            background: #f8fbff;
+            border-left: 4px solid #1E64C8;
+            border-radius: 6px;
+            padding: 10px 14px;
+        }
+        
+        .tip-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .tip-desc {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.4;
+        }
+        
+        .code-inline {
+            font-family: 'Courier New', monospace;
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #1E64C8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">SSH and Remote Server Connection Practice</div>
+        
+        <div class="ssh-intro">
+            <span class="intro-text"><span class="intro-highlight">SSH</span> (Secure Shell): Encrypted remote terminal access to servers</span>
+        </div>
+        
+        <div class="connection-flow">
+            <div class="flow-node">
+                <div class="flow-icon">💻</div>
+                <div class="flow-label">Local Machine</div>
+            </div>
+            
+            <div class="flow-arrow">→</div>
+            
+            <div class="flow-node">
+                <div class="flow-icon">🔒</div>
+                <div class="flow-label">SSH Encrypted</div>
+            </div>
+            
+            <div class="flow-arrow">→</div>
+            
+            <div class="flow-node">
+                <div class="flow-icon">🖥️</div>
+                <div class="flow-label">Remote Server</div>
+            </div>
+        </div>
+        
+        <div class="basic-command">
+            <div class="command-title">Basic Connection</div>
+            <div class="command-code">ssh username@hostname</div>
+        </div>
+        
+        <div class="key-auth-section">
+            <div class="section-title">SSH Key Authentication Setup (More Secure)</div>
+            <div class="key-steps">
+                <div class="key-step">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Generate Keys</div>
+                    <div class="step-cmd">ssh-keygen -t rsa -b 4096</div>
+                </div>
+                
+                <div class="key-step">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Copy Public Key</div>
+                    <div class="step-cmd">ssh-copy-id username@server</div>
+                </div>
+                
+                <div class="key-step">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Connect</div>
+                    <div class="step-cmd">ssh username@server</div>
+                    <div style="font-size: 13px; color: #666; margin-top: 4px;">No password needed!</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tips-grid">
+            <div class="tip-box">
+                <div class="tip-title">SSH Config</div>
+                <div class="tip-desc"><span class="code-inline">~/.ssh/config</span> for convenient aliases and settings</div>
+            </div>
+            
+            <div class="tip-box">
+                <div class="tip-title">Persistent Sessions</div>
+                <div class="tip-desc">Use <span class="code-inline">tmux</span> or <span class="code-inline">screen</span> to keep sessions alive</div>
+            </div>
+            
+            <div class="tip-box">
+                <div class="tip-title">Practice</div>
+                <div class="tip-desc">Connect to lab server, run training scripts remotely</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

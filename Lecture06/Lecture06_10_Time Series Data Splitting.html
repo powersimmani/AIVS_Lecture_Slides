@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Series Data Splitting</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: white;
+            font-family: Aptos, 'Segoe UI', sans-serif;
+        }
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+            padding: 30px;
+            box-sizing: border-box;
+        }
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 20px;
+        }
+        .comparison-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .method-card {
+            background: #f8f9fb;
+            border-radius: 10px;
+            padding: 20px;
+            position: relative;
+        }
+        .wrong-card {
+            border: 3px solid #e74c3c;
+        }
+        .correct-card {
+            border: 3px solid #27ae60;
+        }
+        .card-header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .card-icon {
+            font-size: 32px;
+            margin-bottom: 5px;
+        }
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .wrong-card .card-title { color: #e74c3c; }
+        .correct-card .card-title { color: #27ae60; }
+        
+        .timeline {
+            display: flex;
+            height: 50px;
+            margin: 15px 0;
+            position: relative;
+        }
+        .time-block {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            border-right: 2px solid white;
+        }
+        .time-block:last-child {
+            border-right: none;
+        }
+        .train-block { background: #1E64C8; }
+        .val-block { background: #4A90E2; }
+        .test-block { background: #7BB3F0; }
+        
+        .shuffled-timeline .time-block {
+            position: relative;
+            animation: shuffle 2s infinite;
+        }
+        
+        .time-arrow {
+            text-align: center;
+            margin: 10px 0;
+            color: #666;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .time-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #888;
+            margin-top: 5px;
+        }
+        
+        .description {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.6;
+            margin-top: 15px;
+            text-align: center;
+        }
+        
+        .approaches-section {
+            background: #f8f9fb;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        .approaches-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .approaches-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .approach-box {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #1E64C8;
+        }
+        .approach-box:nth-child(2) {
+            border-left-color: #4A90E2;
+        }
+        .approach-name {
+            font-size: 17px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        .approach-visual {
+            display: flex;
+            gap: 3px;
+            height: 35px;
+            margin: 10px 0;
+        }
+        .window-block {
+            flex: 1;
+            border-radius: 3px;
+        }
+        .sliding-visual .window-block {
+            background: linear-gradient(to right, #ddd 0%, #1E64C8 40%, #4A90E2 70%, #7BB3F0 100%);
+        }
+        .expanding-visual .window-block:nth-child(1) { background: #1E64C8; flex: 2; }
+        .expanding-visual .window-block:nth-child(2) { background: #4A90E2; flex: 1; }
+        .expanding-visual .window-block:nth-child(3) { background: #7BB3F0; flex: 1; }
+        
+        .key-principles {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+        }
+        .principles-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .principles-list {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            font-size: 15px;
+            text-align: center;
+        }
+        .principle-item {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 10px;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Time Series Data Splitting</div>
+        
+        <div class="comparison-section">
+            <!-- Wrong: Random Shuffle -->
+            <div class="method-card wrong-card">
+                <div class="card-header">
+                    <div class="card-icon">❌</div>
+                    <div class="card-title">Random Shuffle (Wrong!)</div>
+                </div>
+                <div class="time-arrow">⚠️ Violates temporal order</div>
+                <div class="timeline shuffled-timeline">
+                    <div class="time-block test-block">Test</div>
+                    <div class="time-block train-block">Train</div>
+                    <div class="time-block val-block">Val</div>
+                    <div class="time-block train-block">Train</div>
+                    <div class="time-block test-block">Test</div>
+                    <div class="time-block val-block">Val</div>
+                </div>
+                <div class="time-labels">
+                    <span>Jan</span>
+                    <span>Mar</span>
+                    <span>Jun</span>
+                    <span>Sep</span>
+                    <span>Dec</span>
+                </div>
+                <div class="description">
+                    ⛔ Creates look-ahead bias<br>
+                    ⛔ Causes data leakage
+                </div>
+            </div>
+
+            <!-- Correct: Forward Chaining -->
+            <div class="method-card correct-card">
+                <div class="card-header">
+                    <div class="card-icon">✅</div>
+                    <div class="card-title">Forward Chaining (Correct)</div>
+                </div>
+                <div class="time-arrow">→ Time flows forward →</div>
+                <div class="timeline">
+                    <div class="time-block train-block" style="flex: 3;">Train</div>
+                    <div class="time-block val-block" style="flex: 1;">Val</div>
+                    <div class="time-block test-block" style="flex: 1;">Test</div>
+                </div>
+                <div class="time-labels">
+                    <span>Past ←</span>
+                    <span style="text-align: center;">Present</span>
+                    <span style="text-align: right;">→ Future</span>
+                </div>
+                <div class="description">
+                    ✓ Preserves chronological order<br>
+                    ✓ Train on past, validate on future
+                </div>
+            </div>
+        </div>
+
+        <div class="approaches-section">
+            <div class="approaches-title">Two Common Approaches</div>
+            <div class="approaches-grid">
+                <div class="approach-box">
+                    <div class="approach-name">🔄 Sliding Window</div>
+                    <div class="approach-visual sliding-visual">
+                        <div class="window-block"></div>
+                    </div>
+                    <div style="font-size: 15px; color: #555;">Fixed window moves forward in time</div>
+                </div>
+                <div class="approach-box">
+                    <div class="approach-name">📈 Expanding Window</div>
+                    <div class="approach-visual expanding-visual">
+                        <div class="window-block"></div>
+                        <div class="window-block"></div>
+                        <div class="window-block"></div>
+                    </div>
+                    <div style="font-size: 15px; color: #555;">Training set grows over time</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="key-principles">
+            <div class="principles-title">⚡ Key Principles</div>
+            <div class="principles-list">
+                <div class="principle-item">Never shuffle temporal data</div>
+                <div class="principle-item">Respect temporal dependencies</div>
+                <div class="principle-item">Model drift & seasonality</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

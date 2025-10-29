@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-modal Clustering</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            padding: 25px;
+            gap: 18px;
+        }
+        
+        .header {
+            text-align: center;
+        }
+        
+        .main-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .challenge-box {
+            background: #ffebee;
+            border: 2px solid #f44336;
+            border-radius: 10px;
+            padding: 12px 16px;
+            text-align: center;
+        }
+        
+        .challenge-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #f44336;
+            margin-bottom: 4px;
+        }
+        
+        .challenge-text {
+            font-size: 16px;
+            color: #555;
+        }
+        
+        .approaches-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 18px;
+            flex: 1;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 14px;
+            text-align: center;
+        }
+        
+        .approaches-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+        
+        .approach-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .approach-card:hover {
+            background: #f0f6ff;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.2);
+        }
+        
+        .approach-icon {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        
+        .approach-name {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .approach-desc {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.4;
+        }
+        
+        .early-fusion {
+            border-color: #ff9800;
+            background: #fff8f0;
+        }
+        
+        .early-fusion .approach-name {
+            color: #ff9800;
+        }
+        
+        .late-fusion {
+            border-color: #9C27B0;
+            background: #f3e5f5;
+        }
+        
+        .late-fusion .approach-name {
+            color: #9C27B0;
+        }
+        
+        .deep-method {
+            border-color: #4CAF50;
+            background: #e8f5e9;
+        }
+        
+        .deep-method .approach-name {
+            color: #4CAF50;
+        }
+        
+        .visual-example {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 16px;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+        }
+        
+        .modality-block {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .modality-icon {
+            font-size: 40px;
+        }
+        
+        .modality-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .fusion-arrow {
+            font-size: 32px;
+            color: #4CAF50;
+        }
+        
+        .shared-rep {
+            background: #e8f5e9;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            padding: 16px;
+            text-align: center;
+        }
+        
+        .shared-label {
+            font-size: 17px;
+            font-weight: 600;
+            color: #4CAF50;
+            margin-bottom: 4px;
+        }
+        
+        .shared-desc {
+            font-size: 15px;
+            color: #555;
+        }
+        
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+        
+        .applications-box {
+            background: white;
+            border: 2px solid #9C27B0;
+            border-radius: 10px;
+            padding: 14px 16px;
+        }
+        
+        .app-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #9C27B0;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .app-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .app-item {
+            background: #f3e5f5;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 16px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .app-icon {
+            font-size: 18px;
+        }
+        
+        .clip-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .clip-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .clip-desc {
+            font-size: 16px;
+            color: #555;
+            text-align: center;
+            line-height: 1.4;
+        }
+        
+        .clip-badge {
+            background: #1E64C8;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 14px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 8px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="main-title">Multi-modal Clustering</div>
+            <div class="subtitle">Clustering Data with Multiple Modalities</div>
+        </div>
+        
+        <div class="challenge-box">
+            <div class="challenge-title">⚠️ Challenge</div>
+            <div class="challenge-text">Different feature spaces and scales across modalities</div>
+        </div>
+        
+        <div class="approaches-section">
+            <div class="section-title">Three Clustering Approaches</div>
+            
+            <div class="approaches-grid">
+                <div class="approach-card early-fusion">
+                    <div class="approach-icon">🔗</div>
+                    <div class="approach-name">Early Fusion</div>
+                    <div class="approach-desc">Concatenate features from different modalities</div>
+                </div>
+                
+                <div class="approach-card late-fusion">
+                    <div class="approach-icon">🔀</div>
+                    <div class="approach-name">Late Fusion</div>
+                    <div class="approach-desc">Cluster each modality separately, then combine results</div>
+                </div>
+                
+                <div class="approach-card deep-method">
+                    <div class="approach-icon">🧠</div>
+                    <div class="approach-name">Deep Multi-modal</div>
+                    <div class="approach-desc">Learn shared representation across modalities</div>
+                </div>
+            </div>
+            
+            <div class="visual-example">
+                <div class="modality-block">
+                    <div class="modality-icon">🖼️</div>
+                    <div class="modality-label">Image</div>
+                </div>
+                
+                <div class="fusion-arrow">+</div>
+                
+                <div class="modality-block">
+                    <div class="modality-icon">📝</div>
+                    <div class="modality-label">Text</div>
+                </div>
+                
+                <div class="fusion-arrow">→</div>
+                
+                <div class="shared-rep">
+                    <div class="shared-label">Shared Space</div>
+                    <div class="shared-desc">Joint representation</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bottom-grid">
+            <div class="applications-box">
+                <div class="app-title">
+                    <span>🎯</span>
+                    <span>Applications</span>
+                </div>
+                <div class="app-list">
+                    <div class="app-item">
+                        <span class="app-icon">🎬</span>
+                        <span>Video Analysis (visual + audio)</span>
+                    </div>
+                    <div class="app-item">
+                        <span class="app-icon">🏥</span>
+                        <span>Medical Imaging with Reports</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="clip-box">
+                <div class="clip-title">🔥 Modern Approach</div>
+                <div class="clip-desc">CLIP-style contrastive learning for multi-modal clustering</div>
+                <div class="clip-badge">Contrastive Multi-modal Learning</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

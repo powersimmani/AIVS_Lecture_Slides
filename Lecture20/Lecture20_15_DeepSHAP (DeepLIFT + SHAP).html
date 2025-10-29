@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepSHAP (DeepLIFT + SHAP)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Aptos', 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+            padding: 25px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 15px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 18px;
+        }
+        
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1.3fr 1fr;
+            gap: 20px;
+            height: calc(100% - 100px);
+        }
+        
+        .network-section {
+            background: #F8F9FA;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 15px;
+            position: relative;
+        }
+        
+        .section-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .network-diagram {
+            position: relative;
+            height: 300px;
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        
+        .layer {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .layer-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+        
+        .neuron {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+            border: 2px solid;
+            transition: all 0.3s ease;
+        }
+        
+        .neuron:hover {
+            transform: scale(1.2);
+            z-index: 10;
+        }
+        
+        .input-neuron {
+            background: #E8F2FF;
+            border-color: #1E64C8;
+            color: #1E64C8;
+        }
+        
+        .hidden-neuron {
+            background: #4A90E2;
+            border-color: #1E64C8;
+            color: white;
+        }
+        
+        .output-neuron {
+            background: #1E64C8;
+            border-color: #1E64C8;
+            color: white;
+        }
+        
+        .connection-line {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, #1E64C8, #4A90E2);
+            opacity: 0.3;
+            z-index: 0;
+        }
+        
+        .layer-input {
+            left: 30px;
+            top: 50px;
+        }
+        
+        .layer-hidden1 {
+            left: 180px;
+            top: 30px;
+        }
+        
+        .layer-hidden2 {
+            left: 330px;
+            top: 50px;
+        }
+        
+        .layer-output {
+            left: 480px;
+            top: 115px;
+        }
+        
+        .flow-arrow {
+            position: absolute;
+            font-size: 28px;
+            color: #1E64C8;
+            font-weight: 700;
+        }
+        
+        .process-box {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 10px;
+        }
+        
+        .process-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .process-steps {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .process-steps div {
+            margin-bottom: 4px;
+            padding-left: 18px;
+            position: relative;
+        }
+        
+        .process-steps div:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #1E64C8;
+            font-weight: 700;
+        }
+        
+        .info-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .info-card {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 10px;
+            padding: 15px;
+            flex: 1;
+        }
+        
+        .info-card.highlight {
+            border-color: #1E64C8;
+            background: #E8F2FF;
+        }
+        
+        .info-icon {
+            font-size: 26px;
+            margin-bottom: 8px;
+        }
+        
+        .info-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .info-text {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .info-list {
+            font-size: 14px;
+            color: #666;
+            margin-top: 6px;
+            line-height: 1.5;
+        }
+        
+        .code-box {
+            background: #F8F9FA;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #333;
+            margin-top: 10px;
+        }
+        
+        .keyword {
+            color: #E63946;
+            font-weight: 600;
+        }
+        
+        .highlight-text {
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .comment {
+            color: #28A745;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">DeepSHAP: DeepLIFT + SHAP for Neural Networks</div>
+        <div class="subtitle">Backpropagation of reference activation differences</div>
+        
+        <div class="main-grid">
+            <!-- Network Section -->
+            <div class="network-section">
+                <div class="section-title">Neural Network Computation Flow</div>
+                
+                <div class="network-diagram">
+                    <!-- Connection lines (simplified representation) -->
+                    <div class="connection-line" style="left: 55px; top: 95px; width: 110px; transform: rotate(-10deg);"></div>
+                    <div class="connection-line" style="left: 55px; top: 135px; width: 110px;"></div>
+                    <div class="connection-line" style="left: 55px; top: 175px; width: 110px; transform: rotate(10deg);"></div>
+                    
+                    <!-- Layers -->
+                    <div class="layer layer-input">
+                        <div class="layer-label">Input Layer</div>
+                        <div class="neuron input-neuron">x₁</div>
+                        <div class="neuron input-neuron">x₂</div>
+                        <div class="neuron input-neuron">x₃</div>
+                    </div>
+                    
+                    <div class="flow-arrow" style="left: 140px; top: 120px;">→</div>
+                    
+                    <div class="layer layer-hidden1">
+                        <div class="layer-label">Hidden 1</div>
+                        <div class="neuron hidden-neuron">h₁</div>
+                        <div class="neuron hidden-neuron">h₂</div>
+                        <div class="neuron hidden-neuron">h₃</div>
+                        <div class="neuron hidden-neuron">h₄</div>
+                    </div>
+                    
+                    <div class="flow-arrow" style="left: 290px; top: 120px;">→</div>
+                    
+                    <div class="layer layer-hidden2">
+                        <div class="layer-label">Hidden 2</div>
+                        <div class="neuron hidden-neuron">h₅</div>
+                        <div class="neuron hidden-neuron">h₆</div>
+                        <div class="neuron hidden-neuron">h₇</div>
+                    </div>
+                    
+                    <div class="flow-arrow" style="left: 440px; top: 120px;">→</div>
+                    
+                    <div class="layer layer-output">
+                        <div class="layer-label">Output</div>
+                        <div class="neuron output-neuron">ŷ</div>
+                    </div>
+                </div>
+                
+                <div class="process-box">
+                    <div class="process-title">DeepSHAP Computation Steps</div>
+                    <div class="process-steps">
+                        <div>Compute reference activations (average)</div>
+                        <div>Forward pass: input → output</div>
+                        <div>Backward pass: propagate differences</div>
+                        <div>Assign contributions to each input</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Info Section -->
+            <div class="info-section">
+                <div class="info-card highlight">
+                    <div class="info-icon">🧠</div>
+                    <div class="info-title">Key Features</div>
+                    <div class="info-text">
+                        Combines DeepLIFT with Shapley value sampling
+                    </div>
+                    <div class="info-list">
+                        • Layer-wise decomposition<br>
+                        • Handles nonlinear activations<br>
+                        • Reference-based differences
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-icon">⚡</div>
+                    <div class="info-title">Activations</div>
+                    <div class="info-text">
+                        Supports various activation functions
+                    </div>
+                    <div class="info-list">
+                        • ReLU<br>
+                        • Sigmoid<br>
+                        • Tanh
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-icon">📊</div>
+                    <div class="info-title">Reference Value</div>
+                    <div class="info-text">
+                        Typically uses average of training data as baseline
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-icon">💻</div>
+                    <div class="info-title">Implementation</div>
+                    <div class="code-box">
+<span class="keyword">import</span> shap<br>
+<br>
+<span class="comment"># Create explainer</span><br>
+explainer = shap.<span class="highlight-text">DeepExplainer</span>(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;model,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;X_train[:100]<br>
+)<br>
+<br>
+<span class="comment"># Compute SHAP values</span><br>
+shap_values = explainer.shap_values(X_test)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

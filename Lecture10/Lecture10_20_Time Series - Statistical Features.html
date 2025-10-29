@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Series - Statistical Features</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Aptos', 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            padding: 30px;
+        }
+        
+        .title {
+            font-size: 26px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 22px;
+            text-align: center;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 18px;
+        }
+        
+        .feature-category {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 16px;
+        }
+        
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .category-icon {
+            font-size: 26px;
+        }
+        
+        .category-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .category-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .feature-tag {
+            background: #F0F6FF;
+            border: 1px solid #1E64C8;
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 15px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .feature-description {
+            font-size: 14px;
+            color: #666;
+            margin-top: 8px;
+            line-height: 1.4;
+        }
+        
+        .temporal-section {
+            background: #F0F6FF;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 16px 18px;
+            margin-bottom: 15px;
+        }
+        
+        .temporal-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .temporal-icon {
+            font-size: 26px;
+        }
+        
+        .temporal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .temporal-items {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        
+        .temporal-item {
+            background: white;
+            border: 1px solid #1E64C8;
+            border-radius: 6px;
+            padding: 8px 12px;
+            text-align: center;
+            font-size: 15px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .advanced-section {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .advanced-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px 16px;
+        }
+        
+        .advanced-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        
+        .advanced-icon {
+            font-size: 24px;
+        }
+        
+        .advanced-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .advanced-list {
+            list-style: none;
+        }
+        
+        .advanced-item {
+            font-size: 15px;
+            color: #444;
+            line-height: 1.6;
+            margin-bottom: 5px;
+            padding-left: 18px;
+            position: relative;
+        }
+        
+        .advanced-item:before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #1E64C8;
+            font-weight: bold;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Time Series Statistical Features</div>
+        
+        <div class="features-grid">
+            <div class="feature-category">
+                <div class="category-header">
+                    <div class="category-icon">📊</div>
+                    <div class="category-title">Basic Statistics</div>
+                </div>
+                <div class="category-items">
+                    <div class="feature-tag">Mean</div>
+                    <div class="feature-tag">Median</div>
+                    <div class="feature-tag">Std Dev</div>
+                </div>
+                <div class="feature-description">
+                    Basic statistical properties of the signal
+                </div>
+            </div>
+            
+            <div class="feature-category">
+                <div class="category-header">
+                    <div class="category-icon">📏</div>
+                    <div class="category-title">Amplitude Variations</div>
+                </div>
+                <div class="category-items">
+                    <div class="feature-tag">Min</div>
+                    <div class="feature-tag">Max</div>
+                    <div class="feature-tag">Range</div>
+                </div>
+                <div class="feature-description">
+                    Capture the extent of signal variations
+                </div>
+            </div>
+            
+            <div class="feature-category">
+                <div class="category-header">
+                    <div class="category-icon">🔄</div>
+                    <div class="category-title">Autocorrelation</div>
+                </div>
+                <div class="feature-description">
+                    Measures signal's correlation with itself at different time lags
+                </div>
+            </div>
+            
+            <div class="feature-category">
+                <div class="category-header">
+                    <div class="category-icon">🌊</div>
+                    <div class="category-title">Spectral Features</div>
+                </div>
+                <div class="category-items">
+                    <div class="feature-tag">Dominant Frequency</div>
+                    <div class="feature-tag">Spectral Entropy</div>
+                </div>
+                <div class="feature-description">
+                    Frequency domain characteristics
+                </div>
+            </div>
+        </div>
+        
+        <div class="temporal-section">
+            <div class="temporal-header">
+                <div class="temporal-icon">⏱️</div>
+                <div class="temporal-title">Temporal Patterns</div>
+            </div>
+            <div class="temporal-items">
+                <div class="temporal-item">Trend</div>
+                <div class="temporal-item">Seasonality</div>
+                <div class="temporal-item">Cyclic Components</div>
+            </div>
+        </div>
+        
+        <div class="advanced-section">
+            <div class="advanced-card">
+                <div class="advanced-header">
+                    <div class="advanced-icon">📈</div>
+                    <div class="advanced-title">Rolling Window Statistics</div>
+                </div>
+                <ul class="advanced-list">
+                    <li class="advanced-item">Moving average</li>
+                    <li class="advanced-item">Exponential smoothing</li>
+                </ul>
+            </div>
+            
+            <div class="advanced-card">
+                <div class="advanced-header">
+                    <div class="advanced-icon">🎯</div>
+                    <div class="advanced-title">Domain-Specific Features</div>
+                </div>
+                <ul class="advanced-list">
+                    <li class="advanced-item">Peak detection</li>
+                    <li class="advanced-item">Zero-crossing rate</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

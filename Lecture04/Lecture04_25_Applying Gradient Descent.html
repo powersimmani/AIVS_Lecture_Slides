@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applying Gradient Descent</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px;
+            position: relative;
+        }
+        
+        .title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .content-layout {
+            display: flex;
+            gap: 18px;
+            height: calc(100% - 50px);
+        }
+        
+        .left-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .context-box {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            border-radius: 10px;
+            padding: 16px 20px;
+            color: white;
+            text-align: center;
+        }
+        
+        .context-text {
+            font-size: 17px;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+        
+        .method-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            border-radius: 10px;
+            padding: 16px 20px;
+            color: white;
+            text-align: center;
+        }
+        
+        .method-label {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            opacity: 0.95;
+        }
+        
+        .method-text {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .formulas-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            flex: 1;
+        }
+        
+        .formula-card {
+            background: white;
+            border: 3px solid #1E64C8;
+            border-radius: 8px;
+            padding: 14px 16px;
+            text-align: center;
+        }
+        
+        .formula-label {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .formula-text {
+            font-size: 19px;
+            color: #1E64C8;
+            font-weight: 700;
+            font-style: italic;
+        }
+        
+        .gradient-card {
+            border-color: #28a745;
+        }
+        
+        .gradient-card .formula-text {
+            color: #28a745;
+        }
+        
+        .formula-note {
+            font-size: 14px;
+            color: #28a745;
+            margin-top: 6px;
+            font-weight: 500;
+        }
+        
+        .learning-rate-box {
+            background: #fff8e6;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 14px 16px;
+            text-align: center;
+        }
+        
+        .lr-label {
+            font-size: 16px;
+            color: #f57c00;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        
+        .lr-text {
+            font-size: 15px;
+            color: #333;
+        }
+        
+        .right-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .variants-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 16px 18px;
+        }
+        
+        .variants-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .variants-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .variant-item {
+            background: #f8f9fa;
+            border-left: 4px solid #1E64C8;
+            border-radius: 6px;
+            padding: 10px 14px;
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .variant-item:hover {
+            background: #e8f1fb;
+            transform: translateX(5px);
+        }
+        
+        .convergence-box {
+            background: white;
+            border: 2px solid #9c27b0;
+            border-radius: 10px;
+            padding: 16px 18px;
+            flex: 1;
+        }
+        
+        .convergence-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #9c27b0;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .convergence-content {
+            background: #f3e5f5;
+            border-radius: 8px;
+            padding: 14px;
+            text-align: center;
+        }
+        
+        .convergence-text {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.5;
+        }
+        
+        .monitor-items {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 10px;
+        }
+        
+        .monitor-item {
+            background: white;
+            border: 2px solid #9c27b0;
+            border-radius: 6px;
+            padding: 8px 14px;
+            font-size: 15px;
+            color: #9c27b0;
+            font-weight: 600;
+        }
+        
+        .iteration-visual {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border: 2px solid #28a745;
+            border-radius: 10px;
+            padding: 16px;
+            text-align: center;
+        }
+        
+        .iteration-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #28a745;
+            margin-bottom: 10px;
+        }
+        
+        .iteration-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .iteration-step {
+            background: white;
+            border: 2px solid #28a745;
+            border-radius: 20px;
+            padding: 6px 12px;
+            font-size: 14px;
+            color: #28a745;
+            font-weight: 600;
+        }
+        
+        .iteration-arrow {
+            color: #28a745;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Applying Gradient Descent</div>
+        
+        <div class="content-layout">
+            <!-- Left Section -->
+            <div class="left-section">
+                <div class="context-box">
+                    <div class="context-text">
+                        No closed-form solution like linear regression
+                    </div>
+                </div>
+                
+                <div class="method-box">
+                    <div class="method-label">Solution:</div>
+                    <div class="method-text">Iterative Optimization: Gradient Descent</div>
+                </div>
+                
+                <div class="formulas-section">
+                    <div class="formula-card">
+                        <div class="formula-label">Update Rule:</div>
+                        <div class="formula-text">w ← w - η∇L(w)</div>
+                    </div>
+                    
+                    <div class="formula-card gradient-card">
+                        <div class="formula-label">Gradient:</div>
+                        <div class="formula-text">∂L/∂w = (ŷ - y)x</div>
+                        <div class="formula-note">(similar form to linear regression!)</div>
+                    </div>
+                    
+                    <div class="learning-rate-box">
+                        <div class="lr-label">Learning Rate η:</div>
+                        <div class="lr-text">Controls step size (typically 0.001-0.1)</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right Section -->
+            <div class="right-section">
+                <div class="variants-box">
+                    <div class="variants-title">Variants:</div>
+                    <div class="variants-list">
+                        <div class="variant-item">Batch Gradient Descent</div>
+                        <div class="variant-item">Mini-batch Gradient Descent</div>
+                        <div class="variant-item">Stochastic Gradient Descent</div>
+                    </div>
+                </div>
+                
+                <div class="convergence-box">
+                    <div class="convergence-title">Convergence</div>
+                    <div class="convergence-content">
+                        <div class="convergence-text">
+                            Monitor on validation set:
+                        </div>
+                        <div class="monitor-items">
+                            <div class="monitor-item">Loss</div>
+                            <div class="monitor-item">Accuracy</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="iteration-visual">
+                    <div class="iteration-title">Iterative Process</div>
+                    <div class="iteration-flow">
+                        <div class="iteration-step">Initialize</div>
+                        <div class="iteration-arrow">→</div>
+                        <div class="iteration-step">Compute Gradient</div>
+                        <div class="iteration-arrow">→</div>
+                        <div class="iteration-step">Update</div>
+                        <div class="iteration-arrow">↻</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

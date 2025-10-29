@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-class Metrics</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: white;
+            font-family: Aptos, 'Segoe UI', sans-serif;
+        }
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+            padding: 30px;
+            box-sizing: border-box;
+        }
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 20px;
+        }
+        .averaging-methods {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-bottom: 20px;
+        }
+        .method-card {
+            background: #f8f9fb;
+            border-radius: 10px;
+            padding: 20px;
+            border-top: 5px solid #1E64C8;
+        }
+        .method-card:nth-child(2) {
+            border-top-color: #4A90E2;
+        }
+        .method-card:nth-child(3) {
+            border-top-color: #7BB3F0;
+        }
+        .method-icon {
+            text-align: center;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        .method-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        .method-formula {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #1E64C8;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        .method-card:nth-child(2) .method-formula {
+            color: #4A90E2;
+        }
+        .method-card:nth-child(3) .method-formula {
+            color: #7BB3F0;
+        }
+        .method-description {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.6;
+            text-align: center;
+        }
+        
+        .visual-example {
+            background: #f8f9fb;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 18px;
+        }
+        .example-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .example-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+            align-items: center;
+        }
+        .class-data {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .class-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px;
+            margin-bottom: 6px;
+            border-radius: 4px;
+            font-size: 15px;
+        }
+        .class-row:nth-child(1) {
+            background: #e3f2fd;
+        }
+        .class-row:nth-child(2) {
+            background: #f3e5f5;
+        }
+        .class-row:nth-child(3) {
+            background: #fff3e0;
+        }
+        .class-name {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        .class-value {
+            font-family: 'Courier New', monospace;
+            color: #666;
+        }
+        .averaging-comparison {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .comparison-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+        .comparison-row:nth-child(1) {
+            background: #e3f2fd;
+            border-left: 4px solid #1E64C8;
+        }
+        .comparison-row:nth-child(2) {
+            background: #e8eaf6;
+            border-left: 4px solid #4A90E2;
+        }
+        .comparison-row:nth-child(3) {
+            background: #f3e5f5;
+            border-left: 4px solid #7BB3F0;
+        }
+        .comparison-label {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        .comparison-value {
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E64C8;
+        }
+        .comparison-row:nth-child(2) .comparison-value {
+            color: #4A90E2;
+        }
+        .comparison-row:nth-child(3) .comparison-value {
+            color: #7BB3F0;
+        }
+        .comparison-note {
+            font-size: 13px;
+            color: #888;
+        }
+        
+        .key-insights {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+        }
+        .insights-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        .insight-item {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+        .insight-label {
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Multi-class Metrics</div>
+        
+        <div class="averaging-methods">
+            <!-- Macro Average -->
+            <div class="method-card">
+                <div class="method-icon">⚖️</div>
+                <div class="method-name">Macro-Average</div>
+                <div class="method-formula">avg(metric₁, metric₂, ...)</div>
+                <div class="method-description">
+                    Calculate metric for each class, then average. Equal class weight.
+                </div>
+            </div>
+
+            <!-- Micro Average -->
+            <div class="method-card">
+                <div class="method-icon">🎯</div>
+                <div class="method-name">Micro-Average</div>
+                <div class="method-formula">metric(Σ TP, Σ FP, Σ FN)</div>
+                <div class="method-description">
+                    Aggregate all classes first, then calculate. Favors majority.
+                </div>
+            </div>
+
+            <!-- Weighted Average -->
+            <div class="method-card">
+                <div class="method-icon">📊</div>
+                <div class="method-name">Weighted-Average</div>
+                <div class="method-formula">Σ(weight × metric)</div>
+                <div class="method-description">
+                    Weight by class support. Balances macro & micro.
+                </div>
+            </div>
+        </div>
+
+        <div class="visual-example">
+            <div class="example-title">Example: F1 Score Calculation</div>
+            <div class="example-grid">
+                <div class="class-data">
+                    <div class="class-row">
+                        <span class="class-name">Class A (100 samples)</span>
+                        <span class="class-value">F1 = 0.90</span>
+                    </div>
+                    <div class="class-row">
+                        <span class="class-name">Class B (50 samples)</span>
+                        <span class="class-value">F1 = 0.70</span>
+                    </div>
+                    <div class="class-row">
+                        <span class="class-name">Class C (50 samples)</span>
+                        <span class="class-value">F1 = 0.60</span>
+                    </div>
+                </div>
+                
+                <div class="averaging-comparison">
+                    <div class="comparison-row">
+                        <div>
+                            <div class="comparison-label">Macro-Average</div>
+                            <div class="comparison-note">(0.90 + 0.70 + 0.60) / 3</div>
+                        </div>
+                        <div class="comparison-value">0.73</div>
+                    </div>
+                    
+                    <div class="comparison-row">
+                        <div>
+                            <div class="comparison-label">Micro-Average</div>
+                            <div class="comparison-note">Aggregate TP/FP/FN</div>
+                        </div>
+                        <div class="comparison-value">0.82</div>
+                    </div>
+                    
+                    <div class="comparison-row">
+                        <div>
+                            <div class="comparison-label">Weighted-Average</div>
+                            <div class="comparison-note">(100×0.90+50×0.70+50×0.60)/200</div>
+                        </div>
+                        <div class="comparison-value">0.78</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="key-insights">
+            <div class="insights-title">🔑 Key Insights</div>
+            <div class="insights-grid">
+                <div class="insight-item">
+                    <div class="insight-label">Macro</div>
+                    <div>Treats all classes equally, good for balanced view</div>
+                </div>
+                <div class="insight-item">
+                    <div class="insight-label">Micro</div>
+                    <div>Similar to accuracy, biased to majority class</div>
+                </div>
+                <div class="insight-item">
+                    <div class="insight-label">Weighted</div>
+                    <div>Balanced approach considering class sizes</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

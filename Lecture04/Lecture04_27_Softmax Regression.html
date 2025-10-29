@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Softmax Regression</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px;
+            position: relative;
+        }
+        
+        .title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .content-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            height: calc(100% - 50px);
+        }
+        
+        .subtitle-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            border-radius: 10px;
+            padding: 14px 20px;
+            color: white;
+            text-align: center;
+            font-size: 17px;
+            font-weight: 600;
+        }
+        
+        .formula-section {
+            background: white;
+            border: 3px solid #1E64C8;
+            border-radius: 10px;
+            padding: 18px 24px;
+            text-align: center;
+        }
+        
+        .formula-label {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .formula-main {
+            font-size: 20px;
+            color: #1E64C8;
+            font-weight: 700;
+            font-style: italic;
+            line-height: 1.5;
+        }
+        
+        .main-content {
+            display: flex;
+            gap: 18px;
+            flex: 1;
+        }
+        
+        .left-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .feature-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-left: 5px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+        }
+        
+        .feature-card:hover {
+            background: #f8fbff;
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.15);
+        }
+        
+        .feature-icon {
+            width: 32px;
+            height: 32px;
+            background: #1E64C8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .feature-text {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+            flex: 1;
+        }
+        
+        .key-card {
+            background: #fff8e6;
+            border-color: #ffc107;
+            border-left-color: #ffc107;
+        }
+        
+        .key-card .feature-icon {
+            background: #ffc107;
+        }
+        
+        .application-card {
+            background: #e8f5e9;
+            border-color: #28a745;
+            border-left-color: #28a745;
+        }
+        
+        .application-card .feature-icon {
+            background: #28a745;
+        }
+        
+        .right-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .architecture-box {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 16px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        
+        .arch-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .weight-vectors {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            width: 100%;
+        }
+        
+        .weight-item {
+            background: white;
+            border: 2px solid #9c27b0;
+            border-radius: 8px;
+            padding: 10px 14px;
+            text-align: center;
+            font-size: 15px;
+            color: #9c27b0;
+            font-weight: 600;
+        }
+        
+        .output-flow {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .flow-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 14px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .flow-arrow {
+            color: #1E64C8;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .comparison-box {
+            background: white;
+            border: 2px solid #9c27b0;
+            border-radius: 10px;
+            padding: 14px 16px;
+            text-align: center;
+        }
+        
+        .comparison-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #9c27b0;
+            margin-bottom: 8px;
+        }
+        
+        .comparison-text {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Softmax Regression</div>
+        
+        <div class="content-layout">
+            <!-- Subtitle -->
+            <div class="subtitle-box">
+                Multinomial Logistic Regression (Native Multiclass)
+            </div>
+            
+            <!-- Formula -->
+            <div class="formula-section">
+                <div class="formula-label">Softmax Function:</div>
+                <div class="formula-main">
+                    P(y=k|x) = e^(wₖᵀx) / ∑ⱼ e^(wⱼᵀx)
+                </div>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Left Section -->
+                <div class="left-section">
+                    <div class="feature-card">
+                        <div class="feature-icon">Σ</div>
+                        <div class="feature-text">
+                            Outputs: <strong>K probabilities</strong> that sum to 1
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">σ</div>
+                        <div class="feature-text">
+                            Generalizes sigmoid to multiple classes
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card key-card">
+                        <div class="feature-icon">w</div>
+                        <div class="feature-text">
+                            Each class has its own weight vector <strong>wₖ</strong>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">✓</div>
+                        <div class="feature-text">
+                            More elegant than one-vs-rest for multiclass
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card application-card">
+                        <div class="feature-icon">🧠</div>
+                        <div class="feature-text">
+                            Widely used: Neural network output layer
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right Section -->
+                <div class="right-section">
+                    <div class="architecture-box">
+                        <div class="arch-title">Weight Vectors per Class</div>
+                        <div class="weight-vectors">
+                            <div class="weight-item">w₁ for Class 1</div>
+                            <div class="weight-item">w₂ for Class 2</div>
+                            <div class="weight-item">w₃ for Class 3</div>
+                            <div class="weight-item">... ...</div>
+                            <div class="weight-item">wₖ for Class K</div>
+                        </div>
+                        
+                        <div class="output-flow">
+                            <div class="flow-box">Softmax</div>
+                            <div class="flow-arrow">→</div>
+                            <div class="flow-box">∑ P = 1</div>
+                        </div>
+                    </div>
+                    
+                    <div class="comparison-box">
+                        <div class="comparison-title">vs. Sigmoid</div>
+                        <div class="comparison-text">
+                            Sigmoid: Binary (2 classes)<br>
+                            Softmax: Multiclass (K classes)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

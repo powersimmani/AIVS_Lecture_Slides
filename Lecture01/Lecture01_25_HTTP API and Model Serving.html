@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTTP API and Model Serving</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 28px 40px;
+            background: white;
+        }
+        
+        .title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .rest-intro {
+            background: #f0f5fc;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px 20px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        
+        .intro-text {
+            font-size: 17px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .intro-highlight {
+            color: #1E64C8;
+            font-weight: 700;
+        }
+        
+        .api-flow {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .flow-box {
+            background: white;
+            border: 3px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px 18px;
+            text-align: center;
+            transition: all 0.3s;
+            flex: 1;
+        }
+        
+        .flow-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(30, 100, 200, 0.25);
+            background: #f8fbff;
+        }
+        
+        .flow-label {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .flow-detail {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.4;
+        }
+        
+        .flow-arrow {
+            font-size: 28px;
+            color: #1E64C8;
+            font-weight: bold;
+        }
+        
+        .frameworks-section {
+            background: white;
+            border: 2.5px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px 20px;
+            margin-bottom: 16px;
+        }
+        
+        .section-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .frameworks-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        
+        .framework-card {
+            background: #f8fbff;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 10px 14px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .framework-card:hover {
+            background: #1E64C8;
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        .framework-name {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+        }
+        
+        .framework-card:hover .framework-name {
+            color: white;
+        }
+        
+        .benefits-considerations {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 14px;
+        }
+        
+        .info-card {
+            background: white;
+            border: 3px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px 18px;
+        }
+        
+        .info-card.benefits {
+            background: #f8fbff;
+        }
+        
+        .info-card.considerations {
+            background: #fff4e6;
+        }
+        
+        .info-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .info-icon {
+            font-size: 22px;
+        }
+        
+        .info-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+        }
+        
+        .info-items {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 4px;
+        }
+        
+        .info-item::before {
+            content: "•";
+            color: #1E64C8;
+            font-weight: bold;
+            margin-right: 6px;
+            font-size: 17px;
+            flex-shrink: 0;
+        }
+        
+        .production-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        
+        .prod-box {
+            background: #f8fbff;
+            border-left: 4px solid #1E64C8;
+            border-radius: 6px;
+            padding: 10px 14px;
+        }
+        
+        .prod-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .prod-desc {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">HTTP API and Model Serving</div>
+        
+        <div class="rest-intro">
+            <span class="intro-text"><span class="intro-highlight">REST API</span>: Standard way to serve ML models over HTTP</span>
+        </div>
+        
+        <div class="api-flow">
+            <div class="flow-box">
+                <div class="flow-label">Client Request</div>
+                <div class="flow-detail">POST /predict<br>JSON data</div>
+            </div>
+            
+            <div class="flow-arrow">→</div>
+            
+            <div class="flow-box">
+                <div class="flow-label">ML Model</div>
+                <div class="flow-detail">Processing<br>Inference</div>
+            </div>
+            
+            <div class="flow-arrow">→</div>
+            
+            <div class="flow-box">
+                <div class="flow-label">Server Response</div>
+                <div class="flow-detail">JSON<br>predictions</div>
+            </div>
+        </div>
+        
+        <div class="frameworks-section">
+            <div class="section-title">Popular Frameworks</div>
+            <div class="frameworks-grid">
+                <div class="framework-card">
+                    <div class="framework-name">Flask</div>
+                </div>
+                <div class="framework-card">
+                    <div class="framework-name">FastAPI</div>
+                </div>
+                <div class="framework-card">
+                    <div class="framework-name">TensorFlow Serving</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="benefits-considerations">
+            <div class="info-card benefits">
+                <div class="info-header">
+                    <span class="info-icon">✓</span>
+                    <span class="info-title">Benefits</span>
+                </div>
+                <div class="info-items">
+                    <div class="info-item">Language-agnostic</div>
+                    <div class="info-item">Easy integration</div>
+                    <div class="info-item">Scalable with load balancers</div>
+                </div>
+            </div>
+            
+            <div class="info-card considerations">
+                <div class="info-header">
+                    <span class="info-icon">⚠</span>
+                    <span class="info-title">Considerations</span>
+                </div>
+                <div class="info-items">
+                    <div class="info-item">Latency (~10-100ms)</div>
+                    <div class="info-item">Throughput (requests/sec)</div>
+                    <div class="info-item">Batching strategies</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="production-section">
+            <div class="prod-box">
+                <div class="prod-title">Production Tools</div>
+                <div class="prod-desc">Docker + Kubernetes for deployment and scaling</div>
+            </div>
+            
+            <div class="prod-box">
+                <div class="prod-title">Monitoring</div>
+                <div class="prod-desc">Track API response time, error rates, model accuracy drift</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

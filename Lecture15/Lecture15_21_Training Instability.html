@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Training Instability</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            position: relative;
+            padding: 25px 40px;
+        }
+        
+        .header {
+            margin-bottom: 18px;
+        }
+        
+        .part-label {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .main-content {
+            display: flex;
+            gap: 25px;
+            margin-bottom: 18px;
+        }
+        
+        .left-panel {
+            flex: 1.3;
+        }
+        
+        .loss-curves {
+            background: #F5F9FF;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 18px;
+            height: 100%;
+        }
+        
+        .curves-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        
+        .graph-container {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            position: relative;
+            height: 180px;
+            margin-bottom: 16px;
+        }
+        
+        .axis-label {
+            position: absolute;
+            font-size: 13px;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .axis-x {
+            bottom: 5px;
+            right: 10px;
+        }
+        
+        .axis-y {
+            top: 5px;
+            left: 5px;
+        }
+        
+        .curve-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .curve-path {
+            fill: none;
+            stroke-width: 3;
+        }
+        
+        .curve-d {
+            stroke: #1E64C8;
+        }
+        
+        .curve-g {
+            stroke: #FF6B6B;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 10px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .legend-line {
+            width: 30px;
+            height: 3px;
+            border-radius: 2px;
+        }
+        
+        .legend-line.d {
+            background: #1E64C8;
+        }
+        
+        .legend-line.g {
+            background: #FF6B6B;
+        }
+        
+        .issues-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        .issue-card {
+            background: white;
+            border: 2px solid #FF6B6B;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 14px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .issue-icon {
+            color: #FF6B6B;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        
+        .right-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        
+        .info-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px 18px;
+        }
+        
+        .info-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin: 8px 0;
+            font-size: 15px;
+            color: #333;
+        }
+        
+        .bullet {
+            color: #1E64C8;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .problems-box {
+            background: #FFEBEE;
+            border: 2px solid #FF6B6B;
+            border-radius: 10px;
+            padding: 14px 18px;
+        }
+        
+        .problems-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #FF6B6B;
+            margin-bottom: 10px;
+        }
+        
+        .problem-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin: 8px 0;
+            font-size: 15px;
+            color: #333;
+        }
+        
+        .warning-bullet {
+            color: #FF6B6B;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .solutions-box {
+            background: #E8F5E9;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            padding: 14px 18px;
+            flex: 1;
+        }
+        
+        .solutions-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #4CAF50;
+            margin-bottom: 10px;
+        }
+        
+        .solution-item {
+            display: inline-block;
+            background: white;
+            border: 1px solid #4CAF50;
+            border-radius: 6px;
+            padding: 6px 12px;
+            margin: 4px;
+            font-size: 14px;
+            color: #4CAF50;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="part-label">Part 4/6: Key Challenges</div>
+            <div class="title">Training Instability</div>
+        </div>
+        
+        <div class="main-content">
+            <div class="left-panel">
+                <div class="loss-curves">
+                    <div class="curves-title">Oscillating Loss Patterns</div>
+                    
+                    <div class="graph-container">
+                        <div class="axis-label axis-y">Loss</div>
+                        <div class="axis-label axis-x">Training Steps →</div>
+                        
+                        <svg class="curve-svg" viewBox="0 0 400 150" preserveAspectRatio="none">
+                            <!-- Discriminator Loss (oscillating) -->
+                            <path class="curve-path curve-d" d="M 0,80 Q 50,40 100,70 T 200,60 T 300,75 T 400,65" />
+                            
+                            <!-- Generator Loss (oscillating more) -->
+                            <path class="curve-path curve-g" d="M 0,70 Q 50,100 100,60 T 200,90 T 300,55 T 400,85" />
+                        </svg>
+                    </div>
+                    
+                    <div class="legend">
+                        <div class="legend-item">
+                            <div class="legend-line d"></div>
+                            <span style="color: #1E64C8;">Discriminator Loss</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-line g"></div>
+                            <span style="color: #FF6B6B;">Generator Loss</span>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 16px;">
+                        <div style="font-size: 15px; font-weight: 600; color: #1E64C8; margin-bottom: 10px;">Key Issues</div>
+                        <div class="issues-grid">
+                            <div class="issue-card">
+                                <span class="issue-icon">⚠</span>
+                                <span>No convergence</span>
+                            </div>
+                            <div class="issue-card">
+                                <span class="issue-icon">⚠</span>
+                                <span>G/D imbalance</span>
+                            </div>
+                            <div class="issue-card">
+                                <span class="issue-icon">⚠</span>
+                                <span>No stopping criterion</span>
+                            </div>
+                            <div class="issue-card">
+                                <span class="issue-icon">⚠</span>
+                                <span>Loss ≠ Quality</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <div class="info-box">
+                    <div class="info-title">Characteristics</div>
+                    <div class="info-item">
+                        <span class="bullet">•</span>
+                        <span>Oscillating losses</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="bullet">•</span>
+                        <span>Hyperparameter sensitive</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="bullet">•</span>
+                        <span>Loss-quality disconnect</span>
+                    </div>
+                </div>
+                
+                <div class="problems-box">
+                    <div class="problems-title">Core Problems</div>
+                    <div class="problem-item">
+                        <span class="warning-bullet">✗</span>
+                        <span>Generator/Discriminator imbalance</span>
+                    </div>
+                    <div class="problem-item">
+                        <span class="warning-bullet">✗</span>
+                        <span>No clear stopping criterion</span>
+                    </div>
+                    <div class="problem-item">
+                        <span class="warning-bullet">✗</span>
+                        <span>Loss doesn't correlate with quality</span>
+                    </div>
+                </div>
+                
+                <div class="solutions-box">
+                    <div class="solutions-title">✓ Stabilization Techniques</div>
+                    <div>
+                        <span class="solution-item">Spectral Normalization</span>
+                        <span class="solution-item">Self-Attention</span>
+                        <span class="solution-item">Progressive Growing</span>
+                        <span class="solution-item">LR Scheduling</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

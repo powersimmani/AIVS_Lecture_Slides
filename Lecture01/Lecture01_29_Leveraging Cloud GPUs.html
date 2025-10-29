@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leveraging Cloud GPUs</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 28px 40px;
+            background: white;
+        }
+        
+        .title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .providers-section {
+            background: #f0f5fc;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px 20px;
+            margin-bottom: 16px;
+        }
+        
+        .providers-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .providers-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        
+        .provider-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 10px 14px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .provider-card:hover {
+            background: #1E64C8;
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        .provider-name {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .provider-card:hover .provider-name {
+            color: white;
+        }
+        
+        .provider-series {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .provider-card:hover .provider-series {
+            color: white;
+        }
+        
+        .pricing-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 16px;
+        }
+        
+        .pricing-card {
+            background: white;
+            border: 3px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px 18px;
+            transition: all 0.3s;
+        }
+        
+        .pricing-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(30, 100, 200, 0.25);
+        }
+        
+        .pricing-card.expensive {
+            background: #fff8f8;
+        }
+        
+        .pricing-card.cheap {
+            background: #f8fbff;
+        }
+        
+        .pricing-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .pricing-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E64C8;
+        }
+        
+        .pricing-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 700;
+        }
+        
+        .badge-expensive {
+            background: #e57373;
+            color: white;
+        }
+        
+        .badge-cheap {
+            background: #66bb6a;
+            color: white;
+        }
+        
+        .pricing-desc {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.5;
+            margin-bottom: 6px;
+        }
+        
+        .pricing-example {
+            background: white;
+            border: 1px dashed #1E64C8;
+            border-radius: 6px;
+            padding: 6px 10px;
+            font-size: 15px;
+            color: #1E64C8;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .services-alternatives {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 14px;
+        }
+        
+        .service-box {
+            background: white;
+            border: 2.5px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px 16px;
+        }
+        
+        .service-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .service-items {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.5;
+        }
+        
+        .service-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+        
+        .service-item::before {
+            content: "•";
+            color: #1E64C8;
+            font-weight: bold;
+            font-size: 17px;
+        }
+        
+        .best-practices {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        
+        .practice-box {
+            background: #f8fbff;
+            border-left: 4px solid #1E64C8;
+            border-radius: 6px;
+            padding: 10px 14px;
+        }
+        
+        .practice-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .practice-desc {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Leveraging Cloud GPUs</div>
+        
+        <div class="providers-section">
+            <div class="providers-title">Major Cloud Providers</div>
+            <div class="providers-grid">
+                <div class="provider-card">
+                    <div class="provider-name">AWS</div>
+                    <div class="provider-series">EC2 P4/P5</div>
+                </div>
+                <div class="provider-card">
+                    <div class="provider-name">GCP</div>
+                    <div class="provider-series">A2/A3</div>
+                </div>
+                <div class="provider-card">
+                    <div class="provider-name">Azure</div>
+                    <div class="provider-series">NC/ND series</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="pricing-options">
+            <div class="pricing-card expensive">
+                <div class="pricing-header">
+                    <div class="pricing-name">On-Demand</div>
+                    <div class="pricing-badge badge-expensive">$$$$</div>
+                </div>
+                <div class="pricing-desc">Pay per hour - Expensive but flexible</div>
+                <div class="pricing-example">e.g., $32/hr for A100</div>
+            </div>
+            
+            <div class="pricing-card cheap">
+                <div class="pricing-header">
+                    <div class="pricing-name">Spot Instances</div>
+                    <div class="pricing-badge badge-cheap">70-90% off</div>
+                </div>
+                <div class="pricing-desc">Much cheaper, can be interrupted</div>
+                <div class="pricing-example">Good for experiments</div>
+            </div>
+        </div>
+        
+        <div class="services-alternatives">
+            <div class="service-box">
+                <div class="service-title">Managed Services</div>
+                <div class="service-items">
+                    <div class="service-item">SageMaker (AWS)</div>
+                    <div class="service-item">Vertex AI (GCP)</div>
+                    <div class="service-item">Azure ML</div>
+                </div>
+            </div>
+            
+            <div class="service-box">
+                <div class="service-title">GPU Marketplaces</div>
+                <div class="service-items">
+                    <div class="service-item">Lambda Labs</div>
+                    <div class="service-item">RunPod</div>
+                    <div class="service-item">Vast.ai</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="best-practices">
+            <div class="practice-box">
+                <div class="practice-title">Cost Optimization</div>
+                <div class="practice-desc">Small GPUs for debug, scale up for training</div>
+            </div>
+            
+            <div class="practice-box">
+                <div class="practice-title">Free Credits</div>
+                <div class="practice-desc">Research/education credits from providers</div>
+            </div>
+            
+            <div class="practice-box">
+                <div class="practice-title">Always Shut Down</div>
+                <div class="practice-desc">Stop instances when not in use, monitor spending</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

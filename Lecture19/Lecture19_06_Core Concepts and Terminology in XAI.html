@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XAI Core Concepts</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+            padding: 40px;
+        }
+        
+        /* Central hub */
+        .hub {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 180px;
+            height: 180px;
+            background: linear-gradient(135deg, #1E64C8 0%, #2A7DE1 100%);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 8px 24px rgba(30, 100, 200, 0.25);
+            z-index: 10;
+        }
+        
+        .hub-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            text-align: center;
+            line-height: 1.3;
+        }
+        
+        /* Primary concepts (ring 1) */
+        .concept-ring-1 {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .concept-primary {
+            position: absolute;
+            width: 140px;
+            height: 90px;
+            background: white;
+            border: 3px solid #1E64C8;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 12px;
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.15);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .concept-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(30, 100, 200, 0.25);
+        }
+        
+        .concept-primary-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E64C8;
+            text-align: center;
+            line-height: 1.2;
+        }
+        
+        /* Positioning primary concepts */
+        .concept-1 { 
+            left: -310px;
+            top: -45px;
+        }
+        
+        .concept-2 { 
+            left: 170px;
+            top: -45px;
+        }
+        
+        .concept-3 { 
+            left: -70px;
+            top: -170px;
+        }
+        
+        /* Secondary concepts (ring 2) */
+        .concept-secondary {
+            position: absolute;
+            min-width: 120px;
+            padding: 10px 16px;
+            background: #F0F7FF;
+            border: 2px solid #B8D4F1;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(30, 100, 200, 0.1);
+            transition: all 0.2s;
+        }
+        
+        .concept-secondary:hover {
+            background: #E5F1FF;
+            transform: scale(1.05);
+        }
+        
+        /* Positioning secondary concepts */
+        .sec-1 { left: 50px; top: 60px; }
+        .sec-2 { left: 220px; top: 120px; }
+        .sec-3 { right: 50px; top: 60px; }
+        .sec-4 { right: 220px; top: 120px; }
+        .sec-5 { left: 100px; bottom: 80px; }
+        .sec-6 { right: 100px; bottom: 80px; }
+        
+        /* Connection lines */
+        .connections {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        .line {
+            position: absolute;
+            background: rgba(30, 100, 200, 0.2);
+            transform-origin: left center;
+        }
+        
+        /* Lines from hub to primary concepts */
+        .line-1 { 
+            left: 50%;
+            top: 50%;
+            width: 130px;
+            height: 2px;
+            transform: translate(-100%, -50%) rotate(180deg);
+        }
+        
+        .line-2 { 
+            left: 50%;
+            top: 50%;
+            width: 130px;
+            height: 2px;
+            transform: translate(0, -50%);
+        }
+        
+        .line-3 { 
+            left: 50%;
+            top: 50%;
+            width: 130px;
+            height: 2px;
+            transform: translate(-50%, -100%) rotate(90deg);
+        }
+        
+        /* Annotation badges */
+        .badge {
+            position: absolute;
+            padding: 6px 12px;
+            background: #FFF4E6;
+            border: 1px solid #FFD699;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #B35A00;
+            font-weight: 600;
+        }
+        
+        .badge-1 { right: 60px; bottom: 40px; }
+        .badge-2 { left: 60px; bottom: 40px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Connection lines -->
+        <div class="connections">
+            <div class="line line-1"></div>
+            <div class="line line-2"></div>
+            <div class="line line-3"></div>
+        </div>
+        
+        <!-- Central hub -->
+        <div class="hub">
+            <div class="hub-title">Explainable<br>AI (XAI)</div>
+        </div>
+        
+        <!-- Primary concepts ring -->
+        <div class="concept-ring-1">
+            <div class="concept-primary concept-1">
+                <div class="concept-primary-title">Interpretability</div>
+            </div>
+            
+            <div class="concept-primary concept-2">
+                <div class="concept-primary-title">Explainability</div>
+            </div>
+            
+            <div class="concept-primary concept-3">
+                <div class="concept-primary-title">Transparency</div>
+            </div>
+        </div>
+        
+        <!-- Secondary concepts -->
+        <div class="concept-secondary sec-1">Global<br>Explanations</div>
+        <div class="concept-secondary sec-2">Feature<br>Importance</div>
+        <div class="concept-secondary sec-3">Local<br>Explanations</div>
+        <div class="concept-secondary sec-4">Model-Agnostic<br>Methods</div>
+        <div class="concept-secondary sec-5">Internal<br>Mechanics</div>
+        <div class="concept-secondary sec-6">Model-Specific<br>Methods</div>
+        
+        <!-- Annotation badges -->
+        <div class="badge badge-1">Overall Behavior</div>
+        <div class="badge badge-2">Specific Instance</div>
+    </div>
+</body>
+</html>

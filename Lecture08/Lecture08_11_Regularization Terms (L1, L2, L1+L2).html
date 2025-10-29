@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regularization Terms</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 30px;
+            background: #ffffff;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .main-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .purpose-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            color: white;
+            padding: 16px 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.3);
+        }
+        
+        .purpose-text {
+            font-size: 17px;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-bottom: 20px;
+        }
+        
+        .reg-card {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            height: 280px;
+        }
+        
+        .reg-card.elastic {
+            background: linear-gradient(135deg, #e8f1fd 0%, #f0f8ff 100%);
+            border: 3px solid #1E64C8;
+        }
+        
+        .reg-header {
+            text-align: center;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .reg-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .reg-alias {
+            font-size: 16px;
+            color: #666;
+            font-style: italic;
+        }
+        
+        .reg-formula {
+            background: white;
+            border: 1px dashed #1E64C8;
+            border-radius: 6px;
+            padding: 10px;
+            text-align: center;
+            margin-bottom: 12px;
+            font-size: 16px;
+            color: #1E64C8;
+            font-weight: 500;
+        }
+        
+        .reg-features {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+        
+        .feature-icon {
+            min-width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 2px;
+        }
+        
+        .feature-icon.check {
+            background: #d4edda;
+            color: #28a745;
+        }
+        
+        .feature-icon.info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .hyperparameter-box {
+            background: #f0f8ff;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .lambda-symbol {
+            background: #1E64C8;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .lambda-info {
+            flex: 1;
+        }
+        
+        .lambda-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .lambda-desc {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="main-title">Regularization Terms: L1, L2, and Elastic Net</div>
+            <div class="subtitle">Preventing Overfitting through Model Complexity Constraints</div>
+        </div>
+        
+        <div class="purpose-box">
+            <div class="purpose-text">
+                🎯 Regularization prevents overfitting by constraining model complexity
+            </div>
+        </div>
+        
+        <div class="comparison-grid">
+            <!-- L2 Regularization -->
+            <div class="reg-card">
+                <div class="reg-header">
+                    <div class="reg-name">L2 Regularization</div>
+                    <div class="reg-alias">Ridge</div>
+                </div>
+                <div class="reg-formula">
+                    λ Σ w²
+                </div>
+                <div class="reg-features">
+                    <div class="feature-item">
+                        <div class="feature-icon check">✓</div>
+                        <div>Penalizes sum of squared weights</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon check">✓</div>
+                        <div>Encourages small weights</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon check">✓</div>
+                        <div>Smooth solutions</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon info">○</div>
+                        <div>Does not enforce sparsity</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- L1 Regularization -->
+            <div class="reg-card">
+                <div class="reg-header">
+                    <div class="reg-name">L1 Regularization</div>
+                    <div class="reg-alias">Lasso</div>
+                </div>
+                <div class="reg-formula">
+                    λ Σ |w|
+                </div>
+                <div class="reg-features">
+                    <div class="feature-item">
+                        <div class="feature-icon check">✓</div>
+                        <div>Penalizes sum of absolute weights</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon check">✓</div>
+                        <div>Promotes sparsity</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon check">✓</div>
+                        <div>Enables automatic feature selection</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon info">○</div>
+                        <div>Sets some weights to zero</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Elastic Net -->
+            <div class="reg-card elastic">
+                <div class="reg-header">
+                    <div class="reg-name">Elastic Net</div>
+                    <div class="reg-alias">L1 + L2 Combined</div>
+                </div>
+                <div class="reg-formula">
+                    λ₁ Σ |w| + λ₂ Σ w²
+                </div>
+                <div class="reg-features">
+                    <div class="feature-item">
+                        <div class="feature-icon check">✓</div>
+                        <div>Combines advantages of L1 and L2</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon check">✓</div>
+                        <div>Balances sparsity and grouping effect</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon check">✓</div>
+                        <div>Handles correlated features</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon info">★</div>
+                        <div><strong>Best of Both Worlds</strong></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="hyperparameter-box">
+            <div class="lambda-symbol">λ</div>
+            <div class="lambda-info">
+                <div class="lambda-title">Lambda (λ): Regularization Strength</div>
+                <div class="lambda-desc">
+                    Hyperparameter controlling regularization strength - larger values lead to stronger regularization effect
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

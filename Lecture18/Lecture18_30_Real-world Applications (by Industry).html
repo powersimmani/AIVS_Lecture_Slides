@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-world Applications by Industry</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            padding: 25px;
+            gap: 16px;
+        }
+        
+        .header {
+            text-align: center;
+        }
+        
+        .main-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .industries-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+            flex: 1;
+        }
+        
+        .industry-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 12px;
+            padding: 16px 18px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+        
+        .industry-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(30, 100, 200, 0.25);
+        }
+        
+        .industry-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+        
+        .industry-icon {
+            font-size: 32px;
+            flex-shrink: 0;
+        }
+        
+        .industry-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .applications-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .app-item {
+            background: #f0f6ff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 15px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .app-bullet {
+            color: #1E64C8;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .ecommerce-card {
+            border-color: #ff9800;
+            background: #fff8f0;
+        }
+        
+        .ecommerce-card .industry-name {
+            color: #ff9800;
+        }
+        
+        .ecommerce-card .app-item {
+            background: #fff8f0;
+            border: 1px solid #ffe0b2;
+        }
+        
+        .ecommerce-card .app-bullet {
+            color: #ff9800;
+        }
+        
+        .healthcare-card {
+            border-color: #f44336;
+            background: #ffebee;
+        }
+        
+        .healthcare-card .industry-name {
+            color: #f44336;
+        }
+        
+        .healthcare-card .app-item {
+            background: #ffebee;
+            border: 1px solid #ffcdd2;
+        }
+        
+        .healthcare-card .app-bullet {
+            color: #f44336;
+        }
+        
+        .finance-card {
+            border-color: #4CAF50;
+            background: #e8f5e9;
+        }
+        
+        .finance-card .industry-name {
+            color: #4CAF50;
+        }
+        
+        .finance-card .app-item {
+            background: #e8f5e9;
+            border: 1px solid #c8e6c9;
+        }
+        
+        .finance-card .app-bullet {
+            color: #4CAF50;
+        }
+        
+        .manufacturing-card {
+            border-color: #9C27B0;
+            background: #f3e5f5;
+        }
+        
+        .manufacturing-card .industry-name {
+            color: #9C27B0;
+        }
+        
+        .manufacturing-card .app-item {
+            background: #f3e5f5;
+            border: 1px solid #e1bee7;
+        }
+        
+        .manufacturing-card .app-bullet {
+            color: #9C27B0;
+        }
+        
+        .social-card {
+            border-color: #03A9F4;
+            background: #e1f5fe;
+        }
+        
+        .social-card .industry-name {
+            color: #03A9F4;
+        }
+        
+        .social-card .app-item {
+            background: #e1f5fe;
+            border: 1px solid #b3e5fc;
+        }
+        
+        .social-card .app-bullet {
+            color: #03A9F4;
+        }
+        
+        .genomics-card {
+            border-color: #00BCD4;
+            background: #e0f7fa;
+        }
+        
+        .genomics-card .industry-name {
+            color: #00BCD4;
+        }
+        
+        .genomics-card .app-item {
+            background: #e0f7fa;
+            border: 1px solid #b2ebf2;
+        }
+        
+        .genomics-card .app-bullet {
+            color: #00BCD4;
+        }
+        
+        .transportation-card {
+            border-color: #FF5722;
+            background: #fbe9e7;
+        }
+        
+        .transportation-card .industry-name {
+            color: #FF5722;
+        }
+        
+        .transportation-card .app-item {
+            background: #fbe9e7;
+            border: 1px solid #ffccbc;
+        }
+        
+        .transportation-card .app-bullet {
+            color: #FF5722;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="main-title">Real-world Applications by Industry</div>
+            <div class="subtitle">Clustering Applications Across Different Sectors</div>
+        </div>
+        
+        <div class="industries-grid">
+            <div class="industry-card ecommerce-card">
+                <div class="industry-header">
+                    <div class="industry-icon">🛒</div>
+                    <div class="industry-name">E-commerce</div>
+                </div>
+                <div class="applications-list">
+                    <div class="app-item">
+                        <span class="app-bullet">•</span>
+                        <span>Customer segmentation</span>
+                    </div>
+                    <div class="app-item">
+                        <span class="app-bullet">•</span>
+                        <span>Product recommendations</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="industry-card healthcare-card">
+                <div class="industry-header">
+                    <div class="industry-icon">🏥</div>
+                    <div class="industry-name">Healthcare</div>
+                </div>
+                <div class="applications-list">
+                    <div class="app-item">
+                        <span class="app-bullet">•</span>
+                        <span>Patient stratification</span>
+                    </div>
+                    <div class="app-item">
+                        <span class="app-bullet">•</span>
+                        <span>Disease subtyping</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="industry-card finance-card">
+                <div class="industry-header">
+                    <div class="industry-icon">💰</div>
+                    <div class="industry-name">Finance</div>
+                </div>
+                <div class="applications-list">
+                    <div class="app-item">
+                        <span class="app-bullet">•</span>
+                        <span>Fraud detection</span>
+                    </div>
+                    <div class="app-item">
+                        <span class="app-bullet">•</span>
+                        <span>Portfolio clustering</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="industry-card manufacturing-card">
+                <div class="industry-header">
+                    <div class="industry-icon">🏭</div>
+                    <div class="industry-name">Manufacturing</div>
+                </div>
+                <div class="applications-list">
+                    <div class="app-item">
+                        <span class="app-bullet">•</span>
+                        <span>Anomaly detection</span>
+                    </div>
+                    <div class="app-item">
+                        <span class="app-bullet">•</span>
+                        <span>Predictive maintenance</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="industry-card social-card">
+                <div class="industry-header">
+                    <div class="industry-icon">📱</div>
+                    <div class="industry-name">Social Media</div>
+                </div>
+                <div class="applications-list">
+                    <div class="app-item">
+                        <span class="app-bullet">•</span>
+                        <span>Community detection</span>
+                    </div>
+                    <div class="app-item">
+                        <span class="app-bullet">•</span>
+                        <span>Content recommendation</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="industry-card genomics-card">
+                <div class="industry-header">
+                    <div class="industry-icon">🧬</div>
+                    <div class="industry-name">Genomics</div>
+                </div>
+                <div class="applications-list">
+                    <div class="app-item">
+                        <span class="app-bullet">•</span>
+                        <span>Gene expression clustering</span>
+                    </div>
+                    <div class="app-item">
+                        <span class="app-bullet">•</span>
+                        <span>Cell type discovery</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="industry-card transportation-card">
+                <div class="industry-header">
+                    <div class="industry-icon">🚗</div>
+                    <div class="industry-name">Transportation</div>
+                </div>
+                <div class="applications-list">
+                    <div class="app-item">
+                        <span class="app-bullet">•</span>
+                        <span>Traffic pattern analysis</span>
+                    </div>
+                    <div class="app-item">
+                        <span class="app-bullet">•</span>
+                        <span>Route optimization</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Importance of Learning Rate</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #ffffff; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 30px; background: #ffffff; }
+        .header { text-align: center; margin-bottom: 20px; }
+        .main-title { font-size: 20px; font-weight: 600; color: #1E64C8; margin-bottom: 6px; }
+        .subtitle { font-size: 16px; color: #666; }
+        .content-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; height: 440px; }
+        .left-section, .right-section { display: flex; flex-direction: column; gap: 15px; }
+        .importance-box { background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%); color: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 12px rgba(30, 100, 200, 0.3); text-align: center; }
+        .importance-icon { font-size: 32px; margin-bottom: 10px; }
+        .importance-text { font-size: 17px; font-weight: 600; line-height: 1.6; }
+        .problems-box { background: #f8f9fa; border: 2px solid #1E64C8; border-radius: 8px; padding: 18px; flex: 1; }
+        .problems-title { font-size: 18px; font-weight: 600; color: #1E64C8; margin-bottom: 12px; text-align: center; }
+        .problems-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; height: calc(100% - 40px); }
+        .problem-card { padding: 16px; border-radius: 8px; display: flex; flex-direction: column; justify-content: center; }
+        .problem-card.too-large { background: #f8d7da; border: 2px solid #dc3545; }
+        .problem-card.too-small { background: #fff3cd; border: 2px solid #ffc107; }
+        .problem-card.optimal { background: #d4edda; border: 2px solid #28a745; grid-column: 1 / -1; }
+        .problem-label { font-size: 17px; font-weight: 600; margin-bottom: 8px; text-align: center; }
+        .problem-card.too-large .problem-label { color: #dc3545; }
+        .problem-card.too-small .problem-label { color: #856404; }
+        .problem-card.optimal .problem-label { color: #28a745; }
+        .problem-effects { display: flex; flex-direction: column; gap: 6px; }
+        .effect-item { font-size: 16px; line-height: 1.4; text-align: center; }
+        .problem-card.too-large .effect-item { color: #721c24; }
+        .problem-card.too-small .effect-item { color: #856404; }
+        .problem-card.optimal .effect-item { color: #155724; }
+        .training-phases-box { background: #f8f9fa; border: 2px solid #1E64C8; border-radius: 8px; padding: 18px; }
+        .phases-title { font-size: 18px; font-weight: 600; color: #1E64C8; margin-bottom: 12px; text-align: center; }
+        .phase-item { background: white; border: 2px solid #1E64C8; border-radius: 6px; padding: 14px 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 12px; }
+        .phase-icon { background: #1E64C8; color: white; min-width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 600; flex-shrink: 0; }
+        .phase-content { flex: 1; }
+        .phase-label { font-size: 16px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .phase-desc { font-size: 16px; color: #2c3e50; line-height: 1.4; }
+        .insights-box { background: #f0f8ff; border: 2px solid #1E64C8; border-radius: 8px; padding: 18px; flex: 1; }
+        .insights-title { font-size: 17px; font-weight: 600; color: #1E64C8; margin-bottom: 12px; }
+        .insight-list { display: flex; flex-direction: column; gap: 10px; }
+        .insight-item { display: flex; align-items: flex-start; gap: 10px; }
+        .insight-icon { background: #1E64C8; color: white; min-width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0; margin-top: 2px; }
+        .insight-text { font-size: 16px; color: #2c3e50; line-height: 1.5; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="main-title">Importance of Learning Rate</div>
+            <div class="subtitle">The Most Critical Hyperparameter</div>
+        </div>
+        
+        <div class="content-layout">
+            <div class="left-section">
+                <div class="importance-box">
+                    <div class="importance-icon">⚡</div>
+                    <div class="importance-text">
+                        The most important hyperparameter<br>
+                        affecting training dynamics and convergence
+                    </div>
+                </div>
+                
+                <div class="problems-box">
+                    <div class="problems-title">Learning Rate Impact</div>
+                    <div class="problems-grid">
+                        <div class="problem-card too-large">
+                            <div class="problem-label">⚠️ Too Large</div>
+                            <div class="problem-effects">
+                                <div class="effect-item">• Training divergence</div>
+                                <div class="effect-item">• Loss oscillation</div>
+                                <div class="effect-item">• Loss explosion</div>
+                            </div>
+                        </div>
+                        
+                        <div class="problem-card too-small">
+                            <div class="problem-label">⚠️ Too Small</div>
+                            <div class="problem-effects">
+                                <div class="effect-item">• Slow convergence</div>
+                                <div class="effect-item">• Stuck in poor</div>
+                                <div class="effect-item">local minima</div>
+                            </div>
+                        </div>
+                        
+                        <div class="problem-card optimal">
+                            <div class="problem-label">✓ Optimal (Dynamic)</div>
+                            <div class="problem-effects">
+                                <div class="effect-item">
+                                    Optimal learning rate changes throughout training
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-section">
+                <div class="training-phases-box">
+                    <div class="phases-title">Training Phase Strategy</div>
+                    
+                    <div class="phase-item">
+                        <div class="phase-icon">🚀</div>
+                        <div class="phase-content">
+                            <div class="phase-label">Early Training</div>
+                            <div class="phase-desc">
+                                Large learning rate for fast initial progress
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="phase-item">
+                        <div class="phase-icon">🎯</div>
+                        <div class="phase-content">
+                            <div class="phase-label">Late Training</div>
+                            <div class="phase-desc">
+                                Small learning rate for fine-tuning and convergence
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="insights-box">
+                    <div class="insights-title">💡 Key Insights</div>
+                    <div class="insight-list">
+                        <div class="insight-item">
+                            <div class="insight-icon">1</div>
+                            <div class="insight-text">
+                                Different layers may benefit from different learning rates
+                            </div>
+                        </div>
+                        <div class="insight-item">
+                            <div class="insight-icon">2</div>
+                            <div class="insight-text">
+                                Learning rate scheduling improves final model performance
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

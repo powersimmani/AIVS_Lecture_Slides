@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ensemble Methods</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: #ffffff;
+            padding: 20px 40px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 25px;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .method-card {
+            background: linear-gradient(135deg, #f8f9fb 0%, #e8f4ff 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 12px;
+            padding: 18px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .method-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 16px rgba(30, 100, 200, 0.2);
+            background: linear-gradient(135deg, #e8f4ff 0%, #d1e9ff 100%);
+        }
+        
+        .method-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .method-icon {
+            font-size: 28px;
+        }
+        
+        .method-name {
+            font-size: 19px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .method-visual {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 12px;
+            min-height: 110px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .models-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        
+        .model-box {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
+            border: 2px solid #2e7d32;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .arrow-down {
+            font-size: 24px;
+            color: #1E64C8;
+        }
+        
+        .combination-box {
+            background: #1E64C8;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+        }
+        
+        .meta-model {
+            background: linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%);
+            border: 2px solid #6a1b9a;
+        }
+        
+        .method-description {
+            font-size: 15px;
+            color: #2c3e50;
+            text-align: center;
+            line-height: 1.5;
+        }
+        
+        .benefits-section {
+            grid-column: 1 / -1;
+            background: #e8f5e9;
+            border: 2px solid #4caf50;
+            border-radius: 12px;
+            padding: 18px 20px;
+            margin-top: 10px;
+        }
+        
+        .benefits-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #4caf50;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .benefit-item {
+            background: white;
+            border-radius: 8px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .benefit-icon {
+            font-size: 24px;
+        }
+        
+        .benefit-text {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+        
+        .highlight {
+            font-weight: 600;
+            color: #4caf50;
+        }
+        
+        .tradeoff-box {
+            grid-column: 1 / -1;
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 12px 16px;
+            text-align: center;
+            margin-top: 10px;
+        }
+        
+        .tradeoff-text {
+            font-size: 16px;
+            color: #2c3e50;
+        }
+        
+        .tradeoff-highlight {
+            font-weight: 600;
+            color: #f57c00;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Ensemble Methods</div>
+        
+        <div class="main-content">
+            <div class="method-card">
+                <div class="method-header">
+                    <div class="method-icon">📊</div>
+                    <div class="method-name">Averaging</div>
+                </div>
+                <div class="method-visual">
+                    <div class="models-row">
+                        <div class="model-box">M1</div>
+                        <div class="model-box">M2</div>
+                        <div class="model-box">M3</div>
+                    </div>
+                    <div class="arrow-down">↓</div>
+                    <div class="combination-box">Mean Prediction</div>
+                </div>
+                <div class="method-description">
+                    Averages predictions from multiple models
+                </div>
+            </div>
+            
+            <div class="method-card">
+                <div class="method-header">
+                    <div class="method-icon">🗳️</div>
+                    <div class="method-name">Voting</div>
+                </div>
+                <div class="method-visual">
+                    <div class="models-row">
+                        <div class="model-box">M1</div>
+                        <div class="model-box">M2</div>
+                        <div class="model-box">M3</div>
+                    </div>
+                    <div class="arrow-down">↓</div>
+                    <div class="combination-box">Majority Vote</div>
+                </div>
+                <div class="method-description">
+                    Takes majority vote for classification
+                </div>
+            </div>
+            
+            <div class="method-card">
+                <div class="method-header">
+                    <div class="method-icon">🎯</div>
+                    <div class="method-name">Stacking</div>
+                </div>
+                <div class="method-visual">
+                    <div class="models-row">
+                        <div class="model-box">M1</div>
+                        <div class="model-box">M2</div>
+                        <div class="model-box">M3</div>
+                    </div>
+                    <div class="arrow-down">↓</div>
+                    <div class="combination-box meta-model">Meta-Model</div>
+                </div>
+                <div class="method-description">
+                    Trains meta-model on base predictions
+                </div>
+            </div>
+            
+            <div class="method-card">
+                <div class="method-header">
+                    <div class="method-icon">🔢</div>
+                    <div class="method-name">Typical Size</div>
+                </div>
+                <div class="method-visual">
+                    <div class="models-row">
+                        <div class="model-box">M1</div>
+                        <div class="model-box">M2</div>
+                        <div class="model-box">M3</div>
+                        <div class="model-box" style="opacity: 0.5;">...</div>
+                        <div class="model-box">M10</div>
+                    </div>
+                </div>
+                <div class="method-description">
+                    3-10 models in ensemble
+                </div>
+            </div>
+            
+            <div class="benefits-section">
+                <div class="benefits-title">✓ Key Benefits</div>
+                <div class="benefits-grid">
+                    <div class="benefit-item">
+                        <div class="benefit-icon">📉</div>
+                        <div class="benefit-text">
+                            <span class="highlight">Reduces variance</span> across predictions
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">🛡️</div>
+                        <div class="benefit-text">
+                            <span class="highlight">Improves robustness</span> of the model
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tradeoff-box">
+                <div class="tradeoff-text">
+                    ⚖️ Trades <span class="tradeoff-highlight">computational cost</span> for <span class="tradeoff-highlight">higher accuracy</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transfer Learning Strategies</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Aptos', 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            padding: 30px;
+        }
+        
+        .title {
+            font-size: 26px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .concept-box {
+            background: #F0F6FF;
+            border-left: 4px solid #1E64C8;
+            padding: 12px 20px;
+            margin-bottom: 20px;
+            font-size: 17px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .transfer-flow {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 18px 20px;
+            margin-bottom: 18px;
+        }
+        
+        .flow-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 14px;
+            text-align: center;
+        }
+        
+        .flow-visual {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .task-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 18px 20px;
+            text-align: center;
+            flex: 1;
+            max-width: 250px;
+        }
+        
+        .task-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        
+        .task-label {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .task-desc {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .task-examples {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #1E64C8;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .arrow-transfer {
+            color: #1E64C8;
+            font-size: 36px;
+            font-weight: bold;
+        }
+        
+        .knowledge-label {
+            background: #1E64C8;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            position: relative;
+            top: -10px;
+        }
+        
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 18px;
+        }
+        
+        .benefit-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .benefit-icon {
+            width: 45px;
+            height: 45px;
+            background: #1E64C8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+        
+        .benefit-text {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .key-technique-box {
+            background: #1E64C8;
+            color: white;
+            border-radius: 10px;
+            padding: 14px 20px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        
+        .technique-icon {
+            font-size: 28px;
+        }
+        
+        .technique-text {
+            font-size: 18px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Transfer Learning Strategies</div>
+        
+        <div class="concept-box">
+            Leverage knowledge from source task to improve target task performance
+        </div>
+        
+        <div class="transfer-flow">
+            <div class="flow-title">Transfer Learning Process</div>
+            <div class="flow-visual">
+                <div class="task-box">
+                    <div class="task-icon">🎓</div>
+                    <div class="task-label">Source Task</div>
+                    <div class="task-desc">Pre-training on large datasets</div>
+                    <div class="task-examples">ImageNet, Wikipedia</div>
+                </div>
+                
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 5px;">
+                    <div class="knowledge-label">Knowledge Transfer</div>
+                    <div class="arrow-transfer">→</div>
+                </div>
+                
+                <div class="task-box">
+                    <div class="task-icon">🎯</div>
+                    <div class="task-label">Target Task</div>
+                    <div class="task-desc">Fine-tuning or feature extraction</div>
+                    <div class="task-examples">Limited data scenarios</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="benefits-grid">
+            <div class="benefit-card">
+                <div class="benefit-icon">📊</div>
+                <div class="benefit-text">Particularly effective when target task has limited data</div>
+            </div>
+            
+            <div class="benefit-card">
+                <div class="benefit-icon">🔗</div>
+                <div class="benefit-text">Source and target tasks should be related for best results</div>
+            </div>
+            
+            <div class="benefit-card">
+                <div class="benefit-icon">⚡</div>
+                <div class="benefit-text">Reduces training time significantly</div>
+            </div>
+            
+            <div class="benefit-card">
+                <div class="benefit-icon">💻</div>
+                <div class="benefit-text">Reduces computational requirements</div>
+            </div>
+        </div>
+        
+        <div class="key-technique-box">
+            <div class="technique-icon">⭐</div>
+            <div class="technique-text">Key Technique in Modern Deep Learning Applications</div>
+        </div>
+    </div>
+</body>
+</html>

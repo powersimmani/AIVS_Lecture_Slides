@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why Initialization is Important</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: #ffffff;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 30px;
+            padding-top: 20px;
+        }
+        
+        .flow-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 450px;
+            padding: 0 40px;
+        }
+        
+        .center-box {
+            background: #1E64C8;
+            color: white;
+            padding: 30px 40px;
+            border-radius: 12px;
+            font-size: 20px;
+            font-weight: 600;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.2);
+            position: relative;
+            z-index: 2;
+            min-width: 280px;
+        }
+        
+        .impact-group {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            position: relative;
+        }
+        
+        .impact-group.left {
+            margin-right: 80px;
+            align-items: flex-end;
+        }
+        
+        .impact-group.right {
+            margin-left: 80px;
+            align-items: flex-start;
+        }
+        
+        .impact-card {
+            background: #f8f9fb;
+            border-left: 4px solid #1E64C8;
+            padding: 16px 20px;
+            border-radius: 6px;
+            font-size: 16px;
+            color: #2c3e50;
+            max-width: 260px;
+            line-height: 1.4;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .impact-card:hover {
+            background: #eef3fb;
+            transform: translateX(-3px);
+            box-shadow: 0 2px 8px rgba(30, 100, 200, 0.15);
+        }
+        
+        .impact-group.right .impact-card {
+            border-left: none;
+            border-right: 4px solid #1E64C8;
+        }
+        
+        .impact-group.right .impact-card:hover {
+            transform: translateX(3px);
+        }
+        
+        /* 연결선 스타일 */
+        .arrow {
+            position: absolute;
+            width: 60px;
+            height: 2px;
+            background: #1E64C8;
+            top: 50%;
+            z-index: 1;
+        }
+        
+        .arrow.left {
+            right: -70px;
+        }
+        
+        .arrow.right {
+            left: -70px;
+        }
+        
+        .arrow::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-style: solid;
+        }
+        
+        .arrow.left::after {
+            right: 0;
+            border-width: 5px 0 5px 8px;
+            border-color: transparent transparent transparent #1E64C8;
+        }
+        
+        .arrow.right::after {
+            left: 0;
+            border-width: 5px 8px 5px 0;
+            border-color: transparent #1E64C8 transparent transparent;
+        }
+        
+        .highlight {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Why is Initialization Important?</div>
+        
+        <div class="flow-container">
+            <div class="impact-group left">
+                <div class="impact-card">
+                    Sets starting point for <span class="highlight">gradient descent</span>
+                    <div class="arrow left"></div>
+                </div>
+                <div class="impact-card">
+                    Affects <span class="highlight">convergence speed</span> & performance
+                    <div class="arrow left"></div>
+                </div>
+                <div class="impact-card">
+                    Prevents <span class="highlight">vanishing/exploding</span> gradients
+                    <div class="arrow left"></div>
+                </div>
+            </div>
+            
+            <div class="center-box">
+                Initialization<br>Strategy
+            </div>
+            
+            <div class="impact-group right">
+                <div class="impact-card">
+                    <div class="arrow right"></div>
+                    Determines learning <span class="highlight">effectiveness</span>
+                </div>
+                <div class="impact-card">
+                    <div class="arrow right"></div>
+                    Ensures <span class="highlight">training stability</span>
+                </div>
+                <div class="impact-card">
+                    <div class="arrow right"></div>
+                    Critical for <span class="highlight">deep networks</span>
+                </div>
+                <div class="impact-card">
+                    <div class="arrow right"></div>
+                    Influences <span class="highlight">final accuracy</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

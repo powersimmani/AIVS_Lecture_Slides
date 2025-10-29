@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LSUV Initialization</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: #ffffff;
+            padding: 20px 40px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 25px;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            height: 420px;
+        }
+        
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .process-container {
+            flex: 1;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .process-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .step-box {
+            background: white;
+            border-radius: 10px;
+            padding: 16px 20px;
+            border-left: 6px solid #1E64C8;
+            box-shadow: 0 2px 6px rgba(30, 100, 200, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .step-box:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.2);
+        }
+        
+        .step-number {
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            background: #1E64C8;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 32px;
+            font-size: 18px;
+            font-weight: 600;
+            margin-right: 12px;
+        }
+        
+        .step-content {
+            display: inline;
+            font-size: 17px;
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+        
+        .step-highlight {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .arrow-down {
+            text-align: center;
+            font-size: 28px;
+            color: #1E64C8;
+            line-height: 1;
+        }
+        
+        .layer-visual {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+        
+        .layer-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .layer-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #1E64C8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .layer-label {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .section-header {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 5px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .feature-card {
+            background: #f8f9fb;
+            border-left: 4px solid #1E64C8;
+            padding: 14px 16px;
+            border-radius: 6px;
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.5;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            background: #eef3fb;
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(30, 100, 200, 0.15);
+        }
+        
+        .highlight {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .advantage-box {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border: 2px solid #4caf50;
+            border-radius: 10px;
+            padding: 16px;
+            margin-top: 10px;
+        }
+        
+        .advantage-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #4caf50;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .advantage-text {
+            font-size: 16px;
+            color: #2c3e50;
+            text-align: center;
+            line-height: 1.4;
+        }
+        
+        .data-note {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 16px;
+            color: #2c3e50;
+            text-align: center;
+        }
+        
+        .note-highlight {
+            font-weight: 600;
+            color: #f57c00;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">LSUV Initialization</div>
+        <div class="subtitle">Layer-Sequential Unit-Variance Initialization</div>
+        
+        <div class="main-content">
+            <div class="left-section">
+                <div class="process-container">
+                    <div class="process-title">Two-Step Process</div>
+                    
+                    <div class="step-box">
+                        <span class="step-number">1</span>
+                        <span class="step-content">
+                            Initialize with <span class="step-highlight">orthogonal matrices</span>
+                        </span>
+                    </div>
+                    
+                    <div class="arrow-down">↓</div>
+                    
+                    <div class="step-box">
+                        <span class="step-number">2</span>
+                        <span class="step-content">
+                            Normalize to <span class="step-highlight">unit variance</span> layer by layer
+                        </span>
+                    </div>
+                    
+                    <div class="layer-visual">
+                        <div class="layer-item">
+                            <div class="layer-circle">Var=1</div>
+                            <div class="layer-label">Layer 1</div>
+                        </div>
+                        <div class="layer-item">
+                            <div class="layer-circle">Var=1</div>
+                            <div class="layer-label">Layer 2</div>
+                        </div>
+                        <div class="layer-item">
+                            <div class="layer-circle">Var=1</div>
+                            <div class="layer-label">Layer N</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="data-note">
+                    Uses <span class="note-highlight">small batch of data</span> for variance estimation
+                </div>
+            </div>
+            
+            <div class="right-section">
+                <div class="section-header">Key Characteristics</div>
+                
+                <div class="feature-card">
+                    <span class="highlight">Sequential process:</span> Initializes and normalizes one layer at a time
+                </div>
+                
+                <div class="feature-card">
+                    <span class="highlight">Orthogonal initialization:</span> Provides better starting point than random
+                </div>
+                
+                <div class="feature-card">
+                    <span class="highlight">Data-driven:</span> Uses actual data to estimate variance
+                </div>
+                
+                <div class="feature-card">
+                    <span class="highlight">More sophisticated:</span> Advanced compared to Xavier/He methods
+                </div>
+                
+                <div class="advantage-box">
+                    <div class="advantage-title">✓ Particularly Effective</div>
+                    <div class="advantage-text">
+                        Excels in <strong>very deep networks</strong> with <strong>100+ layers</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practical Guidelines and Best Practices</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+            padding: 25px 35px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 18px;
+        }
+        
+        .title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            font-size: 15px;
+            color: #666;
+            font-style: italic;
+        }
+        
+        /* Main content */
+        .content {
+            display: flex;
+            gap: 20px;
+            flex: 1;
+        }
+        
+        /* Decision tree section */
+        .tree-section {
+            flex: 1.5;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .tree-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .tree-container {
+            flex: 1;
+            background: #FAFAFA;
+            border: 2px solid #E5E7EB;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+        }
+        
+        /* Decision node */
+        .decision-node {
+            background: linear-gradient(135deg, #1E64C8 0%, #2A7DE1 100%);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 700;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(30, 100, 200, 0.2);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .decision-node:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Branch container */
+        .branch-container {
+            display: flex;
+            gap: 30px;
+            width: 100%;
+            justify-content: center;
+        }
+        
+        /* Branch */
+        .branch {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            max-width: 200px;
+        }
+        
+        .branch-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1E64C8;
+            background: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            border: 2px solid #B8D4F1;
+        }
+        
+        .arrow-down {
+            width: 3px;
+            height: 25px;
+            background: linear-gradient(180deg, #1E64C8 0%, #4A94E5 100%);
+            position: relative;
+        }
+        
+        .arrow-down::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 10px solid #4A94E5;
+        }
+        
+        /* Result node */
+        .result-node {
+            background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%);
+            color: white;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(76, 175, 80, 0.2);
+            cursor: pointer;
+            transition: all 0.3s;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .result-node:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Info section */
+        .info-section {
+            flex: 0.5;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .section-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .guidelines-box {
+            background: linear-gradient(135deg, #F0F7FF 0%, #E5F1FF 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .guidelines-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .guideline-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-size: 12px;
+            color: #333;
+            line-height: 1.3;
+        }
+        
+        .guideline-icon {
+            color: #1E64C8;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .info-card {
+            background: #F8FAFC;
+            border-left: 4px solid #1E64C8;
+            border-radius: 8px;
+            padding: 9px 11px;
+            transition: all 0.2s;
+        }
+        
+        .info-card:hover {
+            background: #F0F7FF;
+            transform: translateX(4px);
+        }
+        
+        .info-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 3px;
+        }
+        
+        .info-desc {
+            font-size: 11px;
+            color: #666;
+            line-height: 1.3;
+        }
+        
+        /* Warnings */
+        .warnings-box {
+            background: linear-gradient(135deg, #FFF3E0 0%, #FFE0B2 100%);
+            border: 2px solid #FB8C00;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: auto;
+        }
+        
+        .warnings-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #E65100;
+            margin-bottom: 8px;
+        }
+        
+        .warning-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 6px;
+            font-size: 11px;
+            color: #333;
+            line-height: 1.3;
+        }
+        
+        .warning-icon {
+            color: #F57C00;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="title">Practical Guidelines and Best Practices</div>
+            <div class="subtitle">Selecting the Right XAI Method</div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="content">
+            <!-- Decision Tree Section -->
+            <div class="tree-section">
+                <div class="tree-title">XAI Method Selection Decision Tree</div>
+                
+                <div class="tree-container">
+                    <!-- Level 1: Global vs Local -->
+                    <div class="decision-node">
+                        Need Global or Local?
+                    </div>
+                    
+                    <div class="branch-container">
+                        <div class="branch">
+                            <div class="arrow-down"></div>
+                            <div class="branch-label">Global</div>
+                            <div class="arrow-down"></div>
+                        </div>
+                        <div class="branch">
+                            <div class="arrow-down"></div>
+                            <div class="branch-label">Local</div>
+                            <div class="arrow-down"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Level 2: Model-specific possible? -->
+                    <div class="branch-container">
+                        <div class="branch">
+                            <div class="decision-node" style="font-size: 13px;">
+                                Model-specific<br>possible?
+                            </div>
+                        </div>
+                        <div class="branch">
+                            <div class="decision-node" style="font-size: 13px;">
+                                Real-time<br>needed?
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="branch-container">
+                        <div class="branch">
+                            <div class="arrow-down"></div>
+                            <div class="branch-label">Yes</div>
+                            <div class="arrow-down"></div>
+                        </div>
+                        <div class="branch">
+                            <div class="arrow-down"></div>
+                            <div class="branch-label">No</div>
+                            <div class="arrow-down"></div>
+                        </div>
+                        <div class="branch">
+                            <div class="arrow-down"></div>
+                            <div class="branch-label">Yes</div>
+                            <div class="arrow-down"></div>
+                        </div>
+                        <div class="branch">
+                            <div class="arrow-down"></div>
+                            <div class="branch-label">No</div>
+                            <div class="arrow-down"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Level 3: Results -->
+                    <div class="branch-container">
+                        <div class="branch">
+                            <div class="result-node">
+                                Feature<br>Importance,<br>PDP, ALE
+                            </div>
+                        </div>
+                        <div class="branch">
+                            <div class="result-node">
+                                Surrogate<br>Models
+                            </div>
+                        </div>
+                        <div class="branch">
+                            <div class="result-node">
+                                Anchor<br>Explanations
+                            </div>
+                        </div>
+                        <div class="branch">
+                            <div class="result-node">
+                                LIME,<br>SHAP
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Info Section -->
+            <div class="info-section">
+                <div class="section-title">Best Practices</div>
+                
+                <div class="guidelines-box">
+                    <div class="guidelines-title">Key Guidelines</div>
+                    <div class="guideline-item">
+                        <span class="guideline-icon">•</span>
+                        <span>Use multiple XAI methods</span>
+                    </div>
+                    <div class="guideline-item">
+                        <span class="guideline-icon">•</span>
+                        <span>Validate with domain experts</span>
+                    </div>
+                    <div class="guideline-item">
+                        <span class="guideline-icon">•</span>
+                        <span>Consider computational budget</span>
+                    </div>
+                    <div class="guideline-item">
+                        <span class="guideline-icon">•</span>
+                        <span>Document limitations</span>
+                    </div>
+                    <div class="guideline-item">
+                        <span class="guideline-icon">•</span>
+                        <span>Match stakeholder needs</span>
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-title">Validation</div>
+                    <div class="info-desc">Match domain expertise</div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-title">Budget</div>
+                    <div class="info-desc">Real-time vs batch processing</div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-title">Documentation</div>
+                    <div class="info-desc">Record assumptions & limits</div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-title">Monitoring</div>
+                    <div class="info-desc">Track explanation drift</div>
+                </div>
+                
+                <!-- Warnings -->
+                <div class="warnings-box">
+                    <div class="warnings-title">⚠ Watch Out For</div>
+                    <div class="warning-item">
+                        <span class="warning-icon">!</span>
+                        <span>Adversarial examples</span>
+                    </div>
+                    <div class="warning-item">
+                        <span class="warning-icon">!</span>
+                        <span>Data distribution shifts</span>
+                    </div>
+                    <div class="warning-item">
+                        <span class="warning-icon">!</span>
+                        <span>Over-reliance on single method</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

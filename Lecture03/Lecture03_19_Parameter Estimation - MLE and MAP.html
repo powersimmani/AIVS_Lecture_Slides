@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parameter Estimation - MLE and MAP</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: #ffffff;
+            position: relative;
+            padding: 25px 35px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .header-title {
+            font-size: 20px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .intro-box {
+            background: #f8fafb;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .intro-text {
+            font-size: 17px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .main-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            flex: 1;
+        }
+        
+        .method-column {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .method-header {
+            background: #1E64C8;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .method-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .method-subtitle {
+            font-size: 16px;
+            opacity: 0.95;
+        }
+        
+        .concept-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 15px;
+        }
+        
+        .box-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .formula {
+            background: #f8fafb;
+            padding: 8px 10px;
+            border-radius: 4px;
+            font-size: 16px;
+            color: #333;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            margin-top: 5px;
+        }
+        
+        .example-box {
+            background: #f0f7ff;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 15px;
+            flex: 1;
+        }
+        
+        .example-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .example-item {
+            background: white;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 16px;
+            color: #333;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+        
+        .relationship-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 15px;
+            text-align: center;
+        }
+        
+        .relationship-formula {
+            background: #f0f7ff;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 17px;
+            color: #1E64C8;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            margin-top: 6px;
+        }
+        
+        .bottom-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 15px;
+            margin-top: 12px;
+        }
+        
+        .comparison-table {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 15px;
+        }
+        
+        .table-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .comparison-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+        
+        .comparison-cell {
+            background: #f8fafb;
+            padding: 6px 8px;
+            border-radius: 4px;
+            font-size: 15px;
+            text-align: center;
+            border: 1px solid #1E64C8;
+        }
+        
+        .comparison-cell.header {
+            background: #1E64C8;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .ml-application {
+            background: #1E64C8;
+            color: white;
+            border-radius: 8px;
+            padding: 12px 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .ml-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        
+        .ml-content {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-title">Parameter Estimation - MLE and MAP</div>
+        </div>
+        
+        <div class="intro-box">
+            <div class="intro-text">Parameter Estimation: Inferring θ from observed data</div>
+        </div>
+        
+        <div class="main-comparison">
+            <div class="method-column">
+                <div class="method-header">
+                    <div class="method-name">Maximum Likelihood</div>
+                    <div class="method-subtitle">Estimation (MLE)</div>
+                </div>
+                
+                <div class="concept-box">
+                    <div class="box-title">Objective</div>
+                    <div class="formula">argmax L(θ|data)</div>
+                </div>
+                
+                <div class="concept-box">
+                    <div class="box-title">Likelihood Function</div>
+                    <div class="formula">L(θ) = P(data|θ) = ∏ᵢ P(xᵢ|θ)</div>
+                </div>
+                
+                <div class="concept-box">
+                    <div class="box-title">Log-Likelihood</div>
+                    <div class="formula">ℓ(θ) = log L(θ)</div>
+                    <div style="font-size: 15px; color: #555; text-align: center; margin-top: 5px;">
+                        Easier to optimize
+                    </div>
+                </div>
+                
+                <div class="example-box">
+                    <div class="example-title">MLE for Normal Distribution</div>
+                    <div class="example-item">μ̂ = X̄</div>
+                    <div class="example-item">σ̂² = (1/n)Σ(xᵢ - X̄)²</div>
+                </div>
+            </div>
+            
+            <div class="method-column">
+                <div class="method-header">
+                    <div class="method-name">Maximum A Posteriori</div>
+                    <div class="method-subtitle">Estimation (MAP)</div>
+                </div>
+                
+                <div class="concept-box">
+                    <div class="box-title">Objective</div>
+                    <div class="formula">argmax P(θ|data)</div>
+                </div>
+                
+                <div class="concept-box">
+                    <div class="box-title">Using Bayes' Theorem</div>
+                    <div class="formula">P(θ|data) = P(data|θ)P(θ) / P(data)</div>
+                </div>
+                
+                <div class="relationship-box">
+                    <div class="box-title">MAP = MLE + Prior</div>
+                    <div class="relationship-formula">Incorporates prior knowledge</div>
+                </div>
+                
+                <div class="example-box">
+                    <div class="example-title">Key Difference</div>
+                    <div style="font-size: 16px; color: #333; text-align: center; line-height: 1.6; padding: 10px;">
+                        MAP includes <strong>prior P(θ)</strong><br>
+                        Allows regularization and<br>
+                        incorporation of domain knowledge
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bottom-section">
+            <div class="comparison-table">
+                <div class="table-title">Quick Comparison</div>
+                <div class="comparison-row">
+                    <div class="comparison-cell header">Aspect</div>
+                    <div class="comparison-cell header">MLE</div>
+                    <div class="comparison-cell header">MAP</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-cell">Prior</div>
+                    <div class="comparison-cell">No prior</div>
+                    <div class="comparison-cell">Uses prior P(θ)</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-cell">Focus</div>
+                    <div class="comparison-cell">Data only</div>
+                    <div class="comparison-cell">Data + knowledge</div>
+                </div>
+            </div>
+            
+            <div class="ml-application">
+                <div class="ml-title">Regression Use</div>
+                <div class="ml-content">
+                    MLE/MAP estimate regression coefficients
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

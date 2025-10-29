@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Concept-based Explanations</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Aptos', 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+            padding: 25px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 15px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 18px;
+        }
+        
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 20px;
+            height: calc(100% - 100px);
+        }
+        
+        .visualization-section {
+            background: #F8F9FA;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 15px;
+        }
+        
+        .section-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .concept-space {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            height: 260px;
+            position: relative;
+            margin-bottom: 15px;
+        }
+        
+        .axes {
+            position: absolute;
+            left: 30px;
+            right: 30px;
+            top: 30px;
+            bottom: 30px;
+        }
+        
+        .axis-line {
+            position: absolute;
+            background: #333;
+        }
+        
+        .x-axis {
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+        }
+        
+        .y-axis {
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+        }
+        
+        .axis-label {
+            position: absolute;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .x-label {
+            bottom: -25px;
+            right: -30px;
+        }
+        
+        .y-label {
+            top: -25px;
+            left: -15px;
+        }
+        
+        .concept-vector {
+            position: absolute;
+            width: 3px;
+            background: #1E64C8;
+            transform-origin: bottom left;
+            opacity: 0.7;
+        }
+        
+        .vector-arrow {
+            position: absolute;
+            top: -6px;
+            left: 50%;
+            transform: translateX(-50%) rotate(45deg);
+            width: 10px;
+            height: 10px;
+            border-top: 3px solid #1E64C8;
+            border-right: 3px solid #1E64C8;
+        }
+        
+        .concept-point {
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 3px solid;
+            background: white;
+            transform: translate(-50%, 50%);
+        }
+        
+        .point-striped {
+            border-color: #E63946;
+            left: 70%;
+            bottom: 65%;
+        }
+        
+        .point-smooth {
+            border-color: #28A745;
+            left: 30%;
+            bottom: 35%;
+        }
+        
+        .point-dotted {
+            border-color: #F4A261;
+            left: 55%;
+            bottom: 50%;
+        }
+        
+        .concept-label {
+            position: absolute;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+        
+        .label-striped {
+            color: #E63946;
+            background: #FFE0E0;
+            left: 72%;
+            bottom: 68%;
+        }
+        
+        .label-smooth {
+            color: #28A745;
+            background: #D4EDDA;
+            left: 32%;
+            bottom: 32%;
+        }
+        
+        .label-dotted {
+            color: #F4A261;
+            background: #FFF9E6;
+            left: 57%;
+            bottom: 53%;
+        }
+        
+        .example-box {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 12px;
+        }
+        
+        .example-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .example-content {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .example-formula {
+            background: #F8F9FA;
+            padding: 8px;
+            border-radius: 4px;
+            margin-top: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            text-align: center;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .methods-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .method-card {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 10px;
+            padding: 15px;
+            flex: 1;
+        }
+        
+        .method-card.highlight {
+            border-color: #1E64C8;
+            background: #E8F2FF;
+        }
+        
+        .method-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        
+        .method-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .method-subtitle {
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 6px;
+        }
+        
+        .method-text {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .method-list {
+            font-size: 14px;
+            color: #666;
+            margin-top: 6px;
+            line-height: 1.5;
+        }
+        
+        .method-list div {
+            margin-bottom: 3px;
+            padding-left: 16px;
+            position: relative;
+        }
+        
+        .method-list div:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #1E64C8;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Concept-based Explanations</div>
+        <div class="subtitle">Human-understandable concepts vs individual features</div>
+        
+        <div class="main-grid">
+            <!-- Visualization Section -->
+            <div class="visualization-section">
+                <div class="section-title">Concept Space Visualization</div>
+                
+                <div class="concept-space">
+                    <div class="axes">
+                        <div class="axis-line x-axis"></div>
+                        <div class="axis-line y-axis"></div>
+                        <div class="axis-label x-label">Feature Space</div>
+                        <div class="axis-label y-label">Activation</div>
+                        
+                        <!-- Concept vectors (represented as points with labels) -->
+                        <div class="concept-point point-striped"></div>
+                        <div class="concept-label label-striped">Striped</div>
+                        
+                        <div class="concept-point point-smooth"></div>
+                        <div class="concept-label label-smooth">Smooth</div>
+                        
+                        <div class="concept-point point-dotted"></div>
+                        <div class="concept-label label-dotted">Dotted</div>
+                    </div>
+                </div>
+                
+                <div class="example-box">
+                    <div class="example-title">Example: Texture Classification</div>
+                    <div class="example-content">
+                        <strong>Concept:</strong> "Striped pattern"<br>
+                        <strong>Model Sensitivity:</strong> How much does prediction change when moving in the direction of the striped concept?
+                    </div>
+                    <div class="example-formula">
+                        S_C = ∇_C f(x) · v_C
+                    </div>
+                    <div style="text-align: center; font-size: 13px; color: #666; margin-top: 6px;">
+                        Directional derivative along concept vector
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Methods Section -->
+            <div class="methods-section">
+                <div class="method-card highlight">
+                    <div class="method-icon">🎯</div>
+                    <div class="method-title">TCAV</div>
+                    <div class="method-subtitle">Testing with Concept Activation Vectors</div>
+                    <div class="method-text">
+                        Measures model sensitivity to user-defined concepts
+                    </div>
+                    <div class="method-list">
+                        <div>Define concept examples</div>
+                        <div>Train linear classifier</div>
+                        <div>Compute directional derivatives</div>
+                    </div>
+                </div>
+                
+                <div class="method-card">
+                    <div class="method-icon">🤖</div>
+                    <div class="method-title">ACE</div>
+                    <div class="method-subtitle">Automated Concept-based Explanation</div>
+                    <div class="method-text">
+                        Automatically discovers important concepts without human input
+                    </div>
+                    <div class="method-list">
+                        <div>Segment activation space</div>
+                        <div>Cluster similar patterns</div>
+                        <div>Identify meaningful concepts</div>
+                    </div>
+                </div>
+                
+                <div class="method-card">
+                    <div class="method-icon">🔗</div>
+                    <div class="method-title">Concept Bottleneck</div>
+                    <div class="method-subtitle">Models with Interpretable Layers</div>
+                    <div class="method-text">
+                        Intermediate layer explicitly represents human-interpretable concepts
+                    </div>
+                    <div class="method-list">
+                        <div>Prediction = f(concepts)</div>
+                        <div>Intervene on concepts</div>
+                        <div>Inherently interpretable</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

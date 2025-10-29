@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Head Attention Implementation Points</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 30px;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            flex: 1;
+        }
+        
+        .category-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .category-title {
+            background: #1E64C8;
+            color: white;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .point-card {
+            background: #f0f7ff;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 16px;
+            display: flex;
+            gap: 12px;
+            align-items: start;
+        }
+        
+        .point-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .point-content {
+            flex: 1;
+        }
+        
+        .point-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .point-description {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .highlight {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .tradeoff-section {
+            grid-column: 1 / -1;
+            background: #fff9f0;
+            border: 2px solid #f59e0b;
+            border-radius: 8px;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .tradeoff-icon {
+            font-size: 36px;
+            flex-shrink: 0;
+        }
+        
+        .tradeoff-content {
+            flex: 1;
+        }
+        
+        .tradeoff-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #d97700;
+            margin-bottom: 4px;
+        }
+        
+        .tradeoff-text {
+            font-size: 17px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .tradeoff-highlight {
+            font-weight: 600;
+            color: #d97700;
+        }
+        
+        .optimization-badge {
+            background: white;
+            border: 2px solid #16a34a;
+            border-radius: 6px;
+            padding: 8px 14px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #16a34a;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Multi-Head Attention Implementation Points</div>
+        
+        <div class="content-grid">
+            <div class="category-section">
+                <div class="category-title">🔧 Initialization & Configuration</div>
+                
+                <div class="point-card">
+                    <div class="point-icon">⚙️</div>
+                    <div class="point-content">
+                        <div class="point-title">Projection Matrices</div>
+                        <div class="point-description">
+                            Initialize with <span class="highlight">appropriate scaling</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="point-card">
+                    <div class="point-icon">📏</div>
+                    <div class="point-content">
+                        <div class="point-title">Head Dimensions</div>
+                        <div class="point-description">
+                            Use <span class="highlight">same d_k</span> across all heads for simplicity
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="category-section">
+                <div class="category-title">🛡️ Regularization & Stability</div>
+                
+                <div class="point-card">
+                    <div class="point-icon">💧</div>
+                    <div class="point-content">
+                        <div class="point-title">Dropout</div>
+                        <div class="point-description">
+                            Apply after <span class="highlight">attention weights</span> and <span class="highlight">final output</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="point-card">
+                    <div class="point-icon">📊</div>
+                    <div class="point-content">
+                        <div class="point-title">Layer Normalization</div>
+                        <div class="point-description">
+                            Typically after multi-head attention
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="point-card">
+                    <div class="point-icon">🔄</div>
+                    <div class="point-content">
+                        <div class="point-title">Residual Connections</div>
+                        <div class="point-description">
+                            Help <span class="highlight">gradient flow</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="category-section">
+                <div class="category-title">⚡ Optimization</div>
+                
+                <div class="point-card">
+                    <div class="point-icon">📐</div>
+                    <div class="point-content">
+                        <div class="point-title">Long Sequences</div>
+                        <div class="point-description">
+                            Consider <span class="highlight">linear attention variants</span> for efficiency
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="optimization-badge">
+                    ✓ Efficient computation strategies
+                </div>
+            </div>
+            
+            <div class="category-section">
+                <div class="category-title">💡 Best Practices</div>
+                
+                <div class="point-card" style="flex: 1;">
+                    <div class="point-icon">✅</div>
+                    <div class="point-content">
+                        <div class="point-description" style="line-height: 1.6;">
+                            • Consistent head dimensions<br>
+                            • Proper normalization placement<br>
+                            • Efficient memory management
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tradeoff-section">
+                <div class="tradeoff-icon">⚖️</div>
+                <div class="tradeoff-content">
+                    <div class="tradeoff-title">Key Trade-off</div>
+                    <div class="tradeoff-text">
+                        <span class="tradeoff-highlight">More heads</span> increase model capacity but require
+                        <span class="tradeoff-highlight">higher computational cost</span> — balance based on task requirements
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

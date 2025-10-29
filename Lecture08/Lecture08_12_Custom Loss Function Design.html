@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Loss Function Design</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 30px;
+            background: #ffffff;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .main-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            height: 450px;
+        }
+        
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .motivation-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            color: white;
+            padding: 18px 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.3);
+        }
+        
+        .motivation-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .motivation-text {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .considerations-box {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 18px;
+            flex: 1;
+        }
+        
+        .considerations-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+        }
+        
+        .consideration-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .consideration-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .consideration-number {
+            background: #1E64C8;
+            color: white;
+            min-width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        
+        .consideration-text {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.5;
+            padding-top: 3px;
+        }
+        
+        .combination-box {
+            background: #e8f1fd;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 16px 18px;
+        }
+        
+        .combination-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .combination-formula {
+            background: white;
+            border: 1px dashed #1E64C8;
+            border-radius: 6px;
+            padding: 12px;
+            text-align: center;
+            font-size: 16px;
+            color: #1E64C8;
+            font-weight: 500;
+        }
+        
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .process-flow {
+            background: #f0f8ff;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 18px;
+            flex: 1;
+        }
+        
+        .flow-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+        }
+        
+        .flow-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .flow-step {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .step-arrow {
+            background: #1E64C8;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .step-content {
+            flex: 1;
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 6px;
+            padding: 10px 14px;
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+        
+        .examples-box {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 18px;
+        }
+        
+        .examples-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+        }
+        
+        .example-categories {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .example-category {
+            background: #e8f1fd;
+            border-left: 4px solid #1E64C8;
+            border-radius: 4px;
+            padding: 10px 14px;
+        }
+        
+        .category-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .category-examples {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="main-title">Custom Loss Function Design</div>
+            <div class="subtitle">Aligning Training with Domain-Specific Objectives</div>
+        </div>
+        
+        <div class="content-grid">
+            <div class="left-section">
+                <div class="motivation-box">
+                    <div class="motivation-title">💡 Why Custom Loss?</div>
+                    <div class="motivation-text">
+                        Standard loss functions may not sufficiently reflect domain-specific objectives<br>
+                        Align learning with business metrics or task requirements
+                    </div>
+                </div>
+                
+                <div class="considerations-box">
+                    <div class="considerations-title">⚙️ Key Considerations</div>
+                    <div class="consideration-list">
+                        <div class="consideration-item">
+                            <div class="consideration-number">1</div>
+                            <div class="consideration-text">
+                                <strong>Differentiability</strong><br>Ensure differentiability
+                            </div>
+                        </div>
+                        <div class="consideration-item">
+                            <div class="consideration-number">2</div>
+                            <div class="consideration-text">
+                                <strong>Computational Efficiency</strong><br>Computational efficiency
+                            </div>
+                        </div>
+                        <div class="consideration-item">
+                            <div class="consideration-number">3</div>
+                            <div class="consideration-text">
+                                <strong>Numerical Stability</strong><br>Numerical stability
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="combination-box">
+                    <div class="combination-title">🔗 Multi-term Combination</div>
+                    <div class="combination-formula">
+                        L<sub>total</sub> = w₁·L₁ + w₂·L₂ + ... + wₙ·Lₙ
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-section">
+                <div class="process-flow">
+                    <div class="flow-title">📋 Design Process</div>
+                    <div class="flow-steps">
+                        <div class="flow-step">
+                            <div class="step-arrow">1</div>
+                            <div class="step-content">
+                                Verify reflection of true optimization goal
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="step-arrow">2</div>
+                            <div class="step-content">
+                                Combine multiple loss terms with weighting coefficients
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="step-arrow">3</div>
+                            <div class="step-content">
+                                Validate performance improvement with held-out data
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="examples-box">
+                    <div class="examples-title">🎯 Domain Examples</div>
+                    <div class="example-categories">
+                        <div class="example-category">
+                            <div class="category-name">Computer Vision</div>
+                            <div class="category-examples">
+                                Perceptual Loss (Style Transfer), SSIM (Image Quality)
+                            </div>
+                        </div>
+                        <div class="example-category">
+                            <div class="category-name">Medical Imaging</div>
+                            <div class="category-examples">
+                                Diagnostic accuracy optimization, sensitivity/specificity balance
+                            </div>
+                        </div>
+                        <div class="example-category">
+                            <div class="category-name">Financial Forecasting</div>
+                            <div class="category-examples">
+                                Risk-adjusted returns, prediction confidence intervals
+                            </div>
+                        </div>
+                        <div class="example-category">
+                            <div class="category-name">NLP Tasks</div>
+                            <div class="category-examples">
+                                Semantic similarity, contextual consistency
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

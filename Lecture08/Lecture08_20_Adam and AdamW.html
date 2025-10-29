@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adam and AdamW</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 30px;
+            background: #ffffff;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .main-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .content-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            height: 440px;
+        }
+        
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .adam-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.3);
+        }
+        
+        .adam-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .adam-desc {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .combination-box {
+            background: #f0f8ff;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 16px;
+        }
+        
+        .combination-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .combination-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .combination-item {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 6px;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .combination-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .combination-desc {
+            font-size: 16px;
+            color: #2c3e50;
+        }
+        
+        .parameters-box {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 18px;
+            flex: 1;
+        }
+        
+        .parameters-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+        }
+        
+        .param-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .param-item {
+            background: #e8f1fd;
+            border-left: 4px solid #1E64C8;
+            padding: 10px 12px;
+            border-radius: 4px;
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+        
+        .param-value {
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .adamw-box {
+            background: linear-gradient(135deg, #28a745 0%, #34b755 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+        }
+        
+        .adamw-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .adamw-desc {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .improvements-box {
+            background: #f8f9fa;
+            border: 2px solid #28a745;
+            border-radius: 8px;
+            padding: 18px;
+        }
+        
+        .improvements-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #28a745;
+            margin-bottom: 12px;
+        }
+        
+        .improvement-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .improvement-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .improvement-icon {
+            background: #28a745;
+            color: white;
+            min-width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .improvement-text {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+        
+        .comparison-box {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 18px;
+            flex: 1;
+        }
+        
+        .comparison-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .comparison-item {
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+            border: 2px solid;
+        }
+        
+        .comparison-item.adam {
+            background: #e8f1fd;
+            border-color: #1E64C8;
+        }
+        
+        .comparison-item.adamw {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+        
+        .comparison-label {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        
+        .comparison-item.adam .comparison-label {
+            color: #1E64C8;
+        }
+        
+        .comparison-item.adamw .comparison-label {
+            color: #28a745;
+        }
+        
+        .comparison-desc {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+        
+        .recommendation-box {
+            background: linear-gradient(135deg, #28a745 0%, #34b755 100%);
+            color: white;
+            padding: 16px 18px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+        }
+        
+        .recommendation-icon {
+            font-size: 24px;
+            margin-bottom: 6px;
+        }
+        
+        .recommendation-text {
+            font-size: 17px;
+            font-weight: 600;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="main-title">Adam and AdamW</div>
+            <div class="subtitle">Most Popular and Improved Optimizers</div>
+        </div>
+        
+        <div class="content-layout">
+            <div class="left-section">
+                <div class="adam-box">
+                    <div class="adam-title">⭐ Adam</div>
+                    <div class="adam-desc">
+                        Most popular optimization algorithm<br>
+                        combining Momentum and RMSprop
+                    </div>
+                </div>
+                
+                <div class="combination-box">
+                    <div class="combination-title">Moment Estimates</div>
+                    <div class="combination-grid">
+                        <div class="combination-item">
+                            <div class="combination-label">First Moment</div>
+                            <div class="combination-desc">Mean</div>
+                        </div>
+                        <div class="combination-item">
+                            <div class="combination-label">Second Moment</div>
+                            <div class="combination-desc">Variance</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="parameters-box">
+                    <div class="parameters-title">🎛️ Default Parameters</div>
+                    <div class="param-list">
+                        <div class="param-item">
+                            <span class="param-value">β₁ = 0.9</span> (Momentum)
+                        </div>
+                        <div class="param-item">
+                            <span class="param-value">β₂ = 0.999</span> (RMSprop)
+                        </div>
+                        <div class="param-item">
+                            <span class="param-value">ε = 1e-8</span> (Numerical stability)
+                        </div>
+                        <div class="param-item">
+                            Includes <strong>Bias Correction</strong><br>
+                            for moment estimates in early iterations
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-section">
+                <div class="adamw-box">
+                    <div class="adamw-title">🔧 AdamW</div>
+                    <div class="adamw-desc">
+                        Improved Adam using<br>
+                        decoupled weight decay regularization
+                    </div>
+                </div>
+                
+                <div class="improvements-box">
+                    <div class="improvements-title">✨ Key Improvements</div>
+                    <div class="improvement-list">
+                        <div class="improvement-item">
+                            <div class="improvement-icon">1</div>
+                            <div class="improvement-text">
+                                Fixes weight decay implementation bug in original Adam
+                            </div>
+                        </div>
+                        <div class="improvement-item">
+                            <div class="improvement-icon">2</div>
+                            <div class="improvement-text">
+                                Decouples L2 regularization from gradient-based optimization
+                            </div>
+                        </div>
+                        <div class="improvement-item">
+                            <div class="improvement-icon">3</div>
+                            <div class="improvement-text">
+                                Generally better generalization than Adam
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="comparison-box">
+                    <div class="comparison-title">Key Difference</div>
+                    <div class="comparison-grid">
+                        <div class="comparison-item adam">
+                            <div class="comparison-label">Adam</div>
+                            <div class="comparison-desc">
+                                Weight decay<br>in gradient
+                            </div>
+                        </div>
+                        <div class="comparison-item adamw">
+                            <div class="comparison-label">AdamW</div>
+                            <div class="comparison-desc">
+                                Weight decay<br>decoupled
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="recommendation-box">
+                    <div class="recommendation-icon">🏆</div>
+                    <div class="recommendation-text">
+                        AdamW is the preferred choice<br>
+                        in modern deep learning
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

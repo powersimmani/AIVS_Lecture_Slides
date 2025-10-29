@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gradient Descent Review</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 30px;
+            background: #ffffff;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .main-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .content-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            height: 440px;
+        }
+        
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .core-concept {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.3);
+        }
+        
+        .concept-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .concept-desc {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .update-rule-box {
+            background: #f0f8ff;
+            border: 3px solid #1E64C8;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        
+        .rule-label {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .formula {
+            background: white;
+            border: 2px dashed #1E64C8;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+            font-size: 22px;
+            color: #1E64C8;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .formula-note {
+            font-size: 16px;
+            color: #2c3e50;
+            text-align: center;
+            line-height: 1.4;
+        }
+        
+        .mechanism-box {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 18px;
+            flex: 1;
+        }
+        
+        .mechanism-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+        }
+        
+        .mechanism-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .mechanism-icon {
+            background: #1E64C8;
+            color: white;
+            min-width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .mechanism-text {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+        
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .characteristics-box {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 18px;
+            flex: 1;
+        }
+        
+        .char-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+        }
+        
+        .char-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .char-item {
+            background: #e8f1fd;
+            border-left: 4px solid #1E64C8;
+            padding: 12px 14px;
+            border-radius: 4px;
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+        
+        .challenges-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 16px 18px;
+        }
+        
+        .challenges-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        .challenge-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .challenge-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 16px;
+            color: #856404;
+            line-height: 1.4;
+        }
+        
+        .challenge-icon {
+            color: #ffc107;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .tradeoff-box {
+            background: #e8f1fd;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 16px 18px;
+            text-align: center;
+        }
+        
+        .tradeoff-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .tradeoff-text {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="main-title">Gradient Descent Review</div>
+            <div class="subtitle">Foundation for Modern Neural Network Training</div>
+        </div>
+        
+        <div class="content-layout">
+            <div class="left-section">
+                <div class="core-concept">
+                    <div class="concept-title">🎯 Core Concept</div>
+                    <div class="concept-desc">
+                        Iterative optimization algorithm to minimize loss function<br>
+                        Updates parameters in negative gradient direction
+                    </div>
+                </div>
+                
+                <div class="update-rule-box">
+                    <div class="rule-label">Update Rule</div>
+                    <div class="formula">θ = θ - η∇L(θ)</div>
+                    <div class="formula-note">
+                        η: Learning Rate
+                    </div>
+                </div>
+                
+                <div class="mechanism-box">
+                    <div class="mechanism-title">💡 How It Works</div>
+                    <div class="mechanism-item">
+                        <div class="mechanism-icon">1</div>
+                        <div class="mechanism-text">
+                            Calculate loss gradient for all parameters
+                        </div>
+                    </div>
+                    <div class="mechanism-item">
+                        <div class="mechanism-icon">2</div>
+                        <div class="mechanism-text">
+                            Move parameters in opposite direction of gradient
+                        </div>
+                    </div>
+                    <div class="mechanism-item">
+                        <div class="mechanism-icon">3</div>
+                        <div class="mechanism-text">
+                            Repeat until convergence
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-section">
+                <div class="characteristics-box">
+                    <div class="char-title">📊 Key Characteristics</div>
+                    <div class="char-list">
+                        <div class="char-item">
+                            Foundation of all modern neural network training algorithms
+                        </div>
+                        <div class="char-item">
+                            Convergence depends on learning rate, loss landscape, and initialization
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="challenges-box">
+                    <div class="challenges-title">⚠️ Challenges</div>
+                    <div class="challenge-list">
+                        <div class="challenge-item">
+                            <div class="challenge-icon">•</div>
+                            <div>Can get trapped in local minima</div>
+                        </div>
+                        <div class="challenge-item">
+                            <div class="challenge-icon">•</div>
+                            <div>Saddle point problems</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tradeoff-box">
+                    <div class="tradeoff-title">⚖️ Trade-off</div>
+                    <div class="tradeoff-text">
+                        Convergence speed ↔ Stability
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inception Module</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            overflow-x: hidden;
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 960px;
+            width: 95vw;
+            min-height: 540px;
+            height: auto;
+            background: white;
+            position: relative;
+            overflow: hidden;
+            padding: 20px 35px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 16px;
+        }
+        
+        .core-idea {
+            background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+            border: 3px solid #1E64C8;
+            border-radius: 12px;
+            padding: 10px 18px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        
+        .core-label {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 3px;
+        }
+        
+        .core-text {
+            font-size: 16px;
+            color: #333;
+        }
+        
+        .architecture-box {
+            background: white;
+            border: 3px solid #1E64C8;
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 14px;
+        }
+        
+        .arch-title {
+            text-align: center;
+            font-size: 15px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 12px;
+        }
+        
+        .inception-structure {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .input-layer {
+            background: linear-gradient(135deg, #90CAF9 0%, #64B5F6 100%);
+            border: 3px solid #1E88E5;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+        }
+        
+        .parallel-paths {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        
+        .path-column {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .path-box {
+            border: 2px solid;
+            border-radius: 6px;
+            padding: 8px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .path-box:hover {
+            transform: scale(1.05);
+        }
+        
+        .path-column.path1 .path-box {
+            background: linear-gradient(135deg, #FFE0B2 0%, #FFCC80 100%);
+            border-color: #FF9800;
+            color: #E65100;
+        }
+        
+        .path-column.path2 .path-box {
+            background: linear-gradient(135deg, #C8E6C9 0%, #A5D6A7 100%);
+            border-color: #4CAF50;
+            color: #2E7D32;
+        }
+        
+        .path-column.path3 .path-box {
+            background: linear-gradient(135deg, #E1BEE7 0%, #CE93D8 100%);
+            border-color: #9C27B0;
+            color: #6A1B9A;
+        }
+        
+        .path-column.path4 .path-box {
+            background: linear-gradient(135deg, #B2DFDB 0%, #80CBC4 100%);
+            border-color: #009688;
+            color: #00695C;
+        }
+        
+        .concat-layer {
+            background: linear-gradient(135deg, #7E57C2 0%, #5E35B1 100%);
+            border: 3px solid #4527A0;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        
+        .feature-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 10px 12px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            background: #F0F6FF;
+            transform: translateY(-2px);
+        }
+        
+        .feature-icon {
+            font-size: 22px;
+            margin-bottom: 4px;
+        }
+        
+        .feature-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 3px;
+        }
+        
+        .feature-text {
+            font-size: 13px;
+            color: #333;
+            line-height: 1.3;
+        }
+        
+        .evolution-box {
+            background: #E8F5E9;
+            border: 2px solid #4CAF50;
+            border-radius: 8px;
+            padding: 8px 14px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+        
+        .evolution-item {
+            text-align: center;
+        }
+        
+        .evolution-label {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 3px;
+        }
+        
+        .evolution-value {
+            font-size: 15px;
+            font-weight: 700;
+            color: #2E7D32;
+        }
+    
+        
+        /* Responsive adjustments */
+        @media screen and (max-width: 1000px) {
+            .container {
+                width: 98vw !important;
+                max-width: 98vw !important;
+                padding: 15px 20px !important;
+            }
+        }
+        
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: 10px 15px !important;
+            }
+            
+            .title {
+                font-size: 20px !important;
+            }
+            
+            /* 그리드 레이아웃을 1열로 */
+            .challenges-grid,
+            .comparison-grid,
+            .solutions-grid,
+            .guide-grid,
+            .findings-section,
+            .benefits-grid,
+            .applications-section,
+            .guidelines-grid,
+            .components-section,
+            .techniques-grid,
+            .deployment-section,
+            .savings-grid,
+            .results-grid,
+            .functions-grid,
+            .features-grid,
+            .comparison-section,
+            .bottom-section {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .gradient-flow,
+            .network-visual,
+            .flow-steps,
+            .bottleneck-flow,
+            .example-flow,
+            .dimension-box,
+            .inception-structure .parallel-paths,
+            .comparison-section {
+                flex-direction: column !important;
+                gap: 15px !important;
+            }
+            
+            .arrow-back,
+            .arrow,
+            .arrow-right,
+            .arrow-connector,
+            .conv-arrow {
+                transform: rotate(90deg);
+                margin: 5px 0 !important;
+            }
+            
+            /* SVG와 layer 위치 조정 */
+            .layers-container,
+            .architecture-visual {
+                height: auto !important;
+                min-height: 300px !important;
+            }
+            
+            .layer-node {
+                position: relative !important;
+                left: auto !important;
+                margin: 10px 0 !important;
+            }
+        }
+        
+        @media screen and (max-width: 480px) {
+            .container {
+                padding: 8px 10px !important;
+            }
+            
+            .title {
+                font-size: 18px !important;
+            }
+            
+            .card-header,
+            .scenario-label,
+            .card-title,
+            .function-title,
+            .arch-title,
+            .flow-title {
+                font-size: 16px !important;
+            }
+            
+            .layer-box,
+            .conv-box,
+            .step-circle,
+            .layer-circle {
+                font-size: 14px !important;
+                padding: 8px !important;
+            }
+        }
+    
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Inception Module: Multi-Scale Architecture</div>
+        
+        <div class="core-idea">
+            <div class="core-label">CORE IDEA</div>
+            <div class="core-text">Multiple parallel conv paths with different receptive fields</div>
+        </div>
+        
+        <div class="architecture-box">
+            <div class="arch-title">Inception Structure</div>
+            <div class="inception-structure">
+                <div class="input-layer">Input Feature Map</div>
+                
+                <div class="parallel-paths">
+                    <div class="path-column path1">
+                        <div class="path-box">1×1 reduce</div>
+                        <div class="path-box">1×1 conv</div>
+                    </div>
+                    
+                    <div class="path-column path2">
+                        <div class="path-box">1×1 reduce</div>
+                        <div class="path-box">3×3 conv</div>
+                    </div>
+                    
+                    <div class="path-column path3">
+                        <div class="path-box">1×1 reduce</div>
+                        <div class="path-box">5×5 conv</div>
+                    </div>
+                    
+                    <div class="path-column path4">
+                        <div class="path-box">Max pool</div>
+                        <div class="path-box">1×1 conv</div>
+                    </div>
+                </div>
+                
+                <div class="concat-layer">Concatenation (Filter Concat)</div>
+            </div>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <div class="feature-title">Multi-Scale</div>
+                <div class="feature-text">Captures features at different scales</div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <div class="feature-title">Efficiency</div>
+                <div class="feature-text">1×1 convs reduce dimensions first</div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🌈</div>
+                <div class="feature-title">Diversity</div>
+                <div class="feature-text">Rich feature diversity</div>
+            </div>
+        </div>
+        
+        <div class="evolution-box">
+            <div class="evolution-item">
+                <div class="evolution-label">GoogLeNet (v1)</div>
+                <div class="evolution-value">ImageNet 2014</div>
+            </div>
+            <div class="evolution-item">
+                <div class="evolution-label">Inception v2/v3</div>
+                <div class="evolution-value">Factorized Convs</div>
+            </div>
+            <div class="evolution-item">
+                <div class="evolution-label">Inception-ResNet</div>
+                <div class="evolution-value">Skip Connections</div>
+            </div>
+            <div class="evolution-item">
+                <div class="evolution-label">Modern Influence</div>
+                <div class="evolution-value">EfficientNet, NAS</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

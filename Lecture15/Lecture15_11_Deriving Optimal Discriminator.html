@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deriving Optimal Discriminator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            position: relative;
+            padding: 25px 40px;
+        }
+        
+        .header {
+            margin-bottom: 20px;
+        }
+        
+        .part-label {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .main-content {
+            display: flex;
+            gap: 25px;
+        }
+        
+        .left-panel {
+            flex: 1.2;
+        }
+        
+        .derivation-flow {
+            background: #F5F9FF;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        
+        .flow-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 18px;
+        }
+        
+        .derivation-step {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin-bottom: 12px;
+            position: relative;
+        }
+        
+        .step-number {
+            position: absolute;
+            top: -12px;
+            left: 16px;
+            background: #1E64C8;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+        }
+        
+        .step-desc {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 8px;
+            padding-left: 8px;
+        }
+        
+        .step-formula {
+            font-family: 'Courier New', monospace;
+            font-size: 15px;
+            color: #1E64C8;
+            background: #F5F9FF;
+            padding: 10px 14px;
+            border-radius: 6px;
+            text-align: center;
+            line-height: 1.6;
+        }
+        
+        .arrow-down-small {
+            text-align: center;
+            color: #1E64C8;
+            font-size: 20px;
+            margin: 5px 0;
+        }
+        
+        .result-box {
+            background: #1E64C8;
+            color: white;
+            border-radius: 10px;
+            padding: 18px 20px;
+            margin-top: 15px;
+        }
+        
+        .result-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .result-formula {
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            font-weight: 600;
+            background: rgba(255,255,255,0.2);
+            padding: 12px 16px;
+            border-radius: 6px;
+            text-align: center;
+        }
+        
+        .right-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .info-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 16px 20px;
+        }
+        
+        .info-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin: 8px 0;
+            font-size: 15px;
+            color: #333;
+        }
+        
+        .bullet {
+            color: #1E64C8;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .graph-box {
+            background: #F5F9FF;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 16px;
+            flex: 1;
+        }
+        
+        .graph-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        
+        .decision-boundary {
+            position: relative;
+            height: 140px;
+            background: white;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        .boundary-half {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 15px;
+            font-weight: 500;
+        }
+        
+        .boundary-half.real {
+            left: 0;
+            background: rgba(30, 100, 200, 0.1);
+            color: #1E64C8;
+        }
+        
+        .boundary-half.fake {
+            right: 0;
+            background: rgba(255, 107, 107, 0.1);
+            color: #FF6B6B;
+        }
+        
+        .boundary-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: #4CAF50;
+        }
+        
+        .boundary-label {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: #4CAF50;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            white-space: nowrap;
+            z-index: 2;
+        }
+        
+        .boundary-text {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        
+        .boundary-value {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="part-label">Part 2/6: Mathematical Foundations</div>
+            <div class="title">Deriving Optimal Discriminator</div>
+        </div>
+        
+        <div class="main-content">
+            <div class="left-panel">
+                <div class="derivation-flow">
+                    <div class="flow-title">Derivation Steps</div>
+                    
+                    <div class="derivation-step">
+                        <div class="step-number">1</div>
+                        <div class="step-desc">Fix generator G, optimize D</div>
+                        <div class="step-formula">
+                            max<sub>D</sub> V(D,G)
+                        </div>
+                    </div>
+                    
+                    <div class="arrow-down-small">↓</div>
+                    
+                    <div class="derivation-step">
+                        <div class="step-number">2</div>
+                        <div class="step-desc">Calculus of variations</div>
+                        <div class="step-formula">
+                            ∂V/∂D(x) = 0
+                        </div>
+                    </div>
+                    
+                    <div class="arrow-down-small">↓</div>
+                    
+                    <div class="derivation-step">
+                        <div class="step-number">3</div>
+                        <div class="step-desc">Solve for optimal D</div>
+                        <div class="step-formula">
+                            p<sub>data</sub>(x)/D(x) = p<sub>g</sub>(x)/(1-D(x))
+                        </div>
+                    </div>
+                    
+                    <div class="result-box">
+                        <div class="result-title">✓ Optimal Discriminator</div>
+                        <div class="result-formula">
+                            D*(x) = p<sub>data</sub>(x) / (p<sub>data</sub>(x) + p<sub>g</sub>(x))
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <div class="info-box">
+                    <div class="info-title">Key Insights</div>
+                    <div class="info-item">
+                        <span class="bullet">•</span>
+                        <span>Sigmoid activation natural choice</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="bullet">•</span>
+                        <span>Binary cross-entropy loss</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="bullet">•</span>
+                        <span>Depends on density ratio</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="bullet">•</span>
+                        <span>Neural network approximation</span>
+                    </div>
+                </div>
+                
+                <div class="graph-box">
+                    <div class="graph-title">Decision Boundary</div>
+                    <div class="decision-boundary">
+                        <div class="boundary-half real">
+                            <div class="boundary-text">Real Data</div>
+                            <div class="boundary-value">D(x) → 1</div>
+                        </div>
+                        <div class="boundary-half fake">
+                            <div class="boundary-text">Fake Data</div>
+                            <div class="boundary-value">D(x) → 0</div>
+                        </div>
+                        <div class="boundary-line"></div>
+                        <div class="boundary-label">D* = 0.5</div>
+                    </div>
+                    <div style="margin-top: 12px; text-align: center; font-size: 14px; color: #666;">
+                        At equilibrium: p<sub>g</sub> = p<sub>data</sub>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

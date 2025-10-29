@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Need for Seq2Seq</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #ffffff;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 40px;
+            position: relative;
+        }
+        
+        .main-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 24px;
+        }
+        
+        .content {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            height: calc(100% - 50px);
+        }
+        
+        /* Problem Statement */
+        .problem-section {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 16px 20px;
+            border-radius: 8px;
+        }
+        
+        .problem-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        .problem-examples {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        
+        .example-box {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+            border: 2px solid #ffc107;
+        }
+        
+        .example-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #856404;
+            margin-bottom: 6px;
+        }
+        
+        .example-text {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .arrow-transform {
+            font-size: 20px;
+            color: #ffc107;
+            margin: 4px 0;
+        }
+        
+        /* Solution: Encoder-Decoder */
+        .solution-section {
+            flex: 1;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            border-top: 5px solid #1E64C8;
+        }
+        
+        .solution-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        
+        .architecture {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            height: 100%;
+        }
+        
+        .encoder-section, .decoder-section {
+            flex: 1;
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .encoder-section {
+            border-top: 4px solid #1E64C8;
+        }
+        
+        .decoder-section {
+            border-top: 4px solid #5088d4;
+        }
+        
+        .section-label {
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .label-encoder {
+            color: #1E64C8;
+        }
+        
+        .label-decoder {
+            color: #5088d4;
+        }
+        
+        .icon-badge {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+        }
+        
+        .badge-encoder {
+            background: #1E64C8;
+        }
+        
+        .badge-decoder {
+            background: #5088d4;
+        }
+        
+        .sequence-visual {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+            width: 100%;
+        }
+        
+        .seq-boxes {
+            display: flex;
+            gap: 6px;
+        }
+        
+        .seq-item {
+            width: 50px;
+            height: 40px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+        }
+        
+        .item-encoder {
+            background: #1E64C8;
+        }
+        
+        .item-decoder {
+            background: #5088d4;
+        }
+        
+        .seq-label {
+            font-size: 13px;
+            color: #666;
+            text-align: center;
+        }
+        
+        .context-vector {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #1E64C8, #5088d4);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 6px 20px rgba(30, 100, 200, 0.3);
+            flex-shrink: 0;
+        }
+        
+        .context-label {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        
+        .context-value {
+            font-size: 16px;
+        }
+        
+        .description-box {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 3px solid currentColor;
+            text-align: center;
+        }
+        
+        .desc-encoder {
+            border-color: #1E64C8;
+        }
+        
+        .desc-decoder {
+            border-color: #5088d4;
+        }
+        
+        .desc-text {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.4;
+        }
+        
+        .key-features {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+        }
+        
+        .feature-item {
+            flex: 1;
+            background: #e8f2ff;
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+            border: 2px solid #1E64C8;
+        }
+        
+        .feature-icon {
+            font-size: 20px;
+            margin-bottom: 6px;
+        }
+        
+        .feature-text {
+            font-size: 14px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-title">Why Do We Need Sequence-to-Sequence Models?</div>
+        
+        <div class="content">
+            <!-- Problem Statement -->
+            <div class="problem-section">
+                <div class="problem-title">⚠ Challenge: Variable-Length Input → Variable-Length Output</div>
+                <div class="problem-examples">
+                    <div class="example-box">
+                        <div class="example-label">Machine Translation</div>
+                        <div class="example-text">Hello</div>
+                        <div class="arrow-transform">→</div>
+                        <div class="example-text">안녕하세요</div>
+                    </div>
+                    <div class="example-box">
+                        <div class="example-label">Text Summarization</div>
+                        <div class="example-text">Long article...</div>
+                        <div class="arrow-transform">→</div>
+                        <div class="example-text">Short summary</div>
+                    </div>
+                    <div class="example-box">
+                        <div class="example-label">Question Answering</div>
+                        <div class="example-text">What is AI?</div>
+                        <div class="arrow-transform">→</div>
+                        <div class="example-text">AI is...</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Solution: Encoder-Decoder Architecture -->
+            <div class="solution-section">
+                <div class="solution-title">✓ Solution: Encoder-Decoder Architecture</div>
+                
+                <div class="architecture">
+                    <!-- Encoder -->
+                    <div class="encoder-section">
+                        <div class="section-label label-encoder">
+                            <div class="icon-badge badge-encoder">E</div>
+                            <span>Encoder</span>
+                        </div>
+                        
+                        <div class="sequence-visual">
+                            <div class="seq-boxes">
+                                <div class="seq-item item-encoder">x₁</div>
+                                <div class="seq-item item-encoder">x₂</div>
+                                <div class="seq-item item-encoder">x₃</div>
+                            </div>
+                            <div class="seq-label">Input Sequence<br/>(variable length)</div>
+                        </div>
+                        
+                        <div style="font-size: 24px; color: #1E64C8;">↓</div>
+                        
+                        <div class="description-box desc-encoder">
+                            <div class="desc-text">
+                                <strong>Compress</strong> input<br/>into fixed representation
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Context Vector -->
+                    <div class="context-vector">
+                        <div class="context-label">Context</div>
+                        <div class="context-value">c</div>
+                    </div>
+                    
+                    <!-- Decoder -->
+                    <div class="decoder-section">
+                        <div class="section-label label-decoder">
+                            <div class="icon-badge badge-decoder">D</div>
+                            <span>Decoder</span>
+                        </div>
+                        
+                        <div class="sequence-visual">
+                            <div class="seq-boxes">
+                                <div class="seq-item item-decoder">y₁</div>
+                                <div class="seq-item item-decoder">y₂</div>
+                                <div class="seq-item item-decoder">y₃</div>
+                                <div class="seq-item item-decoder">y₄</div>
+                            </div>
+                            <div class="seq-label">Output Sequence<br/>(variable length)</div>
+                        </div>
+                        
+                        <div style="font-size: 24px; color: #5088d4;">↑</div>
+                        
+                        <div class="description-box desc-decoder">
+                            <div class="desc-text">
+                                <strong>Generate</strong> output<br/>from context vector
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="key-features">
+                    <div class="feature-item">
+                        <div class="feature-icon">🔄</div>
+                        <div class="feature-text">Handles different lengths</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">📦</div>
+                        <div class="feature-text">Fixed context vector</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🎯</div>
+                        <div class="feature-text">End-to-end learning</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdaGrad</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 30px;
+            background: #ffffff;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .main-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .content-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            height: 440px;
+        }
+        
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .concept-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.3);
+        }
+        
+        .concept-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .concept-desc {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .update-rule-box {
+            background: #f0f8ff;
+            border: 3px solid #1E64C8;
+            border-radius: 10px;
+            padding: 18px;
+        }
+        
+        .rule-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .formula {
+            background: white;
+            border: 2px dashed #1E64C8;
+            border-radius: 8px;
+            padding: 14px;
+            text-align: center;
+            font-size: 18px;
+            color: #1E64C8;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .formula-note {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+        
+        .mechanism-box {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 18px;
+            flex: 1;
+        }
+        
+        .mechanism-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+        }
+        
+        .mechanism-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .mechanism-item {
+            background: #e8f1fd;
+            border: 2px solid #1E64C8;
+            border-radius: 6px;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .mechanism-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .mechanism-desc {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+        
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .benefits-box {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 18px;
+        }
+        
+        .benefits-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+        }
+        
+        .benefit-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .benefit-icon {
+            background: #28a745;
+            color: white;
+            min-width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .benefit-text {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+        
+        .drawbacks-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 18px;
+        }
+        
+        .drawbacks-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #856404;
+            margin-bottom: 12px;
+        }
+        
+        .drawback-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .drawback-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .drawback-icon {
+            background: #ffc107;
+            color: #856404;
+            min-width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .drawback-text {
+            font-size: 16px;
+            color: #856404;
+            line-height: 1.5;
+        }
+        
+        .epsilon-box {
+            background: #e8f1fd;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .epsilon-symbol {
+            background: #1E64C8;
+            color: white;
+            min-width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .epsilon-info {
+            flex: 1;
+        }
+        
+        .epsilon-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .epsilon-desc {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+        
+        .usecases-box {
+            background: linear-gradient(135deg, #e8f1fd 0%, #f0f8ff 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 14px 16px;
+            flex: 1;
+        }
+        
+        .usecases-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .usecase-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .usecase-item {
+            background: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 16px;
+            color: #2c3e50;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="main-title">AdaGrad (Adaptive Gradient Algorithm)</div>
+            <div class="subtitle">Parameter-Specific Learning Rate Adaptation</div>
+        </div>
+        
+        <div class="content-layout">
+            <div class="left-section">
+                <div class="concept-box">
+                    <div class="concept-title">🎯 Core Concept</div>
+                    <div class="concept-desc">
+                        Adaptively adjusts learning rate<br>
+                        for each parameter based on historical gradients
+                    </div>
+                </div>
+                
+                <div class="update-rule-box">
+                    <div class="rule-title">Update Rule</div>
+                    <div class="formula">
+                        θ = θ - η/√(G + ε) ⊙ ∇L(θ)
+                    </div>
+                    <div class="formula-note">
+                        G: Cumulative sum of squared gradients<br>
+                        ⊙: Element-wise multiplication
+                    </div>
+                </div>
+                
+                <div class="mechanism-box">
+                    <div class="mechanism-title">⚙️ Adaptation Mechanism</div>
+                    <div class="mechanism-grid">
+                        <div class="mechanism-item">
+                            <div class="mechanism-label">Infrequent Parameters</div>
+                            <div class="mechanism-desc">Larger updates</div>
+                        </div>
+                        <div class="mechanism-item">
+                            <div class="mechanism-label">Frequent Parameters</div>
+                            <div class="mechanism-desc">Smaller updates</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-section">
+                <div class="benefits-box">
+                    <div class="benefits-title">✨ Benefits</div>
+                    <div class="benefit-list">
+                        <div class="benefit-item">
+                            <div class="benefit-icon">✓</div>
+                            <div class="benefit-text">
+                                No manual learning rate tuning needed
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-icon">✓</div>
+                            <div class="benefit-text">
+                                Advantageous for sparse data
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="drawbacks-box">
+                    <div class="drawbacks-title">⚠️ Main Drawbacks</div>
+                    <div class="drawback-list">
+                        <div class="drawback-item">
+                            <div class="drawback-icon">!</div>
+                            <div class="drawback-text">
+                                Learning rate monotonically decreases over time
+                            </div>
+                        </div>
+                        <div class="drawback-item">
+                            <div class="drawback-icon">!</div>
+                            <div class="drawback-text">
+                                Aggressive decay can cause premature training stop
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="epsilon-box">
+                    <div class="epsilon-symbol">ε</div>
+                    <div class="epsilon-info">
+                        <div class="epsilon-title">Epsilon Parameter</div>
+                        <div class="epsilon-desc">
+                            Prevents division by zero (typically 1e-8)
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="usecases-box">
+                    <div class="usecases-title">💡 Best Use Cases</div>
+                    <div class="usecase-list">
+                        <div class="usecase-item">Sparse Data Processing</div>
+                        <div class="usecase-item">Natural Language Processing</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

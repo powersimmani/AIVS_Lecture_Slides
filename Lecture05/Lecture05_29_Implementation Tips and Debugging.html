@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Implementation Tips and Best Practices</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Aptos', 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            padding: 40px;
+        }
+        
+        .main-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+        }
+        
+        .content-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            flex: 1;
+        }
+        
+        .category-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .category-header {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            color: white;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .training-header {
+            background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
+        }
+        
+        .debugging-header {
+            background: linear-gradient(135deg, #ff9800 0%, #ffa726 100%);
+        }
+        
+        .optimization-header {
+            background: linear-gradient(135deg, #9c27b0 0%, #ba68c8 100%);
+        }
+        
+        .header-icon {
+            font-size: 20px;
+        }
+        
+        .tips-container {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            overflow-y: auto;
+        }
+        
+        .training-container {
+            border-color: #4caf50;
+        }
+        
+        .debugging-container {
+            border-color: #ff9800;
+        }
+        
+        .optimization-container {
+            border-color: #9c27b0;
+        }
+        
+        .tip-card {
+            background: white;
+            border-left: 4px solid #1E64C8;
+            border-radius: 4px;
+            padding: 10px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .training-card {
+            border-color: #4caf50;
+        }
+        
+        .debugging-card {
+            border-color: #ff9800;
+        }
+        
+        .optimization-card {
+            border-color: #9c27b0;
+        }
+        
+        .tip-icon {
+            width: 28px;
+            height: 28px;
+            background: #1E64C8;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+        
+        .training-icon {
+            background: #4caf50;
+        }
+        
+        .debugging-icon {
+            background: #ff9800;
+        }
+        
+        .optimization-icon {
+            background: #9c27b0;
+        }
+        
+        .tip-content {
+            flex: 1;
+        }
+        
+        .tip-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 3px;
+        }
+        
+        .tip-description {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.4;
+        }
+        
+        .checklist-section {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        
+        .checklist-card {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .checklist-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .checklist-items {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 14px;
+            line-height: 1.3;
+        }
+        
+        .check-box {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #1E64C8;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 1px;
+            background: white;
+        }
+        
+        .check-mark {
+            color: #4caf50;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .item-text {
+            color: #555;
+        }
+        
+        .warning-box {
+            grid-column: 1 / -1;
+            background: #fff3cd;
+            border-left: 4px solid #ff9800;
+            padding: 12px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .warning-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        
+        .warning-content {
+            flex: 1;
+        }
+        
+        .warning-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #e65100;
+            margin-bottom: 4px;
+        }
+        
+        .warning-text {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-title">Implementation Tips and Best Practices</div>
+        
+        <div class="content-layout">
+            <!-- Data & Training -->
+            <div class="category-section">
+                <div class="category-header training-header">
+                    <span class="header-icon">📊</span>
+                    <span>Data & Training</span>
+                </div>
+                <div class="tips-container training-container">
+                    <div class="tip-card training-card">
+                        <div class="tip-icon training-icon">1</div>
+                        <div class="tip-content">
+                            <div class="tip-title">Normalize Inputs</div>
+                            <div class="tip-description">Scale features to [0,1] or standardize (mean=0, std=1)</div>
+                        </div>
+                    </div>
+                    
+                    <div class="tip-card training-card">
+                        <div class="tip-icon training-icon">2</div>
+                        <div class="tip-content">
+                            <div class="tip-title">Weight Initialization</div>
+                            <div class="tip-description">Use Xavier/He initialization, avoid zeros</div>
+                        </div>
+                    </div>
+                    
+                    <div class="tip-card training-card">
+                        <div class="tip-icon training-icon">3</div>
+                        <div class="tip-content">
+                            <div class="tip-title">Split Data Properly</div>
+                            <div class="tip-description">Train (70-80%), Validation (10-15%), Test (10-15%)</div>
+                        </div>
+                    </div>
+                    
+                    <div class="tip-card training-card">
+                        <div class="tip-icon training-icon">4</div>
+                        <div class="tip-content">
+                            <div class="tip-title">Monitor Training</div>
+                            <div class="tip-description">Track both training and validation loss</div>
+                        </div>
+                    </div>
+                    
+                    <div class="tip-card training-card">
+                        <div class="tip-icon training-icon">5</div>
+                        <div class="tip-content">
+                            <div class="tip-title">Use Early Stopping</div>
+                            <div class="tip-description">Stop when validation loss stops improving</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Debugging -->
+            <div class="category-section">
+                <div class="category-header debugging-header">
+                    <span class="header-icon">🐛</span>
+                    <span>Debugging</span>
+                </div>
+                <div class="tips-container debugging-container">
+                    <div class="tip-card debugging-card">
+                        <div class="tip-icon debugging-icon">1</div>
+                        <div class="tip-content">
+                            <div class="tip-title">Start Simple</div>
+                            <div class="tip-description">Begin with small network, overfit small dataset first</div>
+                        </div>
+                    </div>
+                    
+                    <div class="tip-card debugging-card">
+                        <div class="tip-icon debugging-icon">2</div>
+                        <div class="tip-content">
+                            <div class="tip-title">Check Gradient Flow</div>
+                            <div class="tip-description">Verify gradients are not vanishing or exploding</div>
+                        </div>
+                    </div>
+                    
+                    <div class="tip-card debugging-card">
+                        <div class="tip-icon debugging-icon">3</div>
+                        <div class="tip-content">
+                            <div class="tip-title">Visualize Activations</div>
+                            <div class="tip-description">Plot activation distributions across layers</div>
+                        </div>
+                    </div>
+                    
+                    <div class="tip-card debugging-card">
+                        <div class="tip-icon debugging-icon">4</div>
+                        <div class="tip-content">
+                            <div class="tip-title">Numerical Gradient Check</div>
+                            <div class="tip-description">Verify backprop implementation with finite differences</div>
+                        </div>
+                    </div>
+                    
+                    <div class="tip-card debugging-card">
+                        <div class="tip-icon debugging-icon">5</div>
+                        <div class="tip-content">
+                            <div class="tip-title">Log Everything</div>
+                            <div class="tip-description">Track loss, accuracy, learning rate, gradients</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Hyperparameters -->
+            <div class="category-section">
+                <div class="category-header">
+                    <span class="header-icon">⚙️</span>
+                    <span>Hyperparameters</span>
+                </div>
+                <div class="tips-container">
+                    <div class="tip-card">
+                        <div class="tip-icon">1</div>
+                        <div class="tip-content">
+                            <div class="tip-title">Learning Rate</div>
+                            <div class="tip-description">Start with 0.001-0.01, use learning rate schedules</div>
+                        </div>
+                    </div>
+                    
+                    <div class="tip-card">
+                        <div class="tip-icon">2</div>
+                        <div class="tip-content">
+                            <div class="tip-title">Batch Size</div>
+                            <div class="tip-description">Common: 32, 64, 128. Larger = more stable but slower</div>
+                        </div>
+                    </div>
+                    
+                    <div class="tip-card">
+                        <div class="tip-icon">3</div>
+                        <div class="tip-content">
+                            <div class="tip-title">Number of Epochs</div>
+                            <div class="tip-description">Start high, use early stopping to prevent overfitting</div>
+                        </div>
+                    </div>
+                    
+                    <div class="tip-card">
+                        <div class="tip-icon">4</div>
+                        <div class="tip-content">
+                            <div class="tip-title">Regularization</div>
+                            <div class="tip-description">Try L2 (λ=0.01), dropout (p=0.5), or both</div>
+                        </div>
+                    </div>
+                    
+                    <div class="tip-card">
+                        <div class="tip-icon">5</div>
+                        <div class="tip-content">
+                            <div class="tip-title">Grid/Random Search</div>
+                            <div class="tip-description">Systematically tune hyperparameters</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Optimization -->
+            <div class="category-section">
+                <div class="category-header optimization-header">
+                    <span class="header-icon">🚀</span>
+                    <span>Optimization</span>
+                </div>
+                <div class="tips-container optimization-container">
+                    <div class="tip-card optimization-card">
+                        <div class="tip-icon optimization-icon">1</div>
+                        <div class="tip-content">
+                            <div class="tip-title">Use Adam Optimizer</div>
+                            <div class="tip-description">Good default choice with adaptive learning rates</div>
+                        </div>
+                    </div>
+                    
+                    <div class="tip-card optimization-card">
+                        <div class="tip-icon optimization-icon">2</div>
+                        <div class="tip-content">
+                            <div class="tip-title">Batch Normalization</div>
+                            <div class="tip-description">Normalize layer inputs for faster convergence</div>
+                        </div>
+                    </div>
+                    
+                    <div class="tip-card optimization-card">
+                        <div class="tip-icon optimization-icon">3</div>
+                        <div class="tip-content">
+                            <div class="tip-title">Learning Rate Decay</div>
+                            <div class="tip-description">Reduce LR when validation loss plateaus</div>
+                        </div>
+                    </div>
+                    
+                    <div class="tip-card optimization-card">
+                        <div class="tip-icon optimization-icon">4</div>
+                        <div class="tip-content">
+                            <div class="tip-title">Gradient Clipping</div>
+                            <div class="tip-description">Prevent exploding gradients (clip at norm=5)</div>
+                        </div>
+                    </div>
+                    
+                    <div class="tip-card optimization-card">
+                        <div class="tip-icon optimization-icon">5</div>
+                        <div class="tip-content">
+                            <div class="tip-title">Data Augmentation</div>
+                            <div class="tip-description">Artificially expand training data (images, text)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Checklist Section -->
+            <div class="checklist-section">
+                <div class="checklist-card">
+                    <div class="checklist-title">Before Training</div>
+                    <div class="checklist-items">
+                        <div class="checklist-item">
+                            <div class="check-box"><span class="check-mark">✓</span></div>
+                            <div class="item-text">Data normalized</div>
+                        </div>
+                        <div class="checklist-item">
+                            <div class="check-box"><span class="check-mark">✓</span></div>
+                            <div class="item-text">Train/val/test split</div>
+                        </div>
+                        <div class="checklist-item">
+                            <div class="check-box"><span class="check-mark">✓</span></div>
+                            <div class="item-text">Weights initialized</div>
+                        </div>
+                        <div class="checklist-item">
+                            <div class="check-box"><span class="check-mark">✓</span></div>
+                            <div class="item-text">Loss function chosen</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="checklist-card">
+                    <div class="checklist-title">During Training</div>
+                    <div class="checklist-items">
+                        <div class="checklist-item">
+                            <div class="check-box"><span class="check-mark">✓</span></div>
+                            <div class="item-text">Monitor loss curves</div>
+                        </div>
+                        <div class="checklist-item">
+                            <div class="check-box"><span class="check-mark">✓</span></div>
+                            <div class="item-text">Check gradient norms</div>
+                        </div>
+                        <div class="checklist-item">
+                            <div class="check-box"><span class="check-mark">✓</span></div>
+                            <div class="item-text">Save best model</div>
+                        </div>
+                        <div class="checklist-item">
+                            <div class="check-box"><span class="check-mark">✓</span></div>
+                            <div class="item-text">Log metrics regularly</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="checklist-card">
+                    <div class="checklist-title">After Training</div>
+                    <div class="checklist-items">
+                        <div class="checklist-item">
+                            <div class="check-box"><span class="check-mark">✓</span></div>
+                            <div class="item-text">Evaluate on test set</div>
+                        </div>
+                        <div class="checklist-item">
+                            <div class="check-box"><span class="check-mark">✓</span></div>
+                            <div class="item-text">Analyze errors</div>
+                        </div>
+                        <div class="checklist-item">
+                            <div class="check-box"><span class="check-mark">✓</span></div>
+                            <div class="item-text">Document results</div>
+                        </div>
+                        <div class="checklist-item">
+                            <div class="check-box"><span class="check-mark">✓</span></div>
+                            <div class="item-text">Compare baselines</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="warning-box">
+                <div class="warning-icon">⚠️</div>
+                <div class="warning-content">
+                    <div class="warning-title">Common Pitfalls to Avoid</div>
+                    <div class="warning-text">
+                        Not shuffling data • Forgetting to normalize • Using test set for hyperparameter tuning • Setting learning rate too high • Ignoring validation metrics • Not saving checkpoints
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

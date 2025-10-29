@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gradient Flow Analysis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            overflow-x: hidden;
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 960px;
+            width: 95vw;
+            min-height: 540px;
+            height: auto;
+            background: white;
+            position: relative;
+            overflow: hidden;
+            padding: 20px 35px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+        }
+        
+        .goal-box {
+            background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+            border: 3px solid #1E64C8;
+            border-radius: 12px;
+            padding: 12px 20px;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .goal-label {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .goal-text {
+            font-size: 16px;
+            color: #333;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        
+        .activation-card {
+            background: white;
+            border: 3px solid;
+            border-radius: 10px;
+            padding: 12px 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .activation-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+        }
+        
+        .activation-card.relu {
+            background: linear-gradient(135deg, #FFF3E0 0%, #FFE0B2 100%);
+            border-color: #FF9800;
+        }
+        
+        .activation-card.sigmoid {
+            background: linear-gradient(135deg, #FFEBEE 0%, #FFCDD2 100%);
+            border-color: #F44336;
+        }
+        
+        .activation-card.leaky {
+            background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+            border-color: #4CAF50;
+        }
+        
+        .activation-card.smooth {
+            background: linear-gradient(135deg, #F3E5F5 0%, #E1BEE7 100%);
+            border-color: #9C27B0;
+        }
+        
+        .card-header {
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .activation-card.relu .card-header {
+            color: #E65100;
+        }
+        
+        .activation-card.sigmoid .card-header {
+            color: #C62828;
+        }
+        
+        .activation-card.leaky .card-header {
+            color: #2E7D32;
+        }
+        
+        .activation-card.smooth .card-header {
+            color: #6A1B9A;
+        }
+        
+        .status-badge {
+            font-size: 12px;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+        
+        .status-badge.warning {
+            background: #FFC107;
+            color: #333;
+        }
+        
+        .status-badge.poor {
+            background: #F44336;
+            color: white;
+        }
+        
+        .status-badge.good {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .status-badge.excellent {
+            background: #9C27B0;
+            color: white;
+        }
+        
+        .gradient-property {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.5;
+            margin-bottom: 6px;
+        }
+        
+        .gradient-value {
+            font-weight: 700;
+        }
+        
+        .gradient-bar {
+            height: 8px;
+            background: #E0E0E0;
+            border-radius: 4px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+        
+        .gradient-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        
+        .activation-card.relu .gradient-fill {
+            width: 50%;
+            background: #FF9800;
+        }
+        
+        .activation-card.sigmoid .gradient-fill {
+            width: 25%;
+            background: #F44336;
+        }
+        
+        .activation-card.leaky .gradient-fill {
+            width: 80%;
+            background: #4CAF50;
+        }
+        
+        .activation-card.smooth .gradient-fill {
+            width: 95%;
+            background: #9C27B0;
+        }
+        
+        .ideal-property {
+            background: #E8F5E9;
+            border: 3px solid #4CAF50;
+            border-radius: 10px;
+            padding: 12px 18px;
+            margin-bottom: 12px;
+        }
+        
+        .ideal-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #2E7D32;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .ideal-title::before {
+            content: "🎯";
+            margin-right: 8px;
+        }
+        
+        .ideal-text {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .modern-approach {
+            background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+            border: 3px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px 18px;
+            text-align: center;
+        }
+        
+        .approach-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .approach-formula {
+            font-size: 17px;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .approach-component {
+            color: #1E64C8;
+            font-weight: 700;
+        }
+    
+        
+        /* Responsive adjustments */
+        @media screen and (max-width: 1000px) {
+            .container {
+                width: 98vw !important;
+                max-width: 98vw !important;
+                padding: 15px 20px !important;
+            }
+        }
+        
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: 10px 15px !important;
+            }
+            
+            .title {
+                font-size: 20px !important;
+            }
+            
+            /* 그리드 레이아웃을 1열로 */
+            .challenges-grid,
+            .comparison-grid,
+            .solutions-grid,
+            .guide-grid,
+            .findings-section,
+            .benefits-grid,
+            .applications-section,
+            .guidelines-grid,
+            .components-section,
+            .techniques-grid,
+            .deployment-section {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .gradient-flow,
+            .network-visual,
+            .flow-steps,
+            .comparison-section {
+                flex-direction: column !important;
+                gap: 15px !important;
+            }
+            
+            .arrow-back,
+            .arrow,
+            .arrow-right,
+            .arrow-connector {
+                transform: rotate(90deg);
+                margin: 5px 0 !important;
+            }
+        }
+        
+        @media screen and (max-width: 480px) {
+            .container {
+                padding: 8px 10px !important;
+            }
+            
+            .title {
+                font-size: 18px !important;
+            }
+            
+            .card-header,
+            .scenario-label,
+            .card-title,
+            .function-title {
+                font-size: 16px !important;
+            }
+        }
+    
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Gradient Flow Analysis</div>
+        
+        <div class="goal-box">
+            <div class="goal-label">GOAL</div>
+            <div class="goal-text">Understand how gradients propagate through different activations</div>
+        </div>
+        
+        <div class="comparison-grid">
+            <div class="activation-card relu">
+                <div class="card-header">
+                    <span>ReLU</span>
+                    <span class="status-badge warning">⚠ Risky</span>
+                </div>
+                <div class="gradient-property">
+                    <span class="gradient-value">Binary gradient (0 or 1)</span>
+                </div>
+                <div class="gradient-property" style="font-size: 14px; color: #666;">
+                    Can block gradients completely when inactive
+                </div>
+                <div class="gradient-bar">
+                    <div class="gradient-fill"></div>
+                </div>
+            </div>
+            
+            <div class="activation-card sigmoid">
+                <div class="card-header">
+                    <span>Sigmoid / Tanh</span>
+                    <span class="status-badge poor">✗ Poor</span>
+                </div>
+                <div class="gradient-property">
+                    <span class="gradient-value">Max derivative: 0.25</span>
+                </div>
+                <div class="gradient-property" style="font-size: 14px; color: #666;">
+                    Gradients shrink exponentially
+                </div>
+                <div class="gradient-bar">
+                    <div class="gradient-fill"></div>
+                </div>
+            </div>
+            
+            <div class="activation-card leaky">
+                <div class="card-header">
+                    <span>Leaky ReLU</span>
+                    <span class="status-badge good">✓ Good</span>
+                </div>
+                <div class="gradient-property">
+                    <span class="gradient-value">Always allows gradient</span>
+                </div>
+                <div class="gradient-property" style="font-size: 14px; color: #666;">
+                    Small slope in negative region
+                </div>
+                <div class="gradient-bar">
+                    <div class="gradient-fill"></div>
+                </div>
+            </div>
+            
+            <div class="activation-card smooth">
+                <div class="card-header">
+                    <span>Smooth (ELU, GELU, Swish)</span>
+                    <span class="status-badge excellent">★ Best</span>
+                </div>
+                <div class="gradient-property">
+                    <span class="gradient-value">Continuous gradients</span>
+                </div>
+                <div class="gradient-property" style="font-size: 14px; color: #666;">
+                    Better for optimization
+                </div>
+                <div class="gradient-bar">
+                    <div class="gradient-fill"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="ideal-property">
+            <div class="ideal-title">Ideal Property</div>
+            <div class="ideal-text">Gradients neither vanish nor explode across depth</div>
+        </div>
+        
+        <div class="modern-approach">
+            <div class="approach-title">Modern Approach</div>
+            <div class="approach-formula">
+                <span class="approach-component">Good Activations</span> + 
+                <span class="approach-component">Normalization</span> + 
+                <span class="approach-component">Skip Connections</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

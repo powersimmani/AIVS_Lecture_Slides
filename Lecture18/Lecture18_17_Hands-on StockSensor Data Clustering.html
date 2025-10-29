@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hands-on: Stock/Sensor Data Clustering</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            padding: 25px;
+            gap: 18px;
+        }
+        
+        .header {
+            text-align: center;
+        }
+        
+        .main-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .workflow-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            flex: 1;
+        }
+        
+        .workflow-step {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+        
+        .workflow-step:hover {
+            background: #f0f6ff;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(30, 100, 200, 0.2);
+        }
+        
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        
+        .step-number {
+            background: #1E64C8;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        
+        .step-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            line-height: 1.3;
+        }
+        
+        .step-content {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+        }
+        
+        .step-desc {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.4;
+        }
+        
+        .step-tech {
+            display: inline-block;
+            background: #e8f4ff;
+            color: #1E64C8;
+            padding: 5px 12px;
+            border-radius: 14px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 6px;
+            align-self: flex-start;
+        }
+        
+        .step-icon {
+            font-size: 32px;
+            text-align: center;
+            margin-top: auto;
+            padding-top: 8px;
+        }
+        
+        .data-step {
+            background: #fff8f0;
+            border-color: #ff9800;
+        }
+        
+        .data-step .step-number {
+            background: #ff9800;
+        }
+        
+        .data-step .step-title {
+            color: #ff9800;
+        }
+        
+        .preprocessing-step {
+            background: #f3e5f5;
+            border-color: #9C27B0;
+        }
+        
+        .preprocessing-step .step-number {
+            background: #9C27B0;
+        }
+        
+        .preprocessing-step .step-title {
+            color: #9C27B0;
+        }
+        
+        .comparison-step {
+            background: #e8f5e9;
+            border-color: #4CAF50;
+        }
+        
+        .comparison-step .step-number {
+            background: #4CAF50;
+        }
+        
+        .comparison-step .step-title {
+            color: #4CAF50;
+        }
+        
+        .footer-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+        
+        .dataset-box {
+            background: #fff8f0;
+            border: 2px solid #ff9800;
+            border-radius: 10px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .dataset-icon {
+            font-size: 32px;
+        }
+        
+        .dataset-content {
+            flex: 1;
+        }
+        
+        .dataset-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #ff9800;
+            margin-bottom: 6px;
+        }
+        
+        .dataset-list {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.3;
+        }
+        
+        .question-box {
+            background: #e8f4ff;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .question-icon {
+            font-size: 32px;
+        }
+        
+        .question-content {
+            flex: 1;
+        }
+        
+        .question-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .question-text {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.3;
+        }
+        
+        .badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #4CAF50;
+            color: white;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .step-methods {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 6px;
+        }
+        
+        .method-tag {
+            background: white;
+            border: 1px solid #1E64C8;
+            color: #1E64C8;
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="main-title">Hands-on: Stock/Sensor Data Clustering</div>
+            <div class="subtitle">Time Series Clustering Implementation Workflow</div>
+        </div>
+        
+        <div class="workflow-container">
+            <!-- Step 1: Dataset -->
+            <div class="workflow-step data-step">
+                <div class="step-header">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Dataset Selection</div>
+                </div>
+                <div class="step-content">
+                    <div class="step-desc">Yahoo Finance or UCI sensor data</div>
+                    <div class="step-icon">📊</div>
+                </div>
+            </div>
+            
+            <!-- Step 2: Preprocessing -->
+            <div class="workflow-step preprocessing-step">
+                <div class="step-header">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Preprocessing</div>
+                </div>
+                <div class="step-content">
+                    <div class="step-desc">Normalization & resampling</div>
+                    <div class="step-methods">
+                        <div class="method-tag">z-score</div>
+                        <div class="method-tag">interpolate</div>
+                    </div>
+                    <div class="step-icon">🔧</div>
+                </div>
+            </div>
+            
+            <!-- Step 3: DTW Implementation -->
+            <div class="workflow-step">
+                <div class="step-header">
+                    <div class="step-number">3</div>
+                    <div class="step-title">DTW Distance</div>
+                </div>
+                <div class="step-content">
+                    <div class="step-desc">Implement distance function</div>
+                    <div class="step-tech">Python/NumPy</div>
+                    <div class="step-icon">📐</div>
+                </div>
+            </div>
+            
+            <!-- Step 4: Hierarchical Clustering -->
+            <div class="workflow-step">
+                <div class="step-header">
+                    <div class="step-number">4</div>
+                    <div class="step-title">Hierarchical Clustering</div>
+                </div>
+                <div class="step-content">
+                    <div class="step-desc">Apply DTW linkage</div>
+                    <div class="step-tech">scipy.cluster</div>
+                    <div class="step-icon">🌳</div>
+                </div>
+            </div>
+            
+            <!-- Step 5: K-Shape Comparison -->
+            <div class="workflow-step comparison-step">
+                <div class="step-header">
+                    <div class="step-number">5</div>
+                    <div class="step-title">Compare K-Shape</div>
+                </div>
+                <div class="step-content">
+                    <div class="step-desc">Alternative algorithm comparison</div>
+                    <div class="step-tech">tslearn</div>
+                    <div class="step-icon">⚖️</div>
+                </div>
+            </div>
+            
+            <!-- Step 6: Visualization -->
+            <div class="workflow-step">
+                <div class="step-header">
+                    <div class="step-number">6</div>
+                    <div class="step-title">Visualization</div>
+                </div>
+                <div class="step-content">
+                    <div class="step-desc">Plot clusters & centroids</div>
+                    <div class="step-tech">matplotlib</div>
+                    <div class="step-icon">📈</div>
+                </div>
+            </div>
+            
+            <!-- Step 7: Interpretation -->
+            <div class="workflow-step">
+                <div class="badge">Analysis</div>
+                <div class="step-header">
+                    <div class="step-number">7</div>
+                    <div class="step-title">Interpret Results</div>
+                </div>
+                <div class="step-content">
+                    <div class="step-desc">Identify similar behaviors</div>
+                    <div class="step-icon">🔍</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-section">
+            <div class="dataset-box">
+                <div class="dataset-icon">🗂️</div>
+                <div class="dataset-content">
+                    <div class="dataset-title">Data Sources</div>
+                    <div class="dataset-list">Yahoo Finance (stocks) • UCI ML Repository (sensors)</div>
+                </div>
+            </div>
+            
+            <div class="question-box">
+                <div class="question-icon">💡</div>
+                <div class="question-content">
+                    <div class="question-title">Key Question</div>
+                    <div class="question-text">Which stocks/sensors behave similarly?</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

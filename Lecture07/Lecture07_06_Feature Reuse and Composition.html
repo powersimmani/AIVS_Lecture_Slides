@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feature Reuse and Composition</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            overflow-x: hidden;
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 960px;
+            width: 95vw;
+            min-height: 540px;
+            height: auto;
+            background: white;
+            position: relative;
+            overflow: visible;
+            padding: 20px 35px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 25px;
+        }
+        
+        .architecture {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            margin-bottom: 25px;
+            position: relative;
+            height: 200px;
+        }
+        
+        .layer-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .layer-label {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+        
+        .feature-node {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 600;
+            border: 3px solid #1E64C8;
+            background: white;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-node:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(30, 100, 200, 0.3);
+        }
+        
+        .layer-column.layer-l .feature-node {
+            background: linear-gradient(135deg, #E3F2FD, #BBDEFB);
+        }
+        
+        .layer-column.layer-l1 .feature-node {
+            background: linear-gradient(135deg, #64B5F6, #1E88E5);
+            color: white;
+        }
+        
+        .connection-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .arrow-connector {
+            font-size: 40px;
+            color: #1E64C8;
+            font-weight: bold;
+        }
+        
+        .composition-formula {
+            background: #F0F6FF;
+            border-left: 5px solid #1E64C8;
+            padding: 18px 25px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .formula-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 10px;
+        }
+        
+        .formula-content {
+            font-size: 20px;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .formula-content .highlight {
+            color: #1E64C8;
+            font-size: 24px;
+        }
+        
+        .benefits-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        
+        .benefit-card {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 14px 16px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .benefit-card:hover {
+            border-color: #1E64C8;
+            background: #F8FBFF;
+            transform: translateY(-3px);
+        }
+        
+        .benefit-card .icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        
+        .benefit-card .text {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+            font-weight: 500;
+        }
+        
+        .example-box {
+            background: #FFF8E6;
+            border-left: 5px solid #FFA500;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        
+        .example-box .label {
+            font-size: 14px;
+            font-weight: 700;
+            color: #CC8400;
+            margin-bottom: 5px;
+        }
+        
+        .example-box .content {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .node-count {
+            font-size: 13px;
+            color: #666;
+            margin-top: 8px;
+            font-weight: 600;
+        }
+    
+        
+        /* Responsive adjustments */
+        @media screen and (max-width: 1000px) {
+            .container {
+                width: 98vw !important;
+                max-width: 98vw !important;
+                padding: 15px 20px !important;
+            }
+        }
+        
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: 10px 15px !important;
+            }
+            
+            .title {
+                font-size: 20px !important;
+            }
+            
+            /* 아키텍처를 세로로 배치 */
+            .architecture {
+                flex-direction: column !important;
+                height: auto !important;
+                gap: 20px !important;
+            }
+            
+            .arrow-connector {
+                transform: rotate(90deg);
+                margin: 10px 0 !important;
+            }
+            
+            /* SVG 연결선 숨기기 (모바일에서는 복잡함) */
+            .connection-lines {
+                display: none;
+            }
+            
+            /* 그리드를 1열로 */
+            .benefits-container {
+                grid-template-columns: 1fr !important;
+                gap: 10px !important;
+            }
+            
+            .feature-node {
+                width: 60px !important;
+                height: 60px !important;
+                font-size: 14px !important;
+            }
+        }
+        
+        @media screen and (max-width: 480px) {
+            .container {
+                padding: 8px 10px !important;
+            }
+            
+            .title {
+                font-size: 18px !important;
+                margin-bottom: 15px !important;
+            }
+            
+            .layer-label {
+                font-size: 14px !important;
+            }
+            
+            .formula-content {
+                font-size: 16px !important;
+            }
+            
+            .formula-content .highlight {
+                font-size: 18px !important;
+            }
+            
+            .feature-node {
+                width: 50px !important;
+                height: 50px !important;
+                font-size: 13px !important;
+            }
+            
+            .benefit-card .icon {
+                font-size: 24px !important;
+            }
+            
+            .benefit-card .text {
+                font-size: 14px !important;
+            }
+        }
+    
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Feature Reuse and Composition</div>
+        
+        <div class="architecture">
+            <div class="layer-column layer-l">
+                <div class="layer-label">Layer l</div>
+                <div class="feature-node">F₁</div>
+                <div class="feature-node">F₂</div>
+                <div class="feature-node">F₃</div>
+                <div class="node-count">k features</div>
+            </div>
+            
+            <div class="arrow-connector">→</div>
+            
+            <div class="layer-column layer-l1">
+                <div class="layer-label">Layer l+1</div>
+                <div class="feature-node">P₁</div>
+                <div class="feature-node">P₂</div>
+                <div class="feature-node">P₃</div>
+                <div class="feature-node">P₄</div>
+                <div class="feature-node" style="margin-top: -8px;">...</div>
+                <div class="node-count">k² patterns</div>
+            </div>
+            
+            <svg class="connection-lines" width="100%" height="100%">
+                <line x1="25%" y1="35%" x2="60%" y2="25%" stroke="#1E64C8" stroke-width="2" opacity="0.3"/>
+                <line x1="25%" y1="35%" x2="60%" y2="35%" stroke="#1E64C8" stroke-width="2" opacity="0.3"/>
+                <line x1="25%" y1="50%" x2="60%" y2="45%" stroke="#1E64C8" stroke-width="2" opacity="0.3"/>
+                <line x1="25%" y1="50%" x2="60%" y2="55%" stroke="#1E64C8" stroke-width="2" opacity="0.3"/>
+                <line x1="25%" y1="65%" x2="60%" y2="65%" stroke="#1E64C8" stroke-width="2" opacity="0.3"/>
+                <line x1="25%" y1="65%" x2="60%" y2="75%" stroke="#1E64C8" stroke-width="2" opacity="0.3"/>
+            </svg>
+        </div>
+        
+        <div class="composition-formula">
+            <div class="formula-title">COMPOSITIONAL EFFICIENCY</div>
+            <div class="formula-content">
+                Combine <span class="highlight">k</span> features → Create <span class="highlight">k²</span> patterns
+            </div>
+        </div>
+        
+        <div class="benefits-container">
+            <div class="benefit-card">
+                <div class="icon">🔄</div>
+                <div class="text">Reusable Components</div>
+            </div>
+            
+            <div class="benefit-card">
+                <div class="icon">📈</div>
+                <div class="text">Exponential Expressiveness</div>
+            </div>
+            
+            <div class="benefit-card">
+                <div class="icon">🧩</div>
+                <div class="text">Modular Learning</div>
+            </div>
+        </div>
+        
+        <div class="example-box">
+            <div class="label">EXAMPLE</div>
+            <div class="content">"Eye" feature reused for detecting different faces, animals → Reduces redundancy</div>
+        </div>
+    </div>
+</body>
+</html>

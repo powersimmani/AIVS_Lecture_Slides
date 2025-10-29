@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anomaly Detection Overview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+            color: #666;
+            margin-top: -8px;
+        }
+        
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            flex: 1;
+        }
+        
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        
+        .types-box {
+            background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 12px;
+            padding: 16px;
+        }
+        
+        .box-header {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .type-item {
+            background: white;
+            border: 1px solid #1E64C8;
+            border-radius: 8px;
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .type-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        
+        .type-content {
+            flex: 1;
+        }
+        
+        .type-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 2px;
+        }
+        
+        .type-desc {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.3;
+        }
+        
+        .challenges-box {
+            background: linear-gradient(135deg, #ffebee 0%, #ffffff 100%);
+            border: 2px solid #e57373;
+            border-radius: 12px;
+            padding: 16px;
+            flex: 1;
+        }
+        
+        .challenges-box .box-header {
+            color: #d32f2f;
+            border-color: #e57373;
+        }
+        
+        .challenge-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .challenge-list li {
+            font-size: 15px;
+            color: #333;
+            padding-left: 24px;
+            position: relative;
+            line-height: 1.4;
+        }
+        
+        .challenge-list li:before {
+            content: "⚠";
+            position: absolute;
+            left: 0;
+            color: #e57373;
+            font-size: 18px;
+        }
+        
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        
+        .approaches-box {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffffff 100%);
+            border: 2px solid #FF9800;
+            border-radius: 12px;
+            padding: 16px;
+        }
+        
+        .approaches-box .box-header {
+            color: #F57C00;
+            border-color: #FF9800;
+        }
+        
+        .approach-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+        
+        .approach-tag {
+            background: white;
+            border: 1px solid #FF9800;
+            border-radius: 6px;
+            padding: 8px;
+            text-align: center;
+            font-size: 14px;
+            color: #F57C00;
+            font-weight: 600;
+        }
+        
+        .applications-box {
+            background: linear-gradient(135deg, #e8f5e9 0%, #ffffff 100%);
+            border: 2px solid #4CAF50;
+            border-radius: 12px;
+            padding: 16px;
+            flex: 1;
+        }
+        
+        .applications-box .box-header {
+            color: #388E3C;
+            border-color: #4CAF50;
+        }
+        
+        .app-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+        }
+        
+        .app-item {
+            background: white;
+            border: 1px solid #4CAF50;
+            border-radius: 8px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .app-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        
+        .app-text {
+            font-size: 15px;
+            color: #333;
+        }
+        
+        .evaluation-box {
+            background: linear-gradient(135deg, #f3e5f5 0%, #ffffff 100%);
+            border: 2px solid #9C27B0;
+            border-radius: 12px;
+            padding: 14px;
+            text-align: center;
+        }
+        
+        .evaluation-box .box-header {
+            color: #9C27B0;
+            border-color: #9C27B0;
+            margin-bottom: 8px;
+        }
+        
+        .metric-tags {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .metric-tag {
+            background: white;
+            border: 1px solid #9C27B0;
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 14px;
+            color: #9C27B0;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Anomaly Detection Overview</div>
+        <div class="subtitle">Identify rare items/events that differ from normal patterns</div>
+        
+        <div class="main-grid">
+            <div class="left-section">
+                <div class="types-box">
+                    <div class="box-header">🎯 Types of Anomalies</div>
+                    
+                    <div class="type-item">
+                        <div class="type-icon">•</div>
+                        <div class="type-content">
+                            <div class="type-name">Point Anomalies</div>
+                            <div class="type-desc">Individual data points that deviate</div>
+                        </div>
+                    </div>
+                    
+                    <div class="type-item">
+                        <div class="type-icon">📍</div>
+                        <div class="type-content">
+                            <div class="type-name">Contextual Anomalies</div>
+                            <div class="type-desc">Abnormal in specific context</div>
+                        </div>
+                    </div>
+                    
+                    <div class="type-item">
+                        <div class="type-icon">📊</div>
+                        <div class="type-content">
+                            <div class="type-name">Collective Anomalies</div>
+                            <div class="type-desc">Group behavior is anomalous</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="challenges-box">
+                    <div class="box-header">⚠️ Key Challenges</div>
+                    <ul class="challenge-list">
+                        <li>Imbalanced data distribution</li>
+                        <li>Defining 'normal' behavior</li>
+                        <li>Lack of labeled anomalies</li>
+                        <li>Evolving patterns over time</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="right-section">
+                <div class="approaches-box">
+                    <div class="box-header">🔧 Detection Approaches</div>
+                    <div class="approach-grid">
+                        <div class="approach-tag">Statistical</div>
+                        <div class="approach-tag">Distance-based</div>
+                        <div class="approach-tag">Density-based</div>
+                        <div class="approach-tag">Isolation-based</div>
+                    </div>
+                    <div style="margin-top: 10px; text-align: center; font-size: 14px; color: #666;">
+                        Often unsupervised due to lack of labels
+                    </div>
+                </div>
+                
+                <div class="applications-box">
+                    <div class="box-header">🎯 Applications</div>
+                    <div class="app-grid">
+                        <div class="app-item">
+                            <div class="app-icon">💳</div>
+                            <div class="app-text">Fraud detection</div>
+                        </div>
+                        
+                        <div class="app-item">
+                            <div class="app-icon">🔒</div>
+                            <div class="app-text">Network security</div>
+                        </div>
+                        
+                        <div class="app-item">
+                            <div class="app-icon">⚙️</div>
+                            <div class="app-text">Quality control</div>
+                        </div>
+                        
+                        <div class="app-item">
+                            <div class="app-icon">🏥</div>
+                            <div class="app-text">Medical diagnosis</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="evaluation-box">
+                    <div class="box-header">📊 Evaluation Metrics</div>
+                    <div class="metric-tags">
+                        <div class="metric-tag">Precision</div>
+                        <div class="metric-tag">Recall</div>
+                        <div class="metric-tag">F1-Score</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diffusion vs GANs Comparison</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .comparison-table {
+            display: grid;
+            grid-template-columns: 280px 1fr 1fr;
+            gap: 2px;
+            background: #e0e0e0;
+            border-radius: 12px;
+            overflow: hidden;
+            flex-grow: 1;
+        }
+        
+        .table-header {
+            background: linear-gradient(135deg, #1E64C8 0%, #4A90E2 100%);
+            color: white;
+            padding: 15px;
+            font-size: 18px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .criterion-cell {
+            background: #f8f9fa;
+            padding: 15px;
+            font-size: 17px;
+            font-weight: 600;
+            color: #333;
+            display: flex;
+            align-items: center;
+            border-left: 4px solid #1E64C8;
+        }
+        
+        .diffusion-cell {
+            background: white;
+            padding: 15px;
+            font-size: 16px;
+            color: #555;
+            display: flex;
+            align-items: center;
+            line-height: 1.5;
+            position: relative;
+        }
+        
+        .gans-cell {
+            background: white;
+            padding: 15px;
+            font-size: 16px;
+            color: #555;
+            display: flex;
+            align-items: center;
+            line-height: 1.5;
+        }
+        
+        .icon {
+            font-size: 20px;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+        
+        .winner {
+            background: linear-gradient(135deg, #e8f4fd 0%, #f0f8ff 100%);
+            border-left: 4px solid #1E64C8;
+        }
+        
+        .winner-badge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #1E64C8;
+            color: white;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        
+        .legend {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .legend-box {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            border: 2px solid #1E64C8;
+        }
+        
+        .legend-box.winner {
+            background: linear-gradient(135deg, #e8f4fd 0%, #f0f8ff 100%);
+        }
+        
+        .emoji {
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">Diffusion Models vs GANs</div>
+            <div class="subtitle">Comprehensive Feature Comparison</div>
+        </div>
+        
+        <div class="comparison-table">
+            <!-- Header Row -->
+            <div class="table-header">Criterion</div>
+            <div class="table-header">Diffusion Models</div>
+            <div class="table-header">GANs</div>
+            
+            <!-- Row 1: Training Stability -->
+            <div class="criterion-cell">
+                <span class="icon">⚖️</span>
+                Training Stability
+            </div>
+            <div class="diffusion-cell winner">
+                <span class="winner-badge">✓</span>
+                More stable, no adversarial collapse
+            </div>
+            <div class="gans-cell">
+                Can be unstable, risk of mode collapse
+            </div>
+            
+            <!-- Row 2: Mode Coverage -->
+            <div class="criterion-cell">
+                <span class="icon">🎯</span>
+                Mode Coverage
+            </div>
+            <div class="diffusion-cell winner">
+                <span class="winner-badge">✓</span>
+                Captures all modes effectively
+            </div>
+            <div class="gans-cell">
+                May miss some modes
+            </div>
+            
+            <!-- Row 3: Sample Quality -->
+            <div class="criterion-cell">
+                <span class="icon">✨</span>
+                Sample Quality
+            </div>
+            <div class="diffusion-cell winner">
+                <span class="winner-badge">✓</span>
+                Comparable, often more detailed
+            </div>
+            <div class="gans-cell">
+                High quality, sometimes less detailed
+            </div>
+            
+            <!-- Row 4: Generation Speed -->
+            <div class="criterion-cell">
+                <span class="icon">⚡</span>
+                Generation Speed
+            </div>
+            <div class="diffusion-cell">
+                Slower (100-1000 steps)
+            </div>
+            <div class="gans-cell winner">
+                <span class="winner-badge">✓</span>
+                Faster (1 step generation)
+            </div>
+            
+            <!-- Row 5: Training Complexity -->
+            <div class="criterion-cell">
+                <span class="icon">🔧</span>
+                Training Complexity
+            </div>
+            <div class="diffusion-cell winner">
+                <span class="winner-badge">✓</span>
+                Simpler loss, no discriminator
+            </div>
+            <div class="gans-cell">
+                Complex, requires discriminator tuning
+            </div>
+            
+            <!-- Row 6: Controllability -->
+            <div class="criterion-cell">
+                <span class="icon">🎮</span>
+                Controllability
+            </div>
+            <div class="diffusion-cell winner">
+                <span class="winner-badge">✓</span>
+                Easier to guide and condition
+            </div>
+            <div class="gans-cell">
+                More challenging to control
+            </div>
+            
+            <!-- Row 7: Likelihood Evaluation -->
+            <div class="criterion-cell">
+                <span class="icon">📊</span>
+                Likelihood Evaluation
+            </div>
+            <div class="diffusion-cell winner">
+                <span class="winner-badge">✓</span>
+                Provides tractable likelihood
+            </div>
+            <div class="gans-cell">
+                No direct likelihood estimation
+            </div>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-box winner"></div>
+                <span>Advantage</span>
+            </div>
+            <div class="legend-item">
+                <span class="emoji">✓</span>
+                <span>Winner in this category</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

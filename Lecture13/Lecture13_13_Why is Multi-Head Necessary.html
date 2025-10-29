@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why Multi-Head Attention?</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 30px;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .comparison-section {
+            display: flex;
+            gap: 20px;
+            flex: 1.2;
+        }
+        
+        .single-head {
+            flex: 1;
+            background: #fff9f9;
+            border: 2px solid #dc3545;
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        
+        .multi-head {
+            flex: 1;
+            background: #f0fdf4;
+            border: 2px solid #16a34a;
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        
+        .section-header {
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 2px solid;
+        }
+        
+        .single-head .section-header {
+            border-color: #dc3545;
+        }
+        
+        .multi-head .section-header {
+            border-color: #16a34a;
+        }
+        
+        .section-icon {
+            font-size: 32px;
+            margin-bottom: 6px;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .single-head .section-title {
+            color: #dc3545;
+        }
+        
+        .multi-head .section-title {
+            color: #16a34a;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: start;
+            gap: 10px;
+        }
+        
+        .feature-icon {
+            font-size: 18px;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+        
+        .feature-text {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .highlight {
+            font-weight: 600;
+            color: #16a34a;
+        }
+        
+        .visual-representation {
+            margin-top: auto;
+            padding-top: 12px;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .single-box {
+            background: #e5e7eb;
+            border-radius: 6px;
+            padding: 12px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 600;
+            color: #666;
+        }
+        
+        .multi-boxes {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+        }
+        
+        .head-box {
+            background: #16a34a;
+            color: white;
+            border-radius: 6px;
+            padding: 10px 4px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .benefits-section {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .benefit-card {
+            flex: 1;
+            background: #f0f7ff;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 14px 16px;
+            text-align: center;
+        }
+        
+        .benefit-icon {
+            font-size: 24px;
+            margin-bottom: 6px;
+        }
+        
+        .benefit-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .benefit-text {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.3;
+        }
+        
+        .analogy-box {
+            background: #fff9f0;
+            border: 2px solid #f59e0b;
+            border-radius: 8px;
+            padding: 12px 20px;
+            text-align: center;
+        }
+        
+        .analogy-icon {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+        
+        .analogy-text {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .strong-text {
+            font-weight: 600;
+            color: #d97700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Why is Multi-Head Attention Necessary?</div>
+        
+        <div class="comparison-section">
+            <div class="single-head">
+                <div class="section-header">
+                    <div class="section-icon">⚠️</div>
+                    <div class="section-title">Single Head</div>
+                </div>
+                
+                <div class="feature-item">
+                    <span class="feature-icon">❌</span>
+                    <div class="feature-text">
+                        <strong>Limited representation capacity</strong>
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <span class="feature-icon">🔒</span>
+                    <div class="feature-text">
+                        Single attention pattern only
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <span class="feature-icon">📉</span>
+                    <div class="feature-text">
+                        Cannot capture multiple relationship types simultaneously
+                    </div>
+                </div>
+                
+                <div class="visual-representation">
+                    <div class="single-box">Single Attention Head</div>
+                </div>
+            </div>
+            
+            <div class="multi-head">
+                <div class="section-header">
+                    <div class="section-icon">✅</div>
+                    <div class="section-title">Multi-Head</div>
+                </div>
+                
+                <div class="feature-item">
+                    <span class="feature-icon">🎯</span>
+                    <div class="feature-text">
+                        <span class="highlight">Different heads learn different patterns</span>
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <span class="feature-icon">📚</span>
+                    <div class="feature-text">
+                        Some heads capture <strong>syntax</strong>, others <strong>semantics</strong>
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <span class="feature-icon">🔍</span>
+                    <div class="feature-text">
+                        Attend to <span class="highlight">different positions for different purposes</span>
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <span class="feature-icon">📈</span>
+                    <div class="feature-text">
+                        <span class="highlight">Empirically improves performance</span> significantly
+                    </div>
+                </div>
+                
+                <div class="visual-representation">
+                    <div class="multi-boxes">
+                        <div class="head-box">Head 1</div>
+                        <div class="head-box">Head 2</div>
+                        <div class="head-box">Head 3</div>
+                        <div class="head-box">Head 4</div>
+                        <div class="head-box">Head 5</div>
+                        <div class="head-box">Head 6</div>
+                        <div class="head-box">Head 7</div>
+                        <div class="head-box">Head 8</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="analogy-box">
+            <div class="analogy-icon">🔬</div>
+            <div class="analogy-text">
+                <span class="strong-text">Analogy:</span> Similar to multiple CNN filters capturing different features
+            </div>
+        </div>
+        
+        <div class="benefits-section">
+            <div class="benefit-card">
+                <div class="benefit-icon">💡</div>
+                <div class="benefit-title">Expressiveness</div>
+                <div class="benefit-text">
+                    Increases model power without excessive parameters
+                </div>
+            </div>
+            
+            <div class="benefit-card">
+                <div class="benefit-icon">🎭</div>
+                <div class="benefit-title">Diversity</div>
+                <div class="benefit-text">
+                    Multiple perspectives on the same input
+                </div>
+            </div>
+            
+            <div class="benefit-card">
+                <div class="benefit-icon">⚡</div>
+                <div class="benefit-title">Performance</div>
+                <div class="benefit-text">
+                    Empirically proven improvements
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

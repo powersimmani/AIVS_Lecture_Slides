@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistical Methods</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+            color: #666;
+            margin-top: -8px;
+        }
+        
+        .methods-section {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+        
+        .method-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: all 0.3s;
+        }
+        
+        .method-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(30, 100, 200, 0.2);
+        }
+        
+        .method-card.zscore {
+            background: linear-gradient(135deg, #e3f2fd 0%, #ffffff 100%);
+            border-color: #1E64C8;
+        }
+        
+        .method-card.boxplot {
+            background: linear-gradient(135deg, #f3e5f5 0%, #ffffff 100%);
+            border-color: #9C27B0;
+        }
+        
+        .method-card.mahalanobis {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffffff 100%);
+            border-color: #FF9800;
+        }
+        
+        .method-icon {
+            font-size: 36px;
+            text-align: center;
+        }
+        
+        .method-name {
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+            color: #1E64C8;
+        }
+        
+        .method-card.boxplot .method-name {
+            color: #9C27B0;
+        }
+        
+        .method-card.mahalanobis .method-name {
+            color: #F57C00;
+        }
+        
+        .method-formula {
+            background: white;
+            border: 1px dashed;
+            border-radius: 6px;
+            padding: 8px;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #333;
+        }
+        
+        .method-card.zscore .method-formula {
+            border-color: #1E64C8;
+        }
+        
+        .method-card.boxplot .method-formula {
+            border-color: #9C27B0;
+        }
+        
+        .method-card.mahalanobis .method-formula {
+            border-color: #FF9800;
+        }
+        
+        .method-desc {
+            font-size: 14px;
+            color: #555;
+            text-align: center;
+            line-height: 1.4;
+        }
+        
+        .characteristics-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+        
+        .char-box {
+            background: white;
+            border: 2px solid;
+            border-radius: 12px;
+            padding: 16px;
+        }
+        
+        .char-box.strengths {
+            border-color: #4CAF50;
+            background: linear-gradient(135deg, #e8f5e9 0%, #ffffff 100%);
+        }
+        
+        .char-box.limitations {
+            border-color: #e57373;
+            background: linear-gradient(135deg, #ffebee 0%, #ffffff 100%);
+        }
+        
+        .box-header {
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid;
+        }
+        
+        .char-box.strengths .box-header {
+            color: #388E3C;
+            border-color: #4CAF50;
+        }
+        
+        .char-box.limitations .box-header {
+            color: #d32f2f;
+            border-color: #e57373;
+        }
+        
+        .char-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .char-list li {
+            font-size: 15px;
+            color: #333;
+            padding-left: 24px;
+            position: relative;
+            line-height: 1.4;
+        }
+        
+        .char-box.strengths .char-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4CAF50;
+            font-weight: bold;
+            font-size: 20px;
+        }
+        
+        .char-box.limitations .char-list li:before {
+            content: "✗";
+            position: absolute;
+            left: 0;
+            color: #e57373;
+            font-weight: bold;
+            font-size: 20px;
+        }
+        
+        .usage-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+        
+        .usage-box {
+            background: white;
+            border: 2px solid;
+            border-radius: 12px;
+            padding: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .usage-box.works {
+            border-color: #00897B;
+            background: linear-gradient(135deg, #e0f2f1 0%, #ffffff 100%);
+        }
+        
+        .usage-box.preprocessing {
+            border-color: #FFA726;
+            background: linear-gradient(135deg, #fff8e1 0%, #ffffff 100%);
+        }
+        
+        .usage-icon {
+            font-size: 32px;
+            flex-shrink: 0;
+        }
+        
+        .usage-content {
+            flex: 1;
+        }
+        
+        .usage-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .usage-box.works .usage-title {
+            color: #00897B;
+        }
+        
+        .usage-box.preprocessing .usage-title {
+            color: #F57C00;
+        }
+        
+        .usage-text {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Statistical Methods for Anomaly Detection</div>
+        <div class="subtitle">Assume data follows a known distribution (usually Gaussian)</div>
+        
+        <div class="methods-section">
+            <div class="method-card zscore">
+                <div class="method-icon">📊</div>
+                <div class="method-name">Z-Score Method</div>
+                <div class="method-formula">|z| > threshold<br>(e.g., ±3σ)</div>
+                <div class="method-desc">Points beyond threshold are anomalies</div>
+            </div>
+            
+            <div class="method-card boxplot">
+                <div class="method-icon">📦</div>
+                <div class="method-name">Box Plot Method</div>
+                <div class="method-formula">Q1 - 1.5×IQR<br>Q3 + 1.5×IQR</div>
+                <div class="method-desc">Points beyond 1.5×IQR from quartiles</div>
+            </div>
+            
+            <div class="method-card mahalanobis">
+                <div class="method-icon">📐</div>
+                <div class="method-name">Mahalanobis Distance</div>
+                <div class="method-formula">D² = (x-μ)ᵀΣ⁻¹(x-μ)</div>
+                <div class="method-desc">For multi-feature data</div>
+            </div>
+        </div>
+        
+        <div class="characteristics-section">
+            <div class="char-box strengths">
+                <div class="box-header">💪 Strengths</div>
+                <ul class="char-list">
+                    <li>Simple and interpretable</li>
+                    <li>Fast computation</li>
+                    <li>Well-understood theory</li>
+                    <li>Easy to implement</li>
+                </ul>
+            </div>
+            
+            <div class="char-box limitations">
+                <div class="box-header">⚠️ Limitations</div>
+                <ul class="char-list">
+                    <li>Assumes specific distribution</li>
+                    <li>Sensitive to outliers in training</li>
+                    <li>May not work for complex patterns</li>
+                    <li>Requires distribution knowledge</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="usage-section">
+            <div class="usage-box works">
+                <div class="usage-icon">✅</div>
+                <div class="usage-content">
+                    <div class="usage-title">Works Well For</div>
+                    <div class="usage-text">Low-dimensional data with known distribution</div>
+                </div>
+            </div>
+            
+            <div class="usage-box preprocessing">
+                <div class="usage-icon">🔧</div>
+                <div class="usage-content">
+                    <div class="usage-title">Preprocessing Tip</div>
+                    <div class="usage-text">Remove known anomalies before fitting distribution</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

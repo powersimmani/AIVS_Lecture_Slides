@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Series - Line Graph & Area Chart</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #FFFFFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            padding: 25px 35px;
+        }
+        
+        .title-section {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        
+        .main-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .subtitle {
+            font-size: 17px;
+            color: #666666;
+        }
+        
+        .content-wrapper {
+            display: flex;
+            gap: 18px;
+            flex: 1;
+        }
+        
+        .left-panel {
+            flex: 1.6;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            flex: 1;
+        }
+        
+        .chart-card {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 10px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+        
+        .chart-card:hover {
+            border-color: #1E64C8;
+            box-shadow: 0 4px 15px rgba(30, 100, 200, 0.15);
+            transform: translateY(-3px);
+        }
+        
+        .chart-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .chart-visual {
+            flex: 1;
+            background: #F8F8F8;
+            border-radius: 6px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .chart-visual svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .chart-description {
+            text-align: center;
+            font-size: 16px;
+            color: #666;
+            margin-top: 8px;
+            line-height: 1.3;
+        }
+        
+        .right-panel {
+            flex: 0.4;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .features-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .feature-section {
+            margin-bottom: 12px;
+        }
+        
+        .section-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+            margin-bottom: 6px;
+            padding: 6px;
+            background: #F8FBFF;
+            border-radius: 4px;
+        }
+        
+        .feature-icon {
+            color: #1E64C8;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .tips-card {
+            background: #FFF9E6;
+            border: 2px solid #FFC107;
+            border-radius: 10px;
+            padding: 14px;
+        }
+        
+        .tips-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .tip-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 6px;
+            line-height: 1.3;
+        }
+        
+        .tip-icon {
+            color: #F57C00;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        
+        .use-cases {
+            background: #E8F5E9;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            padding: 14px;
+        }
+        
+        .use-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2E7D32;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .use-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 6px;
+        }
+        
+        .check-icon {
+            color: #4CAF50;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .chart-card, .features-card, .tips-card, .use-cases {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        .chart-card:nth-child(1) { animation-delay: 0.1s; }
+        .chart-card:nth-child(2) { animation-delay: 0.2s; }
+        .chart-card:nth-child(3) { animation-delay: 0.3s; }
+        .features-card { animation-delay: 0.4s; }
+        .tips-card { animation-delay: 0.5s; }
+        .use-cases { animation-delay: 0.6s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Time Series: Line Graph & Area Chart</div>
+            <div class="subtitle">Visualizing Trends and Changes Over Time</div>
+        </div>
+        
+        <div class="content-wrapper">
+            <div class="left-panel">
+                <div class="chart-grid">
+                    <!-- Single Line Chart -->
+                    <div class="chart-card">
+                        <div class="chart-title">Single Line</div>
+                        <div class="chart-visual">
+                            <svg viewBox="0 0 200 120" preserveAspectRatio="none">
+                                <!-- Grid lines -->
+                                <line x1="0" y1="100" x2="200" y2="100" stroke="#E0E0E0" stroke-width="1"/>
+                                
+                                <!-- Trend line -->
+                                <polyline
+                                    points="10,80 30,70 50,75 70,60 90,55 110,50 130,45 150,40 170,35 190,30"
+                                    fill="none"
+                                    stroke="#1E64C8"
+                                    stroke-width="3"
+                                    stroke-linejoin="round"/>
+                                
+                                <!-- Data points -->
+                                <circle cx="10" cy="80" r="3" fill="#1E64C8"/>
+                                <circle cx="30" cy="70" r="3" fill="#1E64C8"/>
+                                <circle cx="50" cy="75" r="3" fill="#1E64C8"/>
+                                <circle cx="70" cy="60" r="3" fill="#1E64C8"/>
+                                <circle cx="90" cy="55" r="3" fill="#1E64C8"/>
+                                <circle cx="110" cy="50" r="3" fill="#1E64C8"/>
+                                <circle cx="130" cy="45" r="3" fill="#1E64C8"/>
+                                <circle cx="150" cy="40" r="3" fill="#1E64C8"/>
+                                <circle cx="170" cy="35" r="3" fill="#1E64C8"/>
+                                <circle cx="190" cy="30" r="3" fill="#1E64C8"/>
+                            </svg>
+                        </div>
+                        <div class="chart-description">Shows continuous trend over time</div>
+                    </div>
+                    
+                    <!-- Multiple Lines Chart -->
+                    <div class="chart-card">
+                        <div class="chart-title">Multiple Lines</div>
+                        <div class="chart-visual">
+                            <svg viewBox="0 0 200 120" preserveAspectRatio="none">
+                                <!-- Grid lines -->
+                                <line x1="0" y1="100" x2="200" y2="100" stroke="#E0E0E0" stroke-width="1"/>
+                                
+                                <!-- Line 1 -->
+                                <polyline
+                                    points="10,70 40,60 70,55 100,45 130,40 160,35 190,30"
+                                    fill="none"
+                                    stroke="#1E64C8"
+                                    stroke-width="2.5"
+                                    stroke-linejoin="round"/>
+                                
+                                <!-- Line 2 -->
+                                <polyline
+                                    points="10,85 40,80 70,75 100,70 130,65 160,60 190,55"
+                                    fill="none"
+                                    stroke="#4CAF50"
+                                    stroke-width="2.5"
+                                    stroke-linejoin="round"/>
+                                
+                                <!-- Line 3 -->
+                                <polyline
+                                    points="10,95 40,92 70,88 100,85 130,82 160,78 190,75"
+                                    fill="none"
+                                    stroke="#FF9800"
+                                    stroke-width="2.5"
+                                    stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="chart-description">Compares multiple trends with distinct colors</div>
+                    </div>
+                    
+                    <!-- Stacked Area Chart -->
+                    <div class="chart-card">
+                        <div class="chart-title">Stacked Area</div>
+                        <div class="chart-visual">
+                            <svg viewBox="0 0 200 120" preserveAspectRatio="none">
+                                <!-- Area 1 (bottom) -->
+                                <path
+                                    d="M 10,100 L 40,95 L 70,90 L 100,88 L 130,85 L 160,83 L 190,80 L 190,100 Z"
+                                    fill="rgba(30, 100, 200, 0.6)"
+                                    stroke="#1E64C8"
+                                    stroke-width="1"/>
+                                
+                                <!-- Area 2 (middle) -->
+                                <path
+                                    d="M 10,100 L 40,95 L 70,90 L 100,88 L 130,85 L 160,83 L 190,80 
+                                       L 190,60 L 160,63 L 130,65 L 100,68 L 70,70 L 40,75 L 10,80 Z"
+                                    fill="rgba(76, 175, 80, 0.6)"
+                                    stroke="#4CAF50"
+                                    stroke-width="1"/>
+                                
+                                <!-- Area 3 (top) -->
+                                <path
+                                    d="M 10,80 L 40,75 L 70,70 L 100,68 L 130,65 L 160,63 L 190,60
+                                       L 190,40 L 160,43 L 130,45 L 100,48 L 70,50 L 40,55 L 10,60 Z"
+                                    fill="rgba(255, 152, 0, 0.6)"
+                                    stroke="#FF9800"
+                                    stroke-width="1"/>
+                            </svg>
+                        </div>
+                        <div class="chart-description">Shows composition changes over time</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <div class="features-card">
+                    <div class="card-title">
+                        <span>📈</span>
+                        Features
+                    </div>
+                    
+                    <div class="feature-section">
+                        <div class="section-label">Line Graph</div>
+                        <div class="feature-item">
+                            <span class="feature-icon">•</span>
+                            <span>Sequential continuity</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">•</span>
+                            <span>Trend comparison</span>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-section">
+                        <div class="section-label">Area Chart</div>
+                        <div class="feature-item">
+                            <span class="feature-icon">•</span>
+                            <span>Emphasizes magnitude</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">•</span>
+                            <span>Shows composition</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tips-card">
+                    <div class="tips-title">💡 Best Practices</div>
+                    <div class="tip-item">
+                        <span class="tip-icon">▸</span>
+                        <span>Distinct colors for lines</span>
+                    </div>
+                    <div class="tip-item">
+                        <span class="tip-icon">▸</span>
+                        <span>Add reference lines</span>
+                    </div>
+                    <div class="tip-item">
+                        <span class="tip-icon">▸</span>
+                        <span>Appropriate granularity</span>
+                    </div>
+                    <div class="tip-item">
+                        <span class="tip-icon">▸</span>
+                        <span>Avoid over/undersampling</span>
+                    </div>
+                </div>
+                
+                <div class="use-cases">
+                    <div class="use-title">When to Use</div>
+                    <div class="use-item">
+                        <span class="check-icon">✓</span>
+                        <span>Trend analysis</span>
+                    </div>
+                    <div class="use-item">
+                        <span class="check-icon">✓</span>
+                        <span>Forecasting</span>
+                    </div>
+                    <div class="use-item">
+                        <span class="check-icon">✓</span>
+                        <span>Seasonal patterns</span>
+                    </div>
+                    <div class="use-item">
+                        <span class="check-icon">✓</span>
+                        <span>Change over time</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

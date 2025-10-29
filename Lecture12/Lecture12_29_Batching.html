@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batching in Sequence Models</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #ffffff;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 40px;
+            position: relative;
+        }
+        
+        .main-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .content {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            height: calc(100% - 45px);
+        }
+        
+        /* Problem Section */
+        .problem-section {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 14px 18px;
+            border-radius: 8px;
+        }
+        
+        .section-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        .section-text {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.4;
+        }
+        
+        /* Visual Demo */
+        .demo-section {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+        
+        .demo-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 18px;
+            border-top: 5px solid currentColor;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .card-before {
+            color: #dc3545;
+        }
+        
+        .card-after {
+            color: #28a745;
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+        
+        .card-icon {
+            width: 36px;
+            height: 36px;
+            background: currentColor;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .card-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: currentColor;
+        }
+        
+        /* Sequence Visualization */
+        .sequences-container {
+            flex: 1;
+            background: white;
+            border-radius: 8px;
+            padding: 14px;
+            border: 2px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .sequence-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .sequence-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+            min-width: 50px;
+        }
+        
+        .sequence-boxes {
+            display: flex;
+            gap: 4px;
+            flex: 1;
+        }
+        
+        .seq-token {
+            height: 35px;
+            padding: 0 10px;
+            background: #1E64C8;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .seq-pad {
+            height: 35px;
+            padding: 0 10px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 13px;
+            font-weight: 600;
+            border: 2px dashed #999;
+        }
+        
+        .processing-time {
+            text-align: center;
+            font-size: 12px;
+            color: currentColor;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+        
+        /* Description */
+        .card-description {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 3px solid currentColor;
+            font-size: 14px;
+            color: #555;
+            line-height: 1.4;
+        }
+        
+        /* Implementation Tips */
+        .tips-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 14px;
+        }
+        
+        .tip-card {
+            background: #e8f2ff;
+            border-radius: 8px;
+            padding: 14px;
+            border-left: 4px solid #1E64C8;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .tip-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .tip-icon {
+            font-size: 20px;
+        }
+        
+        .tip-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .tip-content {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.4;
+        }
+        
+        .tip-code {
+            background: white;
+            padding: 8px 10px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #1E64C8;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-title">Batching in Sequence Models</div>
+        
+        <div class="content">
+            <!-- Problem Statement -->
+            <div class="problem-section">
+                <div class="section-title">⚠ Challenge: Variable-Length Sequences</div>
+                <div class="section-text">
+                    Sequences in a batch often have different lengths. We need to pad them to the same length for efficient parallel processing on GPUs.
+                </div>
+            </div>
+            
+            <!-- Visual Comparison -->
+            <div class="demo-section">
+                <!-- Without Batching -->
+                <div class="demo-card card-before">
+                    <div class="card-header">
+                        <div class="card-icon">✗</div>
+                        <div class="card-title">Without Batching</div>
+                    </div>
+                    
+                    <div class="sequences-container">
+                        <div class="sequence-row">
+                            <div class="sequence-label">Seq 1:</div>
+                            <div class="sequence-boxes">
+                                <div class="seq-token">I</div>
+                                <div class="seq-token">love</div>
+                                <div class="seq-token">AI</div>
+                            </div>
+                        </div>
+                        <div style="text-align: center; font-size: 14px; color: #999; margin: 8px 0;">
+                            Process ↓
+                        </div>
+                        <div class="sequence-row">
+                            <div class="sequence-label">Seq 2:</div>
+                            <div class="sequence-boxes">
+                                <div class="seq-token">Hello</div>
+                                <div class="seq-token">world</div>
+                            </div>
+                        </div>
+                        <div style="text-align: center; font-size: 14px; color: #999; margin: 8px 0;">
+                            Process ↓
+                        </div>
+                        <div class="sequence-row">
+                            <div class="sequence-label">Seq 3:</div>
+                            <div class="sequence-boxes">
+                                <div class="seq-token">Deep</div>
+                                <div class="seq-token">learning</div>
+                                <div class="seq-token">is</div>
+                                <div class="seq-token">great</div>
+                            </div>
+                        </div>
+                        <div class="processing-time card-before">
+                            ⏱ Sequential: 3× time
+                        </div>
+                    </div>
+                    
+                    <div class="card-description card-before">
+                        <strong>Sequential processing:</strong> Process one sequence at a time. Slow and inefficient. Cannot leverage GPU parallelism.
+                    </div>
+                </div>
+                
+                <!-- With Batching -->
+                <div class="demo-card card-after">
+                    <div class="card-header">
+                        <div class="card-icon">✓</div>
+                        <div class="card-title">With Batching (Padded)</div>
+                    </div>
+                    
+                    <div class="sequences-container">
+                        <div style="text-align: center; font-size: 13px; color: #666; font-weight: 600; margin-bottom: 6px;">
+                            Batch of 3 sequences
+                        </div>
+                        <div class="sequence-row">
+                            <div class="sequence-label">Seq 1:</div>
+                            <div class="sequence-boxes">
+                                <div class="seq-token">I</div>
+                                <div class="seq-token">love</div>
+                                <div class="seq-token">AI</div>
+                                <div class="seq-pad">PAD</div>
+                            </div>
+                        </div>
+                        <div class="sequence-row">
+                            <div class="sequence-label">Seq 2:</div>
+                            <div class="sequence-boxes">
+                                <div class="seq-token">Hello</div>
+                                <div class="seq-token">world</div>
+                                <div class="seq-pad">PAD</div>
+                                <div class="seq-pad">PAD</div>
+                            </div>
+                        </div>
+                        <div class="sequence-row">
+                            <div class="sequence-label">Seq 3:</div>
+                            <div class="sequence-boxes">
+                                <div class="seq-token">Deep</div>
+                                <div class="seq-token">learning</div>
+                                <div class="seq-token">is</div>
+                                <div class="seq-token">great</div>
+                            </div>
+                        </div>
+                        <div style="text-align: center; font-size: 12px; color: #666; margin-top: 8px;">
+                            All padded to max length (4 tokens)
+                        </div>
+                        <div class="processing-time card-after">
+                            ⚡ Parallel: 1× time (3× faster!)
+                        </div>
+                    </div>
+                    
+                    <div class="card-description card-after">
+                        <strong>Parallel processing:</strong> Process all sequences simultaneously. Fast and efficient. Full GPU utilization. Need masking!
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Implementation Tips -->
+            <div class="tips-section">
+                <div class="tip-card">
+                    <div class="tip-header">
+                        <span class="tip-icon">📦</span>
+                        <span class="tip-title">Padding Strategy</span>
+                    </div>
+                    <div class="tip-content">
+                        Add special PAD tokens to shorter sequences to match the longest sequence in batch.
+                    </div>
+                    <div class="tip-code">
+                        pad_sequence(sequences,<br/>
+                        &nbsp;&nbsp;batch_first=True,<br/>
+                        &nbsp;&nbsp;padding_value=0)
+                    </div>
+                </div>
+                
+                <div class="tip-card">
+                    <div class="tip-header">
+                        <span class="tip-icon">🎭</span>
+                        <span class="tip-title">Use Masking</span>
+                    </div>
+                    <div class="tip-content">
+                        Create masks to ignore PAD tokens during attention computation and loss calculation.
+                    </div>
+                    <div class="tip-code">
+                        mask = (input != PAD)<br/>
+                        scores.masked_fill(<br/>
+                        &nbsp;&nbsp;~mask, -inf)
+                    </div>
+                </div>
+                
+                <div class="tip-card">
+                    <div class="tip-header">
+                        <span class="tip-icon">⚡</span>
+                        <span class="tip-title">Batch Size</span>
+                    </div>
+                    <div class="tip-content">
+                        Balance between memory and speed. Larger batches = faster but more memory. Typical: 32-128.
+                    </div>
+                    <div class="tip-code">
+                        # Common sizes<br/>
+                        batch_size = 32<br/>
+                        batch_size = 64<br/>
+                        batch_size = 128
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

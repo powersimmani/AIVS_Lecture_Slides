@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stratified Sampling</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: white;
+            font-family: Aptos, 'Segoe UI', sans-serif;
+        }
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+            padding: 30px;
+            box-sizing: border-box;
+        }
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 20px;
+        }
+        .comparison-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 20px;
+        }
+        .method-section {
+            background: #f8f9fb;
+            border-radius: 10px;
+            padding: 20px;
+            position: relative;
+        }
+        .method-section.wrong {
+            border: 3px solid #e74c3c;
+        }
+        .method-section.correct {
+            border: 3px solid #27ae60;
+        }
+        .method-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .method-icon {
+            font-size: 28px;
+        }
+        .method-title {
+            font-size: 19px;
+            font-weight: 600;
+        }
+        .wrong .method-title { color: #e74c3c; }
+        .correct .method-title { color: #27ae60; }
+        
+        .dataset-display {
+            margin: 15px 0;
+        }
+        .dataset-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 8px;
+        }
+        .data-row {
+            display: flex;
+            gap: 3px;
+            margin-bottom: 10px;
+        }
+        .data-point {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+        }
+        .class-a { background: #1E64C8; }
+        .class-b { background: #e74c3c; }
+        
+        .split-display {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .split-box {
+            background: white;
+            padding: 12px 8px;
+            border-radius: 6px;
+            text-align: center;
+        }
+        .split-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        .split-visual {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3px;
+            justify-content: center;
+        }
+        .mini-point {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+        }
+        .ratio-display {
+            font-size: 12px;
+            color: #666;
+            margin-top: 6px;
+            font-weight: 500;
+        }
+        
+        .benefits-section {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            color: white;
+            padding: 18px 25px;
+            border-radius: 10px;
+        }
+        .benefits-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        .benefit-item {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 15px;
+            line-height: 1.4;
+        }
+        .benefit-icon {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Stratified Sampling</div>
+        
+        <div class="comparison-container">
+            <!-- Random Sampling (Wrong) -->
+            <div class="method-section wrong">
+                <div class="method-header">
+                    <span class="method-icon">❌</span>
+                    <span class="method-title">Random Sampling</span>
+                </div>
+                
+                <div class="dataset-display">
+                    <div class="dataset-label">Original Dataset (70% A, 30% B)</div>
+                    <div class="data-row">
+                        <div class="data-point class-a"></div>
+                        <div class="data-point class-a"></div>
+                        <div class="data-point class-a"></div>
+                        <div class="data-point class-a"></div>
+                        <div class="data-point class-a"></div>
+                        <div class="data-point class-a"></div>
+                        <div class="data-point class-a"></div>
+                        <div class="data-point class-b"></div>
+                        <div class="data-point class-b"></div>
+                        <div class="data-point class-b"></div>
+                    </div>
+                </div>
+                
+                <div class="split-display">
+                    <div class="split-box">
+                        <div class="split-name">Train</div>
+                        <div class="split-visual">
+                            <div class="mini-point class-a"></div>
+                            <div class="mini-point class-a"></div>
+                            <div class="mini-point class-a"></div>
+                            <div class="mini-point class-a"></div>
+                            <div class="mini-point class-a"></div>
+                            <div class="mini-point class-b"></div>
+                        </div>
+                        <div class="ratio-display">83% A 😟</div>
+                    </div>
+                    <div class="split-box">
+                        <div class="split-name">Val</div>
+                        <div class="split-visual">
+                            <div class="mini-point class-a"></div>
+                            <div class="mini-point class-b"></div>
+                        </div>
+                        <div class="ratio-display">50% A 😟</div>
+                    </div>
+                    <div class="split-box">
+                        <div class="split-name">Test</div>
+                        <div class="split-visual">
+                            <div class="mini-point class-b"></div>
+                            <div class="mini-point class-b"></div>
+                        </div>
+                        <div class="ratio-display">0% A 😱</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stratified Sampling (Correct) -->
+            <div class="method-section correct">
+                <div class="method-header">
+                    <span class="method-icon">✅</span>
+                    <span class="method-title">Stratified Sampling</span>
+                </div>
+                
+                <div class="dataset-display">
+                    <div class="dataset-label">Original Dataset (70% A, 30% B)</div>
+                    <div class="data-row">
+                        <div class="data-point class-a"></div>
+                        <div class="data-point class-a"></div>
+                        <div class="data-point class-a"></div>
+                        <div class="data-point class-a"></div>
+                        <div class="data-point class-a"></div>
+                        <div class="data-point class-a"></div>
+                        <div class="data-point class-a"></div>
+                        <div class="data-point class-b"></div>
+                        <div class="data-point class-b"></div>
+                        <div class="data-point class-b"></div>
+                    </div>
+                </div>
+                
+                <div class="split-display">
+                    <div class="split-box">
+                        <div class="split-name">Train</div>
+                        <div class="split-visual">
+                            <div class="mini-point class-a"></div>
+                            <div class="mini-point class-a"></div>
+                            <div class="mini-point class-a"></div>
+                            <div class="mini-point class-a"></div>
+                            <div class="mini-point class-b"></div>
+                            <div class="mini-point class-b"></div>
+                        </div>
+                        <div class="ratio-display">70% A ✓</div>
+                    </div>
+                    <div class="split-box">
+                        <div class="split-name">Val</div>
+                        <div class="split-visual">
+                            <div class="mini-point class-a"></div>
+                            <div class="mini-point class-b"></div>
+                        </div>
+                        <div class="ratio-display">70% A ✓</div>
+                    </div>
+                    <div class="split-box">
+                        <div class="split-name">Test</div>
+                        <div class="split-visual">
+                            <div class="mini-point class-a"></div>
+                            <div class="mini-point class-b"></div>
+                        </div>
+                        <div class="ratio-display">70% A ✓</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="benefits-section">
+            <div class="benefits-title">Why Stratified Sampling?</div>
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <div class="benefit-icon">🎯</div>
+                    <div>Critical for imbalanced datasets</div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">⚖️</div>
+                    <div>Prevents biased evaluation</div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">📊</div>
+                    <div>Reduces variance in estimates</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

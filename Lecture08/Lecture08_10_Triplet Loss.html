@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Triplet Loss</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 30px;
+            background: #ffffff;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .main-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            height: 430px;
+        }
+        
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .triplet-structure {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 20px;
+            flex: 1;
+        }
+        
+        .structure-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .triplet-items {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .triplet-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .item-badge {
+            min-width: 80px;
+            padding: 10px 14px;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 16px;
+            color: white;
+        }
+        
+        .item-badge.anchor {
+            background: #1E64C8;
+        }
+        
+        .item-badge.positive {
+            background: #28a745;
+        }
+        
+        .item-badge.negative {
+            background: #dc3545;
+        }
+        
+        .item-desc {
+            flex: 1;
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+        
+        .formula-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.3);
+        }
+        
+        .formula-label {
+            font-size: 16px;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+        
+        .formula {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 8px 0;
+            letter-spacing: 0.5px;
+        }
+        
+        .formula-note {
+            font-size: 16px;
+            margin-top: 8px;
+            opacity: 0.85;
+            line-height: 1.4;
+        }
+        
+        .comparison-box {
+            background: #e8f1fd;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 16px;
+        }
+        
+        .comparison-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+        }
+        
+        .comparison-text {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+        
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .mining-box {
+            background: #f0f8ff;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 18px;
+            flex: 1;
+        }
+        
+        .mining-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+        }
+        
+        .mining-desc {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+        
+        .mining-strategies {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .strategy-item {
+            background: white;
+            border-left: 4px solid #1E64C8;
+            padding: 10px 12px;
+            border-radius: 4px;
+            font-size: 16px;
+            color: #2c3e50;
+        }
+        
+        .approaches-box {
+            background: #e8f1fd;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 16px;
+        }
+        
+        .approaches-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+        }
+        
+        .approaches-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .approach-item {
+            background: white;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 16px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .applications-box {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 16px;
+        }
+        
+        .app-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+        }
+        
+        .app-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .app-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+            color: #2c3e50;
+        }
+        
+        .app-icon {
+            background: #1E64C8;
+            color: white;
+            min-width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="main-title">Triplet Loss</div>
+            <div class="subtitle">Extension of Contrastive Loss with Triplet Structure</div>
+        </div>
+        
+        <div class="content-grid">
+            <div class="left-section">
+                <div class="triplet-structure">
+                    <div class="structure-title">Triplet Components</div>
+                    <div class="triplet-items">
+                        <div class="triplet-item">
+                            <div class="item-badge anchor">Anchor</div>
+                            <div class="item-desc">Reference sample</div>
+                        </div>
+                        <div class="triplet-item">
+                            <div class="item-badge positive">Positive</div>
+                            <div class="item-desc">Sample similar to anchor</div>
+                        </div>
+                        <div class="triplet-item">
+                            <div class="item-badge negative">Negative</div>
+                            <div class="item-desc">Sample different from anchor</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="formula-box">
+                    <div class="formula-label">Loss Formula</div>
+                    <div class="formula">max(d(a,p) - d(a,n) + margin, 0)</div>
+                    <div class="formula-note">
+                        Penalizes when anchor is closer to negative than to positive
+                    </div>
+                </div>
+                
+                <div class="comparison-box">
+                    <div class="comparison-title">⚡ Efficiency</div>
+                    <div class="comparison-text">
+                        More efficient than Contrastive Loss<br>
+                        (One optimization step per triplet)
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-section">
+                <div class="mining-box">
+                    <div class="mining-title">🔍 Triplet Mining</div>
+                    <div class="mining-desc">
+                        Careful triplet selection strategy needed for effective learning
+                    </div>
+                    <div class="mining-strategies">
+                        <div class="strategy-item">
+                            <strong>Hard Negatives:</strong> Most difficult negative samples
+                        </div>
+                        <div class="strategy-item">
+                            <strong>Semi-Hard Negatives:</strong> Medium difficulty negative samples
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="approaches-box">
+                    <div class="approaches-title">Mining Approaches</div>
+                    <div class="approaches-grid">
+                        <div class="approach-item">Online Mining</div>
+                        <div class="approach-item">Offline Mining</div>
+                    </div>
+                </div>
+                
+                <div class="applications-box">
+                    <div class="app-title">💡 Applications</div>
+                    <div class="app-list">
+                        <div class="app-item">
+                            <div class="app-icon">1</div>
+                            <div>Face Recognition (FaceNet)</div>
+                        </div>
+                        <div class="app-item">
+                            <div class="app-icon">2</div>
+                            <div>Person Re-identification</div>
+                        </div>
+                        <div class="app-item">
+                            <div class="app-icon">3</div>
+                            <div>Fine-grained Similarity Learning</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

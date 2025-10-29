@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPT Family Development</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: #ffffff;
+            padding: 25px 40px;
+        }
+        
+        .title {
+            font-size: 26px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        /* Timeline */
+        .timeline-section {
+            background: #F8F9FA;
+            border: 3px solid #1E64C8;
+            border-radius: 12px;
+            padding: 18px 20px;
+            flex: 1;
+        }
+        
+        .timeline-title {
+            font-size: 19px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .timeline-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .timeline-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .timeline-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.2);
+        }
+        
+        .timeline-card.special {
+            background: #FFF9E6;
+            border-color: #FFC107;
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+        
+        .card-icon {
+            font-size: 24px;
+        }
+        
+        .card-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .timeline-card.special .card-name {
+            color: #F57C00;
+        }
+        
+        .card-description {
+            font-size: 16px;
+            color: #333333;
+            line-height: 1.4;
+            margin-left: 34px;
+        }
+        
+        /* Open Alternatives */
+        .alternatives-section {
+            background: #E8F5E9;
+            border: 3px solid #4CAF50;
+            border-radius: 10px;
+            padding: 15px 18px;
+        }
+        
+        .alt-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2E7D32;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .alt-items {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .alt-item {
+            background: white;
+            border: 2px solid #4CAF50;
+            border-radius: 6px;
+            padding: 8px 14px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #2E7D32;
+        }
+        
+        /* Key Features */
+        .features-section {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        
+        .feature-card {
+            background: #E8F4F8;
+            border-left: 4px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .feature-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        
+        .feature-content {
+            flex: 1;
+        }
+        
+        .feature-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 2px;
+        }
+        
+        .feature-text {
+            font-size: 15px;
+            color: #333333;
+        }
+        
+        .highlight {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .badge {
+            background: #C8E6C9;
+            border: 2px solid #4CAF50;
+            border-radius: 12px;
+            padding: 2px 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #2E7D32;
+            display: inline-block;
+            margin-left: 6px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">GPT Family Development Timeline</div>
+        
+        <div class="main-content">
+            <!-- Timeline -->
+            <div class="timeline-section">
+                <div class="timeline-title">🚀 Evolution & Innovations</div>
+                <div class="timeline-grid">
+                    <div class="timeline-card">
+                        <div class="card-header">
+                            <div class="card-icon">📚</div>
+                            <div class="card-name">InstructGPT</div>
+                        </div>
+                        <div class="card-description">
+                            <span class="highlight">RLHF</span> for instruction following
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-card special">
+                        <div class="card-header">
+                            <div class="card-icon">💬</div>
+                            <div class="card-name">ChatGPT</div>
+                        </div>
+                        <div class="card-description">
+                            Conversation-optimized with <span class="highlight">safety alignment</span>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-card special">
+                        <div class="card-header">
+                            <div class="card-icon">🎯</div>
+                            <div class="card-name">GPT-4</div>
+                        </div>
+                        <div class="card-description">
+                            <span class="highlight">Multimodal</span> • Improved reasoning & reliability
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-card">
+                        <div class="card-header">
+                            <div class="card-icon">💻</div>
+                            <div class="card-name">Codex</div>
+                        </div>
+                        <div class="card-description">
+                            Code generation • Powers <span class="highlight">GitHub Copilot</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Open Alternatives -->
+            <div class="alternatives-section">
+                <div class="alt-title">
+                    <span>🌍</span>
+                    <span>Open Source Alternatives</span>
+                </div>
+                <div class="alt-items">
+                    <div class="alt-item">GPT-Neo</div>
+                    <div class="alt-item">GPT-J</div>
+                    <div class="alt-item">Bloom</div>
+                    <div class="alt-item">LLaMA</div>
+                </div>
+            </div>
+            
+            <!-- Key Features -->
+            <div class="features-section">
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <div class="feature-content">
+                        <div class="feature-title">Safety</div>
+                        <div class="feature-text">Continuous improvements</div>
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <div class="feature-content">
+                        <div class="feature-title">Accuracy</div>
+                        <div class="feature-text">Enhanced reliability</div>
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🔌</div>
+                    <div class="feature-content">
+                        <div class="feature-title">API Access</div>
+                        <div class="feature-text">Widespread development</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

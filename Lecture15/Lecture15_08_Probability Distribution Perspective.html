@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Probability Distribution Perspective</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            position: relative;
+            padding: 25px 40px;
+        }
+        
+        .header {
+            margin-bottom: 25px;
+        }
+        
+        .part-label {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .main-content {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 25px;
+        }
+        
+        .distribution-visual {
+            flex: 1;
+            background: #F5F9FF;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 20px;
+            position: relative;
+            height: 280px;
+        }
+        
+        .visual-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .distributions {
+            position: relative;
+            height: 200px;
+            margin-top: 10px;
+        }
+        
+        .dist-curve {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .curve {
+            width: 200px;
+            height: 120px;
+            border: 3px solid;
+            border-bottom: none;
+            border-radius: 100px 100px 0 0;
+            opacity: 0.7;
+        }
+        
+        .curve.real {
+            border-color: #1E64C8;
+            position: relative;
+            left: -30px;
+        }
+        
+        .curve.generated {
+            border-color: #FF6B6B;
+            position: relative;
+            left: 30px;
+        }
+        
+        .curve.converged {
+            border-color: #4CAF50;
+            opacity: 0.9;
+        }
+        
+        .dist-label {
+            position: absolute;
+            font-size: 16px;
+            font-weight: 600;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+        }
+        
+        .label-real {
+            color: #1E64C8;
+            left: 20%;
+        }
+        
+        .label-gen {
+            color: #FF6B6B;
+            left: 80%;
+        }
+        
+        .label-converged {
+            color: #4CAF50;
+        }
+        
+        .arrow-converge {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 32px;
+            color: #1E64C8;
+            font-weight: 700;
+        }
+        
+        .info-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .info-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 14px 18px;
+        }
+        
+        .info-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .info-text {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .formula {
+            font-family: 'Courier New', monospace;
+            background: #F5F9FF;
+            padding: 6px 10px;
+            border-radius: 4px;
+            margin-top: 6px;
+            font-size: 14px;
+            color: #1E64C8;
+        }
+        
+        .bottom-section {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .process-box {
+            flex: 1;
+            background: #1E64C8;
+            color: white;
+            border-radius: 10px;
+            padding: 18px 22px;
+        }
+        
+        .process-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        
+        .process-step {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 8px 0;
+            font-size: 15px;
+        }
+        
+        .step-icon {
+            width: 24px;
+            height: 24px;
+            background: white;
+            color: #1E64C8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+        
+        .advantages {
+            flex: 1;
+            background: #F5F9FF;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 18px 22px;
+        }
+        
+        .advantages-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+        }
+        
+        .advantage-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin: 8px 0;
+            font-size: 15px;
+            color: #333;
+        }
+        
+        .check-icon {
+            color: #4CAF50;
+            font-weight: 700;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="part-label">Part 2/6: Mathematical Foundations</div>
+            <div class="title">Probability Distribution Perspective</div>
+        </div>
+        
+        <div class="main-content">
+            <div class="distribution-visual">
+                <div class="visual-title">Distribution Convergence</div>
+                <div class="distributions">
+                    <div class="dist-label label-real">p<sub>data</sub>(x)</div>
+                    <div class="dist-label label-gen">p<sub>g</sub>(x)</div>
+                    <div class="dist-curve">
+                        <div class="curve real"></div>
+                        <div class="curve generated"></div>
+                    </div>
+                    <div class="arrow-converge">→</div>
+                    <div class="dist-label label-converged" style="top: 120px;">p<sub>g</sub> = p<sub>data</sub></div>
+                    <div class="dist-curve" style="top: 80px;">
+                        <div class="curve converged"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="info-panel">
+                <div class="info-box">
+                    <div class="info-title">Real Data Distribution</div>
+                    <div class="info-text">p<sub>data</sub>(x) - True distribution of training data</div>
+                </div>
+                
+                <div class="info-box">
+                    <div class="info-title">Generator Distribution</div>
+                    <div class="info-text">p<sub>g</sub>(x) - Distribution learned by generator</div>
+                </div>
+                
+                <div class="info-box">
+                    <div class="info-title">Objective</div>
+                    <div class="info-text">Minimize distance between distributions</div>
+                    <div class="formula">D(p<sub>data</sub> || p<sub>g</sub>) → 0</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bottom-section">
+            <div class="process-box">
+                <div class="process-title">Sampling Process</div>
+                <div class="process-step">
+                    <div class="step-icon">z</div>
+                    <span>Sample from latent space: z ~ p<sub>z</sub>(z)</span>
+                </div>
+                <div class="process-step">
+                    <div class="step-icon">G</div>
+                    <span>Neural network transformation: G(z)</span>
+                </div>
+                <div class="process-step">
+                    <div class="step-icon">x</div>
+                    <span>Generate sample: x ~ p<sub>g</sub>(x)</span>
+                </div>
+            </div>
+            
+            <div class="advantages">
+                <div class="advantages-title">Key Advantages</div>
+                <div class="advantage-item">
+                    <span class="check-icon">✓</span>
+                    <span>Implicit density modeling</span>
+                </div>
+                <div class="advantage-item">
+                    <span class="check-icon">✓</span>
+                    <span>No explicit likelihood computation</span>
+                </div>
+                <div class="advantage-item">
+                    <span class="check-icon">✓</span>
+                    <span>Direct sampling capability</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parameter Efficiency</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            overflow-x: hidden;
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 960px;
+            width: 95vw;
+            min-height: 540px;
+            height: auto;
+            background: white;
+            position: relative;
+            overflow: hidden;
+            padding: 20px 35px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 25px;
+        }
+        
+        .comparison-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+        
+        .network-card {
+            background: white;
+            border: 3px solid #1E64C8;
+            border-radius: 12px;
+            padding: 20px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .network-card:hover {
+            box-shadow: 0 8px 25px rgba(30, 100, 200, 0.15);
+            transform: translateY(-3px);
+        }
+        
+        .network-card.shallow {
+            border-color: #E57373;
+        }
+        
+        .network-card.deep {
+            background: linear-gradient(135deg, #F0F6FF 0%, #E3F2FD 100%);
+        }
+        
+        .card-header {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #E0E0E0;
+        }
+        
+        .network-card.shallow .card-header {
+            color: #E57373;
+        }
+        
+        .network-card.deep .card-header {
+            color: #1E64C8;
+        }
+        
+        .architecture-visual {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 15px 0;
+            min-height: 80px;
+        }
+        
+        .layer-visual {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .layer-box {
+            background: #1E64C8;
+            border-radius: 6px;
+            color: white;
+            padding: 8px 12px;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            min-width: 80px;
+        }
+        
+        .network-card.shallow .layer-box {
+            background: #E57373;
+            padding: 20px 12px;
+            font-size: 16px;
+        }
+        
+        .arrow-down {
+            font-size: 20px;
+            color: #1E64C8;
+        }
+        
+        .network-card.shallow .arrow-down {
+            color: #E57373;
+        }
+        
+        .param-info {
+            background: #F5F5F5;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+        }
+        
+        .param-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        
+        .param-row:last-child {
+            margin-bottom: 0;
+        }
+        
+        .param-label {
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .param-value {
+            font-weight: 700;
+            color: #333;
+        }
+        
+        .network-card.shallow .param-value {
+            color: #E57373;
+        }
+        
+        .network-card.deep .param-value {
+            color: #1E64C8;
+        }
+        
+        .complexity-section {
+            background: #F0F6FF;
+            border-left: 5px solid #1E64C8;
+            padding: 18px 25px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .complexity-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .complexity-comparison {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+        
+        .complexity-item {
+            text-align: center;
+        }
+        
+        .complexity-type {
+            font-size: 16px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 6px;
+        }
+        
+        .complexity-value {
+            font-size: 20px;
+            font-weight: 700;
+            padding: 8px 16px;
+            border-radius: 8px;
+            background: white;
+        }
+        
+        .complexity-item.shallow .complexity-value {
+            color: #E57373;
+            border: 2px solid #E57373;
+        }
+        
+        .complexity-item.deep .complexity-value {
+            color: #1E64C8;
+            border: 2px solid #1E64C8;
+        }
+        
+        .vs-separator {
+            font-size: 24px;
+            font-weight: 700;
+            color: #999;
+        }
+        
+        .benefits-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 16px;
+            color: #333;
+            transition: all 0.3s ease;
+        }
+        
+        .benefit-item:hover {
+            border-color: #1E64C8;
+            background: #F8FBFF;
+        }
+        
+        .benefit-item::before {
+            content: "✓";
+            color: #1E64C8;
+            font-weight: 700;
+            margin-right: 10px;
+            font-size: 18px;
+        }
+    
+        
+        /* Responsive adjustments */
+        @media screen and (max-width: 1000px) {
+            .container {
+                width: 98vw !important;
+                max-width: 98vw !important;
+                padding: 15px 20px !important;
+            }
+        }
+        
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: 10px 15px !important;
+            }
+            
+            .title {
+                font-size: 20px !important;
+            }
+            
+            /* 그리드 레이아웃을 1열로 */
+            .challenges-grid,
+            .comparison-grid,
+            .solutions-grid,
+            .guide-grid,
+            .findings-section,
+            .benefits-grid,
+            .applications-section,
+            .guidelines-grid,
+            .components-section,
+            .techniques-grid,
+            .deployment-section {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .gradient-flow,
+            .network-visual,
+            .flow-steps,
+            .comparison-section {
+                flex-direction: column !important;
+                gap: 15px !important;
+            }
+            
+            .arrow-back,
+            .arrow,
+            .arrow-right,
+            .arrow-connector {
+                transform: rotate(90deg);
+                margin: 5px 0 !important;
+            }
+        }
+        
+        @media screen and (max-width: 480px) {
+            .container {
+                padding: 8px 10px !important;
+            }
+            
+            .title {
+                font-size: 18px !important;
+            }
+            
+            .card-header,
+            .scenario-label,
+            .card-title,
+            .function-title {
+                font-size: 16px !important;
+            }
+        }
+    
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Parameter Efficiency: Deep vs. Shallow Networks</div>
+        
+        <div class="comparison-section">
+            <div class="network-card shallow">
+                <div class="card-header">Shallow Network</div>
+                <div class="architecture-visual">
+                    <div class="layer-visual">
+                        <div class="layer-box">1000 units</div>
+                    </div>
+                </div>
+                <div class="param-info">
+                    <div class="param-row">
+                        <span class="param-label">Layers:</span>
+                        <span class="param-value">1</span>
+                    </div>
+                    <div class="param-row">
+                        <span class="param-label">Total Units:</span>
+                        <span class="param-value">1,000</span>
+                    </div>
+                    <div class="param-row">
+                        <span class="param-label">Parameters:</span>
+                        <span class="param-value">1M+</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="network-card deep">
+                <div class="card-header">Deep Network</div>
+                <div class="architecture-visual">
+                    <div class="layer-visual">
+                        <div class="layer-box">100 units</div>
+                        <div class="arrow-down">↓</div>
+                        <div class="layer-box">100 units</div>
+                        <div class="arrow-down">↓</div>
+                        <div class="layer-box">100 units</div>
+                    </div>
+                </div>
+                <div class="param-info">
+                    <div class="param-row">
+                        <span class="param-label">Layers:</span>
+                        <span class="param-value">3</span>
+                    </div>
+                    <div class="param-row">
+                        <span class="param-label">Total Units:</span>
+                        <span class="param-value">300</span>
+                    </div>
+                    <div class="param-row">
+                        <span class="param-label">Parameters:</span>
+                        <span class="param-value">30K</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="complexity-section">
+            <div class="complexity-title">Computational Complexity (n inputs)</div>
+            <div class="complexity-comparison">
+                <div class="complexity-item shallow">
+                    <div class="complexity-type">Shallow</div>
+                    <div class="complexity-value">O(2ⁿ)</div>
+                </div>
+                <div class="vs-separator">vs</div>
+                <div class="complexity-item deep">
+                    <div class="complexity-type">Deep</div>
+                    <div class="complexity-value">O(n²)</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="benefits-list">
+            <div class="benefit-item">Better generalization</div>
+            <div class="benefit-item">Faster training</div>
+            <div class="benefit-item">Reduced redundancy</div>
+            <div class="benefit-item">Faster inference</div>
+        </div>
+    </div>
+</body>
+</html>

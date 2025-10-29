@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DTW Principles</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            gap: 25px;
+            padding: 25px;
+        }
+        
+        .left-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .title-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #3a7bd5 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .main-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            opacity: 0.95;
+        }
+        
+        .principles-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            flex: 1;
+        }
+        
+        .principle-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .principle-card:hover {
+            background: #f0f6ff;
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.2);
+        }
+        
+        .principle-icon {
+            font-size: 26px;
+            flex-shrink: 0;
+        }
+        
+        .principle-text {
+            font-size: 17px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .highlight {
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .complexity-badge {
+            background: #fff3e0;
+            border: 2px solid #ff9800;
+            border-radius: 10px;
+            padding: 12px 16px;
+            text-align: center;
+        }
+        
+        .complexity-label {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+        
+        .complexity-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #ff9800;
+        }
+        
+        .right-section {
+            flex: 1.2;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .visualization-container {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .viz-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        
+        .dtw-grid {
+            background: white;
+            border-radius: 8px;
+            padding: 16px;
+            flex: 1;
+            position: relative;
+            display: grid;
+            place-items: center;
+        }
+        
+        .grid-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .matrix-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            grid-template-rows: repeat(8, 1fr);
+            gap: 3px;
+            aspect-ratio: 1;
+        }
+        
+        .grid-cell {
+            background: #e8f4ff;
+            border: 1px solid #d0e7ff;
+            border-radius: 2px;
+        }
+        
+        .path-cell {
+            background: #1E64C8;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+        
+        .axis-label {
+            position: absolute;
+            font-size: 15px;
+            font-weight: 600;
+            color: #666;
+        }
+        
+        .label-x {
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .label-y {
+            left: -60px;
+            top: 50%;
+            transform: translateY(-50%) rotate(-90deg);
+        }
+        
+        .series-viz {
+            display: flex;
+            gap: 16px;
+            margin-top: 12px;
+        }
+        
+        .series-container {
+            flex: 1;
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .series-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .series-wave {
+            height: 50px;
+        }
+        
+        .wave-path {
+            stroke-width: 2.5;
+            fill: none;
+        }
+        
+        .wave-series1 {
+            stroke: #1E64C8;
+        }
+        
+        .wave-series2 {
+            stroke: #4CAF50;
+        }
+        
+        .constraints-box {
+            background: #fff8f0;
+            border: 2px solid #ff9800;
+            border-radius: 10px;
+            padding: 14px 18px;
+        }
+        
+        .constraints-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #ff9800;
+            margin-bottom: 10px;
+        }
+        
+        .constraints-list {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .constraint-tag {
+            background: white;
+            color: #ff9800;
+            padding: 6px 14px;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 500;
+            border: 1px solid #ff9800;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left-section">
+            <div class="title-box">
+                <div class="main-title">Dynamic Time Warping</div>
+                <div class="subtitle">DTW Algorithm</div>
+            </div>
+            
+            <div class="principles-list">
+                <div class="principle-card">
+                    <div class="principle-icon">🔄</div>
+                    <div class="principle-text">
+                        <span class="highlight">Warps time axis</span> to align sequences
+                    </div>
+                </div>
+                
+                <div class="principle-card">
+                    <div class="principle-icon">🎯</div>
+                    <div class="principle-text">
+                        Finds <span class="highlight">optimal alignment path</span>
+                    </div>
+                </div>
+                
+                <div class="principle-card">
+                    <div class="principle-icon">🔗</div>
+                    <div class="principle-text">
+                        Allows <span class="highlight">one-to-many</span> matching
+                    </div>
+                </div>
+                
+                <div class="principle-card">
+                    <div class="principle-icon">📏</div>
+                    <div class="principle-text">
+                        DTW distance = <span class="highlight">sum of aligned distances</span>
+                    </div>
+                </div>
+                
+                <div class="principle-card">
+                    <div class="principle-icon">⚡</div>
+                    <div class="principle-text">
+                        Handles <span class="highlight">speed variations</span> & phase shifts
+                    </div>
+                </div>
+            </div>
+            
+            <div class="complexity-badge">
+                <div class="complexity-label">Time Complexity</div>
+                <div class="complexity-value">O(n²)</div>
+            </div>
+        </div>
+        
+        <div class="right-section">
+            <div class="visualization-container">
+                <div class="viz-title">DTW Alignment Matrix & Warping Path</div>
+                
+                <div class="dtw-grid">
+                    <div class="grid-container">
+                        <div class="axis-label label-y">Series 1</div>
+                        <div class="axis-label label-x">Series 2</div>
+                        
+                        <div class="matrix-grid">
+                            <!-- Generate grid cells with warping path -->
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell"></div>
+                            
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell path-cell"></div>
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell"></div>
+                            
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell path-cell"></div>
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell"></div>
+                            
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell path-cell"></div>
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell"></div>
+                            
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell path-cell"></div>
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell"></div>
+                            
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell path-cell"></div>
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell"></div>
+                            
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell path-cell"></div>
+                            <div class="grid-cell"></div>
+                            
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell"></div>
+                            <div class="grid-cell path-cell"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="series-viz">
+                    <div class="series-container">
+                        <div class="series-label">Series 1</div>
+                        <svg class="series-wave" viewBox="0 0 100 50" preserveAspectRatio="none">
+                            <path class="wave-path wave-series1" d="M 0,30 Q 20,15 40,30 Q 60,45 80,30 Q 100,15 100,25"/>
+                        </svg>
+                    </div>
+                    
+                    <div class="series-container">
+                        <div class="series-label">Series 2</div>
+                        <svg class="series-wave" viewBox="0 0 100 50" preserveAspectRatio="none">
+                            <path class="wave-path wave-series2" d="M 0,35 Q 15,20 30,35 Q 50,50 70,35 Q 90,20 100,30"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="constraints-box">
+                <div class="constraints-title">⚙️ Alignment Constraints</div>
+                <div class="constraints-list">
+                    <div class="constraint-tag">Sakoe-Chiba Band</div>
+                    <div class="constraint-tag">Itakura Parallelogram</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

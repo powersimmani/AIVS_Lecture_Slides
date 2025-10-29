@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evolution of Generative Models</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+        }
+        
+        .timeline {
+            position: relative;
+            padding: 40px 0;
+            height: 100%;
+        }
+        
+        .timeline-line {
+            position: absolute;
+            top: 80px;
+            left: 60px;
+            right: 60px;
+            height: 3px;
+            background: linear-gradient(to right, #1E64C8 0%, #4A90E2 100%);
+        }
+        
+        .model-node {
+            position: absolute;
+            text-align: center;
+            cursor: default;
+        }
+        
+        .node-circle {
+            width: 16px;
+            height: 16px;
+            background: #1E64C8;
+            border: 3px solid white;
+            border-radius: 50%;
+            margin: 0 auto 8px;
+            box-shadow: 0 0 0 2px #1E64C8;
+            transition: all 0.3s ease;
+        }
+        
+        .model-node:hover .node-circle {
+            width: 20px;
+            height: 20px;
+            background: #4A90E2;
+            box-shadow: 0 0 0 3px #1E64C8;
+        }
+        
+        .year {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .model-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .description {
+            font-size: 16px;
+            color: #555;
+            max-width: 180px;
+            line-height: 1.4;
+        }
+        
+        /* 상단 배치 */
+        .top-node {
+            top: 20px;
+        }
+        
+        /* 하단 배치 */
+        .bottom-node {
+            top: 140px;
+        }
+        
+        /* 위치 조정 */
+        .node1 { left: 40px; }
+        .node2 { left: 180px; }
+        .node3 { left: 350px; }
+        .node4 { left: 520px; }
+        .node5 { left: 720px; }
+        
+        .success-box {
+            position: absolute;
+            bottom: 40px;
+            left: 60px;
+            right: 60px;
+            background: linear-gradient(135deg, #1E64C8 0%, #4A90E2 100%);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(30, 100, 200, 0.2);
+        }
+        
+        .success-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .success-items {
+            font-size: 16px;
+            line-height: 1.6;
+            opacity: 0.95;
+        }
+        
+        .badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 6px;
+        }
+        
+        .arrow {
+            position: absolute;
+            top: 79px;
+            color: #1E64C8;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .arrow1 { left: 150px; }
+        .arrow2 { left: 310px; }
+        .arrow3 { left: 480px; }
+        .arrow4 { left: 670px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="timeline">
+            <div class="timeline-line"></div>
+            
+            <!-- Timeline Arrows -->
+            <div class="arrow arrow1">→</div>
+            <div class="arrow arrow2">→</div>
+            <div class="arrow arrow3">→</div>
+            <div class="arrow arrow4">→</div>
+            
+            <!-- VAEs -->
+            <div class="model-node node1 top-node">
+                <div class="year">2013</div>
+                <div class="node-circle"></div>
+                <div class="model-name">VAEs</div>
+                <div class="description">Probabilistic encoding with KL divergence</div>
+            </div>
+            
+            <!-- GANs -->
+            <div class="model-node node2 bottom-node">
+                <div class="year">2014</div>
+                <div class="node-circle"></div>
+                <div class="model-name">GANs</div>
+                <div class="description">Adversarial training approach</div>
+            </div>
+            
+            <!-- Diffusion Models -->
+            <div class="model-node node3 top-node">
+                <div class="year">2015-2020</div>
+                <div class="node-circle"></div>
+                <div class="model-name">Diffusion</div>
+                <div class="description">Gradual noise addition & removal</div>
+            </div>
+            
+            <!-- Flow-based Models -->
+            <div class="model-node node4 bottom-node">
+                <div class="year">2018</div>
+                <div class="node-circle"></div>
+                <div class="model-name">Flow-based</div>
+                <div class="description">Invertible transformations</div>
+            </div>
+            
+            <!-- Score-based Models -->
+            <div class="model-node node5 top-node">
+                <div class="year">2020+</div>
+                <div class="node-circle"></div>
+                <div class="model-name">Score-based</div>
+                <div class="description">Score matching connection</div>
+            </div>
+            
+            <!-- Recent Success Box -->
+            <div class="success-box">
+                <div class="success-title">
+                    <span>🎯</span>
+                    <span>Recent Success (2022-2023)</span>
+                </div>
+                <div class="success-items">
+                    <span class="badge">DALL-E 2</span>
+                    <span class="badge">Stable Diffusion</span>
+                    <span class="badge">Midjourney</span>
+                    <br>
+                    <strong>Key Advantages:</strong> High quality • Stable training • Mode coverage
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

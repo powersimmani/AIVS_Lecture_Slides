@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture 17 - Complete Slideshow</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #1a1a1a;
+            overflow: hidden;
+        }
+        
+        .slideshow-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .slide {
+            display: none;
+            width: 100vw;
+            height: 100vh;
+            background: white;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        .slide.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        /* Navigation controls */
+        .nav-controls {
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 6px 15px;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+        }
+        
+        .nav-button {
+            background: #1E64C8;
+            color: white;
+            border: none;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-button:hover {
+            background: #2874d8;
+            transform: scale(1.1);
+        }
+        
+        .nav-button:active {
+            transform: scale(0.95);
+        }
+        
+        .nav-button:disabled {
+            background: #555;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+        
+        .slide-counter {
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            min-width: 60px;
+            text-align: center;
+        }
+        
+        /* Progress bar */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #1E64C8;
+            transition: width 0.3s ease;
+        }
+        
+        /* Keyboard hint */
+        .keyboard-hint {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
+            animation: fadeOut 3s ease-in-out forwards;
+            z-index: 1000;
+        }
+        
+        @keyframes fadeOut {
+            0%, 70% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                pointer-events: none;
+            }
+        }
+        
+        .key {
+            display: inline-block;
+            background: #333;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin: 0 4px;
+            font-family: monospace;
+            border: 1px solid #555;
+        }
+        
+        /* Slide title overlay */
+        .slide-title {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(30, 100, 200, 0.9);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+            max-width: 600px;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <!-- Progress bar -->
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+    
+    <!-- Keyboard hint -->
+    <div class="keyboard-hint">
+        Use <span class="key">←</span> <span class="key">→</span> or <span class="key">Space</span> to navigate
+    </div>
+    
+    <!-- Slide title -->
+    <div class="slide-title" id="slideTitle">Loading...</div>
+    
+    <!-- Slideshow container -->
+    <div class="slideshow-container">
+        <div id="slideContainer"></div>
+    </div>
+    
+    <!-- Navigation controls -->
+    <div class="nav-controls">
+        <button class="nav-button" id="prevBtn" onclick="changeSlide(-1)">◄</button>
+        <div class="slide-counter">
+            <span id="currentSlide">1</span> / <span id="totalSlides">32</span>
+        </div>
+        <button class="nav-button" id="nextBtn" onclick="changeSlide(1)">►</button>
+    </div>
+
+    <script>
+        let currentSlideIndex = 0;
+        
+        // 전체 슬라이드 순서 (PDF 순서대로)
+        const slides = [
+            { title: "Title", file: "Lecture17_01_Lecture 17 Clustering and Unsupervised Learning Fundamentals.html", part: null },
+            { title: "Lecture Contents", file: "Lecture17_02_Lecture Contents.html", part: null },
+            
+            // Part 1
+            { title: "Unsupervised Learning Overview", file: "Lecture17_03_Part 1_4 Unsupervised Learning Overview.html", part: "1/4" },
+            { title: "What is Unsupervised Learning?", file: "Lecture17_04_What is Unsupervised Learning.html", part: "1/4" },
+            { title: "Supervised vs Unsupervised vs Semi-supervised", file: "Lecture17_05_Supervised vs Unsupervised vs Semi-supervised.html", part: "1/4" },
+            { title: "Applications of Unsupervised Learning", file: "Lecture17_06_Applications of Unsupervised Learning.html", part: "1/4" },
+            { title: "Key Challenges and Evaluation Methods", file: "Lecture17_07_Key Challenges and Evaluation Methods.html", part: "1/4" },
+            { title: "Data Preprocessing and Scaling", file: "Lecture17_08_Data Preprocessing and Scaling.html", part: "1/4" },
+            
+            // Part 2
+            { title: "Clustering Algorithms", file: "Lecture17_09_Part 2_4 Clustering Algorithms.html", part: "2/4" },
+            { title: "Clustering Problem Definition", file: "Lecture17_10_Clustering Problem Definition.html", part: "2/4" },
+            { title: "K-Means Algorithm", file: "Lecture17_11_K-Means Algorithm.html", part: "2/4" },
+            { title: "K-Means++ Initialization", file: "Lecture17_12_K-Means++ Initialization.html", part: "2/4" },
+            { title: "Hierarchical Clustering", file: "Lecture17_13_Hierarchical Clustering.html", part: "2/4" },
+            { title: "DBSCAN - Density-Based", file: "Lecture17_14_DBSCAN - Density-Based.html", part: "2/4" },
+            { title: "Mean Shift", file: "Lecture17_15_Mean Shift.html", part: "2/4" },
+            { title: "Gaussian Mixture Models", file: "Lecture17_16_Gaussian Mixture Models.html", part: "2/4" },
+            { title: "Cluster Evaluation Metrics", file: "Lecture17_17_Cluster Evaluation Metrics.html", part: "2/4" },
+            
+            // Part 3
+            { title: "Dimensionality Reduction", file: "Lecture17_18_Part 3_4 Dimensionality Reduction.html", part: "3/4" },
+            { title: "Curse of Dimensionality", file: "Lecture17_19_Curse of Dimensionality.html", part: "3/4" },
+            { title: "PCA Principles and Implementation", file: "Lecture17_20_PCA Principles and Implementation.html", part: "3/4" },
+            { title: "Kernel PCA", file: "Lecture17_21_Kernel PCA.html", part: "3/4" },
+            { title: "t-SNE Algorithm", file: "Lecture17_22_t-SNE Algorithm.html", part: "3/4" },
+            { title: "UMAP", file: "Lecture17_23_UMAP.html", part: "3/4" },
+            { title: "Autoencoder Dimensionality Reduction", file: "Lecture17_24_Autoencoder Dimensionality Reduction.html", part: "3/4" },
+            { title: "VAE Basics", file: "Lecture17_25_VAE Basics.html", part: "3/4" },
+            
+            // Part 4
+            { title: "Basic Anomaly Detection", file: "Lecture17_26_Part 4_4 Basic Anomaly Detection.html", part: "4/4" },
+            { title: "Anomaly Detection Overview", file: "Lecture17_27_Anomaly Detection Overview.html", part: "4/4" },
+            { title: "Statistical Methods", file: "Lecture17_28_Statistical Methods.html", part: "4/4" },
+            { title: "Isolation Forest", file: "Lecture17_29_Isolation Forest.html", part: "4/4" },
+            { title: "Hands-on: Implementation with scikit-learn", file: "Lecture17_30_Hands-on Implementation with scikit-learn.html", part: "4/4" },
+            
+            // Ending
+            { title: "Summary and Next Lecture Preview", file: "Lecture17_31_Summary and Next Lecture Preview.html", part: null },
+            { title: "Thank You", file: "Lecture17_32_Thank you.html", part: null }
+        ];
+        
+        function initializeSlides() {
+            const container = document.getElementById('slideContainer');
+            
+            // 모든 슬라이드를 미리 생성
+            slides.forEach((slide, index) => {
+                const slideDiv = document.createElement('div');
+                slideDiv.className = 'slide';
+                slideDiv.id = `slide-${index}`;
+                
+                const iframe = document.createElement('iframe');
+                iframe.src = encodeURI(slide.file);
+                
+                slideDiv.appendChild(iframe);
+                container.appendChild(slideDiv);
+            });
+            
+            // 첫 번째 슬라이드 표시
+            showSlide(0);
+        }
+        
+        function showSlide(index) {
+            // 모든 슬라이드 숨기기
+            const allSlides = document.querySelectorAll('.slide');
+            allSlides.forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            // 현재 슬라이드 표시
+            const currentSlide = document.getElementById(`slide-${index}`);
+            if (currentSlide) {
+                currentSlide.classList.add('active');
+            }
+            
+            // 제목 업데이트 (파트 정보 포함)
+            const slideInfo = slides[index];
+            let titleText = slideInfo.title;
+            if (slideInfo.part) {
+                titleText = `${slideInfo.title} | Part ${slideInfo.part}`;
+            }
+            document.getElementById('slideTitle').textContent = titleText;
+            
+            // 카운터 업데이트
+            document.getElementById('currentSlide').textContent = index + 1;
+            document.getElementById('totalSlides').textContent = slides.length;
+            
+            // 진행 바 업데이트
+            const progress = ((index + 1) / slides.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            
+            // 버튼 상태 업데이트
+            document.getElementById('prevBtn').disabled = index === 0;
+            document.getElementById('nextBtn').disabled = index === slides.length - 1;
+        }
+        
+        function changeSlide(direction) {
+            const newIndex = currentSlideIndex + direction;
+            
+            if (newIndex >= 0 && newIndex < slides.length) {
+                currentSlideIndex = newIndex;
+                showSlide(currentSlideIndex);
+            }
+        }
+        
+        // 키보드 내비게이션
+        document.addEventListener('keydown', (event) => {
+            switch(event.key) {
+                case 'ArrowLeft':
+                case 'ArrowUp':
+                    changeSlide(-1);
+                    break;
+                case 'ArrowRight':
+                case 'ArrowDown':
+                case ' ':
+                    event.preventDefault();
+                    changeSlide(1);
+                    break;
+                case 'Home':
+                    currentSlideIndex = 0;
+                    showSlide(currentSlideIndex);
+                    break;
+                case 'End':
+                    currentSlideIndex = slides.length - 1;
+                    showSlide(currentSlideIndex);
+                    break;
+            }
+        });
+        
+        // 페이지 로드 시 슬라이드 초기화
+        window.addEventListener('load', () => {
+            initializeSlides();
+        });
+        
+        // 스페이스바로 스크롤 방지
+        window.addEventListener('keydown', (e) => {
+            if(e.key === ' ' && e.target === document.body) {
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>

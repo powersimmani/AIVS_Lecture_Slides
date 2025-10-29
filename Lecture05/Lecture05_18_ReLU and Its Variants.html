@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReLU and Its Variants</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Aptos', 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            padding: 40px;
+        }
+        
+        .main-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+        }
+        
+        .variants-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            flex: 1;
+        }
+        
+        .variant-card {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 12px;
+            border: 2px solid #1E64C8;
+        }
+        
+        .leaky-card {
+            border-color: #9c27b0;
+        }
+        
+        .elu-card {
+            border-color: #ff9800;
+        }
+        
+        .variant-header {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            color: white;
+            padding: 8px;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 17px;
+            font-weight: 600;
+        }
+        
+        .leaky-header {
+            background: linear-gradient(135deg, #9c27b0 0%, #ba68c8 100%);
+        }
+        
+        .elu-header {
+            background: linear-gradient(135deg, #ff9800 0%, #ffa726 100%);
+        }
+        
+        .graph-area {
+            background: white;
+            border-radius: 4px;
+            height: 140px;
+            position: relative;
+        }
+        
+        canvas {
+            width: 100%;
+            height: 100%;
+            border-radius: 4px;
+        }
+        
+        .formula-display {
+            background: white;
+            padding: 8px;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+            color: #333;
+            border: 1px solid #ddd;
+            min-height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .properties-section {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        
+        .property-box {
+            background: #f8f9fa;
+            border-left: 4px solid #1E64C8;
+            padding: 12px;
+            border-radius: 4px;
+        }
+        
+        .leaky-property {
+            border-color: #9c27b0;
+        }
+        
+        .elu-property {
+            border-color: #ff9800;
+        }
+        
+        .property-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .leaky-title {
+            color: #9c27b0;
+        }
+        
+        .elu-title {
+            color: #ff9800;
+        }
+        
+        .property-list {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .property-item {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.4;
+            display: flex;
+            align-items: flex-start;
+            gap: 6px;
+        }
+        
+        .check-icon {
+            color: #4caf50;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .cross-icon {
+            color: #d32f2f;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .comparison-table {
+            grid-column: 1 / -1;
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th {
+            background: #1E64C8;
+            color: white;
+            padding: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        td {
+            padding: 8px;
+            font-size: 14px;
+            text-align: center;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        tr:last-child td {
+            border-bottom: none;
+        }
+        
+        tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .feature-name {
+            font-weight: 600;
+            color: #333;
+            text-align: left;
+            padding-left: 15px;
+        }
+        
+        .yes-cell {
+            color: #4caf50;
+            font-weight: 600;
+        }
+        
+        .no-cell {
+            color: #d32f2f;
+            font-weight: 600;
+        }
+        
+        .partial-cell {
+            color: #ff9800;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-title">ReLU and Its Variants</div>
+        
+        <div class="variants-grid">
+            <!-- ReLU -->
+            <div class="variant-card">
+                <div class="variant-header">ReLU</div>
+                <div class="graph-area">
+                    <canvas id="reluCanvas"></canvas>
+                </div>
+                <div class="formula-display">
+                    f(z) = max(0, z)
+                </div>
+            </div>
+            
+            <!-- Leaky ReLU -->
+            <div class="variant-card leaky-card">
+                <div class="variant-header leaky-header">Leaky ReLU</div>
+                <div class="graph-area">
+                    <canvas id="leakyCanvas"></canvas>
+                </div>
+                <div class="formula-display">
+                    f(z) = max(αz, z)<br>
+                    α = 0.01
+                </div>
+            </div>
+            
+            <!-- ELU -->
+            <div class="variant-card elu-card">
+                <div class="variant-header elu-header">ELU</div>
+                <div class="graph-area">
+                    <canvas id="eluCanvas"></canvas>
+                </div>
+                <div class="formula-display">
+                    f(z) = z if z > 0<br>
+                    α(e^z - 1) if z ≤ 0
+                </div>
+            </div>
+            
+            <!-- Properties -->
+            <div class="property-box">
+                <div class="property-title">ReLU Advantages</div>
+                <div class="property-list">
+                    <div class="property-item">
+                        <span class="check-icon">✓</span>
+                        <span>Simple computation</span>
+                    </div>
+                    <div class="property-item">
+                        <span class="check-icon">✓</span>
+                        <span>No vanishing gradient</span>
+                    </div>
+                    <div class="property-item">
+                        <span class="check-icon">✓</span>
+                        <span>Sparse activation</span>
+                    </div>
+                    <div class="property-item">
+                        <span class="cross-icon">✗</span>
+                        <span>Dead neurons (z < 0)</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="property-box leaky-property">
+                <div class="property-title leaky-title">Leaky ReLU</div>
+                <div class="property-list">
+                    <div class="property-item">
+                        <span class="check-icon">✓</span>
+                        <span>Fixes dying ReLU</span>
+                    </div>
+                    <div class="property-item">
+                        <span class="check-icon">✓</span>
+                        <span>Small negative slope</span>
+                    </div>
+                    <div class="property-item">
+                        <span class="check-icon">✓</span>
+                        <span>All neurons active</span>
+                    </div>
+                    <div class="property-item">
+                        <span class="check-icon">✓</span>
+                        <span>Fast convergence</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="property-box elu-property">
+                <div class="property-title elu-title">ELU Advantages</div>
+                <div class="property-list">
+                    <div class="property-item">
+                        <span class="check-icon">✓</span>
+                        <span>Smooth everywhere</span>
+                    </div>
+                    <div class="property-item">
+                        <span class="check-icon">✓</span>
+                        <span>Negative values push mean to zero</span>
+                    </div>
+                    <div class="property-item">
+                        <span class="check-icon">✓</span>
+                        <span>Robust to noise</span>
+                    </div>
+                    <div class="property-item">
+                        <span class="cross-icon">✗</span>
+                        <span>Slower (exponential)</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Comparison Table -->
+            <div class="comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>ReLU</th>
+                            <th>Leaky ReLU</th>
+                            <th>ELU</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="feature-name">Computation Speed</td>
+                            <td class="yes-cell">Fast</td>
+                            <td class="yes-cell">Fast</td>
+                            <td class="partial-cell">Moderate</td>
+                        </tr>
+                        <tr>
+                            <td class="feature-name">Dying Neurons</td>
+                            <td class="no-cell">Yes</td>
+                            <td class="yes-cell">No</td>
+                            <td class="yes-cell">No</td>
+                        </tr>
+                        <tr>
+                            <td class="feature-name">Zero-Centered</td>
+                            <td class="no-cell">No</td>
+                            <td class="no-cell">No</td>
+                            <td class="yes-cell">Nearly</td>
+                        </tr>
+                        <tr>
+                            <td class="feature-name">Most Common Use</td>
+                            <td class="yes-cell">Default</td>
+                            <td class="partial-cell">Alternative</td>
+                            <td class="partial-cell">Special Cases</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function drawActivation(canvasId, activationFn, color) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+            
+            function resize() {
+                const rect = canvas.getBoundingClientRect();
+                canvas.width = rect.width * window.devicePixelRatio;
+                canvas.height = rect.height * window.devicePixelRatio;
+                ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+                draw();
+            }
+            
+            function draw() {
+                const width = canvas.width / window.devicePixelRatio;
+                const height = canvas.height / window.devicePixelRatio;
+                const centerX = width / 2;
+                const centerY = height / 2;
+                const scale = 25;
+                
+                ctx.clearRect(0, 0, width, height);
+                
+                // Draw axes
+                ctx.strokeStyle = '#ddd';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(0, centerY);
+                ctx.lineTo(width, centerY);
+                ctx.moveTo(centerX, 0);
+                ctx.lineTo(centerX, height);
+                ctx.stroke();
+                
+                // Draw function
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 2.5;
+                ctx.beginPath();
+                
+                for (let x = 0; x < width; x += 1) {
+                    const inputZ = (x - centerX) / scale;
+                    const outputY = activationFn(inputZ);
+                    const canvasY = centerY - outputY * scale;
+                    
+                    if (x === 0) {
+                        ctx.moveTo(x, canvasY);
+                    } else {
+                        ctx.lineTo(x, canvasY);
+                    }
+                }
+                ctx.stroke();
+                
+                // Labels
+                ctx.fillStyle = '#999';
+                ctx.font = '10px Aptos, Segoe UI, sans-serif';
+                ctx.fillText('z', width - 12, centerY - 5);
+                ctx.fillText('f(z)', centerX + 5, 12);
+            }
+            
+            resize();
+            window.addEventListener('resize', resize);
+        }
+        
+        function relu(z) {
+            return Math.max(0, z);
+        }
+        
+        function leakyRelu(z) {
+            return z > 0 ? z : 0.01 * z;
+        }
+        
+        function elu(z) {
+            const alpha = 1.0;
+            return z > 0 ? z : alpha * (Math.exp(z) - 1);
+        }
+        
+        window.addEventListener('load', () => {
+            drawActivation('reluCanvas', relu, '#1E64C8');
+            drawActivation('leakyCanvas', leakyRelu, '#9c27b0');
+            drawActivation('eluCanvas', elu, '#ff9800');
+        });
+    </script>
+</body>
+</html>

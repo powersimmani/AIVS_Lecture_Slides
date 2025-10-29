@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Methods Comparison</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 35px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            flex: 1;
+        }
+        
+        .method-card {
+            border: 2px solid #1E64C8;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background: white;
+            transition: transform 0.2s;
+        }
+        
+        .method-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(30, 100, 200, 0.15);
+        }
+        
+        .method-card.supervised {
+            border-color: #64B5F6;
+            background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 100%);
+        }
+        
+        .method-card.unsupervised {
+            border-color: #1E64C8;
+            background: linear-gradient(135deg, #f8fbff 0%, #ffffff 100%);
+        }
+        
+        .method-card.semi {
+            border-color: #81C784;
+            background: linear-gradient(135deg, #f1f8f4 0%, #ffffff 100%);
+        }
+        
+        .method-header {
+            text-align: center;
+            padding-bottom: 12px;
+            border-bottom: 2px solid currentColor;
+        }
+        
+        .method-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        
+        .method-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .method-card.supervised .method-name {
+            color: #64B5F6;
+        }
+        
+        .method-card.semi .method-name {
+            color: #81C784;
+        }
+        
+        .method-content {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            flex: 1;
+        }
+        
+        .content-row {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .content-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .content-value {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .method-features {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .method-features li {
+            font-size: 15px;
+            color: #444;
+            padding-left: 18px;
+            position: relative;
+            line-height: 1.3;
+        }
+        
+        .method-features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+            color: #1E64C8;
+        }
+        
+        .method-card.supervised .method-features li:before {
+            color: #64B5F6;
+        }
+        
+        .method-card.semi .method-features li:before {
+            color: #81C784;
+        }
+        
+        .cost-indicator {
+            margin-top: auto;
+            padding-top: 12px;
+            border-top: 1px solid #e0e0e0;
+            text-align: center;
+        }
+        
+        .cost-label {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .cost-bar {
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .cost-fill {
+            height: 100%;
+            background: #1E64C8;
+            border-radius: 3px;
+        }
+        
+        .method-card.supervised .cost-fill {
+            width: 90%;
+            background: #64B5F6;
+        }
+        
+        .method-card.unsupervised .cost-fill {
+            width: 10%;
+            background: #1E64C8;
+        }
+        
+        .method-card.semi .cost-fill {
+            width: 40%;
+            background: #81C784;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="comparison-grid">
+            <!-- Supervised Learning -->
+            <div class="method-card supervised">
+                <div class="method-header">
+                    <div class="method-icon">📚</div>
+                    <div class="method-name">Supervised<br>Learning</div>
+                </div>
+                
+                <div class="method-content">
+                    <div class="content-row">
+                        <div class="content-label">Data Type</div>
+                        <div class="content-value">Labeled data (X, y)</div>
+                    </div>
+                    
+                    <div class="content-row">
+                        <div class="content-label">Goal</div>
+                        <div class="content-value">Predict y from X</div>
+                    </div>
+                    
+                    <ul class="method-features">
+                        <li>Requires labeled data</li>
+                        <li>High accuracy</li>
+                        <li>Expensive labeling</li>
+                        <li>Domain expertise needed</li>
+                    </ul>
+                </div>
+                
+                <div class="cost-indicator">
+                    <div class="cost-label">Labeling Cost</div>
+                    <div class="cost-bar">
+                        <div class="cost-fill"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Unsupervised Learning -->
+            <div class="method-card unsupervised">
+                <div class="method-header">
+                    <div class="method-icon">🔍</div>
+                    <div class="method-name">Unsupervised<br>Learning</div>
+                </div>
+                
+                <div class="method-content">
+                    <div class="content-row">
+                        <div class="content-label">Data Type</div>
+                        <div class="content-value">Only X (unlabeled)</div>
+                    </div>
+                    
+                    <div class="content-row">
+                        <div class="content-label">Goal</div>
+                        <div class="content-value">Find structure in X</div>
+                    </div>
+                    
+                    <ul class="method-features">
+                        <li>No labels needed</li>
+                        <li>Discover patterns</li>
+                        <li>Highly scalable</li>
+                        <li>Cost-effective</li>
+                    </ul>
+                </div>
+                
+                <div class="cost-indicator">
+                    <div class="cost-label">Labeling Cost</div>
+                    <div class="cost-bar">
+                        <div class="cost-fill"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Semi-supervised Learning -->
+            <div class="method-card semi">
+                <div class="method-header">
+                    <div class="method-icon">🔄</div>
+                    <div class="method-name">Semi-supervised<br>Learning</div>
+                </div>
+                
+                <div class="method-content">
+                    <div class="content-row">
+                        <div class="content-label">Data Type</div>
+                        <div class="content-value">Small labeled + Large unlabeled</div>
+                    </div>
+                    
+                    <div class="content-row">
+                        <div class="content-label">Goal</div>
+                        <div class="content-value">Leverage both data types</div>
+                    </div>
+                    
+                    <ul class="method-features">
+                        <li>Best of both worlds</li>
+                        <li>Balanced approach</li>
+                        <li>Practical solution</li>
+                        <li>Often best results</li>
+                    </ul>
+                </div>
+                
+                <div class="cost-indicator">
+                    <div class="cost-label">Labeling Cost</div>
+                    <div class="cost-bar">
+                        <div class="cost-fill"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

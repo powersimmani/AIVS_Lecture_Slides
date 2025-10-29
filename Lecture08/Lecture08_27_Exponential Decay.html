@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Exponential Decay</title>
+    <style>* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: Aptos, 'Segoe UI', sans-serif; background: #ffffff; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+.container { width: 960px; height: 540px; padding: 30px; background: #ffffff; }
+.header { text-align: center; margin-bottom: 20px; }
+.main-title { font-size: 20px; font-weight: 600; color: #1E64C8; margin-bottom: 6px; }
+.subtitle { font-size: 16px; color: #666; }
+.content-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; height: 440px; }
+.left-section, .right-section { display: flex; flex-direction: column; gap: 15px; }
+.concept-box { background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%); color: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 12px rgba(30, 100, 200, 0.3); }
+.concept-title { font-size: 18px; font-weight: 600; margin-bottom: 10px; }
+.concept-desc { font-size: 16px; line-height: 1.6; }
+        .formula-box { background: #f0f8ff; border: 3px solid #1E64C8; border-radius: 10px; padding: 18px; }
+        .rule-title { font-size: 17px; font-weight: 600; color: #1E64C8; margin-bottom: 12px; text-align: center; }
+        .formula { background: white; border: 2px dashed #1E64C8; border-radius: 8px; padding: 14px; text-align: center; font-size: 18px; color: #1E64C8; font-weight: 600; margin-bottom: 10px; }
+        .param-info { background: #e8f1fd; border-left: 4px solid #1E64C8; padding: 10px 12px; border-radius: 4px; font-size: 16px; color: #2c3e50; line-height: 1.5; }
+        .comparison-box { background: #f8f9fa; border: 2px solid #1E64C8; border-radius: 8px; padding: 18px; flex: 1; }
+        .comparison-title { font-size: 17px; font-weight: 600; color: #1E64C8; margin-bottom: 12px; text-align: center; }
+        .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .comparison-item { padding: 12px; border-radius: 6px; text-align: center; border: 2px solid; }
+        .comparison-item.step { background: #fff3cd; border-color: #ffc107; }
+        .comparison-item.exponential { background: #d4edda; border-color: #28a745; }
+        .comparison-label { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+        .comparison-item.step .comparison-label { color: #856404; }
+        .comparison-item.exponential .comparison-label { color: #28a745; }
+        .comparison-desc { font-size: 16px; color: #2c3e50; line-height: 1.4; }
+        .characteristics-box { background: #f8f9fa; border: 2px solid #1E64C8; border-radius: 8px; padding: 18px; }
+        .char-title { font-size: 17px; font-weight: 600; color: #1E64C8; margin-bottom: 12px; }
+        .char-list { display: flex; flex-direction: column; gap: 8px; }
+        .char-item { display: flex; align-items: flex-start; gap: 10px; }
+        .char-icon { min-width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0; margin-top: 2px; }
+        .char-icon.pro { background: #28a745; color: white; }
+        .char-icon.con { background: #ffc107; color: #856404; }
+        .char-text { font-size: 16px; color: #2c3e50; line-height: 1.5; }
+        .visual-box { background: #f8f9fa; border: 2px solid #1E64C8; border-radius: 8px; padding: 18px; flex: 1; }
+        .visual-title { font-size: 17px; font-weight: 600; color: #1E64C8; margin-bottom: 12px; text-align: center; }
+        .usage-box { background: linear-gradient(135deg, #e8f1fd 0%, #f0f8ff 100%); border: 2px solid #1E64C8; border-radius: 8px; padding: 14px 16px; }
+        .usage-title { font-size: 16px; font-weight: 600; color: #1E64C8; margin-bottom: 8px; text-align: center; }
+        .usage-list { display: flex; justify-content: space-around; gap: 10px; }
+        .usage-item { background: white; padding: 8px 14px; border-radius: 6px; font-size: 16px; color: #2c3e50; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="main-title">Exponential Decay Learning Rate Scheduling</div>
+            <div class="subtitle">Gradual Continuous Reduction</div>
+        </div>
+        
+        <div class="content-layout">
+            <div class="left-section">
+                <div class="concept-box">
+                    <div class="concept-title">📉 Core Concept</div>
+                    <div class="concept-desc">
+                        Gradually decrease learning rate<br>
+                        following an exponential function
+                    </div>
+                </div>
+                
+                <div class="formula-box">
+                    <div class="rule-title">Formula</div>
+                    <div class="formula">
+                        LR = initial_lr × decay_rate<sup>(epoch / decay_steps)</sup>
+                    </div>
+                    <div class="param-info">
+                        <strong>Decay Rate:</strong> Typically 0.94-0.99<br>
+                        (per epoch or step)
+                    </div>
+                </div>
+                
+                <div class="comparison-box">
+                    <div class="comparison-title">vs Step Decay</div>
+                    <div class="comparison-grid">
+                        <div class="comparison-item step">
+                            <div class="comparison-label">Step Decay</div>
+                            <div class="comparison-desc">
+                                Sudden changes<br>
+                                Staircase reduction
+                            </div>
+                        </div>
+                        <div class="comparison-item exponential">
+                            <div class="comparison-label">Exponential</div>
+                            <div class="comparison-desc">
+                                Smooth transition<br>
+                                Continuous reduction
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-section">
+                <div class="characteristics-box">
+                    <div class="char-title">⚖️ Characteristics</div>
+                    <div class="char-list">
+                        <div class="char-item">
+                            <div class="char-icon pro">✓</div>
+                            <div class="char-text">
+                                Smoother than step decay
+                            </div>
+                        </div>
+                        <div class="char-item">
+                            <div class="char-icon pro">✓</div>
+                            <div class="char-text">
+                                Smooth transition without sudden changes
+                            </div>
+                        </div>
+                        <div class="char-item">
+                            <div class="char-icon pro">✓</div>
+                            <div class="char-text">
+                                Effective for long training runs
+                            </div>
+                        </div>
+                        <div class="char-item">
+                            <div class="char-icon con">⚠</div>
+                            <div class="char-text">
+                                Can be too aggressive if decay rate poorly tuned
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="visual-box">
+                    <div class="visual-title">Decay Curve Visualization</div>
+                    <div style="background: white; border-radius: 6px; padding: 15px; height: 140px; position: relative;">
+                        <div style="font-size: 14px; color: #666; text-align: center;">Smooth exponential decay curve from initial_lr to near-zero</div>
+                    </div>
+                </div>
+                
+                <div class="usage-box">
+                    <div class="usage-title">🎯 Commonly Used In</div>
+                    <div class="usage-list">
+                        <div class="usage-item">Reinforcement Learning</div>
+                        <div class="usage-item">NLP</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

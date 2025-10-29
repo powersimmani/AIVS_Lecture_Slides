@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waterfall Plot</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Aptos', 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+            padding: 25px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 15px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 18px;
+        }
+        
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1.3fr 1fr;
+            gap: 20px;
+            height: calc(100% - 100px);
+        }
+        
+        .waterfall-section {
+            background: #F8F9FA;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 15px;
+        }
+        
+        .section-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .waterfall-container {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            height: calc(100% - 120px);
+            position: relative;
+        }
+        
+        .waterfall-chart {
+            position: relative;
+            height: 100%;
+            padding-left: 120px;
+            padding-right: 20px;
+        }
+        
+        .bar-item {
+            position: absolute;
+            left: 120px;
+            right: 20px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .bar-label {
+            position: absolute;
+            left: -110px;
+            width: 100px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            text-align: right;
+        }
+        
+        .bar-visual {
+            height: 28px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            font-size: 13px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .bar-visual:hover {
+            transform: scaleX(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .bar-positive {
+            background: linear-gradient(90deg, #DC3545 0%, #E63946 100%);
+            color: white;
+            justify-content: flex-end;
+        }
+        
+        .bar-negative {
+            background: linear-gradient(90deg, #4A90E2 0%, #1E64C8 100%);
+            color: white;
+            justify-content: flex-start;
+        }
+        
+        .base-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #666;
+            opacity: 0.3;
+        }
+        
+        /* Positioning from bottom to top */
+        .item-base {
+            bottom: 10px;
+            background: #E8F2FF;
+            border: 2px solid #1E64C8;
+            border-radius: 6px;
+            padding: 8px;
+            height: auto;
+        }
+        
+        .item-1 { bottom: 55px; }
+        .item-2 { bottom: 100px; }
+        .item-3 { bottom: 145px; }
+        .item-4 { bottom: 190px; }
+        .item-5 { bottom: 235px; }
+        .item-prediction {
+            bottom: 280px;
+            background: #1E64C8;
+            border: 2px solid #1E64C8;
+            color: white;
+            border-radius: 6px;
+            padding: 8px;
+            height: auto;
+            font-weight: 700;
+            font-size: 16px;
+        }
+        
+        .value-text {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1E64C8;
+        }
+        
+        .value-text.final {
+            color: white;
+        }
+        
+        .code-box {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+        }
+        
+        .code-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .code-content {
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #333;
+            background: #F8F9FA;
+            padding: 8px;
+            border-radius: 4px;
+        }
+        
+        .keyword {
+            color: #E63946;
+            font-weight: 600;
+        }
+        
+        .guide-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .guide-card {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 10px;
+            padding: 15px;
+        }
+        
+        .guide-card.highlight {
+            border-color: #1E64C8;
+            background: #E8F2FF;
+        }
+        
+        .guide-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        
+        .guide-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .guide-text {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+        
+        .guide-items {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .guide-items div {
+            margin-bottom: 4px;
+            padding-left: 18px;
+            position: relative;
+        }
+        
+        .guide-items div:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #1E64C8;
+            font-weight: 700;
+        }
+        
+        .legend {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+        
+        .legend-color {
+            width: 30px;
+            height: 18px;
+            border-radius: 4px;
+        }
+        
+        .legend-red {
+            background: linear-gradient(90deg, #DC3545 0%, #E63946 100%);
+        }
+        
+        .legend-blue {
+            background: linear-gradient(90deg, #4A90E2 0%, #1E64C8 100%);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Waterfall Plot: Feature Contribution Breakdown</div>
+        <div class="subtitle">Visualizing how each feature contributes to a single prediction</div>
+        
+        <div class="main-grid">
+            <!-- Waterfall Section -->
+            <div class="waterfall-section">
+                <div class="section-title">Example: House Price Prediction ($350K)</div>
+                
+                <div class="waterfall-container">
+                    <div class="waterfall-chart">
+                        <div class="base-line"></div>
+                        
+                        <!-- Base value -->
+                        <div class="bar-item item-base">
+                            <div class="bar-label">Base Value</div>
+                            <div style="text-align: center; width: 100%;">
+                                <span class="value-text">$250K</span>
+                                <div style="font-size: 12px; color: #666; margin-top: 2px;">Average prediction</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Feature contributions -->
+                        <div class="bar-item item-1">
+                            <div class="bar-label">Square Feet</div>
+                            <div class="bar-visual bar-positive" style="width: 70%;">+$80K</div>
+                        </div>
+                        
+                        <div class="bar-item item-2">
+                            <div class="bar-label">Location</div>
+                            <div class="bar-visual bar-positive" style="width: 50%;">+$50K</div>
+                        </div>
+                        
+                        <div class="bar-item item-3">
+                            <div class="bar-label">Bedrooms</div>
+                            <div class="bar-visual bar-positive" style="width: 25%;">+$20K</div>
+                        </div>
+                        
+                        <div class="bar-item item-4">
+                            <div class="bar-label">Age</div>
+                            <div class="bar-visual bar-negative" style="width: 30%;">-$30K</div>
+                        </div>
+                        
+                        <div class="bar-item item-5">
+                            <div class="bar-label">Condition</div>
+                            <div class="bar-visual bar-negative" style="width: 20%;">-$20K</div>
+                        </div>
+                        
+                        <!-- Final prediction -->
+                        <div class="bar-item item-prediction">
+                            <div class="bar-label" style="color: white;">Prediction</div>
+                            <div style="text-align: center; width: 100%;">
+                                <span class="value-text final">$350K</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-color legend-red"></div>
+                        <span>Positive (increases prediction)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color legend-blue"></div>
+                        <span>Negative (decreases prediction)</span>
+                    </div>
+                </div>
+                
+                <div class="code-box">
+                    <div class="code-title">Code Example</div>
+                    <div class="code-content">
+<span class="keyword">import</span> shap<br>
+shap.plots.<span style="color: #1E64C8; font-weight: 600;">waterfall</span>(shap_values[0])
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Guide Section -->
+            <div class="guide-section">
+                <div class="guide-card highlight">
+                    <div class="guide-icon">📊</div>
+                    <div class="guide-title">How to Read</div>
+                    <div class="guide-items">
+                        <div>Start at base value (bottom)</div>
+                        <div>Each bar adds/subtracts</div>
+                        <div>Red = pushes higher</div>
+                        <div>Blue = pushes lower</div>
+                        <div>Final value at top</div>
+                    </div>
+                </div>
+                
+                <div class="guide-card">
+                    <div class="guide-icon">🔍</div>
+                    <div class="guide-title">Key Insights</div>
+                    <div class="guide-text">
+                        Waterfall plots show the additive nature of SHAP values
+                    </div>
+                    <div class="guide-items">
+                        <div>Base + contributions = prediction</div>
+                        <div>Order: by impact magnitude</div>
+                        <div>Top 10-15 features shown</div>
+                    </div>
+                </div>
+                
+                <div class="guide-card">
+                    <div class="guide-icon">💡</div>
+                    <div class="guide-title">Use Cases</div>
+                    <div class="guide-items">
+                        <div>Explain individual predictions</div>
+                        <div>Identify key drivers</div>
+                        <div>Debug model decisions</div>
+                        <div>Communicate with stakeholders</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Implementation and Practice</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: #ffffff;
+            position: relative;
+            padding: 25px 35px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .header-title {
+            font-size: 20px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            flex: 1;
+        }
+        
+        .left-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .libraries-section {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 15px;
+        }
+        
+        .section-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .library-item {
+            background: #f8fafb;
+            border-left: 4px solid #1E64C8;
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+        }
+        
+        .lib-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 3px;
+        }
+        
+        .lib-desc {
+            font-size: 14px;
+            color: #555;
+        }
+        
+        .code-box {
+            background: #2d2d2d;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 15px;
+            flex: 1;
+        }
+        
+        .code-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #4CAF50;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .code-snippet {
+            background: #1e1e1e;
+            padding: 8px 10px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        
+        .code-comment {
+            color: #6A9955;
+        }
+        
+        .code-keyword {
+            color: #569CD6;
+        }
+        
+        .code-function {
+            color: #DCDCAA;
+        }
+        
+        .code-string {
+            color: #CE9178;
+        }
+        
+        .code-variable {
+            color: #9CDCFE;
+        }
+        
+        .code-operator {
+            color: #D4D4D4;
+        }
+        
+        .right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .workflow-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 15px;
+            flex: 1;
+        }
+        
+        .workflow-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .workflow-step {
+            background: #f8fafb;
+            border: 2px solid #1E64C8;
+            border-radius: 6px;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .step-number {
+            background: #1E64C8;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        
+        .step-text {
+            font-size: 15px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .arrow {
+            text-align: center;
+            font-size: 18px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .practices-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 11px 15px;
+        }
+        
+        .practice-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+        }
+        
+        .practice-item {
+            background: #f0f7ff;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #333;
+            text-align: center;
+            border: 1px solid #1E64C8;
+        }
+        
+        .datasets-box {
+            background: #1E64C8;
+            color: white;
+            border-radius: 8px;
+            padding: 11px 15px;
+        }
+        
+        .dataset-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .dataset-list {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        
+        .dataset-item {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-title">Python Implementation and Practice</div>
+        </div>
+        
+        <div class="main-grid">
+            <div class="left-panel">
+                <div class="libraries-section">
+                    <div class="section-title">Key Python Libraries</div>
+                    <div class="library-item">
+                        <div class="lib-name">NumPy</div>
+                        <div class="lib-desc">Matrix operations</div>
+                    </div>
+                    <div class="library-item">
+                        <div class="lib-name">Scikit-learn</div>
+                        <div class="lib-desc">ML convenience functions</div>
+                    </div>
+                    <div class="library-item">
+                        <div class="lib-name">Pandas</div>
+                        <div class="lib-desc">Data manipulation</div>
+                    </div>
+                    <div class="library-item">
+                        <div class="lib-name">Statsmodels</div>
+                        <div class="lib-desc">Statistical output</div>
+                    </div>
+                    <div class="library-item">
+                        <div class="lib-name">Matplotlib/Seaborn</div>
+                        <div class="lib-desc">Visualization</div>
+                    </div>
+                </div>
+                
+                <div class="code-box">
+                    <div class="code-title"># Implementation Examples</div>
+                    
+                    <div class="code-snippet">
+                        <span class="code-comment"># NumPy (from scratch)</span><br>
+                        <span class="code-variable">β</span> <span class="code-operator">=</span> <span class="code-variable">np</span><span class="code-operator">.</span><span class="code-variable">linalg</span><span class="code-operator">.</span><span class="code-function">inv</span><span class="code-operator">(</span><span class="code-variable">X</span><span class="code-operator">.</span><span class="code-variable">T</span> <span class="code-operator">@</span> <span class="code-variable">X</span><span class="code-operator">)</span> <span class="code-operator">@</span> <span class="code-variable">X</span><span class="code-operator">.</span><span class="code-variable">T</span> <span class="code-operator">@</span> <span class="code-variable">y</span>
+                    </div>
+                    
+                    <div class="code-snippet">
+                        <span class="code-comment"># Scikit-learn (easy)</span><br>
+                        <span class="code-keyword">from</span> <span class="code-variable">sklearn.linear_model</span> <span class="code-keyword">import</span> <span class="code-variable">LinearRegression</span><br>
+                        <span class="code-variable">model</span> <span class="code-operator">=</span> <span class="code-function">LinearRegression</span><span class="code-operator">()</span><br>
+                        <span class="code-variable">model</span><span class="code-operator">.</span><span class="code-function">fit</span><span class="code-operator">(</span><span class="code-variable">X</span><span class="code-operator">,</span> <span class="code-variable">y</span><span class="code-operator">)</span>
+                    </div>
+                    
+                    <div class="code-snippet">
+                        <span class="code-comment"># Statsmodels (detailed stats)</span><br>
+                        <span class="code-keyword">import</span> <span class="code-variable">statsmodels.api</span> <span class="code-keyword">as</span> <span class="code-variable">sm</span><br>
+                        <span class="code-variable">results</span> <span class="code-operator">=</span> <span class="code-variable">sm</span><span class="code-operator">.</span><span class="code-function">OLS</span><span class="code-operator">(</span><span class="code-variable">y</span><span class="code-operator">,</span> <span class="code-variable">X</span><span class="code-operator">).</span><span class="code-function">fit</span><span class="code-operator">()</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <div class="workflow-box">
+                    <div class="section-title">Standard Workflow</div>
+                    <div class="workflow-steps">
+                        <div class="workflow-step">
+                            <div class="step-number">1</div>
+                            <div class="step-text">Load Data</div>
+                        </div>
+                        <div class="arrow">↓</div>
+                        <div class="workflow-step">
+                            <div class="step-number">2</div>
+                            <div class="step-text">Explore & Visualize</div>
+                        </div>
+                        <div class="arrow">↓</div>
+                        <div class="workflow-step">
+                            <div class="step-number">3</div>
+                            <div class="step-text">Fit Model</div>
+                        </div>
+                        <div class="arrow">↓</div>
+                        <div class="workflow-step">
+                            <div class="step-number">4</div>
+                            <div class="step-text">Validate (diagnostics)</div>
+                        </div>
+                        <div class="arrow">↓</div>
+                        <div class="workflow-step">
+                            <div class="step-number">5</div>
+                            <div class="step-text">Predict</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="practices-box">
+                    <div class="section-title">Best Practices</div>
+                    <div class="practice-list">
+                        <div class="practice-item">Feature scaling</div>
+                        <div class="practice-item">Handle missing data</div>
+                        <div class="practice-item">Train-test split</div>
+                        <div class="practice-item">Cross-validation</div>
+                    </div>
+                </div>
+                
+                <div class="datasets-box">
+                    <div class="dataset-title">Practice Datasets</div>
+                    <div class="dataset-list">
+                        <div class="dataset-item">Boston Housing</div>
+                        <div class="dataset-item">California Housing</div>
+                        <div class="dataset-item">Diabetes</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

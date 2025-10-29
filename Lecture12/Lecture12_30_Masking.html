@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masking in Sequence Models</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #ffffff;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 35px;
+            position: relative;
+        }
+        
+        .main-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 18px;
+        }
+        
+        .content {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            height: calc(100% - 40px);
+        }
+        
+        /* Why Masking */
+        .why-section {
+            background: #e8f2ff;
+            border-left: 5px solid #1E64C8;
+            padding: 12px 18px;
+            border-radius: 8px;
+        }
+        
+        .why-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .why-text {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.4;
+        }
+        
+        /* Mask Types */
+        .mask-types {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            flex: 1;
+        }
+        
+        .mask-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 16px;
+            border-top: 5px solid currentColor;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .card-padding {
+            color: #e91e63;
+        }
+        
+        .card-lookahead {
+            color: #9c27b0;
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        
+        .card-number {
+            width: 32px;
+            height: 32px;
+            background: currentColor;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+        }
+        
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: currentColor;
+        }
+        
+        .card-subtitle {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 12px;
+        }
+        
+        /* Visualization */
+        .mask-visual {
+            flex: 1;
+            background: white;
+            border-radius: 8px;
+            padding: 14px;
+            border: 2px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .visual-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+            text-align: center;
+        }
+        
+        /* Padding Mask Grid */
+        .padding-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
+        }
+        
+        .padding-cell {
+            aspect-ratio: 1;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            border: 2px solid currentColor;
+        }
+        
+        .cell-valid {
+            background: #e91e63;
+            color: white;
+            border-color: #e91e63;
+        }
+        
+        .cell-masked {
+            background: #f5f5f5;
+            color: #999;
+            border-color: #ddd;
+            border-style: dashed;
+        }
+        
+        /* Look-ahead Mask Grid */
+        .lookahead-grid {
+            display: grid;
+            grid-template-columns: auto repeat(4, 1fr);
+            gap: 4px;
+            align-items: center;
+        }
+        
+        .lookahead-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #666;
+            text-align: center;
+        }
+        
+        .lookahead-cell {
+            aspect-ratio: 1;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        .cell-allow {
+            background: #9c27b0;
+            color: white;
+        }
+        
+        .cell-block {
+            background: #f5f5f5;
+            color: #999;
+            border: 2px dashed #ddd;
+        }
+        
+        /* Legend */
+        .legend {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 8px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+        }
+        
+        .legend-box {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+        }
+        
+        .legend-text {
+            color: #666;
+            font-weight: 600;
+        }
+        
+        /* Formula */
+        .formula-box {
+            background: white;
+            padding: 10px 14px;
+            border-radius: 6px;
+            border: 2px solid currentColor;
+            margin-top: 8px;
+        }
+        
+        .formula-text {
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: currentColor;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        /* Implementation */
+        .implementation-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+        }
+        
+        .impl-card {
+            background: #e8f2ff;
+            border-radius: 8px;
+            padding: 12px;
+            border-left: 4px solid #1E64C8;
+        }
+        
+        .impl-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .impl-code {
+            background: white;
+            padding: 8px 10px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #555;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-title">Masking in Sequence Models</div>
+        
+        <div class="content">
+            <!-- Why Masking -->
+            <div class="why-section">
+                <div class="why-title">🎭 Why Do We Need Masking?</div>
+                <div class="why-text">
+                    Masks prevent the model from attending to <strong>invalid positions</strong> like padding tokens or future tokens, ensuring correct computation and preventing information leakage.
+                </div>
+            </div>
+            
+            <!-- Mask Types -->
+            <div class="mask-types">
+                <!-- Padding Mask -->
+                <div class="mask-card card-padding">
+                    <div class="card-header">
+                        <div class="card-number">1</div>
+                        <div class="card-title">Padding Mask</div>
+                    </div>
+                    <div class="card-subtitle">
+                        Ignore PAD tokens in attention computation
+                    </div>
+                    
+                    <div class="mask-visual">
+                        <div class="visual-title">Example: Sequence with padding</div>
+                        <div class="padding-grid">
+                            <div class="padding-cell cell-valid">I</div>
+                            <div class="padding-cell cell-valid">love</div>
+                            <div class="padding-cell cell-valid">AI</div>
+                            <div class="padding-cell cell-masked">PAD</div>
+                            <div class="padding-cell cell-masked">PAD</div>
+                        </div>
+                        <div class="legend">
+                            <div class="legend-item">
+                                <div class="legend-box cell-valid"></div>
+                                <div class="legend-text">Valid (1)</div>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-box cell-masked"></div>
+                                <div class="legend-text">Masked (0)</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="formula-box card-padding">
+                        <div class="formula-text">
+                            mask = (input != PAD_TOKEN)<br/>
+                            scores.masked_fill(~mask, -∞)
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Look-ahead Mask -->
+                <div class="mask-card card-lookahead">
+                    <div class="card-header">
+                        <div class="card-number">2</div>
+                        <div class="card-title">Look-ahead Mask</div>
+                    </div>
+                    <div class="card-subtitle">
+                        Prevent attending to future tokens (causal)
+                    </div>
+                    
+                    <div class="mask-visual">
+                        <div class="visual-title">Attention mask matrix (lower triangular)</div>
+                        <div class="lookahead-grid">
+                            <div></div>
+                            <div class="lookahead-label">t₁</div>
+                            <div class="lookahead-label">t₂</div>
+                            <div class="lookahead-label">t₃</div>
+                            <div class="lookahead-label">t₄</div>
+                            
+                            <div class="lookahead-label">t₁</div>
+                            <div class="lookahead-cell cell-allow">✓</div>
+                            <div class="lookahead-cell cell-block">✗</div>
+                            <div class="lookahead-cell cell-block">✗</div>
+                            <div class="lookahead-cell cell-block">✗</div>
+                            
+                            <div class="lookahead-label">t₂</div>
+                            <div class="lookahead-cell cell-allow">✓</div>
+                            <div class="lookahead-cell cell-allow">✓</div>
+                            <div class="lookahead-cell cell-block">✗</div>
+                            <div class="lookahead-cell cell-block">✗</div>
+                            
+                            <div class="lookahead-label">t₃</div>
+                            <div class="lookahead-cell cell-allow">✓</div>
+                            <div class="lookahead-cell cell-allow">✓</div>
+                            <div class="lookahead-cell cell-allow">✓</div>
+                            <div class="lookahead-cell cell-block">✗</div>
+                            
+                            <div class="lookahead-label">t₄</div>
+                            <div class="lookahead-cell cell-allow">✓</div>
+                            <div class="lookahead-cell cell-allow">✓</div>
+                            <div class="lookahead-cell cell-allow">✓</div>
+                            <div class="lookahead-cell cell-allow">✓</div>
+                        </div>
+                        <div class="legend">
+                            <div class="legend-item">
+                                <div class="legend-box cell-allow"></div>
+                                <div class="legend-text">Can attend</div>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-box cell-block"></div>
+                                <div class="legend-text">Blocked</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="formula-box card-lookahead">
+                        <div class="formula-text">
+                            mask = torch.tril(<br/>
+                            &nbsp;&nbsp;torch.ones(seq_len, seq_len))
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Implementation -->
+            <div class="implementation-section">
+                <div class="impl-card">
+                    <div class="impl-title">① Create Mask</div>
+                    <div class="impl-code">
+# Padding mask<br/>
+pad_mask = (x != PAD)<br/>
+<br/>
+# Shape: (batch, seq_len)
+                    </div>
+                </div>
+                
+                <div class="impl-card">
+                    <div class="impl-title">② Apply to Attention</div>
+                    <div class="impl-code">
+# Before softmax<br/>
+scores = scores.masked_fill(<br/>
+&nbsp;&nbsp;~mask, float('-inf'))<br/>
+attn = softmax(scores)
+                    </div>
+                </div>
+                
+                <div class="impl-card">
+                    <div class="impl-title">③ Combine Masks</div>
+                    <div class="impl-code">
+# Both padding + lookahead<br/>
+mask = pad_mask &<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; lookahead_mask<br/>
+# Logical AND
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

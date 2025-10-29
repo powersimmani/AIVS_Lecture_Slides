@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Self-Supervised Pretraining</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            padding: 25px;
+            gap: 20px;
+        }
+        
+        .workflow-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .phase {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .phase-number {
+            background: #1E64C8;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .phase-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 16px;
+            width: 100%;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .phase-box:hover {
+            background: #f0f6ff;
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.2);
+        }
+        
+        .phase-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .phase-data {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+        
+        .phase-icon {
+            font-size: 28px;
+            margin-top: 6px;
+        }
+        
+        .arrow-large {
+            color: #1E64C8;
+            font-size: 36px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .comparison-section {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 20px;
+        }
+        
+        .benefits-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .benefit-card {
+            background: white;
+            border-left: 4px solid #1E64C8;
+            border-radius: 6px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+        }
+        
+        .benefit-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        
+        .benefit-text {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .chart-container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .chart-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        
+        .chart-graph {
+            position: relative;
+            height: 180px;
+            border-left: 2px solid #666;
+            border-bottom: 2px solid #666;
+            margin: 0 10px 10px 30px;
+        }
+        
+        .y-axis-label {
+            position: absolute;
+            left: -28px;
+            top: -10px;
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+        }
+        
+        .x-axis-label {
+            position: absolute;
+            bottom: -25px;
+            right: -10px;
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .curve {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .curve-line-ssl {
+            stroke: #4CAF50;
+            stroke-width: 3;
+            fill: none;
+        }
+        
+        .curve-line-supervised {
+            stroke: #ff9800;
+            stroke-width: 3;
+            fill: none;
+            stroke-dasharray: 5, 5;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 10px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 15px;
+            color: #333;
+        }
+        
+        .legend-line {
+            width: 30px;
+            height: 3px;
+        }
+        
+        .legend-ssl {
+            background: #4CAF50;
+        }
+        
+        .legend-supervised {
+            background: #ff9800;
+        }
+        
+        .applications {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .app-tag {
+            background: #e8f4ff;
+            color: #1E64C8;
+            padding: 6px 14px;
+            border-radius: 16px;
+            font-size: 15px;
+            font-weight: 500;
+            border: 1px solid #1E64C8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="workflow-section">
+            <div class="phase">
+                <div class="phase-number">1</div>
+                <div class="phase-box">
+                    <div class="phase-title">Pretrain</div>
+                    <div class="phase-data">Large unlabeled dataset</div>
+                    <div class="phase-icon">🗄️</div>
+                </div>
+            </div>
+            
+            <div class="arrow-large">→</div>
+            
+            <div class="phase">
+                <div class="phase-number">2</div>
+                <div class="phase-box">
+                    <div class="phase-title">Fine-tune</div>
+                    <div class="phase-data">Small labeled dataset</div>
+                    <div class="phase-icon">🎯</div>
+                </div>
+            </div>
+            
+            <div class="arrow-large">→</div>
+            
+            <div class="phase">
+                <div class="phase-number">3</div>
+                <div class="phase-box">
+                    <div class="phase-title">Deploy</div>
+                    <div class="phase-data">Downstream task</div>
+                    <div class="phase-icon">🚀</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="comparison-section">
+            <div class="benefits-list">
+                <div class="benefit-card">
+                    <div class="benefit-icon">🌐</div>
+                    <div class="benefit-text">Cross-domain transfer learning</div>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon">📉</div>
+                    <div class="benefit-text">Reduces labeled data needs</div>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon">🏥</div>
+                    <div class="benefit-text">Medical imaging applications</div>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon">🛰️</div>
+                    <div class="benefit-text">Satellite imagery analysis</div>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon">✅</div>
+                    <div class="benefit-text">Match pretraining & target domains</div>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <div class="chart-title">Performance vs Labeled Data Size</div>
+                <div class="chart-graph">
+                    <div class="y-axis-label">Performance</div>
+                    <div class="x-axis-label">Labeled Data →</div>
+                    
+                    <svg class="curve" viewBox="0 0 100 100" preserveAspectRatio="none">
+                        <!-- Self-Supervised Pretraining + Fine-tuning -->
+                        <path class="curve-line-ssl" d="M 0,70 Q 15,20 30,15 T 60,10 T 100,8"/>
+                        
+                        <!-- Supervised from scratch -->
+                        <path class="curve-line-supervised" d="M 0,95 Q 20,85 40,60 T 70,30 T 100,15"/>
+                    </svg>
+                </div>
+                
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-line legend-ssl"></div>
+                        <span>Self-Supervised + Fine-tune</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-line legend-supervised"></div>
+                        <span>Supervised from scratch</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="applications">
+            <div class="app-tag">💬 Text</div>
+            <div class="app-tag">🖼️ Images</div>
+            <div class="app-tag">🎵 Audio</div>
+            <div class="app-tag">🎥 Video</div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Summary and Next Lecture</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 16px;
+            flex: 1;
+        }
+        
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        
+        .summary-header {
+            background: linear-gradient(135deg, #e3f2fd 0%, #ffffff 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .summary-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .summary-subtitle {
+            font-size: 14px;
+            color: #666;
+            margin-top: 4px;
+        }
+        
+        .topics-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            flex: 1;
+        }
+        
+        .topic-box {
+            background: white;
+            border: 2px solid;
+            border-radius: 10px;
+            padding: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s;
+        }
+        
+        .topic-box:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .topic-box.clustering {
+            border-color: #1E64C8;
+            background: linear-gradient(135deg, #e3f2fd 0%, #ffffff 100%);
+        }
+        
+        .topic-box.dimred {
+            border-color: #9C27B0;
+            background: linear-gradient(135deg, #f3e5f5 0%, #ffffff 100%);
+        }
+        
+        .topic-box.anomaly {
+            border-color: #4CAF50;
+            background: linear-gradient(135deg, #e8f5e9 0%, #ffffff 100%);
+        }
+        
+        .topic-box.considerations {
+            border-color: #FF9800;
+            background: linear-gradient(135deg, #fff3e0 0%, #ffffff 100%);
+        }
+        
+        .topic-icon {
+            font-size: 32px;
+            flex-shrink: 0;
+        }
+        
+        .topic-content {
+            flex: 1;
+        }
+        
+        .topic-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .topic-box.clustering .topic-title {
+            color: #1E64C8;
+        }
+        
+        .topic-box.dimred .topic-title {
+            color: #9C27B0;
+        }
+        
+        .topic-box.anomaly .topic-title {
+            color: #388E3C;
+        }
+        
+        .topic-box.considerations .topic-title {
+            color: #F57C00;
+        }
+        
+        .topic-desc {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.3;
+        }
+        
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        
+        .next-lecture-box {
+            background: linear-gradient(135deg, #fff8e1 0%, #ffffff 100%);
+            border: 3px solid #FFA726;
+            border-radius: 12px;
+            padding: 18px;
+            flex: 1;
+        }
+        
+        .next-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 14px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #FFA726;
+        }
+        
+        .next-icon {
+            font-size: 28px;
+        }
+        
+        .next-title {
+            font-size: 19px;
+            font-weight: 600;
+            color: #F57C00;
+        }
+        
+        .next-subtitle {
+            text-align: center;
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+        }
+        
+        .next-topics {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .next-item {
+            background: white;
+            border: 1px solid #FFA726;
+            border-radius: 8px;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .next-item-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        
+        .next-item-text {
+            font-size: 15px;
+            color: #333;
+        }
+        
+        .practice-box {
+            background: linear-gradient(135deg, #e0f2f1 0%, #ffffff 100%);
+            border: 2px solid #00897B;
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+        }
+        
+        .practice-icon {
+            font-size: 36px;
+            margin-bottom: 8px;
+        }
+        
+        .practice-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #00897B;
+            margin-bottom: 6px;
+        }
+        
+        .practice-text {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">📚 Summary and Next Lecture Preview</div>
+        
+        <div class="main-grid">
+            <div class="left-section">
+                <div class="summary-header">
+                    <div class="summary-title">Today's Lecture: Unsupervised Learning</div>
+                    <div class="summary-subtitle">Discovering patterns without labels</div>
+                </div>
+                
+                <div class="topics-grid">
+                    <div class="topic-box clustering">
+                        <div class="topic-icon">🔵</div>
+                        <div class="topic-content">
+                            <div class="topic-title">Clustering</div>
+                            <div class="topic-desc">K-Means, DBSCAN, Hierarchical, GMM - each has trade-offs</div>
+                        </div>
+                    </div>
+                    
+                    <div class="topic-box dimred">
+                        <div class="topic-icon">📉</div>
+                        <div class="topic-content">
+                            <div class="topic-title">Dimensionality Reduction</div>
+                            <div class="topic-desc">PCA, t-SNE, UMAP - visualization and compression</div>
+                        </div>
+                    </div>
+                    
+                    <div class="topic-box anomaly">
+                        <div class="topic-icon">⚠️</div>
+                        <div class="topic-content">
+                            <div class="topic-title">Anomaly Detection</div>
+                            <div class="topic-desc">Statistical methods, Isolation Forest - identify outliers</div>
+                        </div>
+                    </div>
+                    
+                    <div class="topic-box considerations">
+                        <div class="topic-icon">🎯</div>
+                        <div class="topic-content">
+                            <div class="topic-title">Key Considerations</div>
+                            <div class="topic-desc">Scaling, evaluation metrics, interpretability</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-section">
+                <div class="next-lecture-box">
+                    <div class="next-header">
+                        <div class="next-icon">🚀</div>
+                        <div class="next-title">Next Lecture</div>
+                    </div>
+                    
+                    <div class="next-subtitle">Advanced Topics in Deep Learning</div>
+                    
+                    <div class="next-topics">
+                        <div class="next-item">
+                            <div class="next-item-icon">🧠</div>
+                            <div class="next-item-text">Deep Autoencoders</div>
+                        </div>
+                        
+                        <div class="next-item">
+                            <div class="next-item-icon">🎨</div>
+                            <div class="next-item-text">Generative Adversarial Networks (GANs)</div>
+                        </div>
+                        
+                        <div class="next-item">
+                            <div class="next-item-icon">🔄</div>
+                            <div class="next-item-text">Self-Supervised Learning</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="practice-box">
+                    <div class="practice-icon">💻</div>
+                    <div class="practice-title">Practice Assignment</div>
+                    <div class="practice-text">Apply these algorithms to real-world datasets</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

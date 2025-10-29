@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RNN Evolution Diagram</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 30px;
+            background: white;
+        }
+        
+        .flow-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            height: 100%;
+        }
+        
+        .stage {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .box {
+            flex: 1;
+            padding: 16px 20px;
+            border-radius: 8px;
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            position: relative;
+        }
+        
+        .box-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .box-content {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .problems {
+            flex: 1.2;
+            background: #fff5f5;
+            border-color: #dc3545;
+        }
+        
+        .problems .box-title {
+            color: #dc3545;
+        }
+        
+        .problems ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .problems li {
+            font-size: 15px;
+            color: #555;
+            margin-bottom: 4px;
+            padding-left: 16px;
+            position: relative;
+        }
+        
+        .problems li:before {
+            content: "⚠";
+            position: absolute;
+            left: 0;
+            color: #dc3545;
+        }
+        
+        .solution {
+            background: #f0f7ff;
+            border-color: #1E64C8;
+        }
+        
+        .arrow {
+            font-size: 32px;
+            color: #1E64C8;
+            font-weight: bold;
+            margin: 0 10px;
+        }
+        
+        .arrow-down {
+            text-align: center;
+            font-size: 28px;
+            color: #666;
+            height: 20px;
+        }
+        
+        .highlight-box {
+            background: #1E64C8;
+            color: white;
+            padding: 14px 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: auto;
+        }
+        
+        .stage-1 {
+            flex: 2;
+        }
+        
+        .stage-2 {
+            flex: 2;
+        }
+        
+        .stage-3 {
+            flex: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="flow-container">
+            <!-- Stage 1: RNN -->
+            <div class="stage stage-1">
+                <div class="box">
+                    <div class="box-title">RNN</div>
+                    <div class="box-content">Recurrent Neural Networks<br>Step-by-step sequential processing</div>
+                </div>
+                <span class="arrow">→</span>
+                <div class="box problems">
+                    <div class="box-title">Problems</div>
+                    <ul>
+                        <li>Vanishing gradient</li>
+                        <li>Sequential processing limits</li>
+                        <li>Long sequence challenges</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="arrow-down">↓</div>
+            
+            <!-- Stage 2: LSTM/GRU -->
+            <div class="stage stage-2">
+                <div class="box solution">
+                    <div class="box-title">LSTM & GRU</div>
+                    <div class="box-content">Addressed vanishing gradient with gates</div>
+                </div>
+                <span class="arrow">→</span>
+                <div class="box problems">
+                    <div class="box-title">Remaining Issues</div>
+                    <ul>
+                        <li>Still sequential processing</li>
+                        <li>Limited parallelization</li>
+                        <li>Long-range dependencies</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="arrow-down">↓</div>
+            
+            <!-- Stage 3: Attention -->
+            <div class="stage stage-3">
+                <div class="box solution">
+                    <div class="box-title">Attention Mechanism</div>
+                    <div class="box-content">Improved encoder-decoder models<br>Direct connections to all positions</div>
+                </div>
+            </div>
+            
+            <div class="arrow-down">↓</div>
+            
+            <!-- Final Solution -->
+            <div class="highlight-box">
+                Solution: Transformer Architecture<br>
+                <span style="font-size: 15px; font-weight: 400;">Parallel processing + Effective long-range dependencies</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

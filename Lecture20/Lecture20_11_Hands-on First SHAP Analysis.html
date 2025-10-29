@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hands-on: First SHAP Analysis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Aptos', 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+            padding: 25px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 20px;
+        }
+        
+        .workflow {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .step-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .step-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(30, 100, 200, 0.2);
+        }
+        
+        .step-number {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 28px;
+            height: 28px;
+            background: #1E64C8;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+        }
+        
+        .step-icon {
+            font-size: 28px;
+            text-align: center;
+            margin: 8px 0;
+        }
+        
+        .step-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 6px;
+        }
+        
+        .step-code {
+            font-size: 13px;
+            font-family: 'Courier New', monospace;
+            background: #F8F9FA;
+            padding: 6px;
+            border-radius: 4px;
+            color: #333;
+            text-align: center;
+            word-break: break-word;
+        }
+        
+        .code-section {
+            background: #F8F9FA;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 15px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .code-block {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+        }
+        
+        .code-header {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .code-content {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #333;
+            line-height: 1.6;
+            background: #F8F9FA;
+            padding: 10px;
+            border-radius: 6px;
+            overflow-x: auto;
+        }
+        
+        .code-line {
+            margin-bottom: 4px;
+        }
+        
+        .comment {
+            color: #28A745;
+        }
+        
+        .keyword {
+            color: #E63946;
+            font-weight: 600;
+        }
+        
+        .string {
+            color: #F4A261;
+        }
+        
+        .output-section {
+            background: #E8F2FF;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 8px;
+        }
+        
+        .output-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .output-text {
+            font-size: 13px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .arrow-down {
+            text-align: center;
+            color: #1E64C8;
+            font-size: 24px;
+            font-weight: 700;
+            margin: 8px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Hands-on: First SHAP Analysis Workflow</div>
+        
+        <div class="workflow">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <div class="step-icon">📦</div>
+                <div class="step-title">Setup</div>
+                <div class="step-code">pip install shap</div>
+            </div>
+            
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <div class="step-icon">📊</div>
+                <div class="step-title">Load Data</div>
+                <div class="step-code">load_boston()</div>
+            </div>
+            
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <div class="step-icon">🤖</div>
+                <div class="step-title">Train Model</div>
+                <div class="step-code">RandomForest</div>
+            </div>
+            
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <div class="step-icon">🔍</div>
+                <div class="step-title">Explain</div>
+                <div class="step-code">TreeExplainer</div>
+            </div>
+        </div>
+        
+        <div class="arrow-down">↓</div>
+        
+        <div class="code-section">
+            <div class="code-block">
+                <div class="code-header">
+                    <span>💻</span>
+                    <span>Complete Code Example</span>
+                </div>
+                <div class="code-content">
+                    <div class="code-line"><span class="keyword">import</span> shap</div>
+                    <div class="code-line"><span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> RandomForestRegressor</div>
+                    <div class="code-line"><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> load_boston</div>
+                    <div class="code-line">&nbsp;</div>
+                    <div class="code-line"><span class="comment"># Load dataset</span></div>
+                    <div class="code-line">X, y = load_boston(return_X_y=<span class="keyword">True</span>)</div>
+                    <div class="code-line">&nbsp;</div>
+                    <div class="code-line"><span class="comment"># Train model</span></div>
+                    <div class="code-line">model = RandomForestRegressor(n_estimators=100)</div>
+                    <div class="code-line">model.fit(X, y)</div>
+                    <div class="code-line">&nbsp;</div>
+                    <div class="code-line"><span class="comment"># Initialize explainer</span></div>
+                    <div class="code-line">explainer = shap.TreeExplainer(model)</div>
+                    <div class="code-line">&nbsp;</div>
+                    <div class="code-line"><span class="comment"># Compute SHAP values</span></div>
+                    <div class="code-line">shap_values = explainer.shap_values(X)</div>
+                    <div class="code-line">&nbsp;</div>
+                    <div class="code-line"><span class="comment"># Visualize single prediction</span></div>
+                    <div class="code-line">shap.waterfall_plot(</div>
+                    <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;shap.Explanation(</div>
+                    <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;values=shap_values[0],</div>
+                    <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;base_values=explainer.expected_value</div>
+                    <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;)</div>
+                    <div class="code-line">)</div>
+                </div>
+            </div>
+            
+            <div class="code-block">
+                <div class="code-header">
+                    <span>📈</span>
+                    <span>Key Insights</span>
+                </div>
+                <div class="output-section">
+                    <div class="output-title">🎯 What You'll See:</div>
+                    <div class="output-text">
+                        • Waterfall plot showing feature contributions<br>
+                        • Base value (average prediction)<br>
+                        • Each feature's push/pull effect<br>
+                        • Final prediction value
+                    </div>
+                </div>
+                
+                <div class="output-section" style="margin-top: 10px;">
+                    <div class="output-title">💡 Interpretation Tips:</div>
+                    <div class="output-text">
+                        • Red bars = increase prediction<br>
+                        • Blue bars = decrease prediction<br>
+                        • Bar length = importance magnitude<br>
+                        • Sum of all = deviation from base
+                    </div>
+                </div>
+                
+                <div class="output-section" style="margin-top: 10px;">
+                    <div class="output-title">⚙️ Model Options:</div>
+                    <div class="output-text">
+                        • TreeExplainer: XGBoost, LightGBM, RF<br>
+                        • KernelExplainer: Any model (slower)<br>
+                        • DeepExplainer: Neural networks
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Training vs. Inference</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 30px;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .comparison-container {
+            display: flex;
+            gap: 16px;
+            flex: 1;
+        }
+        
+        .mode-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .mode-header {
+            background: #1E64C8;
+            color: white;
+            padding: 14px 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .inference-section .mode-header {
+            background: #16a34a;
+        }
+        
+        .mode-icon {
+            font-size: 28px;
+            margin-bottom: 4px;
+        }
+        
+        .mode-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        
+        .mode-subtitle {
+            font-size: 15px;
+            opacity: 0.95;
+        }
+        
+        .feature-card {
+            background: #f0f7ff;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 16px;
+            display: flex;
+            gap: 10px;
+            align-items: start;
+        }
+        
+        .inference-section .feature-card {
+            background: #f0fdf4;
+            border-color: #16a34a;
+        }
+        
+        .feature-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .feature-text {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .highlight-blue {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .highlight-green {
+            font-weight: 600;
+            color: #16a34a;
+        }
+        
+        .process-visual {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 14px;
+            text-align: center;
+            margin-top: auto;
+        }
+        
+        .inference-section .process-visual {
+            border-color: #16a34a;
+        }
+        
+        .visual-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        
+        .visual-content {
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .training-section .visual-content {
+            color: #1E64C8;
+        }
+        
+        .inference-section .visual-content {
+            color: #16a34a;
+        }
+        
+        .key-differences {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .diff-card {
+            flex: 1;
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 16px;
+            text-align: center;
+        }
+        
+        .diff-icon {
+            font-size: 24px;
+            margin-bottom: 6px;
+        }
+        
+        .diff-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .diff-comparison {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .training-value {
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .inference-value {
+            color: #16a34a;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Training vs. Inference</div>
+        
+        <div class="comparison-container">
+            <div class="mode-section training-section">
+                <div class="mode-header">
+                    <div class="mode-icon">🎓</div>
+                    <div class="mode-title">Training Mode</div>
+                    <div class="mode-subtitle">Teacher Forcing</div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <div class="feature-text">
+                        <span class="highlight-blue">Parallel processing</span> of all target tokens simultaneously
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <div class="feature-text">
+                        <span class="highlight-blue">Masking</span> ensures causality (no future information leakage)
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📚</div>
+                    <div class="feature-text">
+                        Ground truth tokens used as input for next positions
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <div class="feature-text">
+                        <span class="highlight-blue">Fast & efficient</span> - entire sequence at once
+                    </div>
+                </div>
+                
+                <div class="process-visual">
+                    <div class="visual-label">Processing Mode</div>
+                    <div class="visual-content">ALL → ALL</div>
+                </div>
+            </div>
+            
+            <div class="mode-section inference-section">
+                <div class="mode-header">
+                    <div class="mode-icon">🎯</div>
+                    <div class="mode-title">Inference Mode</div>
+                    <div class="mode-subtitle">Autoregressive Generation</div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <div class="feature-text">
+                        <span class="highlight-green">Token-by-token</span> autoregressive generation
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">➡️</div>
+                    <div class="feature-text">
+                        Each <span class="highlight-green">generated token</span> becomes input for next step
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🎲</div>
+                    <div class="feature-text">
+                        <span class="highlight-green">Beam search</span> or sampling for generation strategies
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">💾</div>
+                    <div class="feature-text">
+                        <span class="highlight-green">KV-caching</span> improves inference efficiency
+                    </div>
+                </div>
+                
+                <div class="process-visual">
+                    <div class="visual-label">Processing Mode</div>
+                    <div class="visual-content">ONE → ONE</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="key-differences">
+            <div class="diff-card">
+                <div class="diff-icon">⚡</div>
+                <div class="diff-title">Speed</div>
+                <div class="diff-comparison">
+                    Training: <span class="training-value">Parallelizable</span><br>
+                    Inference: <span class="inference-value">Sequential</span>
+                </div>
+            </div>
+            
+            <div class="diff-card">
+                <div class="diff-icon">📊</div>
+                <div class="diff-title">Processing</div>
+                <div class="diff-comparison">
+                    Training: <span class="training-value">All at once</span><br>
+                    Inference: <span class="inference-value">Step by step</span>
+                </div>
+            </div>
+            
+            <div class="diff-card">
+                <div class="diff-icon">🎯</div>
+                <div class="diff-title">Input Source</div>
+                <div class="diff-comparison">
+                    Training: <span class="training-value">Ground truth</span><br>
+                    Inference: <span class="inference-value">Generated</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KernelSHAP Algorithm</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Aptos', 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+            padding: 25px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 15px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            height: calc(100% - 100px);
+        }
+        
+        .flowchart-section {
+            background: #F8F9FA;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .flow-steps {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .flow-step {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .flow-step:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.2);
+        }
+        
+        .step-number {
+            min-width: 32px;
+            height: 32px;
+            background: #1E64C8;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .step-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            line-height: 1.3;
+        }
+        
+        .step-detail {
+            font-size: 14px;
+            color: #666;
+            margin-top: 2px;
+        }
+        
+        .arrow-down {
+            text-align: center;
+            color: #1E64C8;
+            font-size: 20px;
+            font-weight: 700;
+            margin: -5px 0;
+        }
+        
+        .properties-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .property-card {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 10px;
+            padding: 15px;
+            flex: 1;
+        }
+        
+        .property-card.highlight {
+            border-color: #1E64C8;
+            background: #E8F2FF;
+        }
+        
+        .property-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        
+        .property-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .property-text {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+            margin-bottom: 8px;
+        }
+        
+        .property-list {
+            font-size: 15px;
+            color: #666;
+            line-height: 1.5;
+        }
+        
+        .property-list li {
+            margin-bottom: 4px;
+        }
+        
+        .code-box {
+            background: #F8F9FA;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #333;
+            margin-top: 8px;
+        }
+        
+        .keyword {
+            color: #E63946;
+            font-weight: 600;
+        }
+        
+        .highlight-text {
+            color: #1E64C8;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">KernelSHAP: Model-Agnostic Approximation</div>
+        <div class="subtitle">Sampling-based method with weighted linear regression</div>
+        
+        <div class="content-grid">
+            <!-- Flowchart Section -->
+            <div class="flowchart-section">
+                <div class="section-title">Algorithm Flowchart</div>
+                
+                <div class="flow-steps">
+                    <div class="flow-step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <div class="step-text">Sample Coalitions</div>
+                            <div class="step-detail">Generate feature subsets systematically</div>
+                        </div>
+                    </div>
+                    
+                    <div class="arrow-down">↓</div>
+                    
+                    <div class="flow-step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <div class="step-text">Create Perturbed Instances</div>
+                            <div class="step-detail">Replace missing features with background data</div>
+                        </div>
+                    </div>
+                    
+                    <div class="arrow-down">↓</div>
+                    
+                    <div class="flow-step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <div class="step-text">Get Model Predictions</div>
+                            <div class="step-detail">Evaluate f(x) for each coalition</div>
+                        </div>
+                    </div>
+                    
+                    <div class="arrow-down">↓</div>
+                    
+                    <div class="flow-step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <div class="step-text">Apply SHAP Kernel Weights</div>
+                            <div class="step-detail">Specialized weighting function</div>
+                        </div>
+                    </div>
+                    
+                    <div class="arrow-down">↓</div>
+                    
+                    <div class="flow-step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <div class="step-text">Weighted Linear Regression</div>
+                            <div class="step-detail">Solve for SHAP values (φᵢ)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Properties Section -->
+            <div class="properties-section">
+                <div class="property-card highlight">
+                    <div class="property-icon">🎯</div>
+                    <div class="property-title">Key Advantage</div>
+                    <div class="property-text">
+                        <span class="highlight-text">Model-Agnostic</span> - Works with any black-box model
+                    </div>
+                    <ul class="property-list">
+                        <li>• Neural networks</li>
+                        <li>• Ensemble methods</li>
+                        <li>• Custom models</li>
+                    </ul>
+                </div>
+                
+                <div class="property-card">
+                    <div class="property-icon">⚖️</div>
+                    <div class="property-title">Trade-off</div>
+                    <div class="property-text">
+                        Computational Cost vs Accuracy
+                    </div>
+                    <div class="property-list">
+                        <span class="highlight-text">More samples</span> → Better approximation<br>
+                        <span class="highlight-text">Fewer samples</span> → Faster computation
+                    </div>
+                </div>
+                
+                <div class="property-card">
+                    <div class="property-icon">💻</div>
+                    <div class="property-title">Implementation</div>
+                    <div class="code-box">
+<span class="keyword">import</span> shap<br>
+<br>
+explainer = shap.<span class="highlight-text">KernelExplainer</span>(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;model.predict,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;X_train<br>
+)<br>
+shap_values = explainer.shap_values(X_test)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

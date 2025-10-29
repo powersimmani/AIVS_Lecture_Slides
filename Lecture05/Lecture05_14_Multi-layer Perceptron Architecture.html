@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-layer Perceptron Architecture</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Aptos', 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 40px;
+        }
+        
+        .main-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+        }
+        
+        .architecture-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .network-diagram {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 25px;
+            border: 2px solid #1E64C8;
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .mlp-structure {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            position: relative;
+        }
+        
+        svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .connection-line {
+            stroke: #bbdefb;
+            stroke-width: 1.5;
+            opacity: 0.4;
+        }
+        
+        .layer {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .layer-label {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            padding: 4px 12px;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+        
+        .input-label {
+            background: #e3f2fd;
+            color: #1E64C8;
+        }
+        
+        .hidden-label {
+            background: #e8eaf6;
+            color: #5e35b1;
+        }
+        
+        .output-label {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .nodes-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .node {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+            border: 2px solid;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .input-node {
+            background: #e3f2fd;
+            border-color: #1E64C8;
+            color: #1E64C8;
+        }
+        
+        .hidden-node {
+            background: #5e35b1;
+            border-color: #4527a0;
+            color: white;
+        }
+        
+        .output-node {
+            background: #4caf50;
+            border-color: #388e3c;
+            color: white;
+        }
+        
+        .layer-size {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+        
+        .info-card {
+            background: #f8f9fa;
+            border-left: 4px solid #1E64C8;
+            padding: 12px;
+            border-radius: 4px;
+        }
+        
+        .info-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .info-text {
+            font-size: 16px;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .formula-card {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .formula-text {
+            font-size: 18px;
+            font-weight: 500;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .arrow-formula {
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-title">Multi-layer Perceptron Architecture</div>
+        
+        <div class="architecture-area">
+            <div class="network-diagram">
+                <svg id="connections"></svg>
+                
+                <div class="mlp-structure">
+                    <!-- Input Layer -->
+                    <div class="layer">
+                        <div class="layer-label input-label">Input Layer</div>
+                        <div class="nodes-group" id="input-layer">
+                            <div class="node input-node" data-layer="input" data-index="0">x₁</div>
+                            <div class="node input-node" data-layer="input" data-index="1">x₂</div>
+                            <div class="node input-node" data-layer="input" data-index="2">x₃</div>
+                            <div class="node input-node" data-layer="input" data-index="3">x₄</div>
+                        </div>
+                        <div class="layer-size">n features</div>
+                    </div>
+                    
+                    <!-- Hidden Layer 1 -->
+                    <div class="layer">
+                        <div class="layer-label hidden-label">Hidden 1</div>
+                        <div class="nodes-group" id="hidden1-layer">
+                            <div class="node hidden-node" data-layer="hidden1" data-index="0">h₁¹</div>
+                            <div class="node hidden-node" data-layer="hidden1" data-index="1">h₂¹</div>
+                            <div class="node hidden-node" data-layer="hidden1" data-index="2">h₃¹</div>
+                            <div class="node hidden-node" data-layer="hidden1" data-index="3">h₄¹</div>
+                            <div class="node hidden-node" data-layer="hidden1" data-index="4">h₅¹</div>
+                        </div>
+                        <div class="layer-size">m₁ units</div>
+                    </div>
+                    
+                    <!-- Hidden Layer 2 -->
+                    <div class="layer">
+                        <div class="layer-label hidden-label">Hidden 2</div>
+                        <div class="nodes-group" id="hidden2-layer">
+                            <div class="node hidden-node" data-layer="hidden2" data-index="0">h₁²</div>
+                            <div class="node hidden-node" data-layer="hidden2" data-index="1">h₂²</div>
+                            <div class="node hidden-node" data-layer="hidden2" data-index="2">h₃²</div>
+                            <div class="node hidden-node" data-layer="hidden2" data-index="3">h₄²</div>
+                        </div>
+                        <div class="layer-size">m₂ units</div>
+                    </div>
+                    
+                    <!-- Hidden Layer 3 -->
+                    <div class="layer">
+                        <div class="layer-label hidden-label">Hidden 3</div>
+                        <div class="nodes-group" id="hidden3-layer">
+                            <div class="node hidden-node" data-layer="hidden3" data-index="0">h₁³</div>
+                            <div class="node hidden-node" data-layer="hidden3" data-index="1">h₂³</div>
+                            <div class="node hidden-node" data-layer="hidden3" data-index="2">h₃³</div>
+                        </div>
+                        <div class="layer-size">m₃ units</div>
+                    </div>
+                    
+                    <!-- Output Layer -->
+                    <div class="layer">
+                        <div class="layer-label output-label">Output Layer</div>
+                        <div class="nodes-group" id="output-layer">
+                            <div class="node output-node" data-layer="output" data-index="0">ŷ₁</div>
+                            <div class="node output-node" data-layer="output" data-index="1">ŷ₂</div>
+                        </div>
+                        <div class="layer-size">k outputs</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-title">Layers</div>
+                    <div class="info-text">L = 5</div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-title">Hidden Layers</div>
+                    <div class="info-text">3 layers</div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-title">Parameters</div>
+                    <div class="info-text">Weights + Biases</div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-title">Connectivity</div>
+                    <div class="info-text">Fully Connected</div>
+                </div>
+                
+                <div class="formula-card">
+                    <div class="formula-text">h⁽ˡ⁾ = σ(W⁽ˡ⁾h⁽ˡ⁻¹⁾ + b⁽ˡ⁾)</div>
+                    <div class="arrow-formula">→</div>
+                    <div class="formula-text">Layer-wise Computation</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function drawConnections() {
+            const svg = document.getElementById('connections');
+            const container = document.querySelector('.network-diagram');
+            const rect = container.getBoundingClientRect();
+            
+            svg.setAttribute('width', rect.width);
+            svg.setAttribute('height', rect.height);
+            
+            // Clear existing lines
+            svg.innerHTML = '';
+            
+            const connections = [
+                {from: 'input', to: 'hidden1'},
+                {from: 'hidden1', to: 'hidden2'},
+                {from: 'hidden2', to: 'hidden3'},
+                {from: 'hidden3', to: 'output'}
+            ];
+            
+            connections.forEach(conn => {
+                const fromNodes = document.querySelectorAll(`[data-layer="${conn.from}"]`);
+                const toNodes = document.querySelectorAll(`[data-layer="${conn.to}"]`);
+                
+                fromNodes.forEach(fromNode => {
+                    const fromRect = fromNode.getBoundingClientRect();
+                    const fromX = fromRect.left + fromRect.width / 2 - rect.left;
+                    const fromY = fromRect.top + fromRect.height / 2 - rect.top;
+                    
+                    toNodes.forEach(toNode => {
+                        const toRect = toNode.getBoundingClientRect();
+                        const toX = toRect.left + toRect.width / 2 - rect.left;
+                        const toY = toRect.top + toRect.height / 2 - rect.top;
+                        
+                        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                        line.setAttribute('x1', fromX);
+                        line.setAttribute('y1', fromY);
+                        line.setAttribute('x2', toX);
+                        line.setAttribute('y2', toY);
+                        line.setAttribute('class', 'connection-line');
+                        svg.appendChild(line);
+                    });
+                });
+            });
+        }
+        
+        window.addEventListener('load', () => {
+            setTimeout(drawConnections, 100);
+        });
+        window.addEventListener('resize', drawConnections);
+    </script>
+</body>
+</html>

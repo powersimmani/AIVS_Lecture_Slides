@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Common Failure Patterns</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            position: relative;
+            padding: 25px 40px;
+        }
+        
+        .header {
+            margin-bottom: 18px;
+        }
+        
+        .part-label {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .failures-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+        
+        .failure-card {
+            background: white;
+            border: 2px solid #FF6B6B;
+            border-radius: 10px;
+            padding: 16px 18px;
+            position: relative;
+            transition: transform 0.2s;
+        }
+        
+        .failure-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.2);
+        }
+        
+        .failure-icon {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            font-size: 28px;
+            opacity: 0.3;
+        }
+        
+        .failure-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .failure-badge {
+            background: #FF6B6B;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .failure-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #FF6B6B;
+        }
+        
+        .failure-desc {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .category-label {
+            display: inline-block;
+            background: #FFF3E0;
+            color: #FF9800;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+        
+        .collapse-card {
+            grid-column: span 2;
+            background: #FFEBEE;
+            border: 3px solid #FF6B6B;
+        }
+        
+        .collapse-card .failure-title {
+            font-size: 18px;
+        }
+        
+        .bottom-section {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .info-box {
+            flex: 1;
+            border-radius: 10px;
+            padding: 14px 18px;
+        }
+        
+        .info-box.visual {
+            background: #F5F9FF;
+            border: 2px solid #1E64C8;
+        }
+        
+        .info-box.temporal {
+            background: #FFF3E0;
+            border: 2px solid #FF9800;
+        }
+        
+        .info-box.resolution {
+            background: #E8F5E9;
+            border: 2px solid #4CAF50;
+        }
+        
+        .box-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .box-title.visual {
+            color: #1E64C8;
+        }
+        
+        .box-title.temporal {
+            color: #FF9800;
+        }
+        
+        .box-title.resolution {
+            color: #4CAF50;
+        }
+        
+        .box-text {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .box-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 6px;
+        }
+        
+        .list-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #333;
+        }
+        
+        .list-bullet {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #FF6B6B;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="part-label">Part 4/6: Key Challenges</div>
+            <div class="title">Common Failure Patterns</div>
+        </div>
+        
+        <div class="failures-grid">
+            <div class="failure-card">
+                <div class="failure-icon">🎨</div>
+                <div class="failure-header">
+                    <div class="failure-badge">Visual</div>
+                    <div class="failure-title">Checkerboard Artifacts</div>
+                </div>
+                <div class="failure-desc">
+                    Grid-like patterns appear in generated images due to deconvolution operations
+                </div>
+                <span class="category-label">Image Quality</span>
+            </div>
+            
+            <div class="failure-card">
+                <div class="failure-icon">🌈</div>
+                <div class="failure-header">
+                    <div class="failure-badge">Color</div>
+                    <div class="failure-title">Unrealistic Colors</div>
+                </div>
+                <div class="failure-desc">
+                    Color distributions don't match real data, often oversaturated or unnatural
+                </div>
+                <span class="category-label">Distribution</span>
+            </div>
+            
+            <div class="failure-card">
+                <div class="failure-icon">🔄</div>
+                <div class="failure-header">
+                    <div class="failure-badge">Texture</div>
+                    <div class="failure-title">Inconsistent Transitions</div>
+                </div>
+                <div class="failure-desc">
+                    Mix of blurry and sharp regions without logical consistency
+                </div>
+                <span class="category-label">Coherence</span>
+            </div>
+            
+            <div class="failure-card">
+                <div class="failure-icon">👤</div>
+                <div class="failure-header">
+                    <div class="failure-badge">Anatomy</div>
+                    <div class="failure-title">Anatomical Errors</div>
+                </div>
+                <div class="failure-desc">
+                    Incorrect features in faces, hands, or body proportions
+                </div>
+                <span class="category-label">Realism</span>
+            </div>
+            
+            <div class="failure-card collapse-card">
+                <div class="failure-icon" style="font-size: 36px;">💥</div>
+                <div class="failure-header">
+                    <div class="failure-badge">Critical</div>
+                    <div class="failure-title">Training Collapse After Initial Success</div>
+                </div>
+                <div class="failure-desc">
+                    Model performance degrades suddenly after showing good results, often unrecoverable without restart
+                </div>
+                <span class="category-label">Training Dynamics</span>
+            </div>
+        </div>
+        
+        <div class="bottom-section">
+            <div class="info-box visual">
+                <div class="box-title visual">
+                    <span>📊</span>
+                    <span>Visual Artifacts</span>
+                </div>
+                <div class="box-list">
+                    <div class="list-item">
+                        <div class="list-bullet"></div>
+                        <span>Checkerboard patterns</span>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-bullet"></div>
+                        <span>Color inconsistencies</span>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-bullet"></div>
+                        <span>Blurry/sharp mixing</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="info-box temporal">
+                <div class="box-title temporal">
+                    <span>🎬</span>
+                    <span>Video Issues</span>
+                </div>
+                <div class="box-text">
+                    Temporal inconsistency between frames in video generation tasks
+                </div>
+            </div>
+            
+            <div class="info-box resolution">
+                <div class="box-title resolution">
+                    <span>🔍</span>
+                    <span>Resolution Limits</span>
+                </div>
+                <div class="box-text">
+                    Quality degrades without progressive growing techniques
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

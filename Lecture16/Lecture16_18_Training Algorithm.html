@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Training Algorithm</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .title {
+            font-size: 26px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .algorithm-flow {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px 20px;
+            flex-grow: 1;
+        }
+        
+        .step-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(30, 100, 200, 0.08);
+        }
+        
+        .step-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(30, 100, 200, 0.2);
+            border-color: #1E64C8;
+            border-width: 3px;
+        }
+        
+        .step-number {
+            background: #1E64C8;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 8px rgba(30, 100, 200, 0.3);
+        }
+        
+        .step-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        
+        .step-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+        
+        .step-desc {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.4;
+        }
+        
+        .step-formula {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 6px 10px;
+            margin-top: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 15px;
+            color: #333;
+        }
+        
+        .highlight-step {
+            border-color: #27AE60;
+            background: linear-gradient(135deg, #f0fff4 0%, #ffffff 100%);
+        }
+        
+        .highlight-step .step-number {
+            background: #27AE60;
+        }
+        
+        .highlight-step .step-title {
+            color: #27AE60;
+        }
+        
+        .loop-step {
+            grid-column: 1 / -1;
+            border-color: #E74C3C;
+            background: linear-gradient(135deg, #fff5f5 0%, #ffffff 100%);
+            flex-direction: row;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .loop-step .step-number {
+            background: #E74C3C;
+        }
+        
+        .loop-step .step-title {
+            color: #E74C3C;
+        }
+        
+        .arrow-hint {
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 20px;
+            color: #1E64C8;
+        }
+        
+        .info-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #4A90E2 100%);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 15px;
+            box-shadow: 0 4px 15px rgba(30, 100, 200, 0.25);
+        }
+        
+        .info-text {
+            font-size: 17px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">Training Algorithm</div>
+            <div class="subtitle">Part 3/7: Reverse Process</div>
+        </div>
+        
+        <div class="algorithm-flow">
+            <!-- Step 1 -->
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <div class="step-icon">📊</div>
+                <div class="step-title">Sample Data</div>
+                <div class="step-desc">x₀ ~ p_data</div>
+                <div class="arrow-hint">↓</div>
+            </div>
+            
+            <!-- Step 2 -->
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <div class="step-icon">🎲</div>
+                <div class="step-title">Sample Timestep</div>
+                <div class="step-desc">t ~ Uniform</div>
+                <div class="step-formula">{1,...,T}</div>
+                <div class="arrow-hint">↓</div>
+            </div>
+            
+            <!-- Step 3 -->
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <div class="step-icon">🔊</div>
+                <div class="step-title">Sample Noise</div>
+                <div class="step-desc">ε ~ N(0, I)</div>
+                <div class="arrow-hint">↓</div>
+            </div>
+            
+            <!-- Step 4 -->
+            <div class="step-card highlight-step">
+                <div class="step-number">4</div>
+                <div class="step-icon">➕</div>
+                <div class="step-title">Add Noise</div>
+                <div class="step-formula">x_t = √ᾱ_t·x₀ + √(1-ᾱ_t)·ε</div>
+                <div class="arrow-hint">↓</div>
+            </div>
+            
+            <!-- Step 5 -->
+            <div class="step-card highlight-step">
+                <div class="step-number">5</div>
+                <div class="step-icon">🧠</div>
+                <div class="step-title">Predict Noise</div>
+                <div class="step-desc">Neural Network</div>
+                <div class="step-formula">ε̂ = ε_θ(x_t, t)</div>
+                <div class="arrow-hint">↓</div>
+            </div>
+            
+            <!-- Step 6 -->
+            <div class="step-card highlight-step">
+                <div class="step-number">6</div>
+                <div class="step-icon">📏</div>
+                <div class="step-title">Compute Loss</div>
+                <div class="step-formula">L = ||ε - ε̂||²</div>
+                <div class="arrow-hint">↓</div>
+            </div>
+            
+            <!-- Step 7 -->
+            <div class="step-card">
+                <div class="step-number">7</div>
+                <div class="step-icon">⚡</div>
+                <div class="step-title">Backprop</div>
+                <div class="step-desc">Update parameters θ</div>
+                <div class="arrow-hint">↓</div>
+            </div>
+            
+            <!-- Step 8 -->
+            <div class="step-card loop-step">
+                <div class="step-number">8</div>
+                <div class="step-icon">🔄</div>
+                <div>
+                    <div class="step-title">Repeat Until Convergence</div>
+                    <div class="step-desc">Loop through steps 1-7</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="info-box">
+            <div class="info-text">💡 Core Training Loop: Sample → Add Noise → Predict → Optimize → Repeat</div>
+        </div>
+    </div>
+</body>
+</html>

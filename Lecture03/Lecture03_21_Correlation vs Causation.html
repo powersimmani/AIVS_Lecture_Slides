@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Correlation vs Causation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: #ffffff;
+            position: relative;
+            padding: 25px 35px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .header-title {
+            font-size: 20px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .main-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .concept-column {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .concept-header {
+            background: #1E64C8;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .definition-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 15px;
+        }
+        
+        .def-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .def-content {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .formula-box {
+            background: #f8fafb;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 15px;
+        }
+        
+        .formula-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+            text-align: center;
+        }
+        
+        .formula {
+            background: white;
+            padding: 8px 10px;
+            border-radius: 4px;
+            font-size: 16px;
+            color: #333;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+        }
+        
+        .range-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+            padding: 8px;
+            background: white;
+            border-radius: 4px;
+        }
+        
+        .range-item {
+            text-align: center;
+            font-size: 15px;
+            color: #333;
+        }
+        
+        .range-value {
+            font-weight: 600;
+            color: #1E64C8;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .diagram-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 15px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .diagram-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .variable-node {
+            background: #1E64C8;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .arrow-right {
+            font-size: 32px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .warning-section {
+            background: #fff3cd;
+            border: 3px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 20px;
+            margin-bottom: 15px;
+        }
+        
+        .warning-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 6px;
+        }
+        
+        .warning-text {
+            font-size: 17px;
+            color: #333;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        .example-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .confounding-example {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        
+        .example-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .confounding-diagram {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .conf-top {
+            display: flex;
+            justify-content: center;
+        }
+        
+        .conf-bottom {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            position: relative;
+        }
+        
+        .conf-node {
+            background: #1E64C8;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .conf-arrow {
+            position: absolute;
+            width: 2px;
+            height: 30px;
+            background: #1E64C8;
+        }
+        
+        .arrow-left {
+            left: 25%;
+            top: -30px;
+            transform: translateX(-50%);
+        }
+        
+        .arrow-left::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 8px solid #1E64C8;
+        }
+        
+        .arrow-right {
+            right: 25%;
+            top: -30px;
+            transform: translateX(50%);
+        }
+        
+        .arrow-right::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 8px solid #1E64C8;
+        }
+        
+        .correlation-line {
+            position: absolute;
+            bottom: 15px;
+            left: 25%;
+            right: 25%;
+            height: 2px;
+            background: rgba(30, 100, 200, 0.3);
+            border-top: 2px dashed #1E64C8;
+        }
+        
+        .example-text {
+            font-size: 15px;
+            color: #555;
+            text-align: center;
+            margin-top: 10px;
+            line-height: 1.4;
+        }
+        
+        .ml-application {
+            background: #1E64C8;
+            color: white;
+            border-radius: 8px;
+            padding: 12px 20px;
+            text-align: center;
+        }
+        
+        .ml-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        
+        .ml-content {
+            font-size: 16px;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-title">Correlation vs Causation</div>
+        </div>
+        
+        <div class="main-comparison">
+            <div class="concept-column">
+                <div class="concept-header">Correlation</div>
+                
+                <div class="definition-box">
+                    <div class="def-title">Definition</div>
+                    <div class="def-content">Statistical association between variables</div>
+                </div>
+                
+                <div class="formula-box">
+                    <div class="formula-title">Pearson Correlation</div>
+                    <div class="formula">ρ = Cov(X,Y) / (σₓσᵧ)</div>
+                    <div class="range-display">
+                        <div class="range-item">
+                            <div class="range-value">ρ = -1</div>
+                            <div>Perfect negative</div>
+                        </div>
+                        <div class="range-item">
+                            <div class="range-value">ρ = 0</div>
+                            <div>No linear</div>
+                        </div>
+                        <div class="range-item">
+                            <div class="range-value">ρ = 1</div>
+                            <div>Perfect positive</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="diagram-box">
+                    <div style="text-align: center; font-size: 16px; color: #555; margin-bottom: 10px;">
+                        Association only
+                    </div>
+                    <div class="diagram-content">
+                        <div class="variable-node">X</div>
+                        <div style="font-size: 24px; color: #1E64C8;">↔</div>
+                        <div class="variable-node">Y</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="concept-column">
+                <div class="concept-header">Causation</div>
+                
+                <div class="definition-box">
+                    <div class="def-title">Definition</div>
+                    <div class="def-content">X directly influences Y</div>
+                </div>
+                
+                <div class="formula-box">
+                    <div class="formula-title">Causal Relationship</div>
+                    <div style="text-align: center; padding: 20px; font-size: 18px; color: #333;">
+                        Requires:
+                        <div style="margin-top: 10px; font-size: 16px; line-height: 1.6;">
+                            • Temporal precedence<br>
+                            • Mechanism<br>
+                            • Control of confounders
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="diagram-box">
+                    <div style="text-align: center; font-size: 16px; color: #555; margin-bottom: 10px;">
+                        Direct influence
+                    </div>
+                    <div class="diagram-content">
+                        <div class="variable-node">X</div>
+                        <div class="arrow-right">→</div>
+                        <div class="variable-node">Y</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="warning-section">
+            <div class="warning-title">⚠️ Key Warning</div>
+            <div class="warning-text">Correlation does NOT imply causation</div>
+        </div>
+        
+        <div class="example-section">
+            <div class="confounding-example">
+                <div class="example-title">Confounding Variable</div>
+                <div class="confounding-diagram">
+                    <div class="conf-top">
+                        <div class="conf-node">Z (Confounder)</div>
+                    </div>
+                    <div class="conf-bottom">
+                        <div class="conf-arrow arrow-left"></div>
+                        <div class="conf-arrow arrow-right"></div>
+                        <div class="conf-node">X</div>
+                        <div class="conf-node">Y</div>
+                        <div class="correlation-line"></div>
+                    </div>
+                </div>
+                <div class="example-text">
+                    Z affects both X and Y,<br>creating spurious correlation
+                </div>
+            </div>
+            
+            <div class="confounding-example">
+                <div class="example-title">Classic Example</div>
+                <div class="confounding-diagram">
+                    <div class="conf-top">
+                        <div class="conf-node">Temperature</div>
+                    </div>
+                    <div class="conf-bottom">
+                        <div class="conf-arrow arrow-left"></div>
+                        <div class="conf-arrow arrow-right"></div>
+                        <div class="conf-node" style="font-size: 14px; padding: 8px 10px;">Ice Cream</div>
+                        <div class="conf-node" style="font-size: 14px; padding: 8px 10px;">Drownings</div>
+                        <div class="correlation-line"></div>
+                    </div>
+                </div>
+                <div class="example-text">
+                    Correlated, but ice cream<br>doesn't cause drownings
+                </div>
+            </div>
+        </div>
+        
+        <div class="ml-application">
+            <div class="ml-title">Regression Limitation</div>
+            <div class="ml-content">Regression shows association, not necessarily causation</div>
+        </div>
+    </div>
+</body>
+</html>

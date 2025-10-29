@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bidirectional RNN Architecture</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #ffffff;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 40px;
+            position: relative;
+        }
+        
+        .architecture {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            height: 100%;
+        }
+        
+        .layer-label {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 140px;
+        }
+        
+        .direction-icon {
+            width: 32px;
+            height: 32px;
+            background: #1E64C8;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+        }
+        
+        /* Input Layer */
+        .input-layer {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 0;
+        }
+        
+        .input-boxes {
+            display: flex;
+            gap: 12px;
+            flex: 1;
+            justify-content: center;
+        }
+        
+        .input-box {
+            width: 100px;
+            height: 60px;
+            background: #f0f4f8;
+            border: 2px solid #d0d9e3;
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: #555;
+        }
+        
+        .input-label {
+            font-size: 14px;
+            color: #888;
+            margin-top: 4px;
+        }
+        
+        /* RNN Layers */
+        .rnn-layer {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 0;
+        }
+        
+        .rnn-cells {
+            display: flex;
+            gap: 12px;
+            flex: 1;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .rnn-cell {
+            width: 100px;
+            height: 80px;
+            background: #1E64C8;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            position: relative;
+        }
+        
+        .rnn-cell-backward {
+            background: #5088d4;
+        }
+        
+        .cell-label {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .cell-time {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-top: 4px;
+        }
+        
+        /* Arrows */
+        .h-arrow {
+            position: absolute;
+            top: 50%;
+            height: 3px;
+            background: white;
+            opacity: 0.6;
+        }
+        
+        .h-arrow-forward {
+            right: -12px;
+            width: 8px;
+        }
+        
+        .h-arrow-backward {
+            left: -12px;
+            width: 8px;
+        }
+        
+        .h-arrow::after {
+            content: '';
+            position: absolute;
+            top: -3px;
+            width: 0;
+            height: 0;
+        }
+        
+        .h-arrow-forward::after {
+            right: -4px;
+            border-left: 6px solid white;
+            border-top: 4px solid transparent;
+            border-bottom: 4px solid transparent;
+            opacity: 0.6;
+        }
+        
+        .h-arrow-backward::after {
+            left: -4px;
+            border-right: 6px solid white;
+            border-top: 4px solid transparent;
+            border-bottom: 4px solid transparent;
+            opacity: 0.6;
+        }
+        
+        /* Vertical connections */
+        .v-connection {
+            position: absolute;
+            width: 3px;
+            background: #999;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .v-arrow-up {
+            bottom: 100%;
+            height: 20px;
+            margin-bottom: 16px;
+        }
+        
+        .v-arrow-down {
+            top: 100%;
+            height: 20px;
+            margin-top: 16px;
+        }
+        
+        .v-arrow-up::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-bottom: 6px solid #999;
+        }
+        
+        .v-arrow-down::before {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-top: 6px solid #999;
+        }
+        
+        /* Output Layer */
+        .output-layer {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 0;
+        }
+        
+        .output-boxes {
+            display: flex;
+            gap: 12px;
+            flex: 1;
+            justify-content: center;
+        }
+        
+        .output-box {
+            width: 100px;
+            height: 60px;
+            background: #e8f2ff;
+            border: 2px solid #1E64C8;
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .output-label {
+            font-size: 14px;
+            opacity: 0.7;
+            margin-top: 4px;
+        }
+        
+        .info-box {
+            position: absolute;
+            bottom: 20px;
+            right: 40px;
+            background: #f8f9fa;
+            padding: 16px;
+            border-radius: 8px;
+            border-left: 4px solid #1E64C8;
+            max-width: 280px;
+        }
+        
+        .info-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .info-text {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="architecture">
+            <!-- Input Layer -->
+            <div class="input-layer">
+                <div class="layer-label">
+                    <div class="direction-icon">⊙</div>
+                    <span>Input</span>
+                </div>
+                <div class="input-boxes">
+                    <div class="input-box">
+                        <div>x₁</div>
+                        <div class="input-label">time t=1</div>
+                    </div>
+                    <div class="input-box">
+                        <div>x₂</div>
+                        <div class="input-label">time t=2</div>
+                    </div>
+                    <div class="input-box">
+                        <div>x₃</div>
+                        <div class="input-label">time t=3</div>
+                    </div>
+                    <div class="input-box">
+                        <div>x₄</div>
+                        <div class="input-label">time t=4</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Forward RNN Layer -->
+            <div class="rnn-layer">
+                <div class="layer-label">
+                    <div class="direction-icon">→</div>
+                    <span>Forward RNN</span>
+                </div>
+                <div class="rnn-cells">
+                    <div class="rnn-cell">
+                        <div class="v-connection v-arrow-up"></div>
+                        <div class="cell-label">h⃗₁</div>
+                        <div class="cell-time">t=1</div>
+                        <div class="h-arrow h-arrow-forward"></div>
+                        <div class="v-connection v-arrow-down"></div>
+                    </div>
+                    <div class="rnn-cell">
+                        <div class="v-connection v-arrow-up"></div>
+                        <div class="cell-label">h⃗₂</div>
+                        <div class="cell-time">t=2</div>
+                        <div class="h-arrow h-arrow-forward"></div>
+                        <div class="v-connection v-arrow-down"></div>
+                    </div>
+                    <div class="rnn-cell">
+                        <div class="v-connection v-arrow-up"></div>
+                        <div class="cell-label">h⃗₃</div>
+                        <div class="cell-time">t=3</div>
+                        <div class="h-arrow h-arrow-forward"></div>
+                        <div class="v-connection v-arrow-down"></div>
+                    </div>
+                    <div class="rnn-cell">
+                        <div class="v-connection v-arrow-up"></div>
+                        <div class="cell-label">h⃗₄</div>
+                        <div class="cell-time">t=4</div>
+                        <div class="v-connection v-arrow-down"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Backward RNN Layer -->
+            <div class="rnn-layer">
+                <div class="layer-label">
+                    <div class="direction-icon" style="background: #5088d4;">←</div>
+                    <span>Backward RNN</span>
+                </div>
+                <div class="rnn-cells">
+                    <div class="rnn-cell rnn-cell-backward">
+                        <div class="v-connection v-arrow-up" style="background: #5088d4;"></div>
+                        <div class="cell-label">h⃖₁</div>
+                        <div class="cell-time">t=1</div>
+                        <div class="h-arrow h-arrow-backward"></div>
+                        <div class="v-connection v-arrow-down" style="background: #5088d4;"></div>
+                    </div>
+                    <div class="rnn-cell rnn-cell-backward">
+                        <div class="v-connection v-arrow-up" style="background: #5088d4;"></div>
+                        <div class="cell-label">h⃖₂</div>
+                        <div class="cell-time">t=2</div>
+                        <div class="h-arrow h-arrow-backward"></div>
+                        <div class="v-connection v-arrow-down" style="background: #5088d4;"></div>
+                    </div>
+                    <div class="rnn-cell rnn-cell-backward">
+                        <div class="v-connection v-arrow-up" style="background: #5088d4;"></div>
+                        <div class="cell-label">h⃖₃</div>
+                        <div class="cell-time">t=3</div>
+                        <div class="h-arrow h-arrow-backward"></div>
+                        <div class="v-connection v-arrow-down" style="background: #5088d4;"></div>
+                    </div>
+                    <div class="rnn-cell rnn-cell-backward">
+                        <div class="v-connection v-arrow-up" style="background: #5088d4;"></div>
+                        <div class="cell-label">h⃖₄</div>
+                        <div class="cell-time">t=4</div>
+                        <div class="v-connection v-arrow-down" style="background: #5088d4;"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Output Layer -->
+            <div class="output-layer">
+                <div class="layer-label">
+                    <div class="direction-icon">⊕</div>
+                    <span>Output</span>
+                </div>
+                <div class="output-boxes">
+                    <div class="output-box">
+                        <div>y₁</div>
+                        <div class="output-label">[h⃗₁; h⃖₁]</div>
+                    </div>
+                    <div class="output-box">
+                        <div>y₂</div>
+                        <div class="output-label">[h⃗₂; h⃖₂]</div>
+                    </div>
+                    <div class="output-box">
+                        <div>y₃</div>
+                        <div class="output-label">[h⃗₃; h⃖₃]</div>
+                    </div>
+                    <div class="output-box">
+                        <div>y₄</div>
+                        <div class="output-label">[h⃗₄; h⃖₄]</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="info-box">
+            <div class="info-title">Key Feature</div>
+            <div class="info-text">
+                BiRNN processes sequences in both directions, concatenating forward (h⃗) and backward (h⃖) hidden states to capture full context at each time step.
+            </div>
+        </div>
+    </div>
+</body>
+</html>

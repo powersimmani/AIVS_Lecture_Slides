@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Normal Equation Solution</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: #ffffff;
+            position: relative;
+            padding: 25px 35px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .header-title {
+            font-size: 20px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-top: 4px;
+        }
+        
+        .main-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            flex: 1;
+        }
+        
+        .matrix-form-box {
+            background: #1E64C8;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+        }
+        
+        .matrix-title {
+            font-size: 17px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+        
+        .matrix-formula {
+            font-size: 18px;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .arrow-large {
+            text-align: center;
+            font-size: 28px;
+            color: #1E64C8;
+            font-weight: 600;
+            padding: 5px 0;
+        }
+        
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .solution-box {
+            background: white;
+            border: 3px solid #1E64C8;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        
+        .solution-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .solution-formula {
+            background: #f0f7ff;
+            padding: 12px 15px;
+            border-radius: 6px;
+            font-size: 18px;
+            color: #1E64C8;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .solution-note {
+            font-size: 15px;
+            color: #555;
+            text-align: center;
+            line-height: 1.4;
+        }
+        
+        .simple-form-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        
+        .simple-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .simple-formula {
+            background: #f8fafb;
+            padding: 8px 10px;
+            border-radius: 4px;
+            font-size: 16px;
+            color: #333;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            margin-bottom: 6px;
+        }
+        
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+        }
+        
+        .info-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 15px;
+            text-align: center;
+        }
+        
+        .info-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .info-content {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .info-formula {
+            background: #f8fafb;
+            padding: 6px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+            margin-top: 6px;
+        }
+        
+        .connection-box {
+            background: #f0f7ff;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 10px 15px;
+            text-align: center;
+            grid-column: 1 / -1;
+        }
+        
+        .connection-content {
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .highlight {
+            color: #1E64C8;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-title">Normal Equation Solution</div>
+            <div class="subtitle">Closed-form solution for linear regression</div>
+        </div>
+        
+        <div class="main-flow">
+            <div class="matrix-form-box">
+                <div class="matrix-title">Matrix Form</div>
+                <div class="matrix-formula">Y = Xβ + ε</div>
+                <div style="font-size: 14px; text-align: center; margin-top: 6px; opacity: 0.9;">
+                    X is the design matrix
+                </div>
+            </div>
+            
+            <div class="arrow-large">↓</div>
+            
+            <div class="matrix-form-box" style="background: #f8fafb; color: #333; border: 2px solid #1E64C8;">
+                <div class="matrix-title" style="color: #1E64C8;">Normal Equation</div>
+                <div class="matrix-formula" style="color: #1E64C8;">XᵀXβ = XᵀY</div>
+            </div>
+            
+            <div class="arrow-large">↓</div>
+            
+            <div class="main-grid">
+                <div class="solution-box">
+                    <div class="solution-title">General Solution</div>
+                    <div class="solution-formula">β̂ = (XᵀX)⁻¹XᵀY</div>
+                    <div class="solution-note">
+                        When XᵀX is invertible
+                    </div>
+                </div>
+                
+                <div class="simple-form-box">
+                    <div class="simple-title">Simple Regression</div>
+                    <div class="simple-formula">β̂₁ = Cov(X,Y) / Var(X)</div>
+                    <div class="simple-formula">β̂₀ = Ȳ - β̂₁X̄</div>
+                </div>
+            </div>
+            
+            <div class="bottom-grid">
+                <div class="info-box">
+                    <div class="info-title">Complexity</div>
+                    <div class="info-content">
+                        Computational cost
+                        <div class="info-formula">O(np² + p³)</div>
+                        n: samples<br>p: features
+                    </div>
+                </div>
+                
+                <div class="info-box">
+                    <div class="info-title">Alternative</div>
+                    <div class="info-content">
+                        For large-scale:<br>
+                        <strong>Gradient Descent</strong><br>
+                        <span style="font-size: 13px; color: #666;">(iterative method)</span>
+                    </div>
+                </div>
+                
+                <div class="info-box">
+                    <div class="info-title">Advantage</div>
+                    <div class="info-content">
+                        <strong>Closed-form</strong><br>
+                        Direct computation<br>
+                        No iterations needed
+                    </div>
+                </div>
+                
+                <div class="connection-box">
+                    <div class="connection-content">
+                        Connects <span class="highlight">Linear Algebra</span> (Part 1) to <span class="highlight">Regression Solution</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

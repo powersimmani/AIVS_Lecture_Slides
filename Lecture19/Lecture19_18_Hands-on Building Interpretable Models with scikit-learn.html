@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Building Interpretable Models - scikit-learn</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+            padding: 25px 35px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            font-size: 15px;
+            color: #666;
+            font-style: italic;
+        }
+        
+        /* Main content */
+        .content {
+            display: flex;
+            gap: 20px;
+            flex: 1;
+        }
+        
+        /* Left - workflow */
+        .workflow-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .workflow-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+        
+        .step-card {
+            background: white;
+            border: 2px solid #E5E7EB;
+            border-radius: 10px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .step-card::after {
+            content: '↓';
+            position: absolute;
+            bottom: -16px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 16px;
+            color: #B8D4F1;
+            font-weight: 700;
+        }
+        
+        .step-card:last-child::after {
+            content: '';
+        }
+        
+        .step-card:hover {
+            border-color: #1E64C8;
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.15);
+            transform: translateX(4px);
+        }
+        
+        .step-number {
+            flex-shrink: 0;
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #1E64C8 0%, #2A7DE1 100%);
+            color: white;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 16px;
+            font-weight: 700;
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .step-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 3px;
+        }
+        
+        .step-desc {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.3;
+        }
+        
+        /* Right - code examples */
+        .code-section {
+            flex: 1.2;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .code-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+        
+        .code-block {
+            background: #1E1E1E;
+            border-radius: 8px;
+            padding: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #D4D4D4;
+            line-height: 1.5;
+            overflow: auto;
+            border: 2px solid #333;
+            transition: all 0.2s;
+        }
+        
+        .code-block:hover {
+            border-color: #1E64C8;
+        }
+        
+        .code-comment {
+            color: #6A9955;
+        }
+        
+        .code-keyword {
+            color: #569CD6;
+        }
+        
+        .code-string {
+            color: #CE9178;
+        }
+        
+        .code-function {
+            color: #DCDCAA;
+        }
+        
+        .code-number {
+            color: #B5CEA8;
+        }
+        
+        .code-module {
+            color: #4EC9B0;
+        }
+        
+        .code-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #333;
+        }
+        
+        .code-icon {
+            font-size: 14px;
+        }
+        
+        .code-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #4EC9B0;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        
+        /* Key modules box */
+        .modules-box {
+            background: linear-gradient(135deg, #F0F7FF 0%, #E5F1FF 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: auto;
+        }
+        
+        .modules-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .modules-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+        }
+        
+        .module-item {
+            font-size: 13px;
+            color: #333;
+            padding: 4px 8px;
+            background: white;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="title">Building Interpretable Models with scikit-learn</div>
+            <div class="subtitle">Hands-on Workflow & Code Examples</div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="content">
+            <!-- Workflow Section -->
+            <div class="workflow-section">
+                <div class="workflow-title">Implementation Steps</div>
+                
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <div class="step-title">Import & Load Data</div>
+                        <div class="step-desc">Load dataset and dependencies</div>
+                    </div>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <div class="step-title">Preprocessing</div>
+                        <div class="step-desc">Feature scaling, categorical encoding</div>
+                    </div>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <div class="step-title">Train Models</div>
+                        <div class="step-desc">Linear, Tree-based classifiers</div>
+                    </div>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <div class="step-title">Extract Insights</div>
+                        <div class="step-desc">Coefficients, feature importance</div>
+                    </div>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <div class="step-title">Visualize & Compare</div>
+                        <div class="step-desc">Accuracy vs interpretability</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Code Section -->
+            <div class="code-section">
+                <div class="code-title">Code Examples</div>
+                
+                <!-- Linear Model -->
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-icon">📊</span>
+                        <span class="code-label">Linear Model</span>
+                    </div>
+                    <span class="code-keyword">from</span> <span class="code-module">sklearn.linear_model</span> <span class="code-keyword">import</span> LogisticRegression<br>
+                    <br>
+                    model = <span class="code-function">LogisticRegression</span>()<br>
+                    model.<span class="code-function">fit</span>(X_train, y_train)<br>
+                    <br>
+                    <span class="code-comment"># Access coefficients</span><br>
+                    coef = model.<span class="code-module">coef_</span><br>
+                    <span class="code-keyword">print</span>(f<span class="code-string">"Coefficients: {coef}"</span>)
+                </div>
+                
+                <!-- Decision Tree -->
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-icon">🌲</span>
+                        <span class="code-label">Decision Tree</span>
+                    </div>
+                    <span class="code-keyword">from</span> <span class="code-module">sklearn.tree</span> <span class="code-keyword">import</span> DecisionTreeClassifier<br>
+                    <br>
+                    tree = <span class="code-function">DecisionTreeClassifier</span>(max_depth=<span class="code-number">3</span>)<br>
+                    tree.<span class="code-function">fit</span>(X_train, y_train)<br>
+                    <br>
+                    <span class="code-comment"># Feature importance</span><br>
+                    importance = tree.<span class="code-module">feature_importances_</span>
+                </div>
+                
+                <!-- Inspection Tools -->
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-icon">🔍</span>
+                        <span class="code-label">Inspection Tools</span>
+                    </div>
+                    <span class="code-keyword">from</span> <span class="code-module">sklearn.inspection</span> <span class="code-keyword">import</span> PartialDependenceDisplay<br>
+                    <br>
+                    <span class="code-comment"># Visualize partial dependence</span><br>
+                    PartialDependenceDisplay.<span class="code-function">from_estimator</span>(<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;model, X, features=[<span class="code-number">0</span>, <span class="code-number">1</span>]<br>
+                    )
+                </div>
+                
+                <!-- Key Modules -->
+                <div class="modules-box">
+                    <div class="modules-title">Key sklearn Modules</div>
+                    <div class="modules-grid">
+                        <div class="module-item">linear_model</div>
+                        <div class="module-item">tree</div>
+                        <div class="module-item">inspection</div>
+                        <div class="module-item">preprocessing</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

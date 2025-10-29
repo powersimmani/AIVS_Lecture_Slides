@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lasso Regression (L1)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px;
+            position: relative;
+        }
+        
+        .title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .content-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            height: calc(100% - 50px);
+        }
+        
+        .penalty-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            border-radius: 10px;
+            padding: 18px 24px;
+            color: white;
+            text-align: center;
+        }
+        
+        .penalty-label {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            opacity: 0.9;
+        }
+        
+        .penalty-formula {
+            font-size: 20px;
+            font-weight: 600;
+            font-style: italic;
+            letter-spacing: 0.5px;
+        }
+        
+        .features-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            flex: 1;
+        }
+        
+        .feature-row {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .feature-card {
+            flex: 1;
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s;
+        }
+        
+        .feature-card:hover {
+            background: #f8fbff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.15);
+        }
+        
+        .feature-icon {
+            width: 36px;
+            height: 36px;
+            background: #1E64C8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        
+        .feature-content {
+            flex: 1;
+        }
+        
+        .feature-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .feature-desc {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.3;
+        }
+        
+        .highlight-card {
+            background: #fff8e6;
+            border-color: #ffc107;
+        }
+        
+        .highlight-card .feature-icon {
+            background: #ffc107;
+        }
+        
+        .highlight-card .feature-title {
+            color: #f57c00;
+        }
+        
+        .comparison-section {
+            background: white;
+            border: 2px solid #6c757d;
+            border-radius: 10px;
+            padding: 16px 20px;
+        }
+        
+        .comparison-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .comparison-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .method-tag {
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .ridge-tag {
+            background: #e3f2fd;
+            color: #1565c0;
+            border: 2px solid #1565c0;
+        }
+        
+        .vs-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #6c757d;
+        }
+        
+        .lasso-tag {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 2px solid #2e7d32;
+        }
+        
+        .result-text {
+            font-size: 16px;
+            color: #495057;
+            text-align: center;
+        }
+        
+        .sparse-highlight {
+            font-weight: 600;
+            color: #2e7d32;
+        }
+        
+        .cv-box {
+            background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+            border-radius: 8px;
+            padding: 14px 18px;
+            text-align: center;
+            color: white;
+        }
+        
+        .cv-text {
+            font-size: 17px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Lasso Regression (L1 Regularization)</div>
+        
+        <div class="content-layout">
+            <!-- Penalty Formula -->
+            <div class="penalty-box">
+                <div class="penalty-label">Alternative Penalty:</div>
+                <div class="penalty-formula">λ∑|βᵢ|  (L1 Penalty)</div>
+            </div>
+            
+            <!-- Features -->
+            <div class="features-section">
+                <div class="feature-row">
+                    <div class="feature-card">
+                        <div class="feature-icon">⚡</div>
+                        <div class="feature-content">
+                            <div class="feature-title">Key Difference</div>
+                            <div class="feature-desc">Can shrink coefficients exactly to zero</div>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">🎯</div>
+                        <div class="feature-content">
+                            <div class="feature-title">Feature Selection</div>
+                            <div class="feature-desc">Performs automatic feature selection</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="feature-row">
+                    <div class="feature-card highlight-card">
+                        <div class="feature-icon">✨</div>
+                        <div class="feature-content">
+                            <div class="feature-title">Sparse Models</div>
+                            <div class="feature-desc">Only important features retained</div>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card highlight-card">
+                        <div class="feature-icon">💡</div>
+                        <div class="feature-content">
+                            <div class="feature-title">Use Case</div>
+                            <div class="feature-desc">Many features but few are truly relevant</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Comparison -->
+            <div class="comparison-section">
+                <div class="comparison-title">Ridge vs Lasso Comparison</div>
+                <div class="comparison-content">
+                    <div class="method-tag ridge-tag">Ridge</div>
+                    <div class="vs-text">vs</div>
+                    <div class="method-tag lasso-tag">Lasso</div>
+                </div>
+                <div class="result-text" style="margin-top: 10px;">
+                    Lasso produces <span class="sparse-highlight">sparser solutions</span>
+                </div>
+            </div>
+            
+            <!-- Cross-validation -->
+            <div class="cv-box">
+                <div class="cv-text">Choosing λ: Cross-validation approach</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

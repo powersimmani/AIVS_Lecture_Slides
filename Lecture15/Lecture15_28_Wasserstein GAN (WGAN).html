@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wasserstein GAN</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            position: relative;
+            padding: 25px 40px;
+        }
+        
+        .header {
+            margin-bottom: 18px;
+        }
+        
+        .part-label {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .comparison-section {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 18px;
+        }
+        
+        .comparison-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        
+        .comparison-box {
+            background: white;
+            border: 3px solid #FF6B6B;
+            border-radius: 10px;
+            padding: 16px 20px;
+            position: relative;
+        }
+        
+        .comparison-box.wgan {
+            border-color: #4CAF50;
+            background: rgba(76, 175, 80, 0.05);
+        }
+        
+        .box-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        
+        .box-badge {
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .box-badge.original {
+            background: #FF6B6B;
+            color: white;
+        }
+        
+        .box-badge.wgan {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .box-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #FF6B6B;
+        }
+        
+        .comparison-box.wgan .box-title {
+            color: #4CAF50;
+        }
+        
+        .detail-item {
+            margin: 10px 0;
+        }
+        
+        .detail-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+        
+        .detail-value {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .formula {
+            font-family: 'Courier New', monospace;
+            background: #F5F9FF;
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #1E64C8;
+            margin-top: 6px;
+        }
+        
+        .improvements-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+        
+        .improvement-card {
+            background: #E8F5E9;
+            border: 2px solid #4CAF50;
+            border-radius: 8px;
+            padding: 14px 16px;
+            text-align: center;
+        }
+        
+        .improvement-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        
+        .improvement-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #4CAF50;
+            margin-bottom: 6px;
+        }
+        
+        .improvement-desc {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .wgan-gp-box {
+            background: #FFF9E6;
+            border: 2px solid #FFC107;
+            border-radius: 10px;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .gp-icon {
+            font-size: 32px;
+            flex-shrink: 0;
+        }
+        
+        .gp-content {
+            flex: 1;
+        }
+        
+        .gp-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #F57C00;
+            margin-bottom: 6px;
+        }
+        
+        .gp-text {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .vs-badge {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #1E64C8;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.3);
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="part-label">Part 5/6: Improvement Techniques</div>
+            <div class="title">Wasserstein GAN (WGAN)</div>
+        </div>
+        
+        <div class="comparison-section">
+            <div class="vs-badge">VS</div>
+            
+            <div class="comparison-col">
+                <div class="comparison-box">
+                    <div class="box-header">
+                        <div class="box-badge original">Original</div>
+                        <div class="box-title">Standard GAN</div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="detail-label">Distance Metric</div>
+                        <div class="detail-value">Jensen-Shannon divergence</div>
+                        <div class="formula">JS(p<sub>data</sub> || p<sub>g</sub>)</div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="detail-label">Output Layer</div>
+                        <div class="detail-value">Sigmoid (Discriminator)</div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="detail-label">Constraint</div>
+                        <div class="detail-value">No explicit constraint</div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="detail-label">Training</div>
+                        <div class="detail-value">Unstable, oscillating losses</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="comparison-col">
+                <div class="comparison-box wgan">
+                    <div class="box-header">
+                        <div class="box-badge wgan">WGAN</div>
+                        <div class="box-title">Wasserstein GAN</div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="detail-label">Distance Metric</div>
+                        <div class="detail-value">Wasserstein distance (Earth Mover)</div>
+                        <div class="formula">W(p<sub>data</sub>, p<sub>g</sub>)</div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="detail-label">Output Layer</div>
+                        <div class="detail-value">Linear (Critic, no sigmoid)</div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="detail-label">Constraint</div>
+                        <div class="detail-value">Lipschitz constraint (weight clipping)</div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="detail-label">Training</div>
+                        <div class="detail-value">Stable, meaningful loss</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="improvements-grid">
+            <div class="improvement-card">
+                <div class="improvement-icon">📈</div>
+                <div class="improvement-title">Stable Training</div>
+                <div class="improvement-desc">More consistent convergence dynamics</div>
+            </div>
+            
+            <div class="improvement-card">
+                <div class="improvement-icon">📊</div>
+                <div class="improvement-title">Meaningful Loss</div>
+                <div class="improvement-desc">Loss correlates with quality</div>
+            </div>
+            
+            <div class="improvement-card">
+                <div class="improvement-icon">🎯</div>
+                <div class="improvement-title">Mode Coverage</div>
+                <div class="improvement-desc">Better distribution coverage</div>
+            </div>
+        </div>
+        
+        <div class="wgan-gp-box">
+            <div class="gp-icon">⚡</div>
+            <div class="gp-content">
+                <div class="gp-title">WGAN-GP Enhancement</div>
+                <div class="gp-text">
+                    Gradient penalty replaces weight clipping for better Lipschitz constraint enforcement
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

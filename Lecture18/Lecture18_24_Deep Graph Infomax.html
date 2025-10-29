@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deep Graph Infomax</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            padding: 25px;
+            gap: 18px;
+        }
+        
+        .header {
+            text-align: center;
+        }
+        
+        .main-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .architecture-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 18px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        
+        .arch-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 4px;
+        }
+        
+        .main-flow {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+        
+        .flow-branch {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .branch-label {
+            text-align: center;
+            font-size: 17px;
+            font-weight: 600;
+            padding: 8px;
+            border-radius: 8px;
+        }
+        
+        .positive-label {
+            background: #e8f5e9;
+            color: #4CAF50;
+            border: 2px solid #4CAF50;
+        }
+        
+        .negative-label {
+            background: #ffebee;
+            color: #f44336;
+            border: 2px solid #f44336;
+        }
+        
+        .flow-step {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .flow-step:hover {
+            background: #f0f6ff;
+            transform: translateX(3px);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.2);
+        }
+        
+        .step-icon {
+            font-size: 28px;
+            margin-bottom: 6px;
+        }
+        
+        .step-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .step-desc {
+            font-size: 15px;
+            color: #666;
+            line-height: 1.3;
+        }
+        
+        .positive-step {
+            border-color: #4CAF50;
+        }
+        
+        .positive-step .step-title {
+            color: #4CAF50;
+        }
+        
+        .negative-step {
+            border-color: #f44336;
+        }
+        
+        .negative-step .step-title {
+            color: #f44336;
+        }
+        
+        .arrow-down {
+            text-align: center;
+            color: #1E64C8;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .objective-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #3a7bd5 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 14px 18px;
+            text-align: center;
+        }
+        
+        .objective-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+        
+        .objective-desc {
+            font-size: 16px;
+            line-height: 1.4;
+            opacity: 0.95;
+        }
+        
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        
+        .info-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .card-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        
+        .card-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .card-desc {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.3;
+        }
+        
+        .self-supervised-card {
+            background: #fff8f0;
+            border-color: #ff9800;
+        }
+        
+        .self-supervised-card .card-title {
+            color: #ff9800;
+        }
+        
+        .no-labels-card {
+            background: #f3e5f5;
+            border-color: #9C27B0;
+        }
+        
+        .no-labels-card .card-title {
+            color: #9C27B0;
+        }
+        
+        .transfer-card {
+            background: #e8f5e9;
+            border-color: #4CAF50;
+        }
+        
+        .transfer-card .card-title {
+            color: #4CAF50;
+        }
+        
+        .highlight-badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #ff9800;
+            color: white;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="main-title">Deep Graph Infomax (DGI)</div>
+            <div class="subtitle">Self-Supervised Graph Representation Learning</div>
+        </div>
+        
+        <div class="architecture-section">
+            <div class="arch-title">Contrastive Learning Architecture</div>
+            
+            <div class="main-flow">
+                <!-- Positive Branch -->
+                <div class="flow-branch">
+                    <div class="branch-label positive-label">✓ Positive Samples</div>
+                    
+                    <div class="flow-step positive-step">
+                        <div class="step-icon">🕸️</div>
+                        <div class="step-title">Original Graph</div>
+                        <div class="step-desc">Real structure</div>
+                    </div>
+                    
+                    <div class="arrow-down">↓</div>
+                    
+                    <div class="flow-step positive-step">
+                        <div class="step-icon">🧠</div>
+                        <div class="step-title">GNN Encoder</div>
+                        <div class="step-desc">Extract features</div>
+                    </div>
+                    
+                    <div class="arrow-down">↓</div>
+                    
+                    <div class="flow-step positive-step" style="position: relative;">
+                        <div class="highlight-badge">Local</div>
+                        <div class="step-icon">📊</div>
+                        <div class="step-title">Node Embeddings</div>
+                        <div class="step-desc">Local representations</div>
+                    </div>
+                </div>
+                
+                <!-- Negative Branch -->
+                <div class="flow-branch">
+                    <div class="branch-label negative-label">✗ Negative Samples</div>
+                    
+                    <div class="flow-step negative-step">
+                        <div class="step-icon">🔀</div>
+                        <div class="step-title">Corrupted Graph</div>
+                        <div class="step-desc">Shuffled features</div>
+                    </div>
+                    
+                    <div class="arrow-down">↓</div>
+                    
+                    <div class="flow-step negative-step">
+                        <div class="step-icon">🧠</div>
+                        <div class="step-title">GNN Encoder</div>
+                        <div class="step-desc">Extract features</div>
+                    </div>
+                    
+                    <div class="arrow-down">↓</div>
+                    
+                    <div class="flow-step negative-step" style="position: relative;">
+                        <div class="highlight-badge" style="background: #1E64C8;">Global</div>
+                        <div class="step-icon">🌐</div>
+                        <div class="step-title">Graph Summary</div>
+                        <div class="step-desc">Global representation</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="objective-box">
+                <div class="objective-title">🎯 Objective: Maximize Mutual Information</div>
+                <div class="objective-desc">
+                    Maximize MI between local node embeddings and global graph summary
+                </div>
+            </div>
+        </div>
+        
+        <div class="bottom-grid">
+            <div class="info-card self-supervised-card">
+                <div class="card-icon">🔄</div>
+                <div class="card-title">Self-Supervised</div>
+                <div class="card-desc">
+                    Learn from graph structure alone
+                </div>
+            </div>
+            
+            <div class="info-card no-labels-card">
+                <div class="card-icon">🏷️</div>
+                <div class="card-title">No Labels Needed</div>
+                <div class="card-desc">
+                    Unsupervised training approach
+                </div>
+            </div>
+            
+            <div class="info-card transfer-card">
+                <div class="card-icon">🚀</div>
+                <div class="card-title">Transfer Learning</div>
+                <div class="card-desc">
+                    Apply to downstream tasks
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

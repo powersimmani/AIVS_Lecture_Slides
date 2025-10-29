@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masking Implementation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 30px;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .main-content {
+            display: flex;
+            gap: 16px;
+            flex: 1;
+        }
+        
+        .mask-types {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .mask-card {
+            background: white;
+            border: 2px solid;
+            border-radius: 8px;
+            padding: 16px 18px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .padding-mask {
+            border-color: #1E64C8;
+            background: #f0f7ff;
+        }
+        
+        .lookahead-mask {
+            border-color: #dc3545;
+            background: #fff5f5;
+        }
+        
+        .mask-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid;
+        }
+        
+        .padding-mask .mask-header {
+            border-color: #1E64C8;
+        }
+        
+        .lookahead-mask .mask-header {
+            border-color: #dc3545;
+        }
+        
+        .mask-icon {
+            font-size: 28px;
+        }
+        
+        .mask-title {
+            font-size: 19px;
+            font-weight: 600;
+        }
+        
+        .padding-mask .mask-title {
+            color: #1E64C8;
+        }
+        
+        .lookahead-mask .mask-title {
+            color: #dc3545;
+        }
+        
+        .mask-purpose {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+            font-weight: 500;
+        }
+        
+        .mask-details {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .detail-item {
+            display: flex;
+            align-items: start;
+            gap: 8px;
+        }
+        
+        .detail-icon {
+            font-size: 16px;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+        
+        .detail-text {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .highlight-blue {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .highlight-red {
+            font-weight: 600;
+            color: #dc3545;
+        }
+        
+        .shape-box {
+            background: white;
+            border-radius: 4px;
+            padding: 6px 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+        
+        .visual-matrix {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 3px;
+            margin-top: 6px;
+        }
+        
+        .matrix-cell {
+            aspect-ratio: 1;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .cell-valid {
+            background: #1E64C8;
+            color: white;
+        }
+        
+        .cell-masked {
+            background: #e5e7eb;
+            color: #666;
+        }
+        
+        .cell-causal {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .implementation-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .info-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 14px 16px;
+            display: flex;
+            gap: 12px;
+            align-items: start;
+        }
+        
+        .info-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .info-content {
+            flex: 1;
+        }
+        
+        .info-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .info-text {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .combine-box {
+            background: #fff9f0;
+            border: 2px solid #f59e0b;
+            border-radius: 8px;
+            padding: 14px 18px;
+            text-align: center;
+            margin-top: auto;
+        }
+        
+        .combine-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #d97700;
+            margin-bottom: 6px;
+        }
+        
+        .combine-text {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .combine-highlight {
+            font-weight: 600;
+            color: #d97700;
+        }
+        
+        .critical-box {
+            background: #fef3c7;
+            border: 2px solid #f59e0b;
+            border-radius: 8px;
+            padding: 12px 18px;
+            text-align: center;
+        }
+        
+        .critical-icon {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+        
+        .critical-text {
+            font-size: 16px;
+            color: #333;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Masking Implementation</div>
+        
+        <div class="main-content">
+            <div class="mask-types">
+                <div class="mask-card padding-mask">
+                    <div class="mask-header">
+                        <div class="mask-icon">🔷</div>
+                        <div class="mask-title">Padding Mask</div>
+                    </div>
+                    
+                    <div class="mask-purpose">
+                        <span class="highlight-blue">Ignore padding tokens</span> in attention
+                    </div>
+                    
+                    <div class="mask-details">
+                        <div class="detail-item">
+                            <div class="detail-icon">📐</div>
+                            <div class="detail-text">
+                                Shape: <span class="highlight-blue">(batch_size, 1, 1, seq_len)</span>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <div class="detail-icon">🎯</div>
+                            <div class="detail-text">
+                                Marks which positions are actual tokens vs padding
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="visual-matrix">
+                        <div class="matrix-cell cell-valid">1</div>
+                        <div class="matrix-cell cell-valid">1</div>
+                        <div class="matrix-cell cell-valid">1</div>
+                        <div class="matrix-cell cell-masked">0</div>
+                        <div class="matrix-cell cell-masked">0</div>
+                    </div>
+                </div>
+                
+                <div class="mask-card lookahead-mask">
+                    <div class="mask-header">
+                        <div class="mask-icon">🔺</div>
+                        <div class="mask-title">Look-Ahead Mask (Causal)</div>
+                    </div>
+                    
+                    <div class="mask-purpose">
+                        <span class="highlight-red">Prevent attending to future tokens</span>
+                    </div>
+                    
+                    <div class="mask-details">
+                        <div class="detail-item">
+                            <div class="detail-icon">📐</div>
+                            <div class="detail-text">
+                                <span class="highlight-red">Upper triangular matrix</span> of -inf values
+                            </div>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <div class="detail-icon">🔒</div>
+                            <div class="detail-text">
+                                Ensures causality during decoding
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="visual-matrix">
+                        <div class="matrix-cell cell-valid">✓</div>
+                        <div class="matrix-cell cell-causal">✗</div>
+                        <div class="matrix-cell cell-causal">✗</div>
+                        <div class="matrix-cell cell-causal">✗</div>
+                        <div class="matrix-cell cell-causal">✗</div>
+                        
+                        <div class="matrix-cell cell-valid">✓</div>
+                        <div class="matrix-cell cell-valid">✓</div>
+                        <div class="matrix-cell cell-causal">✗</div>
+                        <div class="matrix-cell cell-causal">✗</div>
+                        <div class="matrix-cell cell-causal">✗</div>
+                        
+                        <div class="matrix-cell cell-valid">✓</div>
+                        <div class="matrix-cell cell-valid">✓</div>
+                        <div class="matrix-cell cell-valid">✓</div>
+                        <div class="matrix-cell cell-causal">✗</div>
+                        <div class="matrix-cell cell-causal">✗</div>
+                        
+                        <div class="matrix-cell cell-valid">✓</div>
+                        <div class="matrix-cell cell-valid">✓</div>
+                        <div class="matrix-cell cell-valid">✓</div>
+                        <div class="matrix-cell cell-valid">✓</div>
+                        <div class="matrix-cell cell-causal">✗</div>
+                        
+                        <div class="matrix-cell cell-valid">✓</div>
+                        <div class="matrix-cell cell-valid">✓</div>
+                        <div class="matrix-cell cell-valid">✓</div>
+                        <div class="matrix-cell cell-valid">✓</div>
+                        <div class="matrix-cell cell-valid">✓</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="implementation-section">
+                <div class="info-card">
+                    <div class="info-icon">⏱️</div>
+                    <div class="info-content">
+                        <div class="info-title">Application Timing</div>
+                        <div class="info-text">
+                            Applied <span class="highlight-blue">before softmax</span> in attention calculation
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-icon">🔢</div>
+                    <div class="info-content">
+                        <div class="info-title">Mask Values</div>
+                        <div class="info-text">
+                            Use <span class="highlight-blue">-inf</span> for masked positions (becomes 0 after softmax)
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="combine-box">
+                    <div class="combine-title">🔗 Combined Masks</div>
+                    <div class="combine-text">
+                        Multiple masks combined using<br>
+                        <span class="combine-highlight">element-wise OR operation</span>
+                    </div>
+                </div>
+                
+                <div class="critical-box">
+                    <div class="critical-icon">⚠️</div>
+                    <div class="critical-text">
+                        Proper masking is crucial for correct model behavior
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

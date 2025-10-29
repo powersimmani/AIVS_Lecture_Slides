@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Summary and Practical Considerations</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: #ffffff;
+            padding: 25px 40px;
+        }
+        
+        .title {
+            font-size: 26px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        /* Key Takeaway */
+        .takeaway-box {
+            background: linear-gradient(135deg, #1E64C8, #2E7FD8);
+            color: white;
+            border-radius: 12px;
+            padding: 12px 18px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(30, 100, 200, 0.3);
+        }
+        
+        .takeaway-text {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        /* Architecture Choice */
+        .arch-section {
+            background: #F8F9FA;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px 15px;
+        }
+        
+        .arch-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .arch-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        
+        .arch-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 8px 10px;
+            text-align: center;
+        }
+        
+        .arch-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 3px;
+        }
+        
+        .arch-model {
+            font-size: 14px;
+            color: #666666;
+        }
+        
+        /* Ethical Concerns */
+        .ethics-section {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        
+        .ethics-card {
+            background: #FFEBEE;
+            border: 2px solid #F44336;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        .ethics-icon {
+            font-size: 28px;
+            margin-bottom: 4px;
+        }
+        
+        .ethics-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #C62828;
+        }
+        
+        /* Best Practices */
+        .practices-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        .practice-card {
+            background: #E8F4F8;
+            border-left: 4px solid #1E64C8;
+            border-radius: 8px;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .practice-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        
+        .practice-content {
+            flex: 1;
+        }
+        
+        .practice-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 2px;
+        }
+        
+        .practice-text {
+            font-size: 14px;
+            color: #333333;
+            line-height: 1.3;
+        }
+        
+        /* Bottom Section */
+        .bottom-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .bottom-card {
+            border-radius: 8px;
+            padding: 10px 12px;
+            text-align: center;
+            border: 2px solid;
+        }
+        
+        .bottom-card.environment {
+            background: #E8F5E9;
+            border-color: #4CAF50;
+        }
+        
+        .bottom-card.accessibility {
+            background: #FFF9E6;
+            border-color: #FFC107;
+        }
+        
+        .bottom-card.learning {
+            background: #F3E5F5;
+            border-color: #9C27B0;
+        }
+        
+        .bottom-icon {
+            font-size: 28px;
+            margin-bottom: 4px;
+        }
+        
+        .bottom-title {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+        
+        .bottom-card.environment .bottom-title {
+            color: #2E7D32;
+        }
+        
+        .bottom-card.accessibility .bottom-title {
+            color: #F57C00;
+        }
+        
+        .bottom-card.learning .bottom-title {
+            color: #7B1FA2;
+        }
+        
+        .bottom-text {
+            font-size: 13px;
+            line-height: 1.3;
+        }
+        
+        .bottom-card.environment .bottom-text {
+            color: #1B5E20;
+        }
+        
+        .bottom-card.accessibility .bottom-text {
+            color: #E65100;
+        }
+        
+        .bottom-card.learning .bottom-text {
+            color: #6A1B9A;
+        }
+        
+        /* Deployment Box */
+        .deployment-box {
+            background: #C8E6C9;
+            border: 3px solid #4CAF50;
+            border-radius: 10px;
+            padding: 10px 15px;
+            text-align: center;
+            grid-column: 1 / -1;
+        }
+        
+        .deployment-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #2E7D32;
+            margin-bottom: 4px;
+        }
+        
+        .deployment-text {
+            font-size: 15px;
+            color: #1B5E20;
+            line-height: 1.4;
+        }
+        
+        .highlight {
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Summary and Practical Considerations</div>
+        
+        <div class="main-content">
+            <!-- Key Takeaway -->
+            <div class="takeaway-box">
+                <div class="takeaway-text">
+                    🚀 Pre-trained LLMs Revolutionized the NLP Landscape
+                </div>
+            </div>
+            
+            <!-- Architecture Choice -->
+            <div class="arch-section">
+                <div class="arch-title">🏗️ Choose Your Architecture</div>
+                <div class="arch-options">
+                    <div class="arch-card">
+                        <div class="arch-name">Encoder</div>
+                        <div class="arch-model">BERT-style</div>
+                    </div>
+                    <div class="arch-card">
+                        <div class="arch-name">Decoder</div>
+                        <div class="arch-model">GPT-style</div>
+                    </div>
+                    <div class="arch-card">
+                        <div class="arch-name">Both</div>
+                        <div class="arch-model">T5-style</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Ethical Concerns -->
+            <div class="ethics-section">
+                <div class="ethics-card">
+                    <div class="ethics-icon">⚖️</div>
+                    <div class="ethics-title">Bias & Fairness</div>
+                </div>
+                <div class="ethics-card">
+                    <div class="ethics-icon">🔒</div>
+                    <div class="ethics-title">Privacy</div>
+                </div>
+                <div class="ethics-card">
+                    <div class="ethics-icon">📰</div>
+                    <div class="ethics-title">Misinformation</div>
+                </div>
+                <div class="ethics-card">
+                    <div class="ethics-icon">🌍</div>
+                    <div class="ethics-title">Environment</div>
+                </div>
+            </div>
+            
+            <!-- Best Practices -->
+            <div class="practices-grid">
+                <div class="practice-card">
+                    <div class="practice-icon">✅</div>
+                    <div class="practice-content">
+                        <div class="practice-title">Diverse Evaluation</div>
+                        <div class="practice-text">Test on diverse datasets and scenarios</div>
+                    </div>
+                </div>
+                
+                <div class="practice-card">
+                    <div class="practice-icon">📝</div>
+                    <div class="practice-content">
+                        <div class="practice-title">Document Limitations</div>
+                        <div class="practice-text">Clearly state model capabilities and constraints</div>
+                    </div>
+                </div>
+                
+                <div class="practice-card">
+                    <div class="practice-icon">🔍</div>
+                    <div class="practice-content">
+                        <div class="practice-title">Transparency</div>
+                        <div class="practice-text">Open about model behavior and decisions</div>
+                    </div>
+                </div>
+                
+                <div class="practice-card">
+                    <div class="practice-icon">👥</div>
+                    <div class="practice-content">
+                        <div class="practice-title">Human Oversight</div>
+                        <div class="practice-text">Maintain human-in-the-loop for critical tasks</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bottom Section -->
+            <div class="bottom-section">
+                <div class="bottom-card environment">
+                    <div class="bottom-icon">🌱</div>
+                    <div class="bottom-title">Environmental Cost</div>
+                    <div class="bottom-text">
+                        <span class="highlight">Training emissions</span> and energy consumption
+                    </div>
+                </div>
+                
+                <div class="bottom-card accessibility">
+                    <div class="bottom-icon">🤝</div>
+                    <div class="bottom-title">Accessibility</div>
+                    <div class="bottom-text">
+                        <span class="highlight">Democratization</span> vs. resource concentration
+                    </div>
+                </div>
+                
+                <div class="bottom-card learning">
+                    <div class="bottom-icon">📚</div>
+                    <div class="bottom-title">Continuous Learning</div>
+                    <div class="bottom-text">
+                        Field evolves <span class="highlight">rapidly</span>, stay updated
+                    </div>
+                </div>
+                
+                <div class="deployment-box">
+                    <div class="deployment-title">🛡️ Responsible Deployment</div>
+                    <div class="deployment-text">
+                        <strong>Transparency</strong> • <strong>Safety measures</strong> • <strong>Human oversight</strong> in all deployments
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

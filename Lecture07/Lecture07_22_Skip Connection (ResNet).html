@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skip Connection (ResNet)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            position: relative;
+            overflow: hidden;
+            padding: 20px 35px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+        }
+        
+        .core-idea {
+            background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+            border: 3px solid #1E64C8;
+            border-radius: 12px;
+            padding: 14px 20px;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .core-label {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .core-formula {
+            font-size: 22px;
+            color: #1E64C8;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .architecture-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 18px;
+            position: relative;
+            height: 180px;
+        }
+        
+        .architecture-visual {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+        }
+        
+        .main-path {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            position: relative;
+        }
+        
+        .layer-box {
+            background: linear-gradient(135deg, #64B5F6 0%, #42A5F5 100%);
+            border: 3px solid #1E64C8;
+            border-radius: 10px;
+            padding: 18px 25px;
+            text-align: center;
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.2);
+        }
+        
+        .input-output {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .io-node {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%);
+            border: 3px solid #2E7D32;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        }
+        
+        .skip-connection {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        .skip-path {
+            stroke: #FF9800;
+            stroke-width: 4;
+            fill: none;
+            stroke-dasharray: 8, 4;
+            animation: dash 1s linear infinite;
+        }
+        
+        @keyframes dash {
+            to {
+                stroke-dashoffset: -12;
+            }
+        }
+        
+        .skip-label {
+            position: absolute;
+            top: 50%;
+            right: 20px;
+            background: #FF9800;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 700;
+            transform: translateY(-50%);
+        }
+        
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        
+        .benefit-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .benefit-card:hover {
+            background: #F0F6FF;
+            transform: translateY(-2px);
+        }
+        
+        .benefit-icon {
+            font-size: 20px;
+            margin-right: 10px;
+        }
+        
+        .benefit-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .benefit-text {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.3;
+        }
+        
+        .impact-section {
+            background: #E8F5E9;
+            border: 3px solid #4CAF50;
+            border-radius: 12px;
+            padding: 12px 18px;
+        }
+        
+        .impact-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #2E7D32;
+            margin-bottom: 8px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .impact-title::before {
+            content: "🏆";
+            margin-right: 8px;
+        }
+        
+        .impact-content {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .impact-item {
+            flex: 1;
+        }
+        
+        .impact-label {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+        
+        .impact-value {
+            font-size: 18px;
+            color: #2E7D32;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Skip Connection (ResNet): Breakthrough Architecture</div>
+        
+        <div class="core-idea">
+            <div class="core-label">CORE FORMULA</div>
+            <div class="core-formula">y = F(x) + x</div>
+        </div>
+        
+        <div class="architecture-section">
+            <div class="architecture-visual">
+                <div class="input-output">
+                    <div class="io-node">x</div>
+                    <svg width="600" height="180" style="position: absolute; left: 80px; top: -50px;">
+                        <!-- Main path arrows -->
+                        <line x1="0" y1="90" x2="50" y2="90" stroke="#1E64C8" stroke-width="3" marker-end="url(#arrowblue)"/>
+                        <line x1="200" y1="90" x2="250" y2="90" stroke="#1E64C8" stroke-width="3" marker-end="url(#arrowblue)"/>
+                        <line x1="400" y1="90" x2="450" y2="90" stroke="#1E64C8" stroke-width="3" marker-end="url(#arrowblue)"/>
+                        
+                        <!-- Skip connection -->
+                        <path d="M 0 90 Q 0 20, 250 20 Q 500 20, 500 90" stroke="#FF9800" stroke-width="4" fill="none" stroke-dasharray="8,4">
+                            <animate attributeName="stroke-dashoffset" from="0" to="-12" dur="1s" repeatCount="indefinite"/>
+                        </path>
+                        
+                        <!-- Plus sign -->
+                        <text x="480" y="95" font-size="24" fill="#FF9800" font-weight="bold">+</text>
+                        
+                        <!-- Skip label -->
+                        <text x="230" y="15" font-size="14" fill="#E65100" font-weight="bold">Identity Shortcut</text>
+                        
+                        <!-- Layer boxes -->
+                        <rect x="50" y="70" width="150" height="40" fill="#42A5F5" stroke="#1E64C8" stroke-width="2" rx="8"/>
+                        <text x="125" y="95" text-anchor="middle" fill="white" font-size="16" font-weight="bold">Layer</text>
+                        
+                        <rect x="250" y="70" width="150" height="40" fill="#42A5F5" stroke="#1E64C8" stroke-width="2" rx="8"/>
+                        <text x="325" y="95" text-anchor="middle" fill="white" font-size="16" font-weight="bold">Layer</text>
+                        
+                        <!-- Arrow markers -->
+                        <defs>
+                            <marker id="arrowblue" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                                <path d="M0,0 L0,6 L9,3 z" fill="#1E64C8"/>
+                            </marker>
+                        </defs>
+                    </svg>
+                    <div class="io-node" style="margin-left: 600px;">y</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="benefits-grid">
+            <div class="benefit-card">
+                <div class="benefit-title">
+                    <span class="benefit-icon">🚀</span>
+                    Extreme Depth
+                </div>
+                <div class="benefit-text">Enabled training 152+ layer networks</div>
+            </div>
+            
+            <div class="benefit-card">
+                <div class="benefit-title">
+                    <span class="benefit-icon">⚡</span>
+                    Gradient Highway
+                </div>
+                <div class="benefit-text">Direct path for gradients to early layers</div>
+            </div>
+            
+            <div class="benefit-card">
+                <div class="benefit-title">
+                    <span class="benefit-icon">🎯</span>
+                    Residual Learning
+                </div>
+                <div class="benefit-text">Learns F(x) instead of full H(x)</div>
+            </div>
+            
+            <div class="benefit-card">
+                <div class="benefit-title">
+                    <span class="benefit-icon">📊</span>
+                    Math Benefit
+                </div>
+                <div class="benefit-text">Gradient always has component of 1</div>
+            </div>
+        </div>
+        
+        <div class="impact-section">
+            <div class="impact-title">Impact & Adoption</div>
+            <div class="impact-content">
+                <div class="impact-item">
+                    <div class="impact-label">ImageNet Champions</div>
+                    <div class="impact-value">ResNet-50/101/152</div>
+                </div>
+                <div class="impact-item">
+                    <div class="impact-label">Performance</div>
+                    <div class="impact-value">Deeper = Better</div>
+                </div>
+                <div class="impact-item">
+                    <div class="impact-label">Adoption</div>
+                    <div class="impact-value">Universal Standard</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

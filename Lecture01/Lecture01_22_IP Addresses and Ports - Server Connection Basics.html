@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IP Addresses and Ports</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 28px 40px;
+            background: white;
+        }
+        
+        .title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .ip-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 16px;
+        }
+        
+        .ip-card {
+            background: white;
+            border: 3px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px 18px;
+            transition: all 0.3s;
+        }
+        
+        .ip-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(30, 100, 200, 0.25);
+        }
+        
+        .ip-header {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .ip-content {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .ip-example {
+            background: #f0f5fc;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            color: #1E64C8;
+            font-weight: 600;
+            margin-top: 6px;
+            text-align: center;
+        }
+        
+        .ip-types {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 16px;
+        }
+        
+        .type-card {
+            background: #f8fbff;
+            border: 2.5px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px 16px;
+        }
+        
+        .type-name {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .type-desc {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.4;
+        }
+        
+        .port-section {
+            background: #fff4e6;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px 20px;
+            margin-bottom: 16px;
+        }
+        
+        .port-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .port-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        
+        .port-item {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 10px 14px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .port-item:hover {
+            background: #1E64C8;
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        .port-number {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .port-item:hover .port-number {
+            color: white;
+        }
+        
+        .port-service {
+            font-size: 15px;
+            color: #555;
+        }
+        
+        .port-item:hover .port-service {
+            color: white;
+        }
+        
+        .connection-example {
+            background: #f0f5fc;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px 20px;
+            margin-bottom: 14px;
+        }
+        
+        .connection-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .connection-code {
+            background: white;
+            border: 2px dashed #1E64C8;
+            border-radius: 8px;
+            padding: 10px 16px;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            color: #1E64C8;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .best-practices {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        
+        .practice-box {
+            background: #f8fbff;
+            border-left: 4px solid #1E64C8;
+            border-radius: 6px;
+            padding: 10px 14px;
+        }
+        
+        .practice-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .practice-desc {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">IP Addresses and Ports - Server Connection Basics</div>
+        
+        <div class="ip-section">
+            <div class="ip-card">
+                <div class="ip-header">IPv4</div>
+                <div class="ip-content">
+                    32-bit address<br>
+                    4.3 billion addresses
+                </div>
+                <div class="ip-example">192.168.1.100</div>
+            </div>
+            
+            <div class="ip-card">
+                <div class="ip-header">IPv6</div>
+                <div class="ip-content">
+                    128-bit address<br>
+                    Future-proof
+                </div>
+                <div class="ip-example">2001:0db8::1</div>
+            </div>
+        </div>
+        
+        <div class="ip-types">
+            <div class="type-card">
+                <div class="type-name">Public IP</div>
+                <div class="type-desc">Internet-facing address, globally unique</div>
+            </div>
+            
+            <div class="type-card">
+                <div class="type-name">Private IP</div>
+                <div class="type-desc">Internal network (192.168.x.x, 10.x.x.x)</div>
+            </div>
+        </div>
+        
+        <div class="port-section">
+            <div class="port-title">Common Ports (0-65535)</div>
+            <div class="port-grid">
+                <div class="port-item">
+                    <div class="port-number">22</div>
+                    <div class="port-service">SSH</div>
+                </div>
+                <div class="port-item">
+                    <div class="port-number">80</div>
+                    <div class="port-service">HTTP</div>
+                </div>
+                <div class="port-item">
+                    <div class="port-number">443</div>
+                    <div class="port-service">HTTPS</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="connection-example">
+            <div class="connection-title">ML Server Connection</div>
+            <div class="connection-code">ssh user@192.168.1.100 -p 22</div>
+        </div>
+        
+        <div class="best-practices">
+            <div class="practice-box">
+                <div class="practice-title">Port Forwarding</div>
+                <div class="practice-desc">Access remote Jupyter: localhost:8888 → server:8888</div>
+            </div>
+            
+            <div class="practice-box">
+                <div class="practice-title">Firewall</div>
+                <div class="practice-desc">Controls port accessibility from outside</div>
+            </div>
+            
+            <div class="practice-box">
+                <div class="practice-title">Security</div>
+                <div class="practice-desc">Use non-standard ports, close unused ports</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pre-training and Fine-tuning Pipeline</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: #ffffff;
+            padding: 25px 40px;
+        }
+        
+        .title {
+            font-size: 26px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .pipeline {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 35px;
+        }
+        
+        .stage {
+            flex: 1;
+            position: relative;
+        }
+        
+        .stage-box {
+            background: #E8F4F8;
+            border: 3px solid #1E64C8;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .stage-number {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1E64C8;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .stage-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            margin-top: 5px;
+        }
+        
+        .stage-subtitle {
+            font-size: 16px;
+            color: #666666;
+            margin-bottom: 12px;
+        }
+        
+        .stage-description {
+            font-size: 16px;
+            color: #333333;
+            line-height: 1.5;
+        }
+        
+        .arrow {
+            font-size: 40px;
+            color: #1E64C8;
+            flex-shrink: 0;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .feature-card {
+            background: #ffffff;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .feature-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        
+        .feature-text {
+            font-size: 16px;
+            color: #333333;
+            line-height: 1.4;
+        }
+        
+        .key-points {
+            background: #FFF9E6;
+            border: 2px solid #FFC107;
+            border-radius: 10px;
+            padding: 15px 20px;
+        }
+        
+        .key-points-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #F57C00;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .key-points-list {
+            display: flex;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .key-point-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            color: #333333;
+        }
+        
+        .key-point-icon {
+            color: #F57C00;
+            font-size: 18px;
+        }
+        
+        .highlight {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Pre-training → Fine-tuning Pipeline</div>
+        
+        <div class="pipeline">
+            <!-- Pre-training Stage -->
+            <div class="stage">
+                <div class="stage-box">
+                    <div class="stage-number">1</div>
+                    <div class="stage-title">Pre-training</div>
+                    <div class="stage-subtitle">Self-Supervised Learning</div>
+                    <div class="stage-description">
+                        Learn from <span class="highlight">massive text corpora</span><br>
+                        No manual labels required<br>
+                        Predict masked/next words
+                    </div>
+                </div>
+            </div>
+            
+            <div class="arrow">→</div>
+            
+            <!-- Fine-tuning Stage -->
+            <div class="stage">
+                <div class="stage-box">
+                    <div class="stage-number">2</div>
+                    <div class="stage-title">Fine-tuning</div>
+                    <div class="stage-subtitle">Task Adaptation</div>
+                    <div class="stage-description">
+                        Adapt to <span class="highlight">specific tasks</span><br>
+                        Requires minimal data<br>
+                        Pre-train once, fine-tune many
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">📚</div>
+                <div class="feature-text">
+                    Captures <strong>syntax & semantics</strong>
+                </div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🧠</div>
+                <div class="feature-text">
+                    Learns <strong>world knowledge</strong>
+                </div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🔧</div>
+                <div class="feature-text">
+                    Creates <strong>universal extractors</strong>
+                </div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📉</div>
+                <div class="feature-text">
+                    Reduces <strong>data requirements</strong>
+                </div>
+            </div>
+        </div>
+        
+        <div class="key-points">
+            <div class="key-points-title">
+                <span>💡</span>
+                <span>Key Advantages</span>
+            </div>
+            <div class="key-points-list">
+                <div class="key-point-item">
+                    <span class="key-point-icon">✓</span>
+                    <span>General language representations</span>
+                </div>
+                <div class="key-point-item">
+                    <span class="key-point-icon">✓</span>
+                    <span>Two-stage learning process</span>
+                </div>
+                <div class="key-point-item">
+                    <span class="key-point-icon">✓</span>
+                    <span>Efficient transfer to downstream tasks</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

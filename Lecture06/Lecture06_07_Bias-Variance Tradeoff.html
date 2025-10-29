@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bias-Variance Tradeoff</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: white;
+            font-family: Aptos, 'Segoe UI', sans-serif;
+        }
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+            padding: 30px;
+            box-sizing: border-box;
+        }
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 20px;
+        }
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 20px;
+        }
+        .curve-section {
+            background: #f8f9fb;
+            border-radius: 10px;
+            padding: 20px;
+            position: relative;
+        }
+        .curve-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .graph-container {
+            position: relative;
+            height: 200px;
+            margin: 10px 0;
+        }
+        .graph-svg {
+            width: 100%;
+            height: 100%;
+        }
+        .axis-label {
+            position: absolute;
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+        }
+        .x-label {
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .y-label {
+            top: 50%;
+            left: -10px;
+            transform: translateY(-50%) rotate(-90deg);
+            transform-origin: center;
+        }
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .legend-line {
+            width: 30px;
+            height: 3px;
+            border-radius: 2px;
+        }
+        .definitions-section {
+            display: grid;
+            gap: 15px;
+        }
+        .definition-card {
+            background: white;
+            border-left: 4px solid #1E64C8;
+            padding: 15px 18px;
+            border-radius: 6px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+        .definition-card.variance {
+            border-left-color: #e74c3c;
+        }
+        .def-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 6px;
+        }
+        .def-text {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.5;
+        }
+        .def-impact {
+            font-size: 15px;
+            color: #666;
+            margin-top: 5px;
+            font-style: italic;
+        }
+        .formula-section {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            color: white;
+            padding: 18px 25px;
+            border-radius: 10px;
+            text-align: center;
+            grid-column: 1 / -1;
+        }
+        .formula-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            opacity: 0.95;
+        }
+        .formula {
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .goal-section {
+            background: #f0f9f4;
+            border: 2px solid #27ae60;
+            padding: 15px 20px;
+            border-radius: 8px;
+            text-align: center;
+            grid-column: 1 / -1;
+        }
+        .goal-text {
+            font-size: 17px;
+            color: #27ae60;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Bias-Variance Tradeoff</div>
+        
+        <div class="main-content">
+            <!-- Graph Section -->
+            <div class="curve-section">
+                <div class="curve-title">Error vs Model Complexity</div>
+                <div class="graph-container">
+                    <svg class="graph-svg" viewBox="0 0 300 180" preserveAspectRatio="xMidYMid meet">
+                        <!-- Axes -->
+                        <line x1="30" y1="150" x2="280" y2="150" stroke="#ccc" stroke-width="2"/>
+                        <line x1="30" y1="20" x2="30" y2="150" stroke="#ccc" stroke-width="2"/>
+                        
+                        <!-- Bias curve (decreasing) -->
+                        <path d="M 40 40 Q 100 50, 160 80 T 270 140" 
+                              stroke="#1E64C8" 
+                              stroke-width="3" 
+                              fill="none"
+                              stroke-linecap="round"/>
+                        
+                        <!-- Variance curve (increasing) -->
+                        <path d="M 40 130 Q 100 120, 160 80 T 270 30" 
+                              stroke="#e74c3c" 
+                              stroke-width="3" 
+                              fill="none"
+                              stroke-linecap="round"/>
+                        
+                        <!-- Total Error curve (U-shaped) -->
+                        <path d="M 40 90 Q 100 75, 155 70 T 270 85" 
+                              stroke="#27ae60" 
+                              stroke-width="3.5" 
+                              fill="none"
+                              stroke-linecap="round"
+                              stroke-dasharray="5,5"/>
+                        
+                        <!-- Sweet spot marker -->
+                        <circle cx="155" cy="70" r="6" fill="#27ae60" opacity="0.8"/>
+                        <text x="155" y="60" text-anchor="middle" font-size="12" fill="#27ae60" font-weight="600">★</text>
+                    </svg>
+                    <div class="axis-label x-label">Model Complexity →</div>
+                    <div class="axis-label y-label">Error →</div>
+                </div>
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-line" style="background: #1E64C8;"></div>
+                        <span>Bias²</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-line" style="background: #e74c3c;"></div>
+                        <span>Variance</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-line" style="background: #27ae60; border: 2px dashed #27ae60; height: 0;"></div>
+                        <span>Total Error</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Definitions Section -->
+            <div class="definitions-section">
+                <div class="definition-card">
+                    <div class="def-title">📊 Bias</div>
+                    <div class="def-text">Error from oversimplified assumptions in the model</div>
+                    <div class="def-impact">→ High bias leads to underfitting (too rigid)</div>
+                </div>
+                
+                <div class="definition-card variance">
+                    <div class="def-title">📈 Variance</div>
+                    <div class="def-text">Error from sensitivity to training data fluctuations</div>
+                    <div class="def-impact">→ High variance leads to overfitting (too flexible)</div>
+                </div>
+
+                <div class="goal-section">
+                    <div class="goal-text">🎯 Goal: Minimize both bias and variance simultaneously</div>
+                </div>
+            </div>
+
+            <!-- Formula Section -->
+            <div class="formula-section">
+                <div class="formula-title">Total Error Decomposition</div>
+                <div class="formula">Total Error = Bias² + Variance + Irreducible Error</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

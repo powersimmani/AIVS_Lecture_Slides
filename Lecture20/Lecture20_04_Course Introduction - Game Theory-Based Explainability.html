@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XAI Taxonomy - SHAP Position</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Aptos', 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+        }
+        
+        .tree {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            padding: 30px;
+        }
+        
+        .node {
+            position: absolute;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 17px;
+            font-weight: 500;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .node:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .level-0 {
+            background: #1E64C8;
+            color: white;
+            font-size: 20px;
+            font-weight: 600;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            min-width: 200px;
+        }
+        
+        .level-1 {
+            background: #4A90E2;
+            color: white;
+            top: 100px;
+            min-width: 180px;
+        }
+        
+        .level-2 {
+            background: #E8F2FF;
+            color: #1E64C8;
+            border: 2px solid #1E64C8;
+            top: 200px;
+            min-width: 160px;
+        }
+        
+        .level-3 {
+            background: white;
+            color: #333;
+            border: 2px solid #ccc;
+            top: 320px;
+            min-width: 140px;
+            font-size: 16px;
+        }
+        
+        .highlight {
+            background: #FFD700 !important;
+            color: #1E64C8 !important;
+            border: 3px solid #1E64C8 !important;
+            font-weight: 700;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .line {
+            position: absolute;
+            background: #1E64C8;
+            opacity: 0.4;
+            z-index: -1;
+        }
+        
+        .line-v {
+            width: 2px;
+        }
+        
+        .line-h {
+            height: 2px;
+        }
+        
+        /* Node positions */
+        .model-agnostic { left: 20%; }
+        .model-specific { left: 75%; }
+        
+        .local { left: 5%; }
+        .global { left: 28%; }
+        .local-ms { left: 62%; }
+        .global-ms { left: 85%; }
+        
+        .lime { left: 2%; top: 320px; }
+        .shap { left: 20%; top: 320px; }
+        .ice { left: 25%; top: 360px; }
+        .pdp { left: 32%; top: 360px; }
+        .cam { left: 60%; top: 320px; }
+        .attention { left: 75%; top: 320px; }
+        .saliency { left: 86%; top: 360px; }
+        
+        .legend {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 14px;
+            color: #666;
+            background: #F8F9FA;
+            padding: 10px 15px;
+            border-radius: 6px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 4px 0;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            margin-right: 8px;
+            border: 2px solid #1E64C8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="tree">
+            <!-- Lines -->
+            <div class="line line-v" style="left: 50%; top: 60px; height: 40px;"></div>
+            <div class="line line-h" style="left: 20%; top: 100px; width: 60%;"></div>
+            
+            <div class="line line-v" style="left: 20%; top: 100px; height: 100px;"></div>
+            <div class="line line-v" style="left: 75%; top: 100px; height: 100px;"></div>
+            
+            <div class="line line-h" style="left: 5%; top: 200px; width: 30%;"></div>
+            <div class="line line-h" style="left: 62%; top: 200px; width: 30%;"></div>
+            
+            <div class="line line-v" style="left: 5%; top: 200px; height: 120px;"></div>
+            <div class="line line-v" style="left: 20%; top: 200px; height: 120px;"></div>
+            <div class="line line-v" style="left: 28%; top: 200px; height: 160px;"></div>
+            <div class="line line-v" style="left: 62%; top: 200px; height: 120px;"></div>
+            <div class="line line-v" style="left: 75%; top: 200px; height: 120px;"></div>
+            <div class="line line-v" style="left: 85%; top: 200px; height: 160px;"></div>
+            
+            <!-- Nodes -->
+            <div class="node level-0">Explainable AI (XAI)</div>
+            
+            <div class="node level-1 model-agnostic">Model-Agnostic</div>
+            <div class="node level-1 model-specific">Model-Specific</div>
+            
+            <div class="node level-2 local">Local</div>
+            <div class="node level-2 global">Global</div>
+            <div class="node level-2 local-ms">Local</div>
+            <div class="node level-2 global-ms">Global</div>
+            
+            <div class="node level-3 lime">LIME</div>
+            <div class="node level-3 shap highlight">SHAP ★</div>
+            <div class="node level-3 ice">ICE</div>
+            <div class="node level-3 pdp">PDP</div>
+            <div class="node level-3 cam">CAM/Grad-CAM</div>
+            <div class="node level-3 attention">Attention Maps</div>
+            <div class="node level-3 saliency">Saliency Maps</div>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background: #FFD700;"></div>
+                <span>Course Focus: SHAP</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

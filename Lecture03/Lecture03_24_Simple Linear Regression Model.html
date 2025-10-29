@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Linear Regression Model</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: #ffffff;
+            position: relative;
+            padding: 25px 35px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .header-title {
+            font-size: 20px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .model-equation {
+            background: #1E64C8;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 18px;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+        }
+        
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            flex: 1;
+        }
+        
+        .left-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 11px;
+        }
+        
+        .param-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 11px 15px;
+        }
+        
+        .param-label {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .param-desc {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .fitted-box {
+            background: #f0f7ff;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 15px;
+        }
+        
+        .fitted-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .fitted-formula {
+            background: white;
+            padding: 8px 10px;
+            border-radius: 4px;
+            font-size: 16px;
+            color: #333;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+        }
+        
+        .objective-box {
+            background: #1E64C8;
+            color: white;
+            border-radius: 8px;
+            padding: 12px 15px;
+            text-align: center;
+        }
+        
+        .obj-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .obj-content {
+            font-size: 16px;
+        }
+        
+        .right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 11px;
+        }
+        
+        .visual-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 15px;
+            flex: 1;
+        }
+        
+        .visual-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .regression-plot {
+            position: relative;
+            height: 200px;
+            background: #f8fafb;
+            border-radius: 6px;
+            border: 2px solid #1E64C8;
+        }
+        
+        .axis {
+            position: absolute;
+            background: #1E64C8;
+        }
+        
+        .x-axis {
+            bottom: 20px;
+            left: 20px;
+            right: 10px;
+            height: 2px;
+        }
+        
+        .y-axis {
+            left: 20px;
+            bottom: 20px;
+            top: 10px;
+            width: 2px;
+        }
+        
+        .axis-label {
+            position: absolute;
+            font-size: 14px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .x-label {
+            bottom: 0;
+            right: 5px;
+        }
+        
+        .y-label {
+            top: 0;
+            left: 5px;
+        }
+        
+        .regression-line {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            width: calc(100% - 30px);
+            height: calc(100% - 30px);
+            pointer-events: none;
+        }
+        
+        .line {
+            stroke: #1E64C8;
+            stroke-width: 3;
+            fill: none;
+        }
+        
+        .data-point {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #1E64C8;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .residual-line {
+            position: absolute;
+            width: 2px;
+            background: rgba(255, 0, 0, 0.4);
+            border-left: 2px dashed rgba(255, 0, 0, 0.6);
+        }
+        
+        .point1 { left: 25%; bottom: 30%; }
+        .point2 { left: 40%; bottom: 45%; }
+        .point3 { left: 55%; bottom: 60%; }
+        .point4 { left: 70%; bottom: 70%; }
+        .point5 { left: 85%; bottom: 85%; }
+        
+        .res1 { left: 25%; bottom: 35%; height: 15px; }
+        .res2 { left: 40%; bottom: 50%; height: 10px; }
+        .res3 { left: 70%; bottom: 75%; height: 10px; }
+        
+        .intercept-marker {
+            position: absolute;
+            left: 20px;
+            bottom: 20px;
+            width: 10px;
+            height: 10px;
+            background: red;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+        
+        .intercept-label {
+            position: absolute;
+            left: 35px;
+            bottom: 15px;
+            font-size: 13px;
+            color: red;
+            font-weight: 600;
+        }
+        
+        .example-box {
+            background: #f8fafb;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 15px;
+        }
+        
+        .example-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+            text-align: center;
+        }
+        
+        .example-formula {
+            background: white;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 16px;
+            color: #333;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-title">Simple Linear Regression Model</div>
+        </div>
+        
+        <div class="model-equation">
+            Y = β₀ + β₁X + ε
+        </div>
+        
+        <div class="main-grid">
+            <div class="left-panel">
+                <div class="param-box">
+                    <div class="param-label">β₀: Intercept</div>
+                    <div class="param-desc">Value when X = 0</div>
+                </div>
+                
+                <div class="param-box">
+                    <div class="param-label">β₁: Slope</div>
+                    <div class="param-desc">Change in Y per unit change in X</div>
+                </div>
+                
+                <div class="param-box">
+                    <div class="param-label">ε: Error Term</div>
+                    <div class="param-desc">Random error, ε ~ N(0, σ²)</div>
+                </div>
+                
+                <div class="fitted-box">
+                    <div class="fitted-title">Fitted Line</div>
+                    <div class="fitted-formula">ŷ = β̂₀ + β̂₁x</div>
+                    <div style="font-size: 15px; color: #555; text-align: center; margin-top: 6px;">
+                        Estimated parameters
+                    </div>
+                </div>
+                
+                <div class="param-box">
+                    <div class="param-label">Residual: eᵢ = yᵢ - ŷᵢ</div>
+                    <div class="param-desc">Prediction error</div>
+                </div>
+                
+                <div class="objective-box">
+                    <div class="obj-title">Objective</div>
+                    <div class="obj-content">Minimize total prediction error</div>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <div class="visual-box">
+                    <div class="visual-title">Visual Representation</div>
+                    <div class="regression-plot">
+                        <div class="axis x-axis"></div>
+                        <div class="axis y-axis"></div>
+                        <div class="axis-label x-label">X</div>
+                        <div class="axis-label y-label">Y</div>
+                        
+                        <svg class="regression-line" viewBox="0 0 100 100" preserveAspectRatio="none">
+                            <line class="line" x1="0" y1="100" x2="100" y2="0" />
+                        </svg>
+                        
+                        <div class="data-point point1"></div>
+                        <div class="data-point point2"></div>
+                        <div class="data-point point3"></div>
+                        <div class="data-point point4"></div>
+                        <div class="data-point point5"></div>
+                        
+                        <div class="residual-line res1"></div>
+                        <div class="residual-line res2"></div>
+                        <div class="residual-line res3"></div>
+                        
+                        <div class="intercept-marker"></div>
+                        <div class="intercept-label">β₀</div>
+                    </div>
+                    <div style="font-size: 14px; color: #555; text-align: center; margin-top: 8px;">
+                        Blue line: fitted regression | Dashed red: residuals
+                    </div>
+                </div>
+                
+                <div class="example-box">
+                    <div class="example-title">Real-World Example</div>
+                    <div class="example-formula">
+                        Salary = β₀ + β₁ × (Years of Experience) + ε
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

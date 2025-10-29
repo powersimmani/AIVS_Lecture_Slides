@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Odds and Log Odds</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px;
+            position: relative;
+        }
+        
+        .title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .content-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            height: calc(100% - 50px);
+        }
+        
+        .transformation-flow {
+            display: flex;
+            align-items: stretch;
+            gap: 12px;
+        }
+        
+        .transform-box {
+            flex: 1;
+            background: white;
+            border: 3px solid #1E64C8;
+            border-radius: 10px;
+            padding: 16px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: all 0.3s;
+        }
+        
+        .transform-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(30, 100, 200, 0.2);
+        }
+        
+        .transform-header {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        
+        .prob-header {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+        }
+        
+        .odds-header {
+            background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+        }
+        
+        .logodds-header {
+            background: linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%);
+        }
+        
+        .transform-formula {
+            font-size: 17px;
+            color: #333;
+            text-align: center;
+            font-weight: 500;
+            font-style: italic;
+            padding: 8px;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+        
+        .transform-range {
+            font-size: 16px;
+            color: #666;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .arrow-between {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .arrow-icon {
+            font-size: 32px;
+            color: #1E64C8;
+            font-weight: bold;
+        }
+        
+        .insight-box {
+            background: linear-gradient(135deg, #ffc107 0%, #ffb300 100%);
+            border-radius: 10px;
+            padding: 18px 24px;
+            color: white;
+            text-align: center;
+        }
+        
+        .insight-label {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            opacity: 0.95;
+        }
+        
+        .insight-text {
+            font-size: 19px;
+            font-weight: 700;
+            line-height: 1.4;
+        }
+        
+        .connection-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 14px 18px;
+            text-align: center;
+            font-size: 17px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .example-section {
+            background: #f8f9fa;
+            border: 2px solid #6c757d;
+            border-radius: 10px;
+            padding: 16px 20px;
+        }
+        
+        .example-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .example-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .example-step {
+            background: white;
+            border: 2px solid #6c757d;
+            border-radius: 8px;
+            padding: 10px 16px;
+            font-size: 16px;
+            color: #495057;
+            font-weight: 600;
+        }
+        
+        .example-arrow {
+            font-size: 24px;
+            color: #6c757d;
+            font-weight: bold;
+        }
+        
+        .bridge-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #5e92d8 100%);
+            border-radius: 10px;
+            padding: 16px 20px;
+            color: white;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Odds and Log Odds</div>
+        
+        <div class="content-layout">
+            <!-- Transformation Flow -->
+            <div class="transformation-flow">
+                <div class="transform-box">
+                    <div class="transform-header prob-header">
+                        Probability
+                    </div>
+                    <div class="transform-formula">
+                        P(event)
+                    </div>
+                    <div class="transform-range">
+                        ∈ [0, 1]
+                    </div>
+                </div>
+                
+                <div class="arrow-between">
+                    <div class="arrow-icon">→</div>
+                </div>
+                
+                <div class="transform-box">
+                    <div class="transform-header odds-header">
+                        Odds
+                    </div>
+                    <div class="transform-formula">
+                        p / (1 - p)
+                    </div>
+                    <div class="transform-range">
+                        ∈ [0, ∞)
+                    </div>
+                </div>
+                
+                <div class="arrow-between">
+                    <div class="arrow-icon">→</div>
+                </div>
+                
+                <div class="transform-box">
+                    <div class="transform-header logodds-header">
+                        Log Odds (Logit)
+                    </div>
+                    <div class="transform-formula">
+                        log(p / (1 - p))
+                    </div>
+                    <div class="transform-range">
+                        ∈ (-∞, ∞)
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Key Insight -->
+            <div class="insight-box">
+                <div class="insight-label">Key Insight:</div>
+                <div class="insight-text">
+                    Log odds can take any real value!
+                </div>
+            </div>
+            
+            <!-- Connection -->
+            <div class="connection-box">
+                Linear model for log odds instead of probability
+            </div>
+            
+            <!-- Example -->
+            <div class="example-section">
+                <div class="example-title">Example:</div>
+                <div class="example-flow">
+                    <div class="example-step">P = 0.8</div>
+                    <div class="example-arrow">→</div>
+                    <div class="example-step">Odds = 4</div>
+                    <div class="example-arrow">→</div>
+                    <div class="example-step">Log odds = 1.39</div>
+                </div>
+            </div>
+            
+            <!-- Bridge -->
+            <div class="bridge-box">
+                Bridge to Logistic Regression Formulation
+            </div>
+        </div>
+    </div>
+</body>
+</html>

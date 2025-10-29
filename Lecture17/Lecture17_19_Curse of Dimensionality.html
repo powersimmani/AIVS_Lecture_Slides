@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curse of Dimensionality</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #e57373;
+        }
+        
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+            color: #666;
+            margin-top: -10px;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            flex: 1;
+        }
+        
+        .problems-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+        
+        .problem-card {
+            background: white;
+            border: 2px solid #e57373;
+            border-radius: 10px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .problem-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(229, 115, 115, 0.3);
+            background: linear-gradient(135deg, #ffebee 0%, #ffffff 100%);
+        }
+        
+        .problem-icon {
+            font-size: 36px;
+            margin-bottom: 5px;
+        }
+        
+        .problem-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #d32f2f;
+            line-height: 1.3;
+        }
+        
+        .problem-desc {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.4;
+        }
+        
+        .consequences-section {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        
+        .consequence-card {
+            background: linear-gradient(135d, #fff3e0 0%, #ffffff 100%);
+            border: 2px solid #FFA726;
+            border-radius: 10px;
+            padding: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s;
+        }
+        
+        .consequence-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(255, 167, 38, 0.2);
+        }
+        
+        .consequence-icon {
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+        
+        .consequence-content {
+            flex: 1;
+        }
+        
+        .consequence-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #F57C00;
+            margin-bottom: 4px;
+        }
+        
+        .consequence-text {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.3;
+        }
+        
+        .solution-section {
+            background: linear-gradient(135deg, #e8f5e9 0%, #ffffff 100%);
+            border: 3px solid #4CAF50;
+            border-radius: 12px;
+            padding: 18px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .solution-icon {
+            font-size: 48px;
+            flex-shrink: 0;
+        }
+        
+        .solution-content {
+            flex: 1;
+        }
+        
+        .solution-label {
+            font-size: 18px;
+            font-weight: 600;
+            color: #388E3C;
+            margin-bottom: 6px;
+        }
+        
+        .solution-text {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .arrow-down {
+            text-align: center;
+            font-size: 32px;
+            color: #e57373;
+            margin: -10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">⚠️ Curse of Dimensionality</div>
+        <div class="subtitle">High dimensions create counterintuitive geometric properties</div>
+        
+        <div class="main-content">
+            <div class="problems-grid">
+                <div class="problem-card">
+                    <div class="problem-icon">📏</div>
+                    <div class="problem-title">Distance Concentration</div>
+                    <div class="problem-desc">All points become equidistant in high dimensions</div>
+                </div>
+                
+                <div class="problem-card">
+                    <div class="problem-icon">📦</div>
+                    <div class="problem-title">Volume Concentration</div>
+                    <div class="problem-desc">Data occupies tiny fraction of space</div>
+                </div>
+                
+                <div class="problem-card">
+                    <div class="problem-icon">📈</div>
+                    <div class="problem-title">Exponential Growth</div>
+                    <div class="problem-desc">Required samples grow exponentially with features</div>
+                </div>
+            </div>
+            
+            <div class="arrow-down">↓</div>
+            
+            <div class="consequences-section">
+                <div class="consequence-card">
+                    <div class="consequence-icon">🎯</div>
+                    <div class="consequence-content">
+                        <div class="consequence-title">Nearest Neighbors</div>
+                        <div class="consequence-text">Become meaningless</div>
+                    </div>
+                </div>
+                
+                <div class="consequence-card">
+                    <div class="consequence-icon">👁️</div>
+                    <div class="consequence-content">
+                        <div class="consequence-title">Visualization</div>
+                        <div class="consequence-text">Impossible beyond 3D</div>
+                    </div>
+                </div>
+                
+                <div class="consequence-card">
+                    <div class="consequence-icon">⚙️</div>
+                    <div class="consequence-content">
+                        <div class="consequence-title">Computational Cost</div>
+                        <div class="consequence-text">Memory & time increase</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="arrow-down" style="color: #4CAF50;">↓</div>
+            
+            <div class="solution-section">
+                <div class="solution-icon">✅</div>
+                <div class="solution-content">
+                    <div class="solution-label">Solution: Dimensionality Reduction</div>
+                    <div class="solution-text">Preserve structure in lower dimensions while maintaining essential information and relationships</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

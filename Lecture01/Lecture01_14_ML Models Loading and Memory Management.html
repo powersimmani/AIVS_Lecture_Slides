@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ML Model Loading Diagram</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 28px 40px;
+            background: white;
+        }
+        
+        .title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .loading-flow {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 18px;
+            gap: 15px;
+        }
+        
+        .flow-step {
+            background: white;
+            border: 3px solid #1E64C8;
+            border-radius: 10px;
+            padding: 18px 25px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .flow-step:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(30, 100, 200, 0.25);
+            background: #f8fbff;
+        }
+        
+        .step-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+        
+        .step-type {
+            font-size: 15px;
+            color: #666;
+        }
+        
+        .flow-arrow {
+            font-size: 28px;
+            color: #1E64C8;
+            font-weight: bold;
+        }
+        
+        .challenge-box {
+            background: #fff4e6;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px 20px;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .challenge-text {
+            font-size: 17px;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .challenge-highlight {
+            color: #1E64C8;
+            font-weight: 700;
+        }
+        
+        .solutions-section {
+            margin-bottom: 16px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .solutions-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 16px;
+        }
+        
+        .solution-card {
+            background: white;
+            border: 2.5px solid #1E64C8;
+            border-radius: 10px;
+            padding: 15px 18px;
+            transition: all 0.3s;
+        }
+        
+        .solution-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(30, 100, 200, 0.2);
+        }
+        
+        .solution-number {
+            display: inline-block;
+            background: #1E64C8;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 28px;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .solution-name {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .solution-desc {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.4;
+        }
+        
+        .insights-tools {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .info-box {
+            background: #f0f5fc;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 14px 18px;
+        }
+        
+        .info-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .info-content {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 4px;
+        }
+        
+        .info-item::before {
+            content: "•";
+            color: #1E64C8;
+            font-weight: bold;
+            margin-right: 6px;
+            font-size: 17px;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">ML Models Loading and Memory Management</div>
+        
+        <div class="loading-flow">
+            <div class="flow-step">
+                <div class="step-name">Disk</div>
+                <div class="step-type">Storage</div>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">
+                <div class="step-name">RAM</div>
+                <div class="step-type">System Memory</div>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">
+                <div class="step-name">VRAM</div>
+                <div class="step-type">GPU Memory</div>
+            </div>
+        </div>
+        
+        <div class="challenge-box">
+            <span class="challenge-text">Challenge: </span>
+            <span class="challenge-highlight">LLaMA-70B = 140GB (FP16)</span>
+            <span class="challenge-text"> exceeds single GPU VRAM</span>
+        </div>
+        
+        <div class="solutions-section">
+            <div class="section-title">Solutions for Large Models</div>
+            <div class="solutions-grid">
+                <div class="solution-card">
+                    <div class="solution-number">1</div>
+                    <div class="solution-name">Model Sharding</div>
+                    <div class="solution-desc">Distribute across multiple GPUs (tensor parallelism)</div>
+                </div>
+                
+                <div class="solution-card">
+                    <div class="solution-number">2</div>
+                    <div class="solution-name">Offloading</div>
+                    <div class="solution-desc">Keep parameters in RAM, load when needed</div>
+                </div>
+                
+                <div class="solution-card">
+                    <div class="solution-number">3</div>
+                    <div class="solution-name">Quantization</div>
+                    <div class="solution-desc">Reduce memory footprint (8-bit, 4-bit)</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="insights-tools">
+            <div class="info-box">
+                <div class="info-title">Key Insights</div>
+                <div class="info-content">
+                    <div class="info-item">Memory bandwidth limits loading speed</div>
+                    <div class="info-item">Disk I/O is not the bottleneck</div>
+                    <div class="info-item">Use memory-mapped files (mmap)</div>
+                </div>
+            </div>
+            
+            <div class="info-box">
+                <div class="info-title">Popular Tools</div>
+                <div class="info-content">
+                    <div class="info-item">Hugging Face Accelerate</div>
+                    <div class="info-item">DeepSpeed ZeRO</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

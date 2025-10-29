@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K-Shape Algorithm</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            padding: 25px;
+            gap: 20px;
+        }
+        
+        .header {
+            text-align: center;
+        }
+        
+        .main-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .content-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            flex: 1;
+        }
+        
+        .features-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .feature-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            background: #f0f6ff;
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.2);
+        }
+        
+        .feature-icon {
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+        
+        .feature-text {
+            font-size: 17px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .highlight {
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .key-feature {
+            background: #fff8f0;
+            border-color: #ff9800;
+        }
+        
+        .key-feature .highlight {
+            color: #ff9800;
+        }
+        
+        .advantage-feature {
+            background: #e8f5e9;
+            border-color: #4CAF50;
+        }
+        
+        .advantage-feature .highlight {
+            color: #4CAF50;
+        }
+        
+        .comparison-section {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        
+        .comparison-table {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 18px;
+            flex: 1;
+        }
+        
+        .table-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 14px;
+            text-align: center;
+        }
+        
+        .table-grid {
+            display: grid;
+            grid-template-columns: 140px 1fr 1fr;
+            gap: 1px;
+            background: #d0d0d0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .table-header {
+            background: #1E64C8;
+            color: white;
+            padding: 10px 12px;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .table-cell {
+            background: white;
+            padding: 10px 12px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .table-label {
+            background: #f0f6ff;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .check-icon {
+            color: #4CAF50;
+            font-size: 20px;
+        }
+        
+        .cross-icon {
+            color: #f44336;
+            font-size: 20px;
+        }
+        
+        .fast-badge {
+            background: #4CAF50;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .slow-badge {
+            background: #ff9800;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .algorithm-box {
+            background: #e8f4ff;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 16px;
+        }
+        
+        .algo-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .algo-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .algo-step {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+        }
+        
+        .step-num {
+            background: #1E64C8;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .step-text {
+            font-size: 15px;
+            color: #333;
+        }
+        
+        .best-for-box {
+            background: #f3e5f5;
+            border: 2px solid #9C27B0;
+            border-radius: 10px;
+            padding: 14px 16px;
+            text-align: center;
+        }
+        
+        .best-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #9C27B0;
+            margin-bottom: 8px;
+        }
+        
+        .best-text {
+            font-size: 16px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="main-title">K-Shape Algorithm</div>
+            <div class="subtitle">Shape-based Time Series Clustering</div>
+        </div>
+        
+        <div class="content-layout">
+            <div class="features-section">
+                <div class="section-title">Key Features</div>
+                
+                <div class="feature-card key-feature">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-text">
+                        <span class="highlight">Cross-correlation</span> for similarity
+                    </div>
+                </div>
+                
+                <div class="feature-card key-feature">
+                    <div class="feature-icon">⚖️</div>
+                    <div class="feature-text">
+                        <span class="highlight">Scale & shift invariant</span> distance
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <div class="feature-text">
+                        Efficient <span class="highlight">shape-based centroid</span>
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <div class="feature-text">
+                        <span class="highlight">Iterative refinement</span> like K-means
+                    </div>
+                </div>
+                
+                <div class="feature-card advantage-feature">
+                    <div class="feature-icon">⚡</div>
+                    <div class="feature-text">
+                        <span class="highlight">Faster</span> than DTW-based methods
+                    </div>
+                </div>
+                
+                <div class="best-for-box">
+                    <div class="best-title">✓ Best For</div>
+                    <div class="best-text">Normalized time series data</div>
+                </div>
+            </div>
+            
+            <div class="comparison-section">
+                <div class="comparison-table">
+                    <div class="table-title">Method Comparison</div>
+                    <div class="table-grid">
+                        <div class="table-header">Feature</div>
+                        <div class="table-header">K-Shape</div>
+                        <div class="table-header">DTW</div>
+                        
+                        <div class="table-cell table-label">Speed</div>
+                        <div class="table-cell">
+                            <span class="fast-badge">Fast</span>
+                        </div>
+                        <div class="table-cell">
+                            <span class="slow-badge">Slow</span>
+                        </div>
+                        
+                        <div class="table-cell table-label">Scale Invariant</div>
+                        <div class="table-cell">
+                            <span class="check-icon">✓</span>
+                        </div>
+                        <div class="table-cell">
+                            <span class="cross-icon">✗</span>
+                        </div>
+                        
+                        <div class="table-cell table-label">Shift Invariant</div>
+                        <div class="table-cell">
+                            <span class="check-icon">✓</span>
+                        </div>
+                        <div class="table-cell">
+                            <span class="cross-icon">✗</span>
+                        </div>
+                        
+                        <div class="table-cell table-label">Time Warp</div>
+                        <div class="table-cell">
+                            <span class="cross-icon">✗</span>
+                        </div>
+                        <div class="table-cell">
+                            <span class="check-icon">✓</span>
+                        </div>
+                        
+                        <div class="table-cell table-label">Complexity</div>
+                        <div class="table-cell" style="font-size: 15px; color: #4CAF50; font-weight: 600;">
+                            O(nm)
+                        </div>
+                        <div class="table-cell" style="font-size: 15px; color: #ff9800; font-weight: 600;">
+                            O(n²m²)
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="algorithm-box">
+                    <div class="algo-title">K-Shape Algorithm Flow</div>
+                    <div class="algo-steps">
+                        <div class="algo-step">
+                            <div class="step-num">1</div>
+                            <div class="step-text">Initialize k cluster centroids</div>
+                        </div>
+                        <div class="algo-step">
+                            <div class="step-num">2</div>
+                            <div class="step-text">Assign series to nearest centroid (cross-correlation)</div>
+                        </div>
+                        <div class="algo-step">
+                            <div class="step-num">3</div>
+                            <div class="step-text">Update centroids (shape extraction)</div>
+                        </div>
+                        <div class="algo-step">
+                            <div class="step-num">4</div>
+                            <div class="step-text">Repeat until convergence</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

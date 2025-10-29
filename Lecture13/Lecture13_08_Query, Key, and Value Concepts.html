@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Query, Key, and Value Concepts</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 30px;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .main-content {
+            display: flex;
+            gap: 20px;
+            flex: 1;
+        }
+        
+        .concepts-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .concept-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 16px 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .concept-card.query {
+            background: #fff9f0;
+            border-color: #f59e0b;
+        }
+        
+        .concept-card.key {
+            background: #f0f7ff;
+            border-color: #1E64C8;
+        }
+        
+        .concept-card.value {
+            background: #f0fdf4;
+            border-color: #16a34a;
+        }
+        
+        .concept-icon {
+            font-size: 28px;
+            margin-bottom: 6px;
+        }
+        
+        .concept-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        
+        .concept-card.query .concept-title {
+            color: #d97700;
+        }
+        
+        .concept-card.key .concept-title {
+            color: #1E64C8;
+        }
+        
+        .concept-card.value .concept-title {
+            color: #16a34a;
+        }
+        
+        .concept-description {
+            font-size: 17px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .process-section {
+            flex: 1.1;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .analogy-box {
+            background: #fef3c7;
+            border: 2px solid #f59e0b;
+            border-radius: 8px;
+            padding: 16px 20px;
+            text-align: center;
+        }
+        
+        .analogy-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #d97700;
+            margin-bottom: 6px;
+        }
+        
+        .analogy-text {
+            font-size: 17px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .transformation-box {
+            background: #f0f7ff;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 18px 20px;
+            flex: 1;
+        }
+        
+        .transformation-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .transformation-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+            color: #333;
+        }
+        
+        .step-number {
+            background: #1E64C8;
+            color: white;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        
+        .formula {
+            font-family: 'Courier New', monospace;
+            background: #e5e7eb;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 15px;
+            font-weight: 600;
+        }
+        
+        .note-box {
+            background: #f0f7ff;
+            border-left: 4px solid #1E64C8;
+            padding: 10px 16px;
+            border-radius: 4px;
+            margin-top: 8px;
+        }
+        
+        .note-text {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Query, Key, and Value Concepts</div>
+        
+        <div class="main-content">
+            <div class="concepts-section">
+                <div class="concept-card query">
+                    <div class="concept-icon">🔍</div>
+                    <div class="concept-title">Query (Q)</div>
+                    <div class="concept-description">
+                        <strong>What information am I looking for?</strong>
+                    </div>
+                </div>
+                
+                <div class="concept-card key">
+                    <div class="concept-icon">🔑</div>
+                    <div class="concept-title">Key (K)</div>
+                    <div class="concept-description">
+                        <strong>What information do I contain?</strong>
+                    </div>
+                </div>
+                
+                <div class="concept-card value">
+                    <div class="concept-icon">💎</div>
+                    <div class="concept-title">Value (V)</div>
+                    <div class="concept-description">
+                        <strong>The actual information I store</strong>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="process-section">
+                <div class="analogy-box">
+                    <div class="analogy-title">💡 Database Analogy</div>
+                    <div class="analogy-text">
+                        <strong>Query</strong> matches <strong>Keys</strong> to retrieve <strong>Values</strong>
+                    </div>
+                </div>
+                
+                <div class="transformation-box">
+                    <div class="transformation-title">Linear Projections</div>
+                    
+                    <div class="transformation-steps">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div>Each token generates Q, K, V</div>
+                        </div>
+                        
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div>Through learned transformations:</div>
+                        </div>
+                        
+                        <div style="margin-left: 36px; display: flex; flex-direction: column; gap: 6px;">
+                            <div><span class="formula">Q = X W_Q</span></div>
+                            <div><span class="formula">K = X W_K</span></div>
+                            <div><span class="formula">V = X W_V</span></div>
+                        </div>
+                        
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div>Projection matrices <strong>learned during training</strong></div>
+                        </div>
+                    </div>
+                    
+                    <div class="note-box">
+                        <div class="note-text">
+                            <strong>X</strong> = Input token embeddings<br>
+                            <strong>W_Q, W_K, W_V</strong> = Trainable weight matrices
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

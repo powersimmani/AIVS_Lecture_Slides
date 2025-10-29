@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Depthwise Separable Convolution</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            overflow-x: hidden;
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 960px;
+            width: 95vw;
+            min-height: 540px;
+            height: auto;
+            background: white;
+            position: relative;
+            overflow: hidden;
+            padding: 20px 35px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 16px;
+        }
+        
+        .key-insight {
+            background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+            border: 3px solid #1E64C8;
+            border-radius: 12px;
+            padding: 10px 18px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        
+        .insight-label {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 3px;
+        }
+        
+        .insight-text {
+            font-size: 16px;
+            color: #333;
+        }
+        
+        .comparison-section {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .conv-card {
+            background: white;
+            border: 3px solid;
+            border-radius: 12px;
+            padding: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .conv-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .conv-card.standard {
+            border-color: #E57373;
+            background: linear-gradient(135deg, #FFEBEE 0%, #FFCDD2 100%);
+        }
+        
+        .conv-card.separable {
+            border-color: #4CAF50;
+            background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+        }
+        
+        .card-header {
+            font-size: 18px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .conv-card.standard .card-header {
+            color: #C62828;
+        }
+        
+        .conv-card.separable .card-header {
+            color: #2E7D32;
+        }
+        
+        .conv-visual {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .process-box {
+            background: linear-gradient(135deg, #90CAF9 0%, #64B5F6 100%);
+            border: 2px solid #1E88E5;
+            border-radius: 6px;
+            padding: 10px 15px;
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            text-align: center;
+            width: 100%;
+        }
+        
+        .conv-card.separable .process-box.depthwise {
+            background: linear-gradient(135deg, #FFB74D 0%, #FF9800 100%);
+            border-color: #F57C00;
+        }
+        
+        .conv-card.separable .process-box.pointwise {
+            background: linear-gradient(135deg, #81C784 0%, #66BB6A 100%);
+            border-color: #43A047;
+        }
+        
+        .arrow-down {
+            font-size: 20px;
+            color: #1E64C8;
+            font-weight: 700;
+        }
+        
+        .formula-box {
+            background: #FFF8E1;
+            border-radius: 6px;
+            padding: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #333;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .savings-section {
+            background: #E8F5E9;
+            border: 3px solid #4CAF50;
+            border-radius: 12px;
+            padding: 12px 18px;
+            margin-bottom: 12px;
+        }
+        
+        .savings-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #2E7D32;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .savings-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        .savings-item {
+            background: white;
+            border: 2px solid #4CAF50;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        .savings-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+        
+        .savings-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #2E7D32;
+        }
+        
+        .applications-section {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        .app-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .app-card:hover {
+            background: #F0F6FF;
+        }
+        
+        .app-icon {
+            font-size: 20px;
+            margin-right: 10px;
+        }
+        
+        .app-content {
+            flex: 1;
+        }
+        
+        .app-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 2px;
+        }
+        
+        .app-text {
+            font-size: 13px;
+            color: #333;
+        }
+    
+        
+        /* Responsive adjustments */
+        @media screen and (max-width: 1000px) {
+            .container {
+                width: 98vw !important;
+                max-width: 98vw !important;
+                padding: 15px 20px !important;
+            }
+        }
+        
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: 10px 15px !important;
+            }
+            
+            .title {
+                font-size: 20px !important;
+            }
+            
+            /* 그리드 레이아웃을 1열로 */
+            .challenges-grid,
+            .comparison-grid,
+            .solutions-grid,
+            .guide-grid,
+            .findings-section,
+            .benefits-grid,
+            .applications-section,
+            .guidelines-grid,
+            .components-section,
+            .techniques-grid,
+            .deployment-section,
+            .savings-grid,
+            .results-grid,
+            .functions-grid,
+            .features-grid,
+            .comparison-section,
+            .bottom-section {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .gradient-flow,
+            .network-visual,
+            .flow-steps,
+            .bottleneck-flow,
+            .example-flow,
+            .dimension-box,
+            .inception-structure .parallel-paths,
+            .comparison-section {
+                flex-direction: column !important;
+                gap: 15px !important;
+            }
+            
+            .arrow-back,
+            .arrow,
+            .arrow-right,
+            .arrow-connector,
+            .conv-arrow {
+                transform: rotate(90deg);
+                margin: 5px 0 !important;
+            }
+            
+            /* SVG와 layer 위치 조정 */
+            .layers-container,
+            .architecture-visual {
+                height: auto !important;
+                min-height: 300px !important;
+            }
+            
+            .layer-node {
+                position: relative !important;
+                left: auto !important;
+                margin: 10px 0 !important;
+            }
+        }
+        
+        @media screen and (max-width: 480px) {
+            .container {
+                padding: 8px 10px !important;
+            }
+            
+            .title {
+                font-size: 18px !important;
+            }
+            
+            .card-header,
+            .scenario-label,
+            .card-title,
+            .function-title,
+            .arch-title,
+            .flow-title {
+                font-size: 16px !important;
+            }
+            
+            .layer-box,
+            .conv-box,
+            .step-circle,
+            .layer-circle {
+                font-size: 14px !important;
+                padding: 8px !important;
+            }
+        }
+    
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Depthwise Separable Convolution</div>
+        
+        <div class="key-insight">
+            <div class="insight-label">KEY INSIGHT</div>
+            <div class="insight-text">Spatial and channel-wise processing can be separated</div>
+        </div>
+        
+        <div class="comparison-section">
+            <div class="conv-card standard">
+                <div class="card-header">Standard Convolution</div>
+                <div class="conv-visual">
+                    <div class="process-box">Single Operation<br>All Channels Together</div>
+                </div>
+                <div class="formula-box">
+                    Params: D² × M × N<br>
+                    (expensive)
+                </div>
+            </div>
+            
+            <div class="conv-card separable">
+                <div class="card-header">Depthwise Separable</div>
+                <div class="conv-visual">
+                    <div class="process-box depthwise">Depthwise Conv<br>Each Channel Separate</div>
+                    <div class="arrow-down">↓</div>
+                    <div class="process-box pointwise">Pointwise (1×1)<br>Combine Channels</div>
+                </div>
+                <div class="formula-box">
+                    Params: D² × M + M × N<br>
+                    (efficient)
+                </div>
+            </div>
+        </div>
+        
+        <div class="savings-section">
+            <div class="savings-title">Efficiency Gains</div>
+            <div class="savings-grid">
+                <div class="savings-item">
+                    <div class="savings-label">Computational Savings</div>
+                    <div class="savings-value">8-9× fewer ops</div>
+                </div>
+                <div class="savings-item">
+                    <div class="savings-label">Parameter Reduction</div>
+                    <div class="savings-value">Massive reduction</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="applications-section">
+            <div class="app-card">
+                <div class="app-icon">📱</div>
+                <div class="app-content">
+                    <div class="app-title">Used In</div>
+                    <div class="app-text">MobileNet, EfficientNet, Xception</div>
+                </div>
+            </div>
+            
+            <div class="app-card">
+                <div class="app-icon">⚖️</div>
+                <div class="app-content">
+                    <div class="app-title">Trade-off</div>
+                    <div class="app-text">Slightly lower accuracy, massive efficiency</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

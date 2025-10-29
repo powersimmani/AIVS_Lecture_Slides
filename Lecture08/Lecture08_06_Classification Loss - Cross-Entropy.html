@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cross-Entropy Loss</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 30px;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .main-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .content-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            flex: 1;
+        }
+        
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .core-concept {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.3);
+        }
+        
+        .core-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        
+        .core-desc {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .characteristics {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .char-item {
+            background: #f8f9fa;
+            border-left: 4px solid #1E64C8;
+            padding: 14px 16px;
+            border-radius: 4px;
+            font-size: 16px;
+            line-height: 1.5;
+            color: #2c3e50;
+        }
+        
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .types-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            flex: 1;
+        }
+        
+        .type-card {
+            background: #e8f1fd;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 18px 20px;
+            flex: 1;
+        }
+        
+        .type-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .type-number {
+            background: #1E64C8;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 16px;
+            margin-right: 12px;
+        }
+        
+        .type-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .type-desc {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+        
+        .formula-box {
+            background: white;
+            border: 2px dashed #1E64C8;
+            border-radius: 6px;
+            padding: 12px;
+            text-align: center;
+            margin-top: 8px;
+        }
+        
+        .formula {
+            font-size: 16px;
+            color: #1E64C8;
+            font-weight: 500;
+        }
+        
+        .divider {
+            width: 2px;
+            background: #1E64C8;
+            opacity: 0.2;
+            margin: 0 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="main-title">Classification Loss: Cross-Entropy</div>
+            <div class="subtitle">Measuring dissimilarity between predicted and true distributions</div>
+        </div>
+        
+        <div class="content-wrapper">
+            <div class="left-section">
+                <div class="core-concept">
+                    <div class="core-title">📊 Core Concept</div>
+                    <div class="core-desc">
+                        Measures the difference between predicted probability distribution and actual labels,
+                        outputting probability distribution through Softmax activation
+                    </div>
+                </div>
+                
+                <div class="characteristics">
+                    <div class="char-item">
+                        <strong>✓</strong> Encourages high confidence for correct classes
+                    </div>
+                    <div class="char-item">
+                        <strong>✓</strong> Larger penalty for confident wrong predictions
+                    </div>
+                    <div class="char-item">
+                        <strong>≡</strong> Equivalent to maximizing log-likelihood of correct class
+                    </div>
+                </div>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <div class="right-section">
+                <div class="types-container">
+                    <div class="type-card">
+                        <div class="type-header">
+                            <div class="type-number">1</div>
+                            <div class="type-name">Binary Cross-Entropy</div>
+                        </div>
+                        <div class="type-desc">
+                            Used for binary classification problems
+                        </div>
+                        <div class="formula-box">
+                            <div class="formula">2 Classes (0 or 1)</div>
+                        </div>
+                    </div>
+                    
+                    <div class="type-card">
+                        <div class="type-header">
+                            <div class="type-number">2</div>
+                            <div class="type-name">Categorical Cross-Entropy</div>
+                        </div>
+                        <div class="type-desc">
+                            Used for multi-class classification problems
+                        </div>
+                        <div class="formula-box">
+                            <div class="formula">N Classes (Multi-class)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

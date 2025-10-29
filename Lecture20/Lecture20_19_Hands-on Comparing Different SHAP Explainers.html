@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comparing SHAP Explainers</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Aptos', 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+            padding: 25px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+        }
+        
+        .workflow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            background: #F8F9FA;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px 20px;
+        }
+        
+        .workflow-step {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .step-number {
+            width: 28px;
+            height: 28px;
+            background: #1E64C8;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+        }
+        
+        .step-text {
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .workflow-arrow {
+            font-size: 20px;
+            color: #1E64C8;
+            font-weight: 700;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 18px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .comparison-table thead {
+            background: #1E64C8;
+            color: white;
+        }
+        
+        .comparison-table th {
+            padding: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            text-align: left;
+        }
+        
+        .comparison-table td {
+            padding: 12px;
+            font-size: 15px;
+            border-bottom: 1px solid #E0E0E0;
+        }
+        
+        .comparison-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .comparison-table tbody tr:hover {
+            background: #F8F9FA;
+        }
+        
+        .explainer-name {
+            font-weight: 700;
+            color: #1E64C8;
+        }
+        
+        .model-type {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .speed-bar-container {
+            width: 100%;
+            height: 20px;
+            background: #F0F0F0;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .speed-bar {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: white;
+        }
+        
+        .speed-fast {
+            background: #28A745;
+            width: 20%;
+        }
+        
+        .speed-moderate {
+            background: #FFC107;
+            width: 40%;
+        }
+        
+        .speed-slow {
+            background: #F4A261;
+            width: 70%;
+        }
+        
+        .speed-very-slow {
+            background: #DC3545;
+            width: 100%;
+        }
+        
+        .accuracy-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+        
+        .acc-exact {
+            background: #D4EDDA;
+            color: #155724;
+        }
+        
+        .acc-high {
+            background: #D1ECF1;
+            color: #0C5460;
+        }
+        
+        .acc-approx {
+            background: #FFF3CD;
+            color: #856404;
+        }
+        
+        .use-case {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .code-section {
+            background: #F8F9FA;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 15px;
+        }
+        
+        .code-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .code-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .code-box {
+            background: white;
+            border: 1px solid #E0E0E0;
+            border-radius: 6px;
+            padding: 10px;
+        }
+        
+        .code-header {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .code-content {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .keyword {
+            color: #E63946;
+            font-weight: 600;
+        }
+        
+        .comment {
+            color: #28A745;
+        }
+        
+        .timing {
+            color: #F4A261;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Hands-on: Comparing Different SHAP Explainers</div>
+        
+        <div class="workflow">
+            <div class="workflow-step">
+                <div class="step-number">1</div>
+                <div class="step-text">Load Dataset</div>
+            </div>
+            <div class="workflow-arrow">→</div>
+            <div class="workflow-step">
+                <div class="step-number">2</div>
+                <div class="step-text">Train Models</div>
+            </div>
+            <div class="workflow-arrow">→</div>
+            <div class="workflow-step">
+                <div class="step-number">3</div>
+                <div class="step-text">Apply Explainers</div>
+            </div>
+            <div class="workflow-arrow">→</div>
+            <div class="workflow-step">
+                <div class="step-number">4</div>
+                <div class="step-text">Compare Results</div>
+            </div>
+        </div>
+        
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th style="width: 20%;">Explainer</th>
+                    <th style="width: 25%;">Speed (Relative)</th>
+                    <th style="width: 15%;">Accuracy</th>
+                    <th style="width: 40%;">Best Use Case</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <div class="explainer-name">TreeSHAP</div>
+                        <div class="model-type">Tree models</div>
+                    </td>
+                    <td>
+                        <div class="speed-bar-container">
+                            <div class="speed-bar speed-fast">Fast (1x)</div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="accuracy-badge acc-exact">Exact</span>
+                    </td>
+                    <td class="use-case">Random Forest, XGBoost, LightGBM</td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="explainer-name">DeepSHAP</div>
+                        <div class="model-type">Neural nets</div>
+                    </td>
+                    <td>
+                        <div class="speed-bar-container">
+                            <div class="speed-bar speed-moderate">Moderate (5x)</div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="accuracy-badge acc-high">High</span>
+                    </td>
+                    <td class="use-case">Deep learning, CNN, RNN models</td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="explainer-name">GradientSHAP</div>
+                        <div class="model-type">Differentiable</div>
+                    </td>
+                    <td>
+                        <div class="speed-bar-container">
+                            <div class="speed-bar speed-moderate">Moderate (4x)</div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="accuracy-badge acc-high">High</span>
+                    </td>
+                    <td class="use-case">Neural networks with gradients</td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="explainer-name">KernelSHAP</div>
+                        <div class="model-type">Any model</div>
+                    </td>
+                    <td>
+                        <div class="speed-bar-container">
+                            <div class="speed-bar speed-slow">Slow (20x)</div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="accuracy-badge acc-approx">Approx</span>
+                    </td>
+                    <td class="use-case">Model-agnostic, black-box models</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="code-section">
+            <div class="code-title">Implementation Examples with Timing</div>
+            <div class="code-grid">
+                <div class="code-box">
+                    <div class="code-header">TreeSHAP (XGBoost)</div>
+                    <div class="code-content">
+<span class="comment"># Fast and exact</span><br>
+explainer = shap.<span class="keyword">TreeExplainer</span>(model)<br>
+shap_values = explainer.shap_values(X)<br>
+<span class="comment"># Time: </span><span class="timing">~0.5s for 1000 samples</span>
+                    </div>
+                </div>
+                
+                <div class="code-box">
+                    <div class="code-header">DeepSHAP (Neural Network)</div>
+                    <div class="code-content">
+<span class="comment"># Optimized for deep learning</span><br>
+explainer = shap.<span class="keyword">DeepExplainer</span>(model, X_bg)<br>
+shap_values = explainer.shap_values(X)<br>
+<span class="comment"># Time: </span><span class="timing">~2.5s for 1000 samples</span>
+                    </div>
+                </div>
+                
+                <div class="code-box">
+                    <div class="code-header">GradientSHAP</div>
+                    <div class="code-content">
+<span class="comment"># Gradient-based approximation</span><br>
+explainer = shap.<span class="keyword">GradientExplainer</span>(model, X_bg)<br>
+shap_values = explainer.shap_values(X)<br>
+<span class="comment"># Time: </span><span class="timing">~2s for 1000 samples</span>
+                    </div>
+                </div>
+                
+                <div class="code-box">
+                    <div class="code-header">KernelSHAP (Any Model)</div>
+                    <div class="code-content">
+<span class="comment"># Most flexible, slowest</span><br>
+explainer = shap.<span class="keyword">KernelExplainer</span>(model.predict, X_bg)<br>
+shap_values = explainer.shap_values(X)<br>
+<span class="comment"># Time: </span><span class="timing">~10s for 1000 samples</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

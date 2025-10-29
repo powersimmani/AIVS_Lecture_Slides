@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hinge Loss and SVM</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 30px;
+            background: #ffffff;
+        }
+        
+        .title-section {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .main-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            height: 420px;
+        }
+        
+        .left-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .svm-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.3);
+        }
+        
+        .svm-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .svm-desc {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .key-features {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            flex: 1;
+        }
+        
+        .feature-item {
+            background: #f8f9fa;
+            border-left: 4px solid #1E64C8;
+            padding: 14px 16px;
+            border-radius: 4px;
+            font-size: 16px;
+            line-height: 1.5;
+            color: #2c3e50;
+        }
+        
+        .feature-item strong {
+            color: #1E64C8;
+        }
+        
+        .right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .variants-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .variant-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            flex: 1;
+        }
+        
+        .variant-card {
+            background: #e8f1fd;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 18px 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .variant-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .variant-icon {
+            background: #1E64C8;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 18px;
+            margin-right: 12px;
+        }
+        
+        .variant-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .formula {
+            background: white;
+            border: 1px dashed #1E64C8;
+            border-radius: 6px;
+            padding: 10px;
+            text-align: center;
+            margin: 10px 0;
+            font-size: 16px;
+            color: #1E64C8;
+            font-weight: 500;
+        }
+        
+        .variant-desc {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.5;
+            margin-top: auto;
+        }
+        
+        .advantages {
+            background: #f0f8ff;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 16px 18px;
+            margin-top: auto;
+        }
+        
+        .advantages-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .advantage-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .advantage-item {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Hinge Loss and Support Vector Machines</div>
+            <div class="subtitle">Maximum Margin Classification</div>
+        </div>
+        
+        <div class="content-grid">
+            <div class="left-panel">
+                <div class="svm-box">
+                    <div class="svm-title">
+                        <span>🎯</span>
+                        <span>Primary Loss Function for SVM</span>
+                    </div>
+                    <div class="svm-desc">
+                        Loss function focused on maximizing the margin between classes
+                    </div>
+                </div>
+                
+                <div class="key-features">
+                    <div class="feature-item">
+                        <strong>Margin-based Penalty:</strong> Penalizes only predictions within margin or misclassified
+                    </div>
+                    <div class="feature-item">
+                        <strong>Confident Predictions:</strong> Encourages correct predictions beyond the margin
+                    </div>
+                    <div class="feature-item">
+                        <strong>Outlier Robustness:</strong> Less sensitive to outliers compared to cross-entropy
+                    </div>
+                </div>
+                
+                <div class="advantages">
+                    <div class="advantages-title">✓ Use Cases</div>
+                    <div class="advantage-list">
+                        <div class="advantage-item">• Binary classification problems</div>
+                        <div class="advantage-item">• Large-margin classifiers</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <div class="variants-title">Hinge Loss Variants</div>
+                
+                <div class="variant-cards">
+                    <div class="variant-card">
+                        <div class="variant-header">
+                            <div class="variant-icon">L</div>
+                            <div class="variant-name">Linear Hinge Loss</div>
+                        </div>
+                        <div class="formula">max(0, 1 - y·f(x))</div>
+                        <div class="variant-desc">
+                            Standard hinge loss<br>
+                            Margin-based linear penalty
+                        </div>
+                    </div>
+                    
+                    <div class="variant-card">
+                        <div class="variant-header">
+                            <div class="variant-icon">S</div>
+                            <div class="variant-name">Squared Hinge Loss</div>
+                        </div>
+                        <div class="formula">max(0, 1 - y·f(x))²</div>
+                        <div class="variant-desc">
+                            Smoother variant<br>
+                            Differentiable smooth form
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L-BFGS Second-Order Optimization</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 30px;
+            background: #ffffff;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .main-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .content-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            height: 440px;
+        }
+        
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .concept-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.3);
+        }
+        
+        .concept-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .concept-desc {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .comparison-box {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 18px;
+        }
+        
+        .comparison-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .comparison-item {
+            padding: 14px;
+            border-radius: 6px;
+            border: 2px solid;
+        }
+        
+        .comparison-item.first-order {
+            background: #e8f1fd;
+            border-color: #1E64C8;
+        }
+        
+        .comparison-item.second-order {
+            background: #fff8e1;
+            border-color: #ff9800;
+        }
+        
+        .comparison-label {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .comparison-item.first-order .comparison-label {
+            color: #1E64C8;
+        }
+        
+        .comparison-item.second-order .comparison-label {
+            color: #ff9800;
+        }
+        
+        .comparison-features {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .comparison-feature {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+        
+        .characteristics-box {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 18px;
+            flex: 1;
+        }
+        
+        .characteristics-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+        }
+        
+        .char-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .char-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .char-icon {
+            min-width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .char-icon.pro {
+            background: #28a745;
+            color: white;
+        }
+        
+        .char-icon.con {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .char-text {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+        
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .tradeoff-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 18px;
+        }
+        
+        .tradeoff-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #856404;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .tradeoff-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .tradeoff-item {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+        }
+        
+        .tradeoff-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #856404;
+            margin-bottom: 6px;
+        }
+        
+        .tradeoff-value {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+        
+        .limitations-box {
+            background: #f8d7da;
+            border: 2px solid #dc3545;
+            border-radius: 8px;
+            padding: 18px;
+        }
+        
+        .limitations-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #721c24;
+            margin-bottom: 12px;
+        }
+        
+        .limitation-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .limitation-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .limitation-icon {
+            background: #dc3545;
+            color: white;
+            min-width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .limitation-text {
+            font-size: 16px;
+            color: #721c24;
+            line-height: 1.5;
+        }
+        
+        .applications-box {
+            background: #f0f8ff;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 18px;
+            flex: 1;
+        }
+        
+        .applications-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+        }
+        
+        .app-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .app-item {
+            background: #e8f1fd;
+            border-left: 4px solid #1E64C8;
+            padding: 10px 12px;
+            border-radius: 4px;
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="main-title">Second-Order Optimization: L-BFGS</div>
+            <div class="subtitle">Limited-Memory Broyden-Fletcher-Goldfarb-Shanno</div>
+        </div>
+        
+        <div class="content-layout">
+            <div class="left-section">
+                <div class="concept-box">
+                    <div class="concept-title">🔍 Core Concept</div>
+                    <div class="concept-desc">
+                        Optimization using second-order<br>
+                        information (Hessian) with efficient<br>
+                        inverse Hessian approximation
+                    </div>
+                </div>
+                
+                <div class="comparison-box">
+                    <div class="comparison-title">First-Order vs Second-Order</div>
+                    <div class="comparison-grid">
+                        <div class="comparison-item first-order">
+                            <div class="comparison-label">First-Order</div>
+                            <div class="comparison-features">
+                                <div class="comparison-feature">• Uses gradient only</div>
+                                <div class="comparison-feature">• More iterations</div>
+                                <div class="comparison-feature">• Lower cost per iteration</div>
+                            </div>
+                        </div>
+                        <div class="comparison-item second-order">
+                            <div class="comparison-label">Second-Order</div>
+                            <div class="comparison-features">
+                                <div class="comparison-feature">• Uses Hessian</div>
+                                <div class="comparison-feature">• Fewer iterations</div>
+                                <div class="comparison-feature">• Higher cost per iteration</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="characteristics-box">
+                    <div class="characteristics-title">⚖️ Characteristics</div>
+                    <div class="char-list">
+                        <div class="char-item">
+                            <div class="char-icon pro">✓</div>
+                            <div class="char-text">
+                                Fewer iterations than first-order methods
+                            </div>
+                        </div>
+                        <div class="char-item">
+                            <div class="char-icon pro">✓</div>
+                            <div class="char-text">
+                                Deterministic method
+                            </div>
+                        </div>
+                        <div class="char-item">
+                            <div class="char-icon con">✗</div>
+                            <div class="char-text">
+                                High computational cost per iteration (O(n²))
+                            </div>
+                        </div>
+                        <div class="char-item">
+                            <div class="char-icon con">✗</div>
+                            <div class="char-text">
+                                Requires full batch evaluation
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-section">
+                <div class="tradeoff-box">
+                    <div class="tradeoff-title">⚡ Performance Trade-off</div>
+                    <div class="tradeoff-grid">
+                        <div class="tradeoff-item">
+                            <div class="tradeoff-label">Iterations</div>
+                            <div class="tradeoff-value">Fewer ✓</div>
+                        </div>
+                        <div class="tradeoff-item">
+                            <div class="tradeoff-label">Per-iteration Cost</div>
+                            <div class="tradeoff-value">Higher ✗</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="limitations-box">
+                    <div class="limitations-title">⚠️ Limitations</div>
+                    <div class="limitation-list">
+                        <div class="limitation-item">
+                            <div class="limitation-icon">!</div>
+                            <div class="limitation-text">
+                                Unsuitable for large-scale deep learning due to memory constraints
+                            </div>
+                        </div>
+                        <div class="limitation-item">
+                            <div class="limitation-icon">!</div>
+                            <div class="limitation-text">
+                                Not suitable for mini-batch optimization
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="applications-box">
+                    <div class="applications-title">💡 Suitable Applications</div>
+                    <div class="app-list">
+                        <div class="app-item">
+                            <strong>Small Models:</strong> Optimization of small-scale models
+                        </div>
+                        <div class="app-item">
+                            <strong>Scientific Computing:</strong> Scientific computing applications
+                        </div>
+                        <div class="app-item">
+                            <strong>Traditional ML:</strong> Logistic Regression, etc.
+                        </div>
+                        <div class="app-item">
+                            <strong>Specific Cases:</strong> When full batch evaluation is feasible
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

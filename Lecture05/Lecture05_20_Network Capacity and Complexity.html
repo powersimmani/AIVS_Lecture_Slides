@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Capacity and Complexity</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Aptos', 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 40px;
+        }
+        
+        .main-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+        }
+        
+        .content-layout {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 25px;
+            flex: 1;
+        }
+        
+        .visualization-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .capacity-demo {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .network-sizes {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        
+        .size-example {
+            background: white;
+            border-radius: 6px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s;
+        }
+        
+        .size-example:hover {
+            border-color: #1E64C8;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.2);
+        }
+        
+        .size-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .mini-network {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .mini-layer {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+        
+        .mini-node {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #1E64C8;
+        }
+        
+        .capacity-info {
+            font-size: 13px;
+            color: #666;
+            text-align: center;
+        }
+        
+        .tradeoff-diagram {
+            background: white;
+            border-radius: 6px;
+            padding: 15px;
+            border: 1px solid #ddd;
+        }
+        
+        .tradeoff-canvas {
+            width: 100%;
+            height: 180px;
+        }
+        
+        canvas {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .factors-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .factors-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex: 1;
+        }
+        
+        .factor-card {
+            background: #f8f9fa;
+            border-left: 4px solid #1E64C8;
+            padding: 12px;
+            border-radius: 4px;
+        }
+        
+        .factor-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+        
+        .factor-icon {
+            width: 28px;
+            height: 28px;
+            background: #1E64C8;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        
+        .factor-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .factor-description {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.5;
+        }
+        
+        .formula-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+        }
+        
+        .formula-title {
+            font-size: 14px;
+            margin-bottom: 5px;
+            opacity: 0.9;
+        }
+        
+        .formula-text {
+            font-size: 17px;
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .guidelines-section {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        
+        .guideline-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .underfitting-card {
+            border-color: #d32f2f;
+        }
+        
+        .optimal-card {
+            border-color: #4caf50;
+        }
+        
+        .overfitting-card {
+            border-color: #ff9800;
+        }
+        
+        .guideline-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid;
+        }
+        
+        .underfitting-header {
+            border-color: #d32f2f;
+        }
+        
+        .optimal-header {
+            border-color: #4caf50;
+        }
+        
+        .overfitting-header {
+            border-color: #ff9800;
+        }
+        
+        .guideline-icon {
+            font-size: 20px;
+        }
+        
+        .guideline-title {
+            font-size: 17px;
+            font-weight: 600;
+        }
+        
+        .underfitting-title {
+            color: #d32f2f;
+        }
+        
+        .optimal-title {
+            color: #4caf50;
+        }
+        
+        .overfitting-title {
+            color: #ff9800;
+        }
+        
+        .guideline-content {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.5;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-title">Network Capacity and Complexity</div>
+        
+        <div class="content-layout">
+            <!-- Visualization Section -->
+            <div class="visualization-section">
+                <div class="section-title">Capacity Levels</div>
+                <div class="capacity-demo">
+                    <div class="network-sizes">
+                        <div class="size-example">
+                            <div class="size-label">Low Capacity</div>
+                            <div class="mini-network">
+                                <div class="mini-layer">
+                                    <div class="mini-node"></div>
+                                    <div class="mini-node"></div>
+                                </div>
+                                <div class="mini-layer">
+                                    <div class="mini-node"></div>
+                                    <div class="mini-node"></div>
+                                </div>
+                                <div class="mini-layer">
+                                    <div class="mini-node"></div>
+                                </div>
+                            </div>
+                            <div class="capacity-info">Few parameters<br>Simple patterns</div>
+                        </div>
+                        
+                        <div class="size-example">
+                            <div class="size-label">Medium Capacity</div>
+                            <div class="mini-network">
+                                <div class="mini-layer">
+                                    <div class="mini-node"></div>
+                                    <div class="mini-node"></div>
+                                    <div class="mini-node"></div>
+                                </div>
+                                <div class="mini-layer">
+                                    <div class="mini-node"></div>
+                                    <div class="mini-node"></div>
+                                    <div class="mini-node"></div>
+                                    <div class="mini-node"></div>
+                                </div>
+                                <div class="mini-layer">
+                                    <div class="mini-node"></div>
+                                    <div class="mini-node"></div>
+                                </div>
+                                <div class="mini-layer">
+                                    <div class="mini-node"></div>
+                                </div>
+                            </div>
+                            <div class="capacity-info">Balanced<br>Good generalization</div>
+                        </div>
+                        
+                        <div class="size-example">
+                            <div class="size-label">High Capacity</div>
+                            <div class="mini-network">
+                                <div class="mini-layer">
+                                    <div class="mini-node"></div>
+                                    <div class="mini-node"></div>
+                                    <div class="mini-node"></div>
+                                    <div class="mini-node"></div>
+                                </div>
+                                <div class="mini-layer">
+                                    <div class="mini-node"></div>
+                                    <div class="mini-node"></div>
+                                    <div class="mini-node"></div>
+                                    <div class="mini-node"></div>
+                                    <div class="mini-node"></div>
+                                </div>
+                                <div class="mini-layer">
+                                    <div class="mini-node"></div>
+                                    <div class="mini-node"></div>
+                                    <div class="mini-node"></div>
+                                    <div class="mini-node"></div>
+                                </div>
+                                <div class="mini-layer">
+                                    <div class="mini-node"></div>
+                                    <div class="mini-node"></div>
+                                </div>
+                            </div>
+                            <div class="capacity-info">Many parameters<br>Risk of overfitting</div>
+                        </div>
+                    </div>
+                    
+                    <div class="tradeoff-diagram">
+                        <canvas id="tradeoffCanvas"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Factors Section -->
+            <div class="factors-section">
+                <div class="section-title">Key Factors</div>
+                <div class="factors-list">
+                    <div class="factor-card">
+                        <div class="factor-header">
+                            <div class="factor-icon">1</div>
+                            <div class="factor-title">Number of Layers</div>
+                        </div>
+                        <div class="factor-description">
+                            Depth increases model expressiveness
+                        </div>
+                    </div>
+                    
+                    <div class="factor-card">
+                        <div class="factor-header">
+                            <div class="factor-icon">2</div>
+                            <div class="factor-title">Units per Layer</div>
+                        </div>
+                        <div class="factor-description">
+                            Width affects pattern complexity
+                        </div>
+                    </div>
+                    
+                    <div class="factor-card">
+                        <div class="factor-header">
+                            <div class="factor-icon">3</div>
+                            <div class="factor-title">Total Parameters</div>
+                        </div>
+                        <div class="factor-description">
+                            More params = higher capacity
+                        </div>
+                    </div>
+                    
+                    <div class="formula-box">
+                        <div class="formula-title">Parameters Count</div>
+                        <div class="formula-text">P = Σ (nₗ × nₗ₊₁ + nₗ₊₁)</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Guidelines Section -->
+            <div class="guidelines-section">
+                <div class="guideline-card underfitting-card">
+                    <div class="guideline-header underfitting-header">
+                        <div class="guideline-icon">📉</div>
+                        <div class="guideline-title underfitting-title">Underfitting</div>
+                    </div>
+                    <div class="guideline-content">
+                        Too simple model<br>
+                        High bias<br>
+                        → Increase capacity
+                    </div>
+                </div>
+                
+                <div class="guideline-card optimal-card">
+                    <div class="guideline-header optimal-header">
+                        <div class="guideline-icon">✓</div>
+                        <div class="guideline-title optimal-title">Optimal</div>
+                    </div>
+                    <div class="guideline-content">
+                        Right complexity<br>
+                        Good generalization<br>
+                        → Balance achieved
+                    </div>
+                </div>
+                
+                <div class="guideline-card overfitting-card">
+                    <div class="guideline-header overfitting-header">
+                        <div class="guideline-icon">📈</div>
+                        <div class="guideline-title overfitting-title">Overfitting</div>
+                    </div>
+                    <div class="guideline-content">
+                        Too complex model<br>
+                        High variance<br>
+                        → Reduce capacity / Regularize
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const canvas = document.getElementById('tradeoffCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        function resizeCanvas() {
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * window.devicePixelRatio;
+            canvas.height = rect.height * window.devicePixelRatio;
+            ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+            draw();
+        }
+        
+        function draw() {
+            const width = canvas.width / window.devicePixelRatio;
+            const height = canvas.height / window.devicePixelRatio;
+            const padding = 40;
+            
+            ctx.clearRect(0, 0, width, height);
+            
+            // Draw axes
+            ctx.strokeStyle = '#666';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(padding, height - padding);
+            ctx.lineTo(width - padding, height - padding);
+            ctx.moveTo(padding, height - padding);
+            ctx.lineTo(padding, padding);
+            ctx.stroke();
+            
+            // Labels
+            ctx.fillStyle = '#666';
+            ctx.font = '13px Aptos, Segoe UI, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('Model Capacity', width / 2, height - 10);
+            ctx.save();
+            ctx.translate(15, height / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText('Error', 0, 0);
+            ctx.restore();
+            
+            // Draw curves
+            const startX = padding;
+            const endX = width - padding;
+            const rangeX = endX - startX;
+            
+            // Training error (decreasing)
+            ctx.strokeStyle = '#1E64C8';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            for (let x = startX; x <= endX; x += 2) {
+                const t = (x - startX) / rangeX;
+                const y = height - padding - (1 - Math.pow(t, 0.5)) * (height - 2 * padding) * 0.7;
+                if (x === startX) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+            
+            // Validation error (U-shaped)
+            ctx.strokeStyle = '#4caf50';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            for (let x = startX; x <= endX; x += 2) {
+                const t = (x - startX) / rangeX;
+                const y = height - padding - (Math.pow(2 * (t - 0.5), 2) * 0.8 + 0.3) * (height - 2 * padding) * 0.7;
+                if (x === startX) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+            
+            // Legend
+            ctx.font = 'bold 12px Aptos, Segoe UI, sans-serif';
+            ctx.fillStyle = '#1E64C8';
+            ctx.fillText('Training', width - 140, 30);
+            ctx.fillStyle = '#4caf50';
+            ctx.fillText('Validation', width - 60, 30);
+            
+            // Optimal point indicator
+            const optimalX = startX + rangeX * 0.5;
+            ctx.strokeStyle = '#ff9800';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.moveTo(optimalX, height - padding);
+            ctx.lineTo(optimalX, padding + 20);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            ctx.fillStyle = '#ff9800';
+            ctx.font = 'bold 11px Aptos, Segoe UI, sans-serif';
+            ctx.fillText('Optimal', optimalX, padding + 15);
+        }
+        
+        window.addEventListener('load', resizeCanvas);
+        window.addEventListener('resize', resizeCanvas);
+    </script>
+</body>
+</html>

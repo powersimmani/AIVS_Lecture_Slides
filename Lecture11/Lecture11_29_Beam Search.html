@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beam Search</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+            padding: 25px 45px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 25px;
+        }
+        
+        .intro-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874D8 100%);
+            color: white;
+            padding: 16px 30px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .intro-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        
+        .intro-subtitle {
+            font-size: 15px;
+            opacity: 0.95;
+        }
+        
+        .concept-box {
+            background: #F8FAFE;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 18px 25px;
+            margin-bottom: 22px;
+            text-align: center;
+        }
+        
+        .concept-text {
+            font-size: 16px;
+            color: #2C3E50;
+            line-height: 1.5;
+        }
+        
+        .concept-highlight {
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .beam-comparison {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 22px;
+        }
+        
+        .beam-card {
+            background: white;
+            border: 2.5px solid #1E64C8;
+            border-radius: 8px;
+            padding: 18px 16px;
+            text-align: center;
+            min-height: 130px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .beam-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .beam-width {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .beam-quality {
+            font-size: 15px;
+            color: #2C3E50;
+            margin-bottom: 4px;
+        }
+        
+        .beam-speed {
+            font-size: 15px;
+            color: #666;
+        }
+        
+        .tradeoff-box {
+            background: #E8F1FC;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 16px 25px;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .tradeoff-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .tradeoff-text {
+            font-size: 16px;
+            color: #2C3E50;
+        }
+        
+        .applications-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 14px 20px;
+        }
+        
+        .app-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .app-list {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            font-size: 16px;
+            color: #2C3E50;
+        }
+        
+        .app-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .app-bullet {
+            color: #1E64C8;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Beam Search</div>
+        
+        <div class="intro-box">
+            <div class="intro-title">Decoding Algorithm for Sequence Generation</div>
+            <div class="intro-subtitle">Maintains k best candidates (beam width)</div>
+        </div>
+        
+        <div class="concept-box">
+            <div class="concept-text">
+                Balances <span class="concept-highlight">quality</span> and <span class="concept-highlight">computational cost</span> by keeping multiple candidate sequences
+            </div>
+        </div>
+        
+        <div class="beam-comparison">
+            <div class="beam-card">
+                <div class="beam-icon">⚡</div>
+                <div class="beam-width">k = 1</div>
+                <div class="beam-quality">Greedy Search</div>
+                <div class="beam-speed">Fastest, Lower Quality</div>
+            </div>
+            
+            <div class="beam-card" style="border-color: #27AE60; border-width: 3px;">
+                <div class="beam-icon">⚖️</div>
+                <div class="beam-width" style="color: #27AE60;">k = 5-10</div>
+                <div class="beam-quality">Typical Beam</div>
+                <div class="beam-speed">Balanced Trade-off</div>
+            </div>
+            
+            <div class="beam-card">
+                <div class="beam-icon">🎯</div>
+                <div class="beam-width">k = Large</div>
+                <div class="beam-quality">Wide Beam</div>
+                <div class="beam-speed">Better Quality, Slower</div>
+            </div>
+        </div>
+        
+        <div class="tradeoff-box">
+            <div class="tradeoff-title">📊 Trade-off</div>
+            <div class="tradeoff-text">
+                Larger beam width → Better quality but higher computation
+            </div>
+        </div>
+        
+        <div class="applications-box">
+            <div class="app-title">💼 Applications</div>
+            <div class="app-list">
+                <div class="app-item">
+                    <span class="app-bullet">•</span>
+                    <span>Machine Translation</span>
+                </div>
+                <div class="app-item">
+                    <span class="app-bullet">•</span>
+                    <span>Image Captioning</span>
+                </div>
+                <div class="app-item">
+                    <span class="app-bullet">•</span>
+                    <span>Text Generation</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text - N-gram, POS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Aptos', 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            padding: 30px;
+        }
+        
+        .title {
+            font-size: 26px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .main-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .feature-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 18px;
+        }
+        
+        .feature-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .feature-icon {
+            font-size: 28px;
+        }
+        
+        .feature-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .feature-definition {
+            background: #F0F6FF;
+            padding: 12px 15px;
+            border-radius: 6px;
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+        
+        .feature-example {
+            background: white;
+            border: 1px solid #1E64C8;
+            border-radius: 6px;
+            padding: 10px 12px;
+            margin-bottom: 10px;
+        }
+        
+        .example-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .example-text {
+            font-size: 16px;
+            color: #333;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .feature-benefits {
+            list-style: none;
+        }
+        
+        .benefit-item {
+            font-size: 16px;
+            color: #444;
+            line-height: 1.6;
+            margin-bottom: 7px;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .benefit-item:before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #1E64C8;
+            font-weight: bold;
+        }
+        
+        .combined-section {
+            background: #F0F6FF;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin-bottom: 15px;
+        }
+        
+        .combined-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .combined-benefit {
+            font-size: 16px;
+            color: #333;
+            text-align: center;
+            line-height: 1.5;
+        }
+        
+        .tradeoff-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .tradeoff-icon {
+            font-size: 28px;
+        }
+        
+        .tradeoff-content {
+            flex: 1;
+        }
+        
+        .tradeoff-label {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .tradeoff-text {
+            font-size: 16px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Text Feature Extraction: N-grams & POS</div>
+        
+        <div class="main-grid">
+            <div class="feature-box">
+                <div class="feature-header">
+                    <div class="feature-icon">🔗</div>
+                    <div class="feature-title">N-grams</div>
+                </div>
+                <div class="feature-definition">
+                    Contiguous sequences of N words
+                </div>
+                <div class="feature-example">
+                    <div class="example-label">Examples:</div>
+                    <div class="example-text">Bigrams (2): "machine learning"</div>
+                    <div class="example-text">Trigrams (3): "natural language processing"</div>
+                </div>
+                <ul class="feature-benefits">
+                    <li class="benefit-item">Capture local word order</li>
+                    <li class="benefit-item">Identify common phrases</li>
+                    <li class="benefit-item">Provide more context than single words</li>
+                </ul>
+            </div>
+            
+            <div class="feature-box">
+                <div class="feature-header">
+                    <div class="feature-icon">🏷️</div>
+                    <div class="feature-title">POS Tagging</div>
+                </div>
+                <div class="feature-definition">
+                    Identifies grammatical roles of words
+                </div>
+                <div class="feature-example">
+                    <div class="example-label">Tags:</div>
+                    <div class="example-text">Noun, Verb, Adjective, Adverb...</div>
+                </div>
+                <ul class="feature-benefits">
+                    <li class="benefit-item">Identify syntactic patterns</li>
+                    <li class="benefit-item">Analyze sentence structure</li>
+                    <li class="benefit-item">Distinguish word usage contexts</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="combined-section">
+            <div class="combined-title">🤝 Combined Benefits</div>
+            <div class="combined-benefit">
+                Using N-grams and POS tags together improves text classification and information extraction
+            </div>
+        </div>
+        
+        <div class="tradeoff-box">
+            <div class="tradeoff-icon">⚖️</div>
+            <div class="tradeoff-content">
+                <div class="tradeoff-label">Trade-off</div>
+                <div class="tradeoff-text">Between context capture and computational complexity (N-grams increase feature space)</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

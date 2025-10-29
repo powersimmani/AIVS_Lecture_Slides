@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Computational Graph</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Aptos', 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            padding: 40px;
+        }
+        
+        .main-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+        }
+        
+        .content-layout {
+            display: grid;
+            grid-template-rows: 1fr auto;
+            gap: 15px;
+            flex: 1;
+        }
+        
+        .graph-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .pass-container {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .backward-container {
+            border-color: #d32f2f;
+        }
+        
+        .pass-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 8px;
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            color: white;
+            border-radius: 6px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .backward-header {
+            background: linear-gradient(135deg, #d32f2f 0%, #e57373 100%);
+        }
+        
+        .graph-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+        }
+        
+        .graph-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+        }
+        
+        .node {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .node-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 16px;
+            border: 3px solid;
+        }
+        
+        .input-node {
+            background: #e3f2fd;
+            border-color: #1E64C8;
+            color: #1E64C8;
+        }
+        
+        .operation-node {
+            background: #fff3e0;
+            border-color: #ff9800;
+            color: #e65100;
+            font-size: 20px;
+        }
+        
+        .output-node {
+            background: #e8f5e9;
+            border-color: #4caf50;
+            color: #2e7d32;
+        }
+        
+        .node-label {
+            font-size: 13px;
+            color: #666;
+            font-weight: 600;
+        }
+        
+        .node-value {
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .gradient-value {
+            font-size: 12px;
+            color: #d32f2f;
+            font-weight: 600;
+        }
+        
+        .edge {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .arrow-right {
+            font-size: 20px;
+            color: #1E64C8;
+            font-weight: bold;
+        }
+        
+        .arrow-left {
+            font-size: 20px;
+            color: #d32f2f;
+            font-weight: bold;
+        }
+        
+        .edge-label {
+            font-size: 11px;
+            color: #666;
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        
+        .gradient-label {
+            font-size: 11px;
+            color: #d32f2f;
+            background: #ffebee;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+        
+        .info-section {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        
+        .info-card {
+            background: #f8f9fa;
+            border-left: 4px solid #1E64C8;
+            padding: 12px;
+            border-radius: 4px;
+        }
+        
+        .info-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .info-icon {
+            font-size: 18px;
+        }
+        
+        .info-text {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.4;
+        }
+        
+        .example-box {
+            background: #fff3cd;
+            border-left: 4px solid #ff9800;
+            padding: 12px;
+            border-radius: 4px;
+        }
+        
+        .example-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #e65100;
+            margin-bottom: 6px;
+        }
+        
+        .example-text {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.4;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-title">Computational Graph</div>
+        
+        <div class="content-layout">
+            <div class="graph-section">
+                <!-- Forward Pass -->
+                <div class="pass-container">
+                    <div class="pass-header">
+                        <span>→</span>
+                        <span>Forward Pass</span>
+                    </div>
+                    <div class="graph-area">
+                        <div class="graph-row">
+                            <div class="node">
+                                <div class="node-circle input-node">x</div>
+                                <div class="node-label">Input</div>
+                                <div class="node-value">2</div>
+                            </div>
+                            
+                            <div class="edge">
+                                <div class="arrow-right">→</div>
+                            </div>
+                            
+                            <div class="node">
+                                <div class="node-circle operation-node">×</div>
+                                <div class="node-label">Multiply</div>
+                            </div>
+                            
+                            <div class="edge">
+                                <div class="arrow-right">→</div>
+                            </div>
+                            
+                            <div class="node">
+                                <div class="node-circle operation-node">+</div>
+                                <div class="node-label">Add</div>
+                            </div>
+                            
+                            <div class="edge">
+                                <div class="arrow-right">→</div>
+                            </div>
+                            
+                            <div class="node">
+                                <div class="node-circle output-node">L</div>
+                                <div class="node-label">Loss</div>
+                                <div class="node-value">13</div>
+                            </div>
+                        </div>
+                        
+                        <div class="graph-row" style="margin-top: -40px;">
+                            <div class="node">
+                                <div class="node-circle input-node">w</div>
+                                <div class="node-label">Weight</div>
+                                <div class="node-value">3</div>
+                            </div>
+                            
+                            <div style="width: 60px; height: 40px; border-left: 2px solid #1E64C8; border-bottom: 2px solid #1E64C8; margin-left: 30px;"></div>
+                        </div>
+                        
+                        <div class="graph-row" style="margin-top: -40px;">
+                            <div class="node">
+                                <div class="node-circle input-node">b</div>
+                                <div class="node-label">Bias</div>
+                                <div class="node-value">7</div>
+                            </div>
+                            
+                            <div style="width: 220px; height: 40px; border-left: 2px solid #1E64C8; border-bottom: 2px solid #1E64C8; margin-left: 30px;"></div>
+                        </div>
+                        
+                        <div style="text-align: center; font-size: 14px; color: #666; margin-top: 10px; font-family: 'Courier New', monospace;">
+                            z = w·x + b = 3×2 + 7 = 13
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Backward Pass -->
+                <div class="pass-container backward-container">
+                    <div class="pass-header backward-header">
+                        <span>←</span>
+                        <span>Backward Pass</span>
+                    </div>
+                    <div class="graph-area">
+                        <div class="graph-row">
+                            <div class="node">
+                                <div class="node-circle input-node">x</div>
+                                <div class="node-label">Input</div>
+                                <div class="gradient-value">∂L/∂x=3</div>
+                            </div>
+                            
+                            <div class="edge">
+                                <div class="arrow-left">←</div>
+                                <div class="gradient-label">×w</div>
+                            </div>
+                            
+                            <div class="node">
+                                <div class="node-circle operation-node">×</div>
+                                <div class="node-label">Multiply</div>
+                            </div>
+                            
+                            <div class="edge">
+                                <div class="arrow-left">←</div>
+                                <div class="gradient-label">1</div>
+                            </div>
+                            
+                            <div class="node">
+                                <div class="node-circle operation-node">+</div>
+                                <div class="node-label">Add</div>
+                            </div>
+                            
+                            <div class="edge">
+                                <div class="arrow-left">←</div>
+                                <div class="gradient-label">∂L/∂z</div>
+                            </div>
+                            
+                            <div class="node">
+                                <div class="node-circle output-node">L</div>
+                                <div class="node-label">Loss</div>
+                                <div class="gradient-value">1</div>
+                            </div>
+                        </div>
+                        
+                        <div class="graph-row" style="margin-top: -40px;">
+                            <div class="node">
+                                <div class="node-circle input-node">w</div>
+                                <div class="node-label">Weight</div>
+                                <div class="gradient-value">∂L/∂w=2</div>
+                            </div>
+                            
+                            <div style="width: 60px; height: 40px; border-left: 2px solid #d32f2f; border-top: 2px solid #d32f2f; margin-left: 30px; position: relative;">
+                                <div class="gradient-label" style="position: absolute; top: -20px; left: 10px;">×x</div>
+                            </div>
+                        </div>
+                        
+                        <div class="graph-row" style="margin-top: -40px;">
+                            <div class="node">
+                                <div class="node-circle input-node">b</div>
+                                <div class="node-label">Bias</div>
+                                <div class="gradient-value">∂L/∂b=1</div>
+                            </div>
+                            
+                            <div style="width: 220px; height: 40px; border-left: 2px solid #d32f2f; border-top: 2px solid #d32f2f; margin-left: 30px; position: relative;">
+                                <div class="gradient-label" style="position: absolute; top: -20px; left: 80px;">1</div>
+                            </div>
+                        </div>
+                        
+                        <div style="text-align: center; font-size: 14px; color: #d32f2f; margin-top: 10px; font-family: 'Courier New', monospace;">
+                            Chain Rule: ∂L/∂w = ∂L/∂z · ∂z/∂w
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Information Section -->
+            <div class="info-section">
+                <div class="info-card">
+                    <div class="info-title">
+                        <span class="info-icon">📊</span>
+                        <span>Nodes</span>
+                    </div>
+                    <div class="info-text">
+                        Variables and operations represented as graph nodes
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-title">
+                        <span class="info-icon">🔗</span>
+                        <span>Edges</span>
+                    </div>
+                    <div class="info-text">
+                        Dependencies between operations shown as directed edges
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-title">
+                        <span class="info-icon">⚡</span>
+                        <span>Automatic</span>
+                    </div>
+                    <div class="info-text">
+                        Frameworks build graphs automatically and compute gradients
+                    </div>
+                </div>
+                
+                <div class="example-box" style="grid-column: 1 / -1;">
+                    <div class="example-title">💡 Key Advantage</div>
+                    <div class="example-text">
+                        Computational graphs enable automatic differentiation by storing intermediate values during forward pass and applying chain rule systematically during backward pass
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

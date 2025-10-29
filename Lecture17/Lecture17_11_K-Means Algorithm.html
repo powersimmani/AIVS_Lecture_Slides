@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K-Means Algorithm</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px;
+            display: flex;
+            gap: 20px;
+        }
+        
+        .left-section {
+            flex: 1.2;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .right-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+        
+        .algorithm-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            flex: 1;
+        }
+        
+        .flow-step {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .flow-step:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(30, 100, 200, 0.2);
+        }
+        
+        .flow-step.init {
+            background: linear-gradient(135deg, #fff8e1 0%, #ffffff 100%);
+            border-color: #FFA726;
+        }
+        
+        .flow-step.assign {
+            background: linear-gradient(135deg, #e3f2fd 0%, #ffffff 100%);
+            border-color: #1E64C8;
+        }
+        
+        .flow-step.update {
+            background: linear-gradient(135deg, #f3e5f5 0%, #ffffff 100%);
+            border-color: #9C27B0;
+        }
+        
+        .flow-step.converge {
+            background: linear-gradient(135deg, #e8f5e9 0%, #ffffff 100%);
+            border-color: #4CAF50;
+        }
+        
+        .step-number {
+            min-width: 45px;
+            height: 45px;
+            background: #1E64C8;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .flow-step.init .step-number {
+            background: #FFA726;
+        }
+        
+        .flow-step.update .step-number {
+            background: #9C27B0;
+        }
+        
+        .flow-step.converge .step-number {
+            background: #4CAF50;
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .step-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .flow-step.init .step-title {
+            color: #F57C00;
+        }
+        
+        .flow-step.update .step-title {
+            color: #9C27B0;
+        }
+        
+        .flow-step.converge .step-title {
+            color: #388E3C;
+        }
+        
+        .step-desc {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.4;
+        }
+        
+        .step-icon {
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+        
+        .arrow-down {
+            text-align: center;
+            color: #1E64C8;
+            font-size: 24px;
+            margin: -8px 0;
+        }
+        
+        .repeat-arrow {
+            position: absolute;
+            right: -40px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 32px;
+            color: #1E64C8;
+        }
+        
+        .complexity-box {
+            background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px;
+            text-align: center;
+        }
+        
+        .complexity-label {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 6px;
+        }
+        
+        .complexity-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .pros-cons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            flex: 1;
+        }
+        
+        .pros-box, .cons-box {
+            background: white;
+            border: 2px solid;
+            border-radius: 10px;
+            padding: 14px;
+            flex: 1;
+        }
+        
+        .pros-box {
+            border-color: #4CAF50;
+            background: linear-gradient(135deg, #e8f5e9 0%, #ffffff 100%);
+        }
+        
+        .cons-box {
+            border-color: #e57373;
+            background: linear-gradient(135deg, #ffebee 0%, #ffffff 100%);
+        }
+        
+        .box-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .pros-box .box-title {
+            color: #388E3C;
+        }
+        
+        .cons-box .box-title {
+            color: #d32f2f;
+        }
+        
+        .box-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .box-list li {
+            font-size: 15px;
+            color: #444;
+            padding-left: 20px;
+            position: relative;
+            line-height: 1.3;
+        }
+        
+        .pros-box .box-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4CAF50;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .cons-box .box-list li:before {
+            content: "✗";
+            position: absolute;
+            left: 0;
+            color: #e57373;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .note-box {
+            background: linear-gradient(135deg, #fff8e1 0%, #ffffff 100%);
+            border: 2px solid #FFA726;
+            border-radius: 10px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .note-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        
+        .note-text {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left-section">
+            <div class="title">K-Means Algorithm</div>
+            
+            <div class="algorithm-flow">
+                <div class="flow-step init">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <div class="step-title">Initialize</div>
+                        <div class="step-desc">Randomly select k centroids</div>
+                    </div>
+                    <div class="step-icon">🎲</div>
+                </div>
+                
+                <div class="arrow-down">↓</div>
+                
+                <div class="flow-step assign">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <div class="step-title">Assignment Step</div>
+                        <div class="step-desc">Assign each point to nearest centroid</div>
+                    </div>
+                    <div class="step-icon">📍</div>
+                    <div class="repeat-arrow">↻</div>
+                </div>
+                
+                <div class="arrow-down">↓</div>
+                
+                <div class="flow-step update">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <div class="step-title">Update Step</div>
+                        <div class="step-desc">Recompute centroids as cluster means</div>
+                    </div>
+                    <div class="step-icon">🔄</div>
+                </div>
+                
+                <div class="arrow-down">↓</div>
+                
+                <div class="flow-step converge">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <div class="step-title">Check Convergence</div>
+                        <div class="step-desc">Stop when centroids don't move</div>
+                    </div>
+                    <div class="step-icon">✅</div>
+                </div>
+            </div>
+            
+            <div class="complexity-box">
+                <div class="complexity-label">Time Complexity</div>
+                <div class="complexity-value">O(n · k · i · d)</div>
+                <div class="complexity-label" style="font-size: 13px; margin-top: 4px;">linear in samples and features</div>
+            </div>
+        </div>
+        
+        <div class="right-section">
+            <div style="height: 30px;"></div>
+            
+            <div class="pros-cons">
+                <div class="pros-box">
+                    <div class="box-title">
+                        <span>💪</span>
+                        <span>Strengths</span>
+                    </div>
+                    <ul class="box-list">
+                        <li>Simple to understand</li>
+                        <li>Fast computation</li>
+                        <li>Scalable to large datasets</li>
+                    </ul>
+                </div>
+                
+                <div class="cons-box">
+                    <div class="box-title">
+                        <span>⚠️</span>
+                        <span>Weaknesses</span>
+                    </div>
+                    <ul class="box-list">
+                        <li>Assumes spherical clusters</li>
+                        <li>Sensitive to initialization</li>
+                        <li>Requires pre-specified k</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="note-box">
+                <div class="note-icon">💡</div>
+                <div class="note-text">
+                    <strong>Finding optimal k:</strong> Use elbow method or silhouette analysis
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

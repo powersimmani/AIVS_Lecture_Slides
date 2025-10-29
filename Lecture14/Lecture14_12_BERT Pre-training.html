@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BERT Pre-training</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: #ffffff;
+            padding: 25px 40px;
+        }
+        
+        .title {
+            font-size: 26px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .tasks-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .task-box {
+            background: #F8F9FA;
+            border: 3px solid #1E64C8;
+            border-radius: 12px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .task-header {
+            text-align: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .task-number {
+            display: inline-block;
+            background: #1E64C8;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            line-height: 28px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .task-title {
+            font-size: 19px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 3px;
+        }
+        
+        .task-subtitle {
+            font-size: 16px;
+            color: #666666;
+        }
+        
+        .example-box {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+        
+        .example-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #666666;
+            margin-bottom: 8px;
+        }
+        
+        .sentence-display {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        
+        .token {
+            background: #E8F4F8;
+            border: 2px solid #1E64C8;
+            border-radius: 6px;
+            padding: 5px 10px;
+            font-size: 15px;
+            font-weight: 500;
+            color: #1E64C8;
+        }
+        
+        .token.special {
+            background: #C8E6C9;
+            border-color: #4CAF50;
+            color: #2E7D32;
+            font-weight: 600;
+        }
+        
+        .token.masked {
+            background: #FFE0B2;
+            border-color: #FF9800;
+            color: #E65100;
+            font-weight: 600;
+        }
+        
+        .arrow-down {
+            text-align: center;
+            font-size: 20px;
+            color: #1E64C8;
+            margin: 5px 0;
+        }
+        
+        .prediction {
+            text-align: center;
+            font-size: 16px;
+            color: #333333;
+            background: #E8F4F8;
+            padding: 8px;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+        
+        .nsp-sentences {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .nsp-sentence {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 6px;
+            padding: 8px 10px;
+        }
+        
+        .sentence-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1E64C8;
+            flex-shrink: 0;
+        }
+        
+        .sentence-text {
+            font-size: 15px;
+            color: #333333;
+        }
+        
+        .classification-result {
+            text-align: center;
+            font-size: 16px;
+            color: white;
+            background: #4CAF50;
+            padding: 8px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+        
+        .bottom-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+        }
+        
+        .info-card {
+            background: #E8F4F8;
+            border-left: 4px solid #1E64C8;
+            border-radius: 6px;
+            padding: 10px 12px;
+        }
+        
+        .info-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .info-text {
+            font-size: 16px;
+            color: #333333;
+            line-height: 1.3;
+        }
+        
+        .highlight {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .special-tokens {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
+        }
+        
+        .special-token-item {
+            background: #C8E6C9;
+            border: 2px solid #4CAF50;
+            border-radius: 5px;
+            padding: 3px 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #2E7D32;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">BERT Pre-training: Two Main Tasks</div>
+        
+        <div class="tasks-grid">
+            <!-- MLM Task -->
+            <div class="task-box">
+                <div class="task-header">
+                    <div class="task-number">1</div>
+                    <div class="task-title">Masked Language Model</div>
+                    <div class="task-subtitle">MLM - 15% masking</div>
+                </div>
+                
+                <div class="example-box">
+                    <div class="example-label">Input:</div>
+                    <div class="sentence-display">
+                        <div class="token special">[CLS]</div>
+                        <div class="token">The</div>
+                        <div class="token">cat</div>
+                        <div class="token masked">[MASK]</div>
+                        <div class="token">on</div>
+                        <div class="token">the</div>
+                        <div class="token">mat</div>
+                    </div>
+                    <div class="arrow-down">↓</div>
+                    <div class="prediction">Predict: <span class="highlight">"sat"</span></div>
+                </div>
+                
+                <div style="font-size: 16px; color: #333333; line-height: 1.5; text-align: center;">
+                    Uses <span class="highlight">bidirectional context</span><br>
+                    to predict masked tokens
+                </div>
+            </div>
+            
+            <!-- NSP Task -->
+            <div class="task-box">
+                <div class="task-header">
+                    <div class="task-number">2</div>
+                    <div class="task-title">Next Sentence Prediction</div>
+                    <div class="task-subtitle">NSP - Binary classification</div>
+                </div>
+                
+                <div class="example-box">
+                    <div class="example-label">Input:</div>
+                    <div class="nsp-sentences">
+                        <div class="nsp-sentence">
+                            <div class="sentence-label">A:</div>
+                            <div class="sentence-text">The man went to the store.</div>
+                        </div>
+                        <div class="nsp-sentence">
+                            <div class="sentence-label">B:</div>
+                            <div class="sentence-text">He bought a gallon of milk.</div>
+                        </div>
+                    </div>
+                    <div class="arrow-down">↓</div>
+                    <div class="classification-result">IsNext ✓</div>
+                </div>
+                
+                <div style="font-size: 16px; color: #333333; line-height: 1.5; text-align: center;">
+                    <span class="highlight">[CLS]</span> token for<br>
+                    sentence-level representation
+                </div>
+            </div>
+        </div>
+        
+        <div class="bottom-info">
+            <div class="info-card">
+                <div class="info-title">📝 Tokenization</div>
+                <div class="info-text">
+                    <strong>WordPiece</strong><br>
+                    30K vocabulary
+                </div>
+            </div>
+            
+            <div class="info-card">
+                <div class="info-title">🏷️ Special Tokens</div>
+                <div class="special-tokens">
+                    <div class="special-token-item">[CLS]</div>
+                    <div class="special-token-item">[SEP]</div>
+                    <div class="special-token-item">[MASK]</div>
+                    <div class="special-token-item">[PAD]</div>
+                </div>
+            </div>
+            
+            <div class="info-card">
+                <div class="info-title">⚡ Training</div>
+                <div class="info-text">
+                    <strong>4 days</strong><br>
+                    on 4-16 Cloud TPUs
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

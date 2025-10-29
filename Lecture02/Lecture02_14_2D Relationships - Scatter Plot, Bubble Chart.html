@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2D Relationships - Scatter & Bubble Charts</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #FFFFFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            padding: 25px 35px;
+        }
+        
+        .title-section {
+            text-align: center;
+            margin-bottom: 18px;
+        }
+        
+        .main-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .subtitle {
+            font-size: 17px;
+            color: #666666;
+        }
+        
+        .content-wrapper {
+            display: flex;
+            gap: 20px;
+            flex: 1;
+        }
+        
+        .left-panel {
+            flex: 1.4;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .patterns-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            flex: 1;
+        }
+        
+        .pattern-card {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 10px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+        
+        .pattern-card:hover {
+            border-color: #1E64C8;
+            box-shadow: 0 4px 15px rgba(30, 100, 200, 0.15);
+            transform: scale(1.02);
+        }
+        
+        .pattern-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .scatter-plot {
+            flex: 1;
+            background: #F8F8F8;
+            border-radius: 6px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .scatter-plot svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .correlation-label {
+            text-align: center;
+            font-size: 16px;
+            color: #666;
+            margin-top: 6px;
+            padding: 4px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+        
+        .positive { background: #E8F5E9; color: #2E7D32; }
+        .negative { background: #FFEBEE; color: #C62828; }
+        .none { background: #F5F5F5; color: #757575; }
+        .nonlinear { background: #FFF9E6; color: #F57C00; }
+        
+        .bubble-section {
+            background: #F8FBFF;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .bubble-visual {
+            flex: 1;
+            background: #F8F8F8;
+            border-radius: 6px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            position: relative;
+        }
+        
+        .bubble {
+            border-radius: 50%;
+            background: #1E64C8;
+            opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+        
+        .bubble:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+        
+        .bubble-1 { width: 30px; height: 30px; }
+        .bubble-2 { width: 50px; height: 50px; background: #4CAF50; }
+        .bubble-3 { width: 40px; height: 40px; background: #FF9800; }
+        .bubble-4 { width: 60px; height: 60px; background: #9C27B0; }
+        
+        .bubble-info {
+            flex: 1;
+        }
+        
+        .bubble-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .bubble-desc {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.4;
+        }
+        
+        .right-panel {
+            flex: 0.6;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        
+        .features-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 16px;
+            flex: 1;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .features-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+            padding: 6px;
+            background: #F8FBFF;
+            border-radius: 4px;
+        }
+        
+        .feature-icon {
+            color: #1E64C8;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .tips-card {
+            background: #FFF9E6;
+            border: 2px solid #FFC107;
+            border-radius: 10px;
+            padding: 16px;
+        }
+        
+        .tips-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .tip-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 6px;
+        }
+        
+        .tip-icon {
+            color: #F57C00;
+            font-size: 16px;
+        }
+        
+        .use-cases {
+            background: #E8F5E9;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            padding: 16px;
+        }
+        
+        .use-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2E7D32;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .use-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 6px;
+        }
+        
+        .check-icon {
+            color: #4CAF50;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .pattern-card, .bubble-section, .features-card, .tips-card, .use-cases {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        .pattern-card:nth-child(1) { animation-delay: 0.1s; }
+        .pattern-card:nth-child(2) { animation-delay: 0.2s; }
+        .pattern-card:nth-child(3) { animation-delay: 0.3s; }
+        .pattern-card:nth-child(4) { animation-delay: 0.4s; }
+        .bubble-section { animation-delay: 0.5s; }
+        .features-card { animation-delay: 0.6s; }
+        .tips-card { animation-delay: 0.7s; }
+        .use-cases { animation-delay: 0.8s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">2D Relationships: Scatter Plot & Bubble Chart</div>
+            <div class="subtitle">Exploring Relationships Between Continuous Variables</div>
+        </div>
+        
+        <div class="content-wrapper">
+            <div class="left-panel">
+                <div class="patterns-grid">
+                    <!-- Positive Correlation -->
+                    <div class="pattern-card">
+                        <div class="pattern-title">Positive Correlation</div>
+                        <div class="scatter-plot">
+                            <svg viewBox="0 0 100 100">
+                                <circle cx="15" cy="75" r="2.5" fill="#1E64C8"/>
+                                <circle cx="25" cy="65" r="2.5" fill="#1E64C8"/>
+                                <circle cx="30" cy="60" r="2.5" fill="#1E64C8"/>
+                                <circle cx="40" cy="50" r="2.5" fill="#1E64C8"/>
+                                <circle cx="45" cy="45" r="2.5" fill="#1E64C8"/>
+                                <circle cx="55" cy="40" r="2.5" fill="#1E64C8"/>
+                                <circle cx="65" cy="30" r="2.5" fill="#1E64C8"/>
+                                <circle cx="75" cy="25" r="2.5" fill="#1E64C8"/>
+                                <circle cx="85" cy="15" r="2.5" fill="#1E64C8"/>
+                                <line x1="10" y1="80" x2="90" y2="10" stroke="#1E64C8" stroke-width="1" stroke-dasharray="2,2" opacity="0.5"/>
+                            </svg>
+                        </div>
+                        <div class="correlation-label positive">Strong Positive (r ≈ +0.9)</div>
+                    </div>
+                    
+                    <!-- Negative Correlation -->
+                    <div class="pattern-card">
+                        <div class="pattern-title">Negative Correlation</div>
+                        <div class="scatter-plot">
+                            <svg viewBox="0 0 100 100">
+                                <circle cx="15" cy="15" r="2.5" fill="#C62828"/>
+                                <circle cx="25" cy="25" r="2.5" fill="#C62828"/>
+                                <circle cx="35" cy="30" r="2.5" fill="#C62828"/>
+                                <circle cx="45" cy="45" r="2.5" fill="#C62828"/>
+                                <circle cx="50" cy="50" r="2.5" fill="#C62828"/>
+                                <circle cx="60" cy="60" r="2.5" fill="#C62828"/>
+                                <circle cx="70" cy="65" r="2.5" fill="#C62828"/>
+                                <circle cx="80" cy="75" r="2.5" fill="#C62828"/>
+                                <circle cx="85" cy="85" r="2.5" fill="#C62828"/>
+                                <line x1="10" y1="10" x2="90" y2="90" stroke="#C62828" stroke-width="1" stroke-dasharray="2,2" opacity="0.5"/>
+                            </svg>
+                        </div>
+                        <div class="correlation-label negative">Strong Negative (r ≈ -0.9)</div>
+                    </div>
+                    
+                    <!-- No Correlation -->
+                    <div class="pattern-card">
+                        <div class="pattern-title">No Correlation</div>
+                        <div class="scatter-plot">
+                            <svg viewBox="0 0 100 100">
+                                <circle cx="20" cy="30" r="2.5" fill="#757575"/>
+                                <circle cx="30" cy="70" r="2.5" fill="#757575"/>
+                                <circle cx="40" cy="40" r="2.5" fill="#757575"/>
+                                <circle cx="45" cy="60" r="2.5" fill="#757575"/>
+                                <circle cx="55" cy="25" r="2.5" fill="#757575"/>
+                                <circle cx="60" cy="75" r="2.5" fill="#757575"/>
+                                <circle cx="70" cy="50" r="2.5" fill="#757575"/>
+                                <circle cx="80" cy="35" r="2.5" fill="#757575"/>
+                                <circle cx="85" cy="65" r="2.5" fill="#757575"/>
+                            </svg>
+                        </div>
+                        <div class="correlation-label none">No Pattern (r ≈ 0)</div>
+                    </div>
+                    
+                    <!-- Non-linear Pattern -->
+                    <div class="pattern-card">
+                        <div class="pattern-title">Non-linear Pattern</div>
+                        <div class="scatter-plot">
+                            <svg viewBox="0 0 100 100">
+                                <circle cx="15" cy="50" r="2.5" fill="#F57C00"/>
+                                <circle cx="25" cy="35" r="2.5" fill="#F57C00"/>
+                                <circle cx="35" cy="25" r="2.5" fill="#F57C00"/>
+                                <circle cx="45" cy="20" r="2.5" fill="#F57C00"/>
+                                <circle cx="55" cy="25" r="2.5" fill="#F57C00"/>
+                                <circle cx="65" cy="35" r="2.5" fill="#F57C00"/>
+                                <circle cx="75" cy="50" r="2.5" fill="#F57C00"/>
+                                <circle cx="85" cy="65" r="2.5" fill="#F57C00"/>
+                                <path d="M 10,50 Q 50,15 90,70" fill="none" stroke="#F57C00" stroke-width="1" stroke-dasharray="2,2" opacity="0.5"/>
+                            </svg>
+                        </div>
+                        <div class="correlation-label nonlinear">Quadratic/Polynomial</div>
+                    </div>
+                </div>
+                
+                <div class="bubble-section">
+                    <div class="bubble-visual">
+                        <div class="bubble bubble-1"></div>
+                        <div class="bubble bubble-2"></div>
+                        <div class="bubble bubble-3"></div>
+                        <div class="bubble bubble-4"></div>
+                    </div>
+                    <div class="bubble-info">
+                        <div class="bubble-title">Bubble Chart</div>
+                        <div class="bubble-desc">Add 3rd dimension (size) + optional 4th (color)</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <div class="features-card">
+                    <div class="card-title">
+                        <span>📊</span>
+                        Key Features
+                    </div>
+                    <div class="features-list">
+                        <div class="feature-item">
+                            <span class="feature-icon">•</span>
+                            <span>Reveals correlation & clusters</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">•</span>
+                            <span>Identifies outliers</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">•</span>
+                            <span>Shows non-linear patterns</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">•</span>
+                            <span>Add trend lines for clarity</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tips-card">
+                    <div class="tips-title">💡 Best Practices</div>
+                    <div class="tip-item">
+                        <span class="tip-icon">▸</span>
+                        <span>Use alpha transparency</span>
+                    </div>
+                    <div class="tip-item">
+                        <span class="tip-icon">▸</span>
+                        <span>Try hexbin for large data</span>
+                    </div>
+                    <div class="tip-item">
+                        <span class="tip-icon">▸</span>
+                        <span>Annotate key points</span>
+                    </div>
+                </div>
+                
+                <div class="use-cases">
+                    <div class="use-title">When to Use</div>
+                    <div class="use-item">
+                        <span class="check-icon">✓</span>
+                        <span>Correlation analysis</span>
+                    </div>
+                    <div class="use-item">
+                        <span class="check-icon">✓</span>
+                        <span>Trend detection</span>
+                    </div>
+                    <div class="use-item">
+                        <span class="check-icon">✓</span>
+                        <span>Multivariate exploration</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

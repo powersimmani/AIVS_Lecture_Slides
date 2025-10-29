@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gradient Vanishing/Exploding</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: #ffffff;
+            padding: 20px 40px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 25px;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            height: 450px;
+        }
+        
+        .problem-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .problem-card {
+            flex: 1;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        
+        .vanishing-card {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border: 2px solid #1E64C8;
+        }
+        
+        .exploding-card {
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            border: 2px solid #ff4444;
+        }
+        
+        .card-header {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .vanishing-card .card-header {
+            color: #1E64C8;
+        }
+        
+        .exploding-card .card-header {
+            color: #ff4444;
+        }
+        
+        .icon {
+            font-size: 28px;
+        }
+        
+        .gradient-visual {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 15px 0;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+        }
+        
+        .layer-box {
+            flex: 1;
+            height: 40px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .vanishing-card .layer-box:nth-child(1) {
+            background: #1E64C8;
+            opacity: 1;
+        }
+        
+        .vanishing-card .layer-box:nth-child(2) {
+            background: #1E64C8;
+            opacity: 0.6;
+        }
+        
+        .vanishing-card .layer-box:nth-child(3) {
+            background: #1E64C8;
+            opacity: 0.3;
+        }
+        
+        .vanishing-card .layer-box:nth-child(4) {
+            background: #1E64C8;
+            opacity: 0.1;
+        }
+        
+        .exploding-card .layer-box:nth-child(1) {
+            background: #ff4444;
+            font-size: 12px;
+        }
+        
+        .exploding-card .layer-box:nth-child(2) {
+            background: #ff4444;
+            font-size: 16px;
+        }
+        
+        .exploding-card .layer-box:nth-child(3) {
+            background: #ff4444;
+            font-size: 20px;
+        }
+        
+        .exploding-card .layer-box:nth-child(4) {
+            background: #ff4444;
+            font-size: 24px;
+        }
+        
+        .description {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.5;
+            margin-top: auto;
+        }
+        
+        .info-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 5px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .info-card {
+            background: #f8f9fb;
+            border-left: 4px solid #1E64C8;
+            padding: 12px 16px;
+            border-radius: 6px;
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.5;
+            transition: all 0.3s ease;
+        }
+        
+        .info-card:hover {
+            background: #eef3fb;
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(30, 100, 200, 0.15);
+        }
+        
+        .highlight {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .warning-highlight {
+            font-weight: 600;
+            color: #ff4444;
+        }
+        
+        .solution-box {
+            background: #e8f5e9;
+            border: 2px solid #4caf50;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-top: 10px;
+        }
+        
+        .solution-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #4caf50;
+            margin-bottom: 5px;
+        }
+        
+        .solution-text {
+            font-size: 16px;
+            color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Gradient Vanishing/Exploding Problems</div>
+        
+        <div class="main-content">
+            <div class="problem-section">
+                <div class="problem-card vanishing-card">
+                    <div class="card-header">
+                        <span class="icon">↓</span>
+                        Vanishing Gradients
+                    </div>
+                    <div class="gradient-visual">
+                        <div class="layer-box">L4</div>
+                        <div class="layer-box">L3</div>
+                        <div class="layer-box">L2</div>
+                        <div class="layer-box">L1</div>
+                    </div>
+                    <div class="description">
+                        Gradients become <strong>extremely small</strong> in early layers, preventing effective learning in deep networks.
+                    </div>
+                </div>
+                
+                <div class="problem-card exploding-card">
+                    <div class="card-header">
+                        <span class="icon">↑</span>
+                        Exploding Gradients
+                    </div>
+                    <div class="gradient-visual">
+                        <div class="layer-box">L1</div>
+                        <div class="layer-box">L2</div>
+                        <div class="layer-box">L3</div>
+                        <div class="layer-box">L4</div>
+                    </div>
+                    <div class="description">
+                        Gradients grow <strong>exponentially large</strong> during backpropagation, causing training instability.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="info-section">
+                <div class="section-title">Key Causes & Effects</div>
+                
+                <div class="info-card">
+                    <span class="highlight">Cause:</span> Repeated multiplication of small/large values during backpropagation
+                </div>
+                
+                <div class="info-card">
+                    <span class="warning-highlight">Susceptible activations:</span> Sigmoid/tanh particularly vulnerable
+                </div>
+                
+                <div class="info-card">
+                    <span class="highlight">Impact:</span> Prevents effective learning in deep networks
+                </div>
+                
+                <div class="info-card">
+                    <span class="warning-highlight">Consequence:</span> Slow convergence or complete training failure
+                </div>
+                
+                <div class="solution-box">
+                    <div class="solution-title">✓ Solution</div>
+                    <div class="solution-text">
+                        Proper initialization helps maintain gradient magnitude throughout the network
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

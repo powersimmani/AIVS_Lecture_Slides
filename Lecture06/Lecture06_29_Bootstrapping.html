@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bootstrapping</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: white;
+            font-family: Aptos, 'Segoe UI', sans-serif;
+        }
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+            padding: 30px;
+            box-sizing: border-box;
+        }
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 20px;
+        }
+        .concept-flow {
+            background: #f8f9fb;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 18px;
+        }
+        .flow-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .flow-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+        .flow-step {
+            flex: 1;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .step-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        .step-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        .step-desc {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+        .flow-arrow {
+            font-size: 28px;
+            color: #1E64C8;
+            flex-shrink: 0;
+        }
+        
+        .sampling-visual {
+            background: #f8f9fb;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 18px;
+        }
+        .visual-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .sampling-grid {
+            display: grid;
+            grid-template-columns: 1fr auto 2fr;
+            gap: 20px;
+            align-items: center;
+        }
+        .original-dataset {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #1E64C8;
+        }
+        .dataset-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .samples-display {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            justify-content: center;
+        }
+        .sample-item {
+            width: 35px;
+            height: 35px;
+            background: #1E64C8;
+            color: white;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+        }
+        .sampling-arrow {
+            font-size: 36px;
+            color: #1E64C8;
+        }
+        .bootstrap-samples {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #4A90E2;
+        }
+        .bootstrap-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .bootstrap-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .bootstrap-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+            min-width: 80px;
+        }
+        .bootstrap-items {
+            display: flex;
+            gap: 4px;
+        }
+        .bootstrap-sample {
+            width: 28px;
+            height: 28px;
+            background: #4A90E2;
+            color: white;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 12px;
+        }
+        .duplicate {
+            background: #e74c3c;
+        }
+        
+        .characteristics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 18px;
+        }
+        .char-card {
+            background: #f8f9fb;
+            border-left: 5px solid #1E64C8;
+            padding: 15px 18px;
+            border-radius: 8px;
+        }
+        .char-card:nth-child(2) {
+            border-left-color: #4A90E2;
+        }
+        .char-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        .char-text {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        .use-case-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+        }
+        .use-case-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .use-case-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        .use-case-item {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Bootstrapping</div>
+        
+        <div class="concept-flow">
+            <div class="flow-title">🔄 Bootstrap Process</div>
+            <div class="flow-diagram">
+                <div class="flow-step">
+                    <div class="step-icon">📦</div>
+                    <div class="step-title">Original Data</div>
+                    <div class="step-desc">N samples</div>
+                </div>
+                
+                <div class="flow-arrow">→</div>
+                
+                <div class="flow-step">
+                    <div class="step-icon">🎲</div>
+                    <div class="step-title">Sample with Replacement</div>
+                    <div class="step-desc">Create B bootstrap samples</div>
+                </div>
+                
+                <div class="flow-arrow">→</div>
+                
+                <div class="flow-step">
+                    <div class="step-icon">🤖</div>
+                    <div class="step-title">Train Models</div>
+                    <div class="step-desc">One model per sample</div>
+                </div>
+                
+                <div class="flow-arrow">→</div>
+                
+                <div class="flow-step">
+                    <div class="step-icon">📊</div>
+                    <div class="step-title">Aggregate</div>
+                    <div class="step-desc">Mean & confidence interval</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="sampling-visual">
+            <div class="visual-title">Sampling with Replacement (Example)</div>
+            <div class="sampling-grid">
+                <div class="original-dataset">
+                    <div class="dataset-label">Original (N=10)</div>
+                    <div class="samples-display">
+                        <div class="sample-item">1</div>
+                        <div class="sample-item">2</div>
+                        <div class="sample-item">3</div>
+                        <div class="sample-item">4</div>
+                        <div class="sample-item">5</div>
+                        <div class="sample-item">6</div>
+                        <div class="sample-item">7</div>
+                        <div class="sample-item">8</div>
+                        <div class="sample-item">9</div>
+                        <div class="sample-item">10</div>
+                    </div>
+                </div>
+                
+                <div class="sampling-arrow">→</div>
+                
+                <div class="bootstrap-samples">
+                    <div class="dataset-label" style="color: #4A90E2;">Bootstrap Samples</div>
+                    <div class="bootstrap-grid">
+                        <div class="bootstrap-row">
+                            <div class="bootstrap-label">Sample 1:</div>
+                            <div class="bootstrap-items">
+                                <div class="bootstrap-sample">3</div>
+                                <div class="bootstrap-sample duplicate">3</div>
+                                <div class="bootstrap-sample">7</div>
+                                <div class="bootstrap-sample">1</div>
+                                <div class="bootstrap-sample">9</div>
+                                <div class="bootstrap-sample">2</div>
+                                <div class="bootstrap-sample duplicate">2</div>
+                                <div class="bootstrap-sample">5</div>
+                                <div class="bootstrap-sample">10</div>
+                                <div class="bootstrap-sample">8</div>
+                            </div>
+                        </div>
+                        <div class="bootstrap-row">
+                            <div class="bootstrap-label">Sample 2:</div>
+                            <div class="bootstrap-items">
+                                <div class="bootstrap-sample">5</div>
+                                <div class="bootstrap-sample">6</div>
+                                <div class="bootstrap-sample">1</div>
+                                <div class="bootstrap-sample duplicate">1</div>
+                                <div class="bootstrap-sample">4</div>
+                                <div class="bootstrap-sample">8</div>
+                                <div class="bootstrap-sample">9</div>
+                                <div class="bootstrap-sample duplicate">9</div>
+                                <div class="bootstrap-sample">3</div>
+                                <div class="bootstrap-sample">7</div>
+                            </div>
+                        </div>
+                        <div class="bootstrap-row">
+                            <div class="bootstrap-label">Sample B:</div>
+                            <div class="bootstrap-items">
+                                <div class="bootstrap-sample">...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="characteristics">
+            <div class="char-card">
+                <div class="char-title">✨ Key Feature</div>
+                <div class="char-text">
+                    Samples with replacement: same data point can appear multiple times in a bootstrap sample
+                </div>
+            </div>
+            
+            <div class="char-card">
+                <div class="char-title">📊 Statistical Power</div>
+                <div class="char-text">
+                    Provides confidence intervals and variance estimates for model performance
+                </div>
+            </div>
+        </div>
+
+        <div class="use-case-box">
+            <div class="use-case-title">💡 Common Uses</div>
+            <div class="use-case-grid">
+                <div class="use-case-item">Estimate model uncertainty</div>
+                <div class="use-case-item">Build ensemble methods (Bagging)</div>
+                <div class="use-case-item">Small dataset validation</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

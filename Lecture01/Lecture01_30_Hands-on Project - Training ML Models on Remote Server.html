@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hands-on Project - Remote ML Training</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 28px 40px;
+            background: white;
+        }
+        
+        .title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        
+        .goal-box {
+            background: #f0f5fc;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px 20px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        
+        .goal-text {
+            font-size: 17px;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .goal-highlight {
+            color: #1E64C8;
+            font-weight: 700;
+        }
+        
+        .workflow-steps {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .step-card {
+            background: white;
+            border: 2.5px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px 16px;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .step-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 16px rgba(30, 100, 200, 0.2);
+            background: #f8fbff;
+        }
+        
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        
+        .step-number {
+            min-width: 32px;
+            height: 32px;
+            background: #1E64C8;
+            color: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .step-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            flex: 1;
+        }
+        
+        .step-desc {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.4;
+            margin-left: 42px;
+        }
+        
+        .deliverables-section {
+            background: #fff4e6;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px 20px;
+        }
+        
+        .deliverables-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .deliverables-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        
+        .deliverable-item {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 10px 14px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .deliverable-item:hover {
+            background: #1E64C8;
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        .deliverable-icon {
+            font-size: 24px;
+            margin-bottom: 6px;
+        }
+        
+        .deliverable-text {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .deliverable-item:hover .deliverable-text {
+            color: white;
+        }
+        
+        .arrow-indicator {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #1E64C8;
+            font-size: 20px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .step-card:hover .arrow-indicator {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Hands-on Project - Training ML Models on Remote Server</div>
+        
+        <div class="goal-box">
+            <span class="goal-text"><span class="goal-highlight">Project Goal:</span> Train image classifier on remote GPU server</span>
+        </div>
+        
+        <div class="workflow-steps">
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-number">1</div>
+                    <div class="step-title">SSH & Setup</div>
+                </div>
+                <div class="step-desc">SSH into server and setup environment (conda/docker)</div>
+                <div class="arrow-indicator">→</div>
+            </div>
+            
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Transfer Dataset</div>
+                </div>
+                <div class="step-desc">Use scp or download directly on server</div>
+                <div class="arrow-indicator">→</div>
+            </div>
+            
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Write Training Script</div>
+                </div>
+                <div class="step-desc">PyTorch/TensorFlow with proper logging</div>
+                <div class="arrow-indicator">→</div>
+            </div>
+            
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-number">4</div>
+                    <div class="step-title">Run in tmux</div>
+                </div>
+                <div class="step-desc">Persistent session even if disconnected</div>
+                <div class="arrow-indicator">→</div>
+            </div>
+            
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-number">5</div>
+                    <div class="step-title">Monitor Training</div>
+                </div>
+                <div class="step-desc">nvidia-smi and TensorBoard (port forwarding)</div>
+                <div class="arrow-indicator">→</div>
+            </div>
+            
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-number">6</div>
+                    <div class="step-title">Download & Evaluate</div>
+                </div>
+                <div class="step-desc">Download trained model and evaluate locally</div>
+                <div class="arrow-indicator">→</div>
+            </div>
+        </div>
+        
+        <div class="deliverables-section">
+            <div class="deliverables-title">📦 Project Deliverables</div>
+            <div class="deliverables-grid">
+                <div class="deliverable-item">
+                    <div class="deliverable-icon">🤖</div>
+                    <div class="deliverable-text">Working Model</div>
+                </div>
+                
+                <div class="deliverable-item">
+                    <div class="deliverable-icon">📊</div>
+                    <div class="deliverable-text">Training Logs</div>
+                </div>
+                
+                <div class="deliverable-item">
+                    <div class="deliverable-icon">📑</div>
+                    <div class="deliverable-text">Results Presentation</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

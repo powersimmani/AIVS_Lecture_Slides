@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Step Decay Learning Rate</title>
+    <style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: Aptos, 'Segoe UI', sans-serif; background: #ffffff; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+.container { width: 960px; height: 540px; padding: 30px; background: #ffffff; }
+.header { text-align: center; margin-bottom: 20px; }
+.main-title { font-size: 20px; font-weight: 600; color: #1E64C8; margin-bottom: 6px; }
+.subtitle { font-size: 16px; color: #666; }
+.content-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; height: 440px; }
+.left-section, .right-section { display: flex; flex-direction: column; gap: 15px; }
+
+        .concept-box { background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%); color: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 12px rgba(30, 100, 200, 0.3); }
+        .concept-title { font-size: 18px; font-weight: 600; margin-bottom: 10px; }
+        .concept-desc { font-size: 16px; line-height: 1.6; }
+        .formula-box { background: #f0f8ff; border: 3px solid #1E64C8; border-radius: 10px; padding: 18px; }
+        .formula-title { font-size: 17px; font-weight: 600; color: #1E64C8; margin-bottom: 12px; text-align: center; }
+        .formula { background: white; border: 2px dashed #1E64C8; border-radius: 8px; padding: 14px; text-align: center; font-size: 18px; color: #1E64C8; font-weight: 600; margin-bottom: 10px; }
+        .formula-note { font-size: 16px; color: #2c3e50; line-height: 1.5; text-align: center; }
+        .example-box { background: #e8f1fd; border: 2px solid #1E64C8; border-radius: 8px; padding: 16px; flex: 1; }
+        .example-title { font-size: 17px; font-weight: 600; color: #1E64C8; margin-bottom: 12px; text-align: center; }
+        .example-desc { font-size: 16px; color: #2c3e50; line-height: 1.6; text-align: center; margin-bottom: 12px; }
+        .step-timeline { display: flex; flex-direction: column; gap: 8px; }
+        .step-item { background: white; border-left: 4px solid #1E64C8; padding: 8px 12px; border-radius: 4px; font-size: 16px; color: #2c3e50; }
+        .characteristics-box { background: #f8f9fa; border: 2px solid #1E64C8; border-radius: 8px; padding: 18px; }
+        .char-title { font-size: 17px; font-weight: 600; color: #1E64C8; margin-bottom: 12px; }
+        .char-list { display: flex; flex-direction: column; gap: 8px; }
+        .char-item { display: flex; align-items: flex-start; gap: 10px; }
+        .char-icon { min-width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0; margin-top: 2px; }
+        .char-icon.pro { background: #28a745; color: white; }
+        .char-icon.con { background: #ffc107; color: #856404; }
+        .char-text { font-size: 16px; color: #2c3e50; line-height: 1.5; }
+        .visual-box { background: #f8f9fa; border: 2px solid #1E64C8; border-radius: 8px; padding: 18px; flex: 1; }
+        .visual-title { font-size: 17px; font-weight: 600; color: #1E64C8; margin-bottom: 12px; text-align: center; }
+        .step-visual { display: flex; align-items: flex-end; justify-content: space-around; height: 120px; background: white; border-radius: 6px; padding: 10px; margin-bottom: 10px; }
+        .bar { width: 60px; background: #1E64C8; border-radius: 4px 4px 0 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 8px; color: white; font-size: 14px; font-weight: 600; }
+        .bar.step1 { height: 100%; }
+        .bar.step2 { height: 66%; }
+        .bar.step3 { height: 33%; }
+        .bar-label { font-size: 12px; color: #666; margin-top: 6px; }
+        .usage-box { background: linear-gradient(135deg, #e8f1fd 0%, #f0f8ff 100%); border: 2px solid #1E64C8; border-radius: 8px; padding: 14px 16px; text-align: center; }
+        .usage-title { font-size: 16px; font-weight: 600; color: #1E64C8; margin-bottom: 6px; }
+        .usage-text { font-size: 16px; color: #2c3e50; line-height: 1.4; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="main-title">Step Decay Learning Rate Scheduling</div>
+            <div class="subtitle">Reducing Learning Rate at Fixed Intervals</div>
+        </div>
+        
+        <div class="content-layout">
+            <div class="left-section">
+                <div class="concept-box">
+                    <div class="concept-title">📉 Core Concept</div>
+                    <div class="concept-desc">
+                        Reduce learning rate by a fixed factor<br>
+                        at specific epoch intervals
+                    </div>
+                </div>
+                
+                <div class="formula-box">
+                    <div class="formula-title">Formula</div>
+                    <div class="formula">
+                        LR = initial_lr × 0.1<sup>(epoch // step_size)</sup>
+                    </div>
+                    <div class="formula-note">
+                        Reduce by 0.1× every step_size epochs
+                    </div>
+                </div>
+                
+                <div class="example-box">
+                    <div class="example-title">💡 Common Schedule</div>
+                    <div class="example-desc">
+                        Reduce by 0.1× every 30 epochs
+                    </div>
+                    <div class="step-timeline">
+                        <div class="step-item">
+                            <strong>Epoch 0-29:</strong> LR = 1.0 × initial_lr
+                        </div>
+                        <div class="step-item">
+                            <strong>Epoch 30-59:</strong> LR = 0.1 × initial_lr
+                        </div>
+                        <div class="step-item">
+                            <strong>Epoch 60-89:</strong> LR = 0.01 × initial_lr
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-section">
+                <div class="characteristics-box">
+                    <div class="char-title">⚖️ Characteristics</div>
+                    <div class="char-list">
+                        <div class="char-item">
+                            <div class="char-icon pro">✓</div>
+                            <div class="char-text">
+                                Simple to implement and understand
+                            </div>
+                        </div>
+                        <div class="char-item">
+                            <div class="char-icon pro">✓</div>
+                            <div class="char-text">
+                                Effective when training duration is known
+                            </div>
+                        </div>
+                        <div class="char-item">
+                            <div class="char-icon pro">✓</div>
+                            <div class="char-text">
+                                Can align drops with learning regime changes
+                            </div>
+                        </div>
+                        <div class="char-item">
+                            <div class="char-icon con">⚠</div>
+                            <div class="char-text">
+                                May cause sudden jumps in loss when LR drops
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="visual-box">
+                    <div class="visual-title">Learning Rate Progression</div>
+                    <div class="step-visual">
+                        <div>
+                            <div class="bar step1">1.0</div>
+                            <div class="bar-label">0-30</div>
+                        </div>
+                        <div>
+                            <div class="bar step2">0.1</div>
+                            <div class="bar-label">30-60</div>
+                        </div>
+                        <div>
+                            <div class="bar step3">0.01</div>
+                            <div class="bar-label">60-90</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="usage-box">
+                    <div class="usage-title">🎯 Widely Used In</div>
+                    <div class="usage-text">
+                        Computer Vision (ResNet Training Schedule)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sparse Linear Models</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+            padding: 25px 35px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+            font-style: italic;
+        }
+        
+        /* Main content */
+        .content {
+            display: flex;
+            gap: 25px;
+            flex: 1;
+        }
+        
+        /* Comparison section */
+        .comparison-section {
+            flex: 1.4;
+            display: flex;
+            gap: 20px;
+        }
+        
+        .model-container {
+            flex: 1;
+            background: white;
+            border: 2px solid #E5E7EB;
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s;
+        }
+        
+        .model-container:hover {
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+        }
+        
+        .model-container.dense {
+            border-color: #E57373;
+        }
+        
+        .model-container.sparse {
+            border-color: #4CAF50;
+        }
+        
+        .model-header {
+            text-align: center;
+            margin-bottom: 15px;
+            padding-bottom: 12px;
+            border-bottom: 3px solid currentColor;
+        }
+        
+        .model-container.dense .model-header {
+            border-color: #E57373;
+        }
+        
+        .model-container.sparse .model-header {
+            border-color: #4CAF50;
+        }
+        
+        .model-title {
+            font-size: 19px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .model-container.dense .model-title {
+            color: #C62828;
+        }
+        
+        .model-container.sparse .model-title {
+            color: #2E7D32;
+        }
+        
+        .model-desc {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .coefficients-plot {
+            flex: 1;
+            background: #FAFAFA;
+            border-radius: 8px;
+            padding: 15px;
+            position: relative;
+        }
+        
+        .features-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            height: 100%;
+            justify-content: space-around;
+        }
+        
+        .feature-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .feature-label {
+            width: 60px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+            text-align: right;
+        }
+        
+        .coef-bar-container {
+            flex: 1;
+            height: 20px;
+            position: relative;
+        }
+        
+        .coef-center-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            width: 1px;
+            height: 100%;
+            background: #999;
+        }
+        
+        .coef-bar {
+            position: absolute;
+            height: 16px;
+            top: 2px;
+            border-radius: 3px;
+            transition: all 0.3s;
+        }
+        
+        .coef-bar:hover {
+            opacity: 0.8;
+        }
+        
+        .coef-bar.positive {
+            left: 50%;
+            background: linear-gradient(90deg, #1E64C8 0%, #4A94E5 100%);
+        }
+        
+        .coef-bar.negative {
+            right: 50%;
+            background: linear-gradient(90deg, #E85D75 0%, #C94B63 100%);
+        }
+        
+        .coef-bar.zero {
+            left: 50%;
+            width: 2px !important;
+            background: #BDBDBD;
+        }
+        
+        .coef-value {
+            position: absolute;
+            font-size: 11px;
+            font-weight: 700;
+            color: white;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 0 4px;
+        }
+        
+        .coef-value.positive {
+            left: 4px;
+        }
+        
+        .coef-value.negative {
+            right: 4px;
+        }
+        
+        .stats-box {
+            margin-top: 12px;
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-around;
+            font-size: 13px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-label {
+            font-weight: 600;
+            color: #666;
+        }
+        
+        .stat-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-top: 2px;
+        }
+        
+        /* Info section */
+        .info-section {
+            flex: 0.6;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .info-card {
+            background: #F8FAFC;
+            border-left: 4px solid #1E64C8;
+            border-radius: 8px;
+            padding: 11px 13px;
+            transition: all 0.2s;
+        }
+        
+        .info-card:hover {
+            background: #F0F7FF;
+            transform: translateX(4px);
+        }
+        
+        .info-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 3px;
+        }
+        
+        .info-desc {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.3;
+        }
+        
+        /* Regularization box */
+        .reg-box {
+            background: linear-gradient(135deg, #F0F7FF 0%, #E5F1FF 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 8px;
+        }
+        
+        .reg-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .reg-item {
+            font-size: 13px;
+            color: #333;
+            line-height: 1.5;
+            margin-bottom: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="title">Sparse Linear Models</div>
+            <div class="subtitle">L1 Regularization for Feature Selection</div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="content">
+            <!-- Comparison Section -->
+            <div class="comparison-section">
+                <!-- Dense Model -->
+                <div class="model-container dense">
+                    <div class="model-header">
+                        <div class="model-title">Dense Model</div>
+                        <div class="model-desc">Standard Linear Regression</div>
+                    </div>
+                    
+                    <div class="coefficients-plot">
+                        <div class="features-list">
+                            <div class="feature-row">
+                                <div class="feature-label">Age</div>
+                                <div class="coef-bar-container">
+                                    <div class="coef-center-line"></div>
+                                    <div class="coef-bar positive" style="width: 55%;">
+                                        <div class="coef-value positive">0.72</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="feature-row">
+                                <div class="feature-label">Income</div>
+                                <div class="coef-bar-container">
+                                    <div class="coef-center-line"></div>
+                                    <div class="coef-bar positive" style="width: 45%;">
+                                        <div class="coef-value positive">0.58</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="feature-row">
+                                <div class="feature-label">Credit</div>
+                                <div class="coef-bar-container">
+                                    <div class="coef-center-line"></div>
+                                    <div class="coef-bar positive" style="width: 40%;">
+                                        <div class="coef-value positive">0.51</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="feature-row">
+                                <div class="feature-label">Debt</div>
+                                <div class="coef-bar-container">
+                                    <div class="coef-center-line"></div>
+                                    <div class="coef-bar negative" style="width: 38%;">
+                                        <div class="coef-value negative">-0.48</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="feature-row">
+                                <div class="feature-label">Educ.</div>
+                                <div class="coef-bar-container">
+                                    <div class="coef-center-line"></div>
+                                    <div class="coef-bar positive" style="width: 25%;">
+                                        <div class="coef-value positive">0.32</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="feature-row">
+                                <div class="feature-label">Exp.</div>
+                                <div class="coef-bar-container">
+                                    <div class="coef-center-line"></div>
+                                    <div class="coef-bar positive" style="width: 18%;">
+                                        <div class="coef-value positive">0.23</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="feature-row">
+                                <div class="feature-label">Region</div>
+                                <div class="coef-bar-container">
+                                    <div class="coef-center-line"></div>
+                                    <div class="coef-bar positive" style="width: 12%;">
+                                        <div class="coef-value positive">0.15</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="feature-row">
+                                <div class="feature-label">Gender</div>
+                                <div class="coef-bar-container">
+                                    <div class="coef-center-line"></div>
+                                    <div class="coef-bar negative" style="width: 8%;">
+                                        <div class="coef-value negative">-0.09</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-box">
+                        <div class="stat-item">
+                            <div class="stat-label">Non-zero</div>
+                            <div class="stat-value">8</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Features</div>
+                            <div class="stat-value">8/8</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sparse Model -->
+                <div class="model-container sparse">
+                    <div class="model-header">
+                        <div class="model-title">Sparse Model</div>
+                        <div class="model-desc">Lasso (L1 Regularization)</div>
+                    </div>
+                    
+                    <div class="coefficients-plot">
+                        <div class="features-list">
+                            <div class="feature-row">
+                                <div class="feature-label">Age</div>
+                                <div class="coef-bar-container">
+                                    <div class="coef-center-line"></div>
+                                    <div class="coef-bar positive" style="width: 52%;">
+                                        <div class="coef-value positive">0.68</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="feature-row">
+                                <div class="feature-label">Income</div>
+                                <div class="coef-bar-container">
+                                    <div class="coef-center-line"></div>
+                                    <div class="coef-bar positive" style="width: 48%;">
+                                        <div class="coef-value positive">0.61</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="feature-row">
+                                <div class="feature-label">Credit</div>
+                                <div class="coef-bar-container">
+                                    <div class="coef-center-line"></div>
+                                    <div class="coef-bar positive" style="width: 42%;">
+                                        <div class="coef-value positive">0.54</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="feature-row">
+                                <div class="feature-label">Debt</div>
+                                <div class="coef-bar-container">
+                                    <div class="coef-center-line"></div>
+                                    <div class="coef-bar negative" style="width: 35%;">
+                                        <div class="coef-value negative">-0.45</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="feature-row">
+                                <div class="feature-label">Educ.</div>
+                                <div class="coef-bar-container">
+                                    <div class="coef-center-line"></div>
+                                    <div class="coef-bar zero"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="feature-row">
+                                <div class="feature-label">Exp.</div>
+                                <div class="coef-bar-container">
+                                    <div class="coef-center-line"></div>
+                                    <div class="coef-bar zero"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="feature-row">
+                                <div class="feature-label">Region</div>
+                                <div class="coef-bar-container">
+                                    <div class="coef-center-line"></div>
+                                    <div class="coef-bar zero"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="feature-row">
+                                <div class="feature-label">Gender</div>
+                                <div class="coef-bar-container">
+                                    <div class="coef-center-line"></div>
+                                    <div class="coef-bar zero"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-box">
+                        <div class="stat-item">
+                            <div class="stat-label">Non-zero</div>
+                            <div class="stat-value">4</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Features</div>
+                            <div class="stat-value">4/8</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Info Section -->
+            <div class="info-section">
+                <div class="section-title">Benefits</div>
+                
+                <div class="info-card">
+                    <div class="info-title">Auto Selection</div>
+                    <div class="info-desc">Only relevant features retained</div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-title">Interpretability</div>
+                    <div class="info-desc">Reduced feature count</div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-title">Implementation</div>
+                    <div class="info-desc">Easier to deploy and debug</div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-title">High-Dim</div>
+                    <div class="info-desc">Valuable when p >> n</div>
+                </div>
+                
+                <!-- Regularization -->
+                <div class="reg-box">
+                    <div class="reg-title">Regularization</div>
+                    <div class="reg-item"><strong>L1 (Lasso):</strong> Sparsity</div>
+                    <div class="reg-item"><strong>L2 (Ridge):</strong> Stability</div>
+                    <div class="reg-item"><strong>Elastic Net:</strong> Balanced</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

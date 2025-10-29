@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Augmentation Strategies</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: #ffffff;
+            padding: 20px 40px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 25px;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-bottom: 20px;
+        }
+        
+        .augmentation-card {
+            background: linear-gradient(135deg, #f8f9fb 0%, #e8f4ff 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .augmentation-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 16px rgba(30, 100, 200, 0.2);
+            background: linear-gradient(135deg, #e8f4ff 0%, #d1e9ff 100%);
+        }
+        
+        .aug-icon {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        
+        .aug-name {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .aug-visual {
+            width: 100%;
+            height: 80px;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .image-placeholder {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        .flipped {
+            transform: scaleX(-1);
+        }
+        
+        .rotated {
+            transform: rotate(45deg);
+        }
+        
+        .color-adjusted {
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+        }
+        
+        .masked-area {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: #e8e8e8;
+            border: 2px dashed #999;
+        }
+        
+        .aug-description {
+            font-size: 14px;
+            color: #2c3e50;
+            text-align: center;
+            line-height: 1.4;
+        }
+        
+        .benefits-section {
+            background: #e8f5e9;
+            border: 2px solid #4caf50;
+            border-radius: 10px;
+            padding: 18px 20px;
+            margin-top: 20px;
+        }
+        
+        .benefits-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #4caf50;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        
+        .benefit-item {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .benefit-icon {
+            font-size: 24px;
+            margin-bottom: 6px;
+        }
+        
+        .benefit-text {
+            font-size: 15px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Data Augmentation Strategies</div>
+        
+        <div class="main-content">
+            <div class="augmentation-card">
+                <div class="aug-icon">↔️</div>
+                <div class="aug-name">Geometric</div>
+                <div class="aug-visual">
+                    <div class="image-placeholder flipped">📷</div>
+                </div>
+                <div class="aug-description">
+                    Flips, rotations, crops
+                </div>
+            </div>
+            
+            <div class="augmentation-card">
+                <div class="aug-icon">🎨</div>
+                <div class="aug-name">Color Jittering</div>
+                <div class="aug-visual">
+                    <div class="image-placeholder color-adjusted">📷</div>
+                </div>
+                <div class="aug-description">
+                    Brightness, contrast, saturation
+                </div>
+            </div>
+            
+            <div class="augmentation-card">
+                <div class="aug-icon">✂️</div>
+                <div class="aug-name">Cutout</div>
+                <div class="aug-visual">
+                    <div class="image-placeholder">📷</div>
+                    <div class="masked-area"></div>
+                </div>
+                <div class="aug-description">
+                    Randomly mask patches
+                </div>
+            </div>
+            
+            <div class="augmentation-card">
+                <div class="aug-icon">🔄</div>
+                <div class="aug-name">Rotation</div>
+                <div class="aug-visual">
+                    <div class="image-placeholder rotated">📷</div>
+                </div>
+                <div class="aug-description">
+                    Random angle rotations
+                </div>
+            </div>
+            
+            <div class="augmentation-card">
+                <div class="aug-icon">🖼️</div>
+                <div class="aug-name">Random Crop</div>
+                <div class="aug-visual">
+                    <div class="image-placeholder" style="width: 45px; height: 45px;">📷</div>
+                </div>
+                <div class="aug-description">
+                    Crop different regions
+                </div>
+            </div>
+            
+            <div class="augmentation-card">
+                <div class="aug-icon">🗑️</div>
+                <div class="aug-name">Random Erasing</div>
+                <div class="aug-visual">
+                    <div class="image-placeholder">📷</div>
+                    <div class="masked-area" style="width: 35px; height: 20px;"></div>
+                </div>
+                <div class="aug-description">
+                    Erase random regions
+                </div>
+            </div>
+        </div>
+        
+        <div class="benefits-section">
+            <div class="benefits-title">✓ Key Benefits</div>
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <div class="benefit-icon">📈</div>
+                    <div class="benefit-text">Increases training diversity</div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">🎯</div>
+                    <div class="benefit-text">Improves generalization</div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">💾</div>
+                    <div class="benefit-text">No additional data needed</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

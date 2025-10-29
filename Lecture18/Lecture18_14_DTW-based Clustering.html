@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DTW-based Clustering</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            padding: 25px;
+            gap: 20px;
+        }
+        
+        .header {
+            text-align: center;
+        }
+        
+        .main-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.1fr;
+            gap: 20px;
+            flex: 1;
+        }
+        
+        .methods-section {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .method-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .method-card:hover {
+            background: #f0f6ff;
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.2);
+        }
+        
+        .method-icon {
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+        
+        .method-content {
+            flex: 1;
+        }
+        
+        .method-name {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .method-desc {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.3;
+        }
+        
+        .dba-card {
+            background: #fff8f0;
+            border-color: #ff9800;
+        }
+        
+        .dba-card .method-name {
+            color: #ff9800;
+        }
+        
+        .complexity-section {
+            background: #ffebee;
+            border: 2px solid #f44336;
+            border-radius: 10px;
+            padding: 14px 16px;
+        }
+        
+        .complexity-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #f44336;
+            margin-bottom: 8px;
+        }
+        
+        .complexity-value {
+            font-size: 19px;
+            font-weight: 700;
+            color: #f44336;
+            text-align: center;
+            padding: 8px;
+            background: white;
+            border-radius: 6px;
+        }
+        
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        
+        .workflow-box {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 18px;
+            flex: 1;
+        }
+        
+        .workflow-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 14px;
+            text-align: center;
+        }
+        
+        .workflow-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .workflow-step {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .step-number {
+            background: #1E64C8;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        
+        .step-box {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 10px 14px;
+            flex: 1;
+        }
+        
+        .step-text {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .approximation-section {
+            background: #e8f5e9;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            padding: 14px 16px;
+        }
+        
+        .approx-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #4CAF50;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .approx-methods {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .approx-tag {
+            background: white;
+            color: #4CAF50;
+            padding: 8px 14px;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            border: 2px solid #4CAF50;
+            flex: 1;
+            text-align: center;
+        }
+        
+        .applications-section {
+            background: #f3e5f5;
+            border: 2px solid #9C27B0;
+            border-radius: 10px;
+            padding: 14px 16px;
+        }
+        
+        .app-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #9C27B0;
+            margin-bottom: 10px;
+        }
+        
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        .app-item {
+            background: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid #9C27B0;
+        }
+        
+        .app-icon {
+            font-size: 22px;
+        }
+        
+        .app-text {
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="main-title">DTW-based Clustering</div>
+            <div class="subtitle">Time Series Clustering with DTW Distance Metric</div>
+        </div>
+        
+        <div class="content-grid">
+            <div class="methods-section">
+                <div class="section-title">Clustering Methods</div>
+                
+                <div class="method-card">
+                    <div class="method-icon">🎯</div>
+                    <div class="method-content">
+                        <div class="method-name">K-medoids</div>
+                        <div class="method-desc">Better than K-means (pairwise distances)</div>
+                    </div>
+                </div>
+                
+                <div class="method-card">
+                    <div class="method-icon">🌳</div>
+                    <div class="method-content">
+                        <div class="method-name">Hierarchical</div>
+                        <div class="method-desc">DTW linkage for dendrogram</div>
+                    </div>
+                </div>
+                
+                <div class="method-card dba-card">
+                    <div class="method-icon">📐</div>
+                    <div class="method-content">
+                        <div class="method-name">DBA</div>
+                        <div class="method-desc">DTW Barycenter Averaging for centroids</div>
+                    </div>
+                </div>
+                
+                <div class="complexity-section">
+                    <div class="complexity-title">⚠️ Computational Cost</div>
+                    <div class="complexity-value">O(n²m²)</div>
+                    <div style="text-align: center; font-size: 14px; color: #666; margin-top: 6px;">
+                        n series × length m
+                    </div>
+                </div>
+                
+                <div class="approximation-section">
+                    <div class="approx-title">
+                        <span>⚡</span>
+                        <span>Speed Approximations</span>
+                    </div>
+                    <div class="approx-methods">
+                        <div class="approx-tag">FastDTW</div>
+                        <div class="approx-tag">PrunedDTW</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-section">
+                <div class="workflow-box">
+                    <div class="workflow-title">DTW Clustering Workflow</div>
+                    <div class="workflow-steps">
+                        <div class="workflow-step">
+                            <div class="step-number">1</div>
+                            <div class="step-box">
+                                <div class="step-text">Compute DTW distance matrix for all pairs</div>
+                            </div>
+                        </div>
+                        
+                        <div class="workflow-step">
+                            <div class="step-number">2</div>
+                            <div class="step-box">
+                                <div class="step-text">Apply clustering algorithm (K-medoids/Hierarchical)</div>
+                            </div>
+                        </div>
+                        
+                        <div class="workflow-step">
+                            <div class="step-number">3</div>
+                            <div class="step-box">
+                                <div class="step-text">Compute cluster centroids using DBA</div>
+                            </div>
+                        </div>
+                        
+                        <div class="workflow-step">
+                            <div class="step-number">4</div>
+                            <div class="step-box">
+                                <div class="step-text">Iterate until convergence or max iterations</div>
+                            </div>
+                        </div>
+                        
+                        <div class="workflow-step">
+                            <div class="step-number">5</div>
+                            <div class="step-box">
+                                <div class="step-text">Evaluate clustering quality with silhouette score</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="applications-section">
+                    <div class="app-title">🎯 Key Applications</div>
+                    <div class="app-grid">
+                        <div class="app-item">
+                            <div class="app-icon">👋</div>
+                            <div class="app-text">Gesture Recognition</div>
+                        </div>
+                        <div class="app-item">
+                            <div class="app-icon">💓</div>
+                            <div class="app-text">ECG Analysis</div>
+                        </div>
+                        <div class="app-item">
+                            <div class="app-icon">📊</div>
+                            <div class="app-text">Stock Patterns</div>
+                        </div>
+                        <div class="app-item">
+                            <div class="app-icon">🔊</div>
+                            <div class="app-text">Speech Recognition</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

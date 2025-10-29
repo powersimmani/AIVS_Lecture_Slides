@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Prompting Techniques</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: #ffffff;
+            padding: 25px 40px;
+        }
+        
+        .title {
+            font-size: 26px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            height: 440px;
+        }
+        
+        /* Chain-of-Thought Section */
+        .cot-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .cot-header {
+            background: linear-gradient(135deg, #1E64C8, #2E7FD8);
+            color: white;
+            border-radius: 10px;
+            padding: 12px 15px;
+            text-align: center;
+            font-size: 19px;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(30, 100, 200, 0.3);
+        }
+        
+        .cot-example {
+            background: #F8F9FA;
+            border: 3px solid #1E64C8;
+            border-radius: 10px;
+            padding: 15px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .example-question {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 10px 12px;
+        }
+        
+        .example-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .example-text {
+            font-size: 15px;
+            color: #333333;
+            line-height: 1.4;
+        }
+        
+        .reasoning-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+        }
+        
+        .step {
+            background: #E8F4F8;
+            border-left: 4px solid #1E64C8;
+            border-radius: 6px;
+            padding: 8px 12px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        
+        .step-number {
+            background: #1E64C8;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .step-text {
+            font-size: 14px;
+            color: #333333;
+            line-height: 1.3;
+            flex: 1;
+        }
+        
+        .final-answer {
+            background: #C8E6C9;
+            border: 2px solid #4CAF50;
+            border-radius: 8px;
+            padding: 10px 12px;
+            text-align: center;
+        }
+        
+        .answer-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2E7D32;
+            margin-bottom: 4px;
+        }
+        
+        .answer-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1B5E20;
+        }
+        
+        /* Techniques Section */
+        .techniques-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .section-title {
+            font-size: 19px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            padding: 10px;
+            background: #E8F4F8;
+            border-radius: 8px;
+        }
+        
+        .technique-card {
+            background: #F8F9FA;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .technique-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(30, 100, 200, 0.2);
+        }
+        
+        .technique-icon {
+            font-size: 28px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .technique-content {
+            flex: 1;
+        }
+        
+        .technique-name {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .technique-desc {
+            font-size: 15px;
+            color: #333333;
+            line-height: 1.4;
+        }
+        
+        .highlight {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .key-phrase {
+            background: #FFF9E6;
+            border: 1px solid #FFC107;
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #F57C00;
+            display: inline-block;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Advanced Prompting Techniques</div>
+        
+        <div class="main-layout">
+            <!-- Chain-of-Thought Example -->
+            <div class="cot-section">
+                <div class="cot-header">
+                    🧠 Chain-of-Thought (CoT)
+                </div>
+                
+                <div class="cot-example">
+                    <div class="example-question">
+                        <div class="example-label">Question:</div>
+                        <div class="example-text">
+                            Roger has 5 tennis balls. He buys 2 more cans of tennis balls. Each can has 3 balls. How many tennis balls does he have now?
+                        </div>
+                    </div>
+                    
+                    <div class="example-question" style="background: #FFF9E6; border-color: #FFC107;">
+                        <div class="example-label" style="color: #F57C00;">Prompt:</div>
+                        <div class="example-text">
+                            "Let's think step by step."
+                        </div>
+                    </div>
+                    
+                    <div class="reasoning-steps">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-text">
+                                Roger starts with <strong>5 tennis balls</strong>
+                            </div>
+                        </div>
+                        
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-text">
+                                He buys <strong>2 cans</strong> of tennis balls
+                            </div>
+                        </div>
+                        
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div class="step-text">
+                                Each can has <strong>3 balls</strong>, so 2 × 3 = <strong>6 balls</strong>
+                            </div>
+                        </div>
+                        
+                        <div class="step">
+                            <div class="step-number">4</div>
+                            <div class="step-text">
+                                Total: 5 + 6 = <strong>11 balls</strong>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="final-answer">
+                        <div class="answer-label">✓ Final Answer:</div>
+                        <div class="answer-text">11 tennis balls</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Other Techniques -->
+            <div class="techniques-section">
+                <div class="section-title">
+                    🚀 Other Advanced Techniques
+                </div>
+                
+                <div class="technique-card">
+                    <div class="technique-icon">📚</div>
+                    <div class="technique-content">
+                        <div class="technique-name">Few-shot Learning</div>
+                        <div class="technique-desc">
+                            Provide <span class="highlight">multiple examples</span> in prompt for pattern recognition
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="technique-card">
+                    <div class="technique-icon">🔄</div>
+                    <div class="technique-content">
+                        <div class="technique-name">Self-consistency</div>
+                        <div class="technique-desc">
+                            Sample <span class="highlight">multiple outputs</span> and vote for most consistent answer
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="technique-card">
+                    <div class="technique-icon">🌳</div>
+                    <div class="technique-content">
+                        <div class="technique-name">Tree of Thoughts</div>
+                        <div class="technique-desc">
+                            Explore <span class="highlight">multiple reasoning paths</span> simultaneously
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="technique-card">
+                    <div class="technique-icon">⚡</div>
+                    <div class="technique-content">
+                        <div class="technique-name">ReAct</div>
+                        <div class="technique-desc">
+                            <span class="highlight">Reasoning and acting</span> in interleaved manner
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="technique-card">
+                    <div class="technique-icon">🔧</div>
+                    <div class="technique-content">
+                        <div class="technique-name">Auto Prompt Optimization</div>
+                        <div class="technique-desc">
+                            Use <span class="highlight">evolutionary methods</span> to improve prompts
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="technique-card">
+                    <div class="technique-icon">🎯</div>
+                    <div class="technique-content">
+                        <div class="technique-name">Meta-prompting</div>
+                        <div class="technique-desc">
+                            <span class="highlight">Prompts that generate prompts</span> for different tasks
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

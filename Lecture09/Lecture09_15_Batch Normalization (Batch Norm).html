@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batch Normalization</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: #ffffff;
+            padding: 20px 40px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 25px;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            height: 450px;
+        }
+        
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        
+        .visual-box {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 12px;
+            padding: 20px;
+            flex: 1;
+        }
+        
+        .visual-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .batch-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .batch-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+        
+        .batch-item {
+            width: 45px;
+            height: 45px;
+            background: #64b5f6;
+            border: 2px solid #1E64C8;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+        }
+        
+        .arrow-large {
+            font-size: 32px;
+            color: #1E64C8;
+        }
+        
+        .normalized-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+        
+        .normalized-item {
+            width: 45px;
+            height: 45px;
+            background: #4caf50;
+            border: 2px solid #2e7d32;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+        }
+        
+        .batch-label {
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            margin-top: 8px;
+        }
+        
+        .formula-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 18px;
+        }
+        
+        .formula-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .formula {
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            color: #2c3e50;
+            background: #f8f9fb;
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+            line-height: 1.8;
+        }
+        
+        .parameter-note {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 10px;
+            text-align: center;
+            font-size: 15px;
+            color: #2c3e50;
+        }
+        
+        .param-highlight {
+            font-weight: 600;
+            color: #f57c00;
+        }
+        
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .section-header {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 5px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .benefit-card {
+            background: #f8f9fb;
+            border-left: 4px solid #1E64C8;
+            padding: 13px 16px;
+            border-radius: 6px;
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.5;
+            transition: all 0.3s ease;
+        }
+        
+        .benefit-card:hover {
+            background: #eef3fb;
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(30, 100, 200, 0.15);
+        }
+        
+        .highlight {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .usage-box {
+            background: #e8f5e9;
+            border: 2px solid #4caf50;
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin-top: 10px;
+        }
+        
+        .usage-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #4caf50;
+            margin-bottom: 8px;
+        }
+        
+        .usage-text {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Batch Normalization (Batch Norm)</div>
+        
+        <div class="main-content">
+            <div class="left-section">
+                <div class="visual-box">
+                    <div class="visual-title">Normalizes Across Batch Dimension</div>
+                    
+                    <div class="batch-visual">
+                        <div>
+                            <div class="batch-grid">
+                                <div class="batch-item">x₁</div>
+                                <div class="batch-item">x₂</div>
+                                <div class="batch-item">x₃</div>
+                                <div class="batch-item">x₄</div>
+                                <div class="batch-item">x₅</div>
+                                <div class="batch-item">x₆</div>
+                                <div class="batch-item">x₇</div>
+                                <div class="batch-item">x₈</div>
+                            </div>
+                            <div class="batch-label">Input Batch</div>
+                        </div>
+                        
+                        <div class="arrow-large">→</div>
+                        
+                        <div>
+                            <div class="normalized-grid">
+                                <div class="normalized-item">x̂₁</div>
+                                <div class="normalized-item">x̂₂</div>
+                                <div class="normalized-item">x̂₃</div>
+                                <div class="normalized-item">x̂₄</div>
+                                <div class="normalized-item">x̂₅</div>
+                                <div class="normalized-item">x̂₆</div>
+                                <div class="normalized-item">x̂₇</div>
+                                <div class="normalized-item">x̂₈</div>
+                            </div>
+                            <div class="batch-label">Normalized</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="formula-box">
+                    <div class="formula-label">Batch Norm Formula</div>
+                    <div class="formula">
+                        x̂ = (x - μ<sub>batch</sub>) / √(σ²<sub>batch</sub> + ε)<br>
+                        <br>
+                        y = γ · x̂ + β
+                    </div>
+                    
+                    <div class="parameter-note">
+                        Learnable: <span class="param-highlight">γ</span> (scale) & <span class="param-highlight">β</span> (shift)
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-section">
+                <div class="section-header">Key Benefits</div>
+                
+                <div class="benefit-card">
+                    <span class="highlight">Reduces</span> internal covariate shift significantly
+                </div>
+                
+                <div class="benefit-card">
+                    Enables <span class="highlight">higher learning rates</span> and faster convergence
+                </div>
+                
+                <div class="benefit-card">
+                    Acts as <span class="highlight">regularizer</span>, reduces need for dropout
+                </div>
+                
+                <div class="benefit-card">
+                    Normalizes inputs across the <span class="highlight">batch dimension</span>
+                </div>
+                
+                <div class="benefit-card">
+                    <span class="highlight">Learnable parameters</span> (γ, β) maintain expressiveness
+                </div>
+                
+                <div class="usage-box">
+                    <div class="usage-title">✓ Most Widely Used</div>
+                    <div class="usage-text">
+                        Standard normalization technique in <strong>Convolutional Neural Networks (CNNs)</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cluster Evaluation Metrics</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .categories {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        
+        .category-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .category-header {
+            background: linear-gradient(135deg, #1E64C8 0%, #2979d9 100%);
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 17px;
+            font-weight: 600;
+        }
+        
+        .category-header.external {
+            background: linear-gradient(135deg, #9C27B0 0%, #ab47bc 100%);
+        }
+        
+        .metric-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+        
+        .metric-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.2);
+        }
+        
+        .external-metrics .metric-card {
+            border-color: #9C27B0;
+        }
+        
+        .external-metrics .metric-card:hover {
+            box-shadow: 0 4px 12px rgba(156, 39, 176, 0.2);
+        }
+        
+        .metric-name {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .external-metrics .metric-name {
+            color: #9C27B0;
+        }
+        
+        .metric-icon {
+            font-size: 20px;
+        }
+        
+        .metric-details {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .metric-range {
+            font-size: 14px;
+            color: #666;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .metric-desc {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.4;
+        }
+        
+        .metric-goal {
+            font-size: 13px;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            align-self: flex-start;
+        }
+        
+        .goal-higher {
+            background: #e8f5e9;
+            color: #388E3C;
+        }
+        
+        .goal-lower {
+            background: #e3f2fd;
+            color: #1976D2;
+        }
+        
+        .goal-minimize {
+            background: #fff3e0;
+            color: #F57C00;
+        }
+        
+        .goal-similarity {
+            background: #f3e5f5;
+            color: #9C27B0;
+        }
+        
+        .validation-section {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .validation-card {
+            background: white;
+            border: 2px solid;
+            border-radius: 10px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s;
+        }
+        
+        .validation-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .validation-card.visual {
+            border-color: #00897B;
+            background: linear-gradient(135deg, #e0f2f1 0%, #ffffff 100%);
+        }
+        
+        .validation-card.domain {
+            border-color: #FFA726;
+            background: linear-gradient(135deg, #fff3e0 0%, #ffffff 100%);
+        }
+        
+        .validation-icon {
+            font-size: 32px;
+            flex-shrink: 0;
+        }
+        
+        .validation-content {
+            flex: 1;
+        }
+        
+        .validation-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .validation-card.visual .validation-title {
+            color: #00897B;
+        }
+        
+        .validation-card.domain .validation-title {
+            color: #F57C00;
+        }
+        
+        .validation-desc {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.3;
+        }
+        
+        .importance-note {
+            background: linear-gradient(135deg, #fff8e1 0%, #ffffff 100%);
+            border: 2px solid #FFA726;
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .note-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: #F57C00;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Cluster Evaluation Metrics</div>
+        
+        <div class="categories">
+            <!-- Internal Metrics -->
+            <div class="category-section internal-metrics">
+                <div class="category-header">📊 Internal Metrics</div>
+                
+                <div class="metric-card">
+                    <div class="metric-name">
+                        <span class="metric-icon">🎯</span>
+                        <span>Silhouette Score</span>
+                    </div>
+                    <div class="metric-details">
+                        <div class="metric-range">Range: [-1, 1]</div>
+                        <div class="metric-desc">Measures separation and cohesion</div>
+                        <div class="metric-goal goal-higher">Higher is better</div>
+                    </div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-name">
+                        <span class="metric-icon">📉</span>
+                        <span>Davies-Bouldin Index</span>
+                    </div>
+                    <div class="metric-details">
+                        <div class="metric-range">Range: [0, ∞)</div>
+                        <div class="metric-desc">Ratio of within to between cluster distances</div>
+                        <div class="metric-goal goal-lower">Lower is better</div>
+                    </div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-name">
+                        <span class="metric-icon">📈</span>
+                        <span>Calinski-Harabasz Index</span>
+                    </div>
+                    <div class="metric-details">
+                        <div class="metric-range">Range: [0, ∞)</div>
+                        <div class="metric-desc">Ratio of between to within variance</div>
+                        <div class="metric-goal goal-higher">Higher is better</div>
+                    </div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-name">
+                        <span class="metric-icon">🎲</span>
+                        <span>Inertia (WCSS)</span>
+                    </div>
+                    <div class="metric-details">
+                        <div class="metric-range">Range: [0, ∞)</div>
+                        <div class="metric-desc">Within-cluster sum of squares</div>
+                        <div class="metric-goal goal-minimize">Minimize for K-means</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- External Metrics -->
+            <div class="category-section external-metrics">
+                <div class="category-header external">🏷️ External Metrics</div>
+                <div style="font-size: 13px; color: #666; text-align: center; margin-top: -5px; margin-bottom: 5px;">
+                    When ground truth labels are available
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-name">
+                        <span class="metric-icon">🔗</span>
+                        <span>Adjusted Rand Index (ARI)</span>
+                    </div>
+                    <div class="metric-details">
+                        <div class="metric-range">Range: [-1, 1]</div>
+                        <div class="metric-desc">Similarity between two clusterings</div>
+                        <div class="metric-goal goal-similarity">Closer to 1 is better</div>
+                    </div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-name">
+                        <span class="metric-icon">ℹ️</span>
+                        <span>Normalized Mutual Info (NMI)</span>
+                    </div>
+                    <div class="metric-details">
+                        <div class="metric-range">Range: [0, 1]</div>
+                        <div class="metric-desc">Mutual information between clusterings</div>
+                        <div class="metric-goal goal-similarity">Closer to 1 is better</div>
+                    </div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-name">
+                        <span class="metric-icon">📊</span>
+                        <span>Fowlkes-Mallows Index</span>
+                    </div>
+                    <div class="metric-details">
+                        <div class="metric-range">Range: [0, 1]</div>
+                        <div class="metric-desc">Geometric mean of precision and recall</div>
+                        <div class="metric-goal goal-similarity">Closer to 1 is better</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="validation-section">
+            <div class="validation-card visual">
+                <div class="validation-icon">👁️</div>
+                <div class="validation-content">
+                    <div class="validation-title">Visual Methods</div>
+                    <div class="validation-desc">Silhouette plots, cluster distributions</div>
+                </div>
+            </div>
+            
+            <div class="validation-card domain">
+                <div class="validation-icon">💼</div>
+                <div class="validation-content">
+                    <div class="validation-title">Domain Validation</div>
+                    <div class="validation-desc">Do clusters make business sense?</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="importance-note">
+            <div class="note-text">⭐ Domain validation is the most important!</div>
+        </div>
+    </div>
+</body>
+</html>

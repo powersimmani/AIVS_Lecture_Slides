@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activation Function Selection Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            overflow-x: hidden;
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 960px;
+            width: 95vw;
+            min-height: 540px;
+            height: auto;
+            background: white;
+            position: relative;
+            overflow: hidden;
+            padding: 20px 35px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 20px;
+        }
+        
+        .default-box {
+            background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+            border: 3px solid #1E64C8;
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .default-label {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .default-text {
+            font-size: 18px;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .default-reason {
+            font-size: 15px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .guide-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        
+        .guide-card {
+            background: white;
+            border: 3px solid;
+            border-radius: 10px;
+            padding: 14px 16px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .guide-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+        }
+        
+        .guide-card.cnn {
+            background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+            border-color: #4CAF50;
+        }
+        
+        .guide-card.convergence {
+            background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+            border-color: #2196F3;
+        }
+        
+        .guide-card.fcn {
+            background: linear-gradient(135deg, #FFF3E0 0%, #FFE0B2 100%);
+            border-color: #FF9800;
+        }
+        
+        .guide-card.nlp {
+            background: linear-gradient(135deg, #F3E5F5 0%, #E1BEE7 100%);
+            border-color: #9C27B0;
+        }
+        
+        .guide-card.compute {
+            background: linear-gradient(135deg, #FCE4EC 0%, #F8BBD0 100%);
+            border-color: #E91E63;
+        }
+        
+        .guide-card.research {
+            background: linear-gradient(135deg, #E0F2F1 0%, #B2DFDB 100%);
+            border-color: #009688;
+        }
+        
+        .scenario-label {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+        
+        .guide-card.cnn .scenario-label {
+            color: #2E7D32;
+        }
+        
+        .guide-card.convergence .scenario-label {
+            color: #1565C0;
+        }
+        
+        .guide-card.fcn .scenario-label {
+            color: #E65100;
+        }
+        
+        .guide-card.nlp .scenario-label {
+            color: #6A1B9A;
+        }
+        
+        .guide-card.compute .scenario-label {
+            color: #C2185B;
+        }
+        
+        .guide-card.research .scenario-label {
+            color: #00695C;
+        }
+        
+        .recommendation {
+            font-size: 17px;
+            color: #333;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .reason {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.4;
+        }
+        
+        .arrow-icon {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            font-size: 20px;
+        }
+        
+        .bottom-note {
+            background: #FFF8E1;
+            border: 2px solid #FFC107;
+            border-radius: 10px;
+            padding: 12px 18px;
+            text-align: center;
+        }
+        
+        .note-icon {
+            font-size: 18px;
+            margin-right: 8px;
+        }
+        
+        .note-text {
+            font-size: 16px;
+            color: #333;
+            font-weight: 600;
+            display: inline;
+        }
+        
+        .note-highlight {
+            color: #F57F17;
+            font-weight: 700;
+        }
+    
+        
+        /* Responsive adjustments */
+        @media screen and (max-width: 1000px) {
+            .container {
+                width: 98vw !important;
+                max-width: 98vw !important;
+                padding: 15px 20px !important;
+            }
+        }
+        
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: 10px 15px !important;
+            }
+            
+            .title {
+                font-size: 20px !important;
+            }
+            
+            /* 그리드 레이아웃을 1열로 */
+            .challenges-grid,
+            .comparison-grid,
+            .solutions-grid,
+            .guide-grid,
+            .findings-section,
+            .benefits-grid,
+            .applications-section,
+            .guidelines-grid,
+            .components-section,
+            .techniques-grid,
+            .deployment-section {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .gradient-flow,
+            .network-visual,
+            .flow-steps,
+            .comparison-section {
+                flex-direction: column !important;
+                gap: 15px !important;
+            }
+            
+            .arrow-back,
+            .arrow,
+            .arrow-right,
+            .arrow-connector {
+                transform: rotate(90deg);
+                margin: 5px 0 !important;
+            }
+        }
+        
+        @media screen and (max-width: 480px) {
+            .container {
+                padding: 8px 10px !important;
+            }
+            
+            .title {
+                font-size: 18px !important;
+            }
+            
+            .card-header,
+            .scenario-label,
+            .card-title,
+            .function-title {
+                font-size: 16px !important;
+            }
+        }
+    
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Activation Function Selection Guide</div>
+        
+        <div class="default-box">
+            <div class="default-label">DEFAULT CHOICE</div>
+            <div class="default-text">Start with ReLU</div>
+            <div class="default-reason">Fast, works well for most cases</div>
+        </div>
+        
+        <div class="guide-grid">
+            <div class="guide-card cnn">
+                <div class="arrow-icon">→</div>
+                <div class="scenario-label">Deep CNNs</div>
+                <div class="recommendation">Leaky ReLU / PReLU</div>
+                <div class="reason">Prevents dead neurons in deep networks</div>
+            </div>
+            
+            <div class="guide-card convergence">
+                <div class="arrow-icon">→</div>
+                <div class="scenario-label">Faster Convergence</div>
+                <div class="recommendation">ELU</div>
+                <div class="reason">Slightly slower but better accuracy</div>
+            </div>
+            
+            <div class="guide-card fcn">
+                <div class="arrow-icon">→</div>
+                <div class="scenario-label">Fully-Connected Deep Networks</div>
+                <div class="recommendation">SELU</div>
+                <div class="reason">Eliminates need for Batch Normalization</div>
+            </div>
+            
+            <div class="guide-card nlp">
+                <div class="arrow-icon">→</div>
+                <div class="scenario-label">Transformers / NLP</div>
+                <div class="recommendation">GELU</div>
+                <div class="reason">Standard in BERT, GPT models</div>
+            </div>
+            
+            <div class="guide-card compute">
+                <div class="arrow-icon">→</div>
+                <div class="scenario-label">Limited Compute</div>
+                <div class="recommendation">ReLU / Leaky ReLU</div>
+                <div class="reason">Fastest computational speed</div>
+            </div>
+            
+            <div class="guide-card research">
+                <div class="arrow-icon">→</div>
+                <div class="scenario-label">Experimental / Research</div>
+                <div class="recommendation">Swish / GELU</div>
+                <div class="reason">Potential accuracy gains</div>
+            </div>
+        </div>
+        
+        <div class="bottom-note">
+            <span class="note-icon">💡</span>
+            <span class="note-text">
+                General rule: Modern smooth activations 
+                <span class="note-highlight">(GELU, Swish)</span> 
+                often worth the extra computational cost
+            </span>
+        </div>
+    </div>
+</body>
+</html>

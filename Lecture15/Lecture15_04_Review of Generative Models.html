@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generative Models Taxonomy</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            position: relative;
+        }
+        
+        .title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 30px;
+            padding-top: 20px;
+        }
+        
+        .tree-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 40px;
+        }
+        
+        .node {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 18px;
+            font-weight: 500;
+            color: #1E64C8;
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        .node.root {
+            background: #1E64C8;
+            color: white;
+            font-size: 20px;
+        }
+        
+        .branches {
+            display: flex;
+            gap: 60px;
+            justify-content: center;
+            position: relative;
+            margin-top: 10px;
+        }
+        
+        .branch {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .branch-line {
+            width: 2px;
+            height: 30px;
+            background: #1E64C8;
+            margin-bottom: 10px;
+        }
+        
+        .sub-nodes {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 10px;
+        }
+        
+        .sub-node {
+            background: #F5F9FF;
+            border: 1.5px solid #1E64C8;
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-size: 16px;
+            color: #333;
+            text-align: center;
+            white-space: nowrap;
+        }
+        
+        .connector-top {
+            position: absolute;
+            width: 2px;
+            height: 30px;
+            background: #1E64C8;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .connector-horizontal {
+            position: absolute;
+            height: 2px;
+            background: #1E64C8;
+            top: 140px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+        }
+        
+        .comparison-box {
+            position: absolute;
+            bottom: 30px;
+            right: 40px;
+            background: #F5F9FF;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 16px 20px;
+            font-size: 16px;
+            color: #333;
+            width: 280px;
+        }
+        
+        .comparison-title {
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            font-size: 17px;
+        }
+        
+        .comparison-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 6px 0;
+            font-size: 15px;
+        }
+        
+        .comparison-label {
+            color: #666;
+        }
+        
+        .comparison-value {
+            font-weight: 500;
+            color: #1E64C8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Generative Models Taxonomy</div>
+        
+        <div class="tree-container">
+            <div class="node root">
+                Generative Models
+                <div class="connector-top"></div>
+            </div>
+            
+            <div class="connector-horizontal"></div>
+            
+            <div class="branches">
+                <div class="branch">
+                    <div class="branch-line"></div>
+                    <div class="node">Traditional</div>
+                    <div class="sub-nodes">
+                        <div class="sub-node">GMM</div>
+                        <div class="sub-node">HMM</div>
+                        <div class="sub-node">Naive Bayes</div>
+                    </div>
+                </div>
+                
+                <div class="branch">
+                    <div class="branch-line"></div>
+                    <div class="node">Deep Learning</div>
+                    <div class="sub-nodes">
+                        <div class="sub-node">VAE</div>
+                        <div class="sub-node">GAN</div>
+                        <div class="sub-node">Autoregressive</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="comparison-box">
+            <div class="comparison-title">VAE vs GAN</div>
+            <div class="comparison-item">
+                <span class="comparison-label">Output Quality</span>
+                <span class="comparison-value">GAN ↑</span>
+            </div>
+            <div class="comparison-item">
+                <span class="comparison-label">Training Stability</span>
+                <span class="comparison-value">VAE ↑</span>
+            </div>
+            <div class="comparison-item">
+                <span class="comparison-label">Mode Coverage</span>
+                <span class="comparison-value">VAE ↑</span>
+            </div>
+            <div class="comparison-item">
+                <span class="comparison-label">Sharpness</span>
+                <span class="comparison-value">GAN ↑</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

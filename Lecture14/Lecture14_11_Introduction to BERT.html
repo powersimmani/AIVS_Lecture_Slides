@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introduction to BERT</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: #ffffff;
+            padding: 25px 40px;
+        }
+        
+        .title {
+            font-size: 26px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .subtitle {
+            font-size: 18px;
+            color: #666666;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr 1.1fr;
+            gap: 25px;
+            height: 410px;
+        }
+        
+        /* Architecture Section */
+        .architecture-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .architecture-box {
+            background: #F8F9FA;
+            border: 3px solid #1E64C8;
+            border-radius: 12px;
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .encoder-stack {
+            display: flex;
+            flex-direction: column-reverse;
+            gap: 8px;
+            margin: 15px 0;
+        }
+        
+        .encoder-layer {
+            background: #1E64C8;
+            border: 2px solid #1557A8;
+            border-radius: 8px;
+            padding: 12px 20px;
+            text-align: center;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            position: relative;
+        }
+        
+        .encoder-layer.highlight {
+            background: #2E7FD8;
+            box-shadow: 0 0 15px rgba(30, 100, 200, 0.5);
+        }
+        
+        .bidirectional-arrows {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 10px 0;
+        }
+        
+        .arrow-group {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 20px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .input-tokens {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        
+        .token {
+            background: #E8F4F8;
+            border: 2px solid #1E64C8;
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #1E64C8;
+        }
+        
+        .specs-box {
+            background: #E8F4F8;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 15px;
+        }
+        
+        .specs-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .spec-item {
+            font-size: 16px;
+            color: #333333;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .spec-label {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        /* Features Section */
+        .features-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .feature-card {
+            background: #E8F4F8;
+            border-left: 4px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        
+        .feature-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .feature-content {
+            flex: 1;
+        }
+        
+        .feature-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .feature-text {
+            font-size: 16px;
+            color: #333333;
+            line-height: 1.4;
+        }
+        
+        .achievement-box {
+            background: #C8E6C9;
+            border: 3px solid #4CAF50;
+            border-radius: 10px;
+            padding: 15px 18px;
+            text-align: center;
+        }
+        
+        .achievement-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        
+        .achievement-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2E7D32;
+            margin-bottom: 5px;
+        }
+        
+        .achievement-text {
+            font-size: 16px;
+            color: #1B5E20;
+            line-height: 1.3;
+        }
+        
+        .highlight {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .release-info {
+            font-size: 16px;
+            color: #666666;
+            text-align: center;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">BERT: Bidirectional Encoder Representations from Transformers</div>
+        <div class="subtitle">Google, 2018 - Revolutionary NLP Model</div>
+        
+        <div class="main-layout">
+            <!-- Architecture Section -->
+            <div class="architecture-section">
+                <div class="architecture-box">
+                    <div class="bidirectional-arrows">
+                        <div class="arrow-group">← Left</div>
+                        <div class="arrow-group">Right →</div>
+                    </div>
+                    
+                    <div class="encoder-stack">
+                        <div class="encoder-layer">Encoder Layer 1</div>
+                        <div class="encoder-layer">Encoder Layer 2</div>
+                        <div class="encoder-layer">...</div>
+                        <div class="encoder-layer highlight">Encoder Layer N</div>
+                    </div>
+                    
+                    <div style="font-size: 16px; color: #1E64C8; font-weight: 600; margin: 10px 0;">
+                        ↕️ Bidirectional Attention
+                    </div>
+                    
+                    <div class="input-tokens">
+                        <div class="token">[CLS]</div>
+                        <div class="token">Token</div>
+                        <div class="token">Token</div>
+                        <div class="token">[SEP]</div>
+                    </div>
+                </div>
+                
+                <div class="specs-box">
+                    <div class="specs-grid">
+                        <div class="spec-item">
+                            <span class="spec-label">Base:</span>
+                            <span>110M params</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Large:</span>
+                            <span>340M params</span>
+                        </div>
+                        <div class="spec-item" style="grid-column: 1 / -1;">
+                            <span class="spec-label">Dataset:</span>
+                            <span>BooksCorpus + Wikipedia (3.3B words)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Features Section -->
+            <div class="features-section">
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <div class="feature-content">
+                        <div class="feature-title">Bidirectional Context</div>
+                        <div class="feature-text">
+                            Deep <span class="highlight">bidirectional</span> understanding from both directions
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🏗️</div>
+                    <div class="feature-content">
+                        <div class="feature-title">Transformer Encoder</div>
+                        <div class="feature-text">
+                            Stack of <span class="highlight">Transformer encoders</span> with self-attention
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📚</div>
+                    <div class="feature-content">
+                        <div class="feature-title">Pre-training Corpus</div>
+                        <div class="feature-text">
+                            Trained on <span class="highlight">BooksCorpus</span> and <span class="highlight">Wikipedia</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <div class="feature-content">
+                        <div class="feature-title">Two Model Sizes</div>
+                        <div class="feature-text">
+                            BERT-Base (110M) and BERT-Large (340M) parameters
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="achievement-box">
+                    <div class="achievement-icon">🏆</div>
+                    <div class="achievement-title">State-of-the-Art Performance</div>
+                    <div class="achievement-text">
+                        Achieved SOTA on <strong>11 NLP benchmarks</strong><br>
+                        Revolutionized NLP in 2018
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

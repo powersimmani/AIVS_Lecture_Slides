@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comparison of Normalization Techniques</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: #ffffff;
+            padding: 20px 40px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 25px;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .comparison-table thead {
+            background: linear-gradient(135deg, #1E64C8 0%, #2E74D8 100%);
+            color: white;
+        }
+        
+        .comparison-table th {
+            padding: 16px;
+            text-align: left;
+            font-size: 17px;
+            font-weight: 600;
+        }
+        
+        .comparison-table th:first-child {
+            width: 200px;
+        }
+        
+        .comparison-table td {
+            padding: 16px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+        
+        .comparison-table tbody tr {
+            transition: all 0.3s ease;
+        }
+        
+        .comparison-table tbody tr:hover {
+            background: #f8f9fb;
+        }
+        
+        .comparison-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .method-name {
+            font-weight: 600;
+            color: #1E64C8;
+            font-size: 17px;
+        }
+        
+        .highlight {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .use-case-badge {
+            display: inline-block;
+            background: #e3f2fd;
+            color: #1565c0;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-right: 6px;
+        }
+        
+        .footer-note {
+            margin-top: 20px;
+            padding: 16px 20px;
+            background: #f8f9fb;
+            border-left: 4px solid #1E64C8;
+            border-radius: 6px;
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+        
+        .footer-note strong {
+            color: #1E64C8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Comparison of Normalization Techniques</div>
+        
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Technique</th>
+                    <th>Best Use Cases</th>
+                    <th>Key Characteristics</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><div class="method-name">Batch Norm</div></td>
+                    <td>
+                        <span class="use-case-badge">CNNs</span>
+                        <span class="use-case-badge">Large batches</span>
+                    </td>
+                    <td>
+                        Normalizes across batch dimension
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><div class="method-name">Layer Norm</div></td>
+                    <td>
+                        <span class="use-case-badge">RNNs</span>
+                        <span class="use-case-badge">Transformers</span>
+                        <span class="use-case-badge">Small batches</span>
+                    </td>
+                    <td>
+                        Independent of batch size
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><div class="method-name">Instance Norm</div></td>
+                    <td>
+                        <span class="use-case-badge">Style Transfer</span>
+                        <span class="use-case-badge">GANs</span>
+                    </td>
+                    <td>
+                        Per instance, per channel
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><div class="method-name">Group Norm</div></td>
+                    <td>
+                        <span class="use-case-badge">Small batch vision</span>
+                        <span class="use-case-badge">Detection</span>
+                        <span class="use-case-badge">Segmentation</span>
+                    </td>
+                    <td>
+                        Groups channels, batch-independent
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><div class="method-name">Weight Norm</div></td>
+                    <td>
+                        <span class="use-case-badge">RNNs</span>
+                        <span class="use-case-badge">Reinforcement Learning</span>
+                    </td>
+                    <td>
+                        Normalizes weights, not activations
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><div class="method-name">Spectral Norm</div></td>
+                    <td>
+                        <span class="use-case-badge">GAN discriminators</span>
+                        <span class="use-case-badge">BigGAN</span>
+                        <span class="use-case-badge">StyleGAN</span>
+                    </td>
+                    <td>
+                        Ensures Lipschitz continuity
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="footer-note">
+            <strong>Key Insight:</strong> Each normalization technique addresses different aspects of training stability. Choose based on your architecture, batch size constraints, and specific task requirements.
+        </div>
+    </div>
+</body>
+</html>

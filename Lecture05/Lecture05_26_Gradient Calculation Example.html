@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gradient Calculation Example</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Aptos', 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            padding: 40px;
+        }
+        
+        .main-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+        }
+        
+        .content-layout {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 20px;
+            flex: 1;
+        }
+        
+        .example-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .network-setup {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .setup-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+        }
+        
+        .setup-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        
+        .param-box {
+            background: white;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        
+        .param-label {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 3px;
+        }
+        
+        .param-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .calculation-steps {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 15px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            overflow-y: auto;
+        }
+        
+        .step-card {
+            background: white;
+            border-left: 4px solid #1E64C8;
+            border-radius: 4px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .forward-step {
+            border-color: #4caf50;
+        }
+        
+        .backward-step {
+            border-color: #d32f2f;
+        }
+        
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .step-badge {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .forward-badge {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .backward-badge {
+            background: #ffebee;
+            color: #c62828;
+        }
+        
+        .step-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .step-formula {
+            background: #f8f9fa;
+            padding: 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #333;
+            text-align: center;
+        }
+        
+        .step-result {
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .summary-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .gradients-box {
+            background: #f8f9fa;
+            border: 2px solid #d32f2f;
+            border-radius: 8px;
+            padding: 15px;
+            flex: 1;
+        }
+        
+        .gradients-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #d32f2f;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        
+        .gradient-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .gradient-item {
+            background: white;
+            padding: 10px;
+            border-radius: 4px;
+            display: grid;
+            grid-template-columns: 80px 1fr auto;
+            gap: 10px;
+            align-items: center;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .gradient-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #d32f2f;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .gradient-formula {
+            font-size: 14px;
+            color: #666;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .gradient-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #d32f2f;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .update-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+        }
+        
+        .update-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .update-formula {
+            font-size: 15px;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+        }
+        
+        .visual-flow {
+            grid-column: 1 / -1;
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+        }
+        
+        .flow-stage {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .stage-box {
+            width: 100px;
+            height: 60px;
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid;
+            font-weight: 600;
+        }
+        
+        .input-stage {
+            background: #e3f2fd;
+            border-color: #1E64C8;
+            color: #1E64C8;
+        }
+        
+        .forward-stage {
+            background: #e8f5e9;
+            border-color: #4caf50;
+            color: #2e7d32;
+        }
+        
+        .loss-stage {
+            background: #fff3e0;
+            border-color: #ff9800;
+            color: #e65100;
+        }
+        
+        .backward-stage {
+            background: #ffebee;
+            border-color: #d32f2f;
+            color: #c62828;
+        }
+        
+        .update-stage {
+            background: #e8eaf6;
+            border-color: #5e35b1;
+            color: #4527a0;
+        }
+        
+        .stage-label {
+            font-size: 13px;
+            color: #666;
+            font-weight: 600;
+        }
+        
+        .flow-arrow {
+            font-size: 24px;
+            color: #1E64C8;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-title">Gradient Calculation Example</div>
+        
+        <div class="content-layout">
+            <!-- Example Section -->
+            <div class="example-section">
+                <div class="section-title">Simple Network: y = σ(wx + b)</div>
+                
+                <div class="network-setup">
+                    <div class="setup-title">Given Values</div>
+                    <div class="setup-grid">
+                        <div class="param-box">
+                            <div class="param-label">Input</div>
+                            <div class="param-value">x = 2</div>
+                        </div>
+                        <div class="param-box">
+                            <div class="param-label">Weight</div>
+                            <div class="param-value">w = 0.5</div>
+                        </div>
+                        <div class="param-box">
+                            <div class="param-label">Bias</div>
+                            <div class="param-value">b = 1</div>
+                        </div>
+                        <div class="param-box">
+                            <div class="param-label">Target</div>
+                            <div class="param-value">y* = 1</div>
+                        </div>
+                        <div class="param-box">
+                            <div class="param-label">Learning Rate</div>
+                            <div class="param-value">η = 0.1</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="calculation-steps">
+                    <div class="step-card forward-step">
+                        <div class="step-header">
+                            <div class="step-badge forward-badge">FORWARD</div>
+                            <div class="step-title">Step 1: Linear Combination</div>
+                        </div>
+                        <div class="step-formula">z = wx + b = 0.5×2 + 1</div>
+                        <div class="step-result">z = 2</div>
+                    </div>
+                    
+                    <div class="step-card forward-step">
+                        <div class="step-header">
+                            <div class="step-badge forward-badge">FORWARD</div>
+                            <div class="step-title">Step 2: Activation</div>
+                        </div>
+                        <div class="step-formula">ŷ = σ(z) = 1/(1+e⁻²)</div>
+                        <div class="step-result">ŷ = 0.881</div>
+                    </div>
+                    
+                    <div class="step-card forward-step">
+                        <div class="step-header">
+                            <div class="step-badge forward-badge">FORWARD</div>
+                            <div class="step-title">Step 3: Loss</div>
+                        </div>
+                        <div class="step-formula">L = (ŷ - y*)² = (0.881 - 1)²</div>
+                        <div class="step-result">L = 0.014</div>
+                    </div>
+                    
+                    <div class="step-card backward-step">
+                        <div class="step-header">
+                            <div class="step-badge backward-badge">BACKWARD</div>
+                            <div class="step-title">Step 4: ∂L/∂ŷ</div>
+                        </div>
+                        <div class="step-formula">∂L/∂ŷ = 2(ŷ - y*) = 2(0.881 - 1)</div>
+                        <div class="step-result">∂L/∂ŷ = -0.238</div>
+                    </div>
+                    
+                    <div class="step-card backward-step">
+                        <div class="step-header">
+                            <div class="step-badge backward-badge">BACKWARD</div>
+                            <div class="step-title">Step 5: ∂L/∂z</div>
+                        </div>
+                        <div class="step-formula">∂L/∂z = ∂L/∂ŷ · σ'(z) = -0.238 × 0.105</div>
+                        <div class="step-result">∂L/∂z = -0.025</div>
+                    </div>
+                    
+                    <div class="step-card backward-step">
+                        <div class="step-header">
+                            <div class="step-badge backward-badge">BACKWARD</div>
+                            <div class="step-title">Step 6: ∂L/∂w & ∂L/∂b</div>
+                        </div>
+                        <div class="step-formula">∂L/∂w = ∂L/∂z · x = -0.025 × 2</div>
+                        <div class="step-result">∂L/∂w = -0.05, ∂L/∂b = -0.025</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Summary Section -->
+            <div class="summary-section">
+                <div class="section-title">Computed Gradients</div>
+                
+                <div class="gradients-box">
+                    <div class="gradients-title">Final Gradients</div>
+                    <div class="gradient-list">
+                        <div class="gradient-item">
+                            <div class="gradient-name">∂L/∂w</div>
+                            <div class="gradient-formula">= ∂L/∂z · x</div>
+                            <div class="gradient-value">-0.05</div>
+                        </div>
+                        
+                        <div class="gradient-item">
+                            <div class="gradient-name">∂L/∂b</div>
+                            <div class="gradient-formula">= ∂L/∂z</div>
+                            <div class="gradient-value">-0.025</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="update-box">
+                    <div class="update-title">Parameter Update (η = 0.1)</div>
+                    <div class="update-formula">
+                        w_new = 0.5 - 0.1×(-0.05) = 0.505<br>
+                        b_new = 1.0 - 0.1×(-0.025) = 1.0025
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Visual Flow -->
+            <div class="visual-flow">
+                <div class="flow-stage">
+                    <div class="stage-box input-stage">
+                        <div>Input</div>
+                        <div style="font-size: 14px;">x, w, b</div>
+                    </div>
+                    <div class="stage-label">Initialize</div>
+                </div>
+                
+                <div class="flow-arrow">→</div>
+                
+                <div class="flow-stage">
+                    <div class="stage-box forward-stage">
+                        <div>Forward</div>
+                        <div style="font-size: 14px;">z, ŷ</div>
+                    </div>
+                    <div class="stage-label">Compute</div>
+                </div>
+                
+                <div class="flow-arrow">→</div>
+                
+                <div class="flow-stage">
+                    <div class="stage-box loss-stage">
+                        <div>Loss</div>
+                        <div style="font-size: 14px;">L</div>
+                    </div>
+                    <div class="stage-label">Evaluate</div>
+                </div>
+                
+                <div class="flow-arrow">→</div>
+                
+                <div class="flow-stage">
+                    <div class="stage-box backward-stage">
+                        <div>Backward</div>
+                        <div style="font-size: 14px;">∂L/∂w, ∂L/∂b</div>
+                    </div>
+                    <div class="stage-label">Gradients</div>
+                </div>
+                
+                <div class="flow-arrow">→</div>
+                
+                <div class="flow-stage">
+                    <div class="stage-box update-stage">
+                        <div>Update</div>
+                        <div style="font-size: 14px;">w', b'</div>
+                    </div>
+                    <div class="stage-label">Optimize</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

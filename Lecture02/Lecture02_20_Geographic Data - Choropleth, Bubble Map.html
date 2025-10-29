@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geographic Data Visualization</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #FFFFFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            padding: 25px 35px;
+        }
+        
+        .title-section {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        
+        .main-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .subtitle {
+            font-size: 17px;
+            color: #666666;
+        }
+        
+        .content-wrapper {
+            display: flex;
+            gap: 20px;
+            flex: 1;
+        }
+        
+        .left-panel {
+            flex: 1.5;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .map-row {
+            display: flex;
+            gap: 12px;
+            flex: 1;
+        }
+        
+        .map-card {
+            flex: 1;
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 10px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+        
+        .map-card:hover {
+            border-color: #1E64C8;
+            box-shadow: 0 4px 15px rgba(30, 100, 200, 0.15);
+        }
+        
+        .map-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .map-visual {
+            flex: 1;
+            background: #F8F8F8;
+            border-radius: 6px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        /* Choropleth Map */
+        .choropleth-map {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        
+        .choropleth-map svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .region {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .region:hover {
+            opacity: 0.8;
+            stroke-width: 2;
+        }
+        
+        /* Bubble Map */
+        .bubble-map {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        
+        .bubble-map svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .bubble {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .bubble:hover {
+            opacity: 1;
+            stroke-width: 2;
+        }
+        
+        .map-description {
+            text-align: center;
+            font-size: 16px;
+            color: #666;
+            margin-top: 8px;
+            line-height: 1.3;
+        }
+        
+        .legend {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 8px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 15px;
+            border-radius: 3px;
+        }
+        
+        .legend-bubble {
+            border-radius: 50%;
+            border: 2px solid #1E64C8;
+        }
+        
+        .right-panel {
+            flex: 0.5;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .features-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .feature-section {
+            margin-bottom: 12px;
+        }
+        
+        .section-header {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+            margin-bottom: 6px;
+            padding: 6px;
+            background: #F8FBFF;
+            border-radius: 4px;
+        }
+        
+        .feature-icon {
+            color: #1E64C8;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .best-practices {
+            background: #FFF9E6;
+            border: 2px solid #FFC107;
+            border-radius: 10px;
+            padding: 14px;
+        }
+        
+        .bp-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .bp-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 6px;
+            line-height: 1.3;
+        }
+        
+        .warning-icon {
+            color: #F57C00;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        
+        .use-cases {
+            background: #E8F5E9;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            padding: 14px;
+        }
+        
+        .use-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2E7D32;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .use-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 6px;
+        }
+        
+        .check-icon {
+            color: #4CAF50;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .map-card, .features-card, .best-practices, .use-cases {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        .map-card:nth-child(1) { animation-delay: 0.1s; }
+        .map-card:nth-child(2) { animation-delay: 0.2s; }
+        .features-card { animation-delay: 0.3s; }
+        .best-practices { animation-delay: 0.4s; }
+        .use-cases { animation-delay: 0.5s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Geographic Data: Choropleth & Bubble Map</div>
+            <div class="subtitle">Spatial Patterns and Regional Comparisons</div>
+        </div>
+        
+        <div class="content-wrapper">
+            <div class="left-panel">
+                <div class="map-row">
+                    <!-- Choropleth Map -->
+                    <div class="map-card">
+                        <div class="map-title">Choropleth Map</div>
+                        <div class="map-visual">
+                            <div class="choropleth-map">
+                                <svg viewBox="0 0 300 200">
+                                    <!-- Simplified map regions -->
+                                    <!-- Region 1 - Very High -->
+                                    <path d="M 20,40 L 80,40 L 80,80 L 20,80 Z" 
+                                          fill="#0D47A1" 
+                                          stroke="#FFFFFF" 
+                                          stroke-width="1"
+                                          class="region"/>
+                                    
+                                    <!-- Region 2 - High -->
+                                    <path d="M 80,40 L 140,40 L 140,80 L 80,80 Z" 
+                                          fill="#1E64C8" 
+                                          stroke="#FFFFFF" 
+                                          stroke-width="1"
+                                          class="region"/>
+                                    
+                                    <!-- Region 3 - Medium -->
+                                    <path d="M 140,40 L 200,40 L 200,80 L 140,80 Z" 
+                                          fill="#42A5F5" 
+                                          stroke="#FFFFFF" 
+                                          stroke-width="1"
+                                          class="region"/>
+                                    
+                                    <!-- Region 4 - Low -->
+                                    <path d="M 200,40 L 260,40 L 260,80 L 200,80 Z" 
+                                          fill="#90CAF9" 
+                                          stroke="#FFFFFF" 
+                                          stroke-width="1"
+                                          class="region"/>
+                                    
+                                    <!-- Region 5 - High -->
+                                    <path d="M 20,80 L 80,80 L 80,120 L 20,120 Z" 
+                                          fill="#1E64C8" 
+                                          stroke="#FFFFFF" 
+                                          stroke-width="1"
+                                          class="region"/>
+                                    
+                                    <!-- Region 6 - Medium -->
+                                    <path d="M 80,80 L 140,80 L 140,120 L 80,120 Z" 
+                                          fill="#42A5F5" 
+                                          stroke="#FFFFFF" 
+                                          stroke-width="1"
+                                          class="region"/>
+                                    
+                                    <!-- Region 7 - Very Low -->
+                                    <path d="M 140,80 L 200,80 L 200,120 L 140,120 Z" 
+                                          fill="#E3F2FD" 
+                                          stroke="#FFFFFF" 
+                                          stroke-width="1"
+                                          class="region"/>
+                                    
+                                    <!-- Region 8 - Medium -->
+                                    <path d="M 200,80 L 260,80 L 260,120 L 200,120 Z" 
+                                          fill="#42A5F5" 
+                                          stroke="#FFFFFF" 
+                                          stroke-width="1"
+                                          class="region"/>
+                                    
+                                    <!-- Region 9 - Low -->
+                                    <path d="M 80,120 L 140,120 L 140,160 L 80,160 Z" 
+                                          fill="#90CAF9" 
+                                          stroke="#FFFFFF" 
+                                          stroke-width="1"
+                                          class="region"/>
+                                    
+                                    <!-- Region 10 - High -->
+                                    <path d="M 140,120 L 200,120 L 200,160 L 140,160 Z" 
+                                          fill="#1E64C8" 
+                                          stroke="#FFFFFF" 
+                                          stroke-width="1"
+                                          class="region"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="legend">
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: #0D47A1;"></div>
+                                <span>Very High</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: #42A5F5;"></div>
+                                <span>Medium</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: #E3F2FD;"></div>
+                                <span>Low</span>
+                            </div>
+                        </div>
+                        <div class="map-description">Color encodes regional statistics</div>
+                    </div>
+                    
+                    <!-- Bubble Map -->
+                    <div class="map-card">
+                        <div class="map-title">Bubble Map</div>
+                        <div class="map-visual">
+                            <div class="bubble-map">
+                                <svg viewBox="0 0 300 200">
+                                    <!-- Base map outline -->
+                                    <rect x="20" y="40" width="240" height="120" 
+                                          fill="#F5F5F5" 
+                                          stroke="#999" 
+                                          stroke-width="1"/>
+                                    
+                                    <!-- Bubbles at different locations with different sizes -->
+                                    <!-- Large bubble -->
+                                    <circle cx="70" cy="80" r="35" 
+                                            fill="rgba(30, 100, 200, 0.5)" 
+                                            stroke="#1E64C8" 
+                                            stroke-width="2"
+                                            class="bubble"/>
+                                    
+                                    <!-- Medium-large bubble -->
+                                    <circle cx="160" cy="60" r="28" 
+                                            fill="rgba(76, 175, 80, 0.5)" 
+                                            stroke="#4CAF50" 
+                                            stroke-width="2"
+                                            class="bubble"/>
+                                    
+                                    <!-- Medium bubble -->
+                                    <circle cx="220" cy="100" r="22" 
+                                            fill="rgba(255, 152, 0, 0.5)" 
+                                            stroke="#FF9800" 
+                                            stroke-width="2"
+                                            class="bubble"/>
+                                    
+                                    <!-- Small-medium bubble -->
+                                    <circle cx="110" cy="130" r="18" 
+                                            fill="rgba(156, 39, 176, 0.5)" 
+                                            stroke="#9C27B0" 
+                                            stroke-width="2"
+                                            class="bubble"/>
+                                    
+                                    <!-- Small bubble -->
+                                    <circle cx="190" cy="140" r="12" 
+                                            fill="rgba(244, 67, 54, 0.5)" 
+                                            stroke="#F44336" 
+                                            stroke-width="2"
+                                            class="bubble"/>
+                                    
+                                    <!-- Very small bubble -->
+                                    <circle cx="240" cy="70" r="8" 
+                                            fill="rgba(0, 150, 136, 0.5)" 
+                                            stroke="#009688" 
+                                            stroke-width="2"
+                                            class="bubble"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="legend">
+                            <div class="legend-item">
+                                <div class="legend-color legend-bubble" style="width: 20px; height: 20px;"></div>
+                                <span>Large</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color legend-bubble" style="width: 14px; height: 14px;"></div>
+                                <span>Medium</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color legend-bubble" style="width: 8px; height: 8px;"></div>
+                                <span>Small</span>
+                            </div>
+                        </div>
+                        <div class="map-description">Size encodes values at coordinates</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <div class="features-card">
+                    <div class="card-title">
+                        <span>🗺️</span>
+                        Features
+                    </div>
+                    
+                    <div class="feature-section">
+                        <div class="section-header">
+                            <span>🎨</span>
+                            <span>Choropleth</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">•</span>
+                            <span>Color-encode regions</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">•</span>
+                            <span>Sequential/diverging scales</span>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-section">
+                        <div class="section-header">
+                            <span>⚫</span>
+                            <span>Bubble Map</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">•</span>
+                            <span>Size at coordinates</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">•</span>
+                            <span>Combine size + color</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="best-practices">
+                    <div class="bp-title">💡 Best Practices</div>
+                    <div class="bp-item">
+                        <span class="warning-icon">▸</span>
+                        <span>Normalize by population/area</span>
+                    </div>
+                    <div class="bp-item">
+                        <span class="warning-icon">▸</span>
+                        <span>Consider projection distortion</span>
+                    </div>
+                    <div class="bp-item">
+                        <span class="warning-icon">▸</span>
+                        <span>Add borders & labels</span>
+                    </div>
+                    <div class="bp-item">
+                        <span class="warning-icon">▸</span>
+                        <span>Use appropriate color scale</span>
+                    </div>
+                </div>
+                
+                <div class="use-cases">
+                    <div class="use-title">When to Use</div>
+                    <div class="use-item">
+                        <span class="check-icon">✓</span>
+                        <span>Spatial patterns</span>
+                    </div>
+                    <div class="use-item">
+                        <span class="check-icon">✓</span>
+                        <span>Regional comparison</span>
+                    </div>
+                    <div class="use-item">
+                        <span class="check-icon">✓</span>
+                        <span>Location-based insights</span>
+                    </div>
+                    <div class="use-item">
+                        <span class="check-icon">✓</span>
+                        <span>Demographics analysis</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

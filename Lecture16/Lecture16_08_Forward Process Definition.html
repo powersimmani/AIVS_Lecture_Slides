@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forward Process Definition</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .goal-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #4A90E2 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(30, 100, 200, 0.2);
+        }
+        
+        .process-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        .data-box {
+            background: white;
+            border: 3px solid #1E64C8;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            min-width: 140px;
+            box-shadow: 0 2px 10px rgba(30, 100, 200, 0.1);
+        }
+        
+        .data-label {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+        
+        .data-desc {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .arrow-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 0 20px;
+        }
+        
+        .arrow {
+            font-size: 32px;
+            color: #1E64C8;
+        }
+        
+        .step-label {
+            font-size: 16px;
+            color: #1E64C8;
+            font-weight: 600;
+            background: #f0f8ff;
+            padding: 4px 12px;
+            border-radius: 6px;
+        }
+        
+        .formula-box {
+            background: #f8f9fa;
+            border-left: 5px solid #1E64C8;
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+        }
+        
+        .formula-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .formula-content {
+            font-size: 18px;
+            color: #333;
+            font-family: 'Courier New', monospace;
+            background: white;
+            padding: 10px 15px;
+            border-radius: 6px;
+            text-align: center;
+        }
+        
+        .properties-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .property-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 12px 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .property-card:hover {
+            border-color: #1E64C8;
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.15);
+        }
+        
+        .property-label {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .property-value {
+            font-size: 16px;
+            color: #555;
+        }
+        
+        .markov-badge {
+            position: absolute;
+            top: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            border: 2px solid #1E64C8;
+            color: #1E64C8;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 16px;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(30, 100, 200, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">Forward Process Definition</div>
+            <div class="subtitle">Part 2/7: Forward Process</div>
+        </div>
+        
+        <div class="goal-box">
+            🎯 Goal: Gradually transform data into pure Gaussian noise
+        </div>
+        
+        <div class="process-flow">
+            <div class="markov-badge">🔗 Markov Chain: q(x_t | x_{t-1})</div>
+            
+            <div class="data-box">
+                <div class="data-label">x₀</div>
+                <div class="data-desc">Original Data</div>
+            </div>
+            
+            <div class="arrow-container">
+                <div class="step-label">t = 1, 2, ..., T</div>
+                <div class="arrow">→→→</div>
+            </div>
+            
+            <div class="data-box" style="border-color: #E74C3C;">
+                <div class="data-label" style="color: #E74C3C;">x_T</div>
+                <div class="data-desc">~ N(0, I)</div>
+            </div>
+        </div>
+        
+        <div class="formula-box">
+            <div class="formula-title">Gaussian Transition Formula</div>
+            <div class="formula-content">
+                x_t = √(1-β_t) · x_{t-1} + √β_t · ε
+            </div>
+        </div>
+        
+        <div class="properties-grid">
+            <div class="property-card">
+                <div class="property-label">⚙️ Noise Schedule (β_t)</div>
+                <div class="property-value">Controls amount of noise at step t</div>
+            </div>
+            
+            <div class="property-card">
+                <div class="property-label">📈 Fixed Schedule</div>
+                <div class="property-value">β_t increases from 0.0001 to 0.02</div>
+            </div>
+            
+            <div class="property-card">
+                <div class="property-label">⏱️ Time Steps (T)</div>
+                <div class="property-value">Usually T = 1000 steps</div>
+            </div>
+            
+            <div class="property-card">
+                <div class="property-label">✨ End Result</div>
+                <div class="property-value">x_T ~ N(0, I) is pure Gaussian noise</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

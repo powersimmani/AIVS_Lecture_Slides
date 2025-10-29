@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BERT Fine-tuning</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: #ffffff;
+            padding: 25px 40px;
+        }
+        
+        .title {
+            font-size: 26px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .main-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        /* Pre-trained BERT Base */
+        .bert-base {
+            background: #1E64C8;
+            border-radius: 10px;
+            padding: 15px 20px;
+            text-align: center;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(30, 100, 200, 0.3);
+        }
+        
+        .arrow-down-center {
+            text-align: center;
+            font-size: 28px;
+            color: #1E64C8;
+            margin: -5px 0;
+        }
+        
+        /* Task Types Grid */
+        .tasks-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        
+        .task-card {
+            background: #F8F9FA;
+            border: 3px solid #1E64C8;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .task-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        
+        .task-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .task-method {
+            background: #E8F4F8;
+            border-radius: 6px;
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            width: 100%;
+        }
+        
+        .method-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #666666;
+            margin-bottom: 4px;
+        }
+        
+        .method-text {
+            font-size: 16px;
+            color: #1E64C8;
+            font-weight: 500;
+            text-align: center;
+        }
+        
+        .task-example {
+            font-size: 15px;
+            color: #666666;
+            text-align: center;
+            font-style: italic;
+        }
+        
+        .token-display {
+            display: flex;
+            gap: 5px;
+            justify-content: center;
+            margin: 8px 0;
+        }
+        
+        .token {
+            background: #FFE0B2;
+            border: 2px solid #FF9800;
+            border-radius: 5px;
+            padding: 4px 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #E65100;
+        }
+        
+        .token.special {
+            background: #C8E6C9;
+            border-color: #4CAF50;
+            color: #2E7D32;
+        }
+        
+        /* Bottom Info */
+        .bottom-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            margin-top: 10px;
+        }
+        
+        .info-card {
+            background: #E8F4F8;
+            border-left: 4px solid #1E64C8;
+            border-radius: 6px;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .info-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        
+        .info-content {
+            flex: 1;
+        }
+        
+        .info-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 2px;
+        }
+        
+        .info-text {
+            font-size: 16px;
+            color: #333333;
+            line-height: 1.3;
+        }
+        
+        .highlight {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .plus-icon {
+            text-align: center;
+            font-size: 20px;
+            color: #1E64C8;
+            font-weight: 600;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">BERT Fine-tuning for Different Tasks</div>
+        
+        <div class="main-layout">
+            <!-- Pre-trained BERT -->
+            <div class="bert-base">
+                🧠 Pre-trained BERT (All Parameters)
+            </div>
+            
+            <div class="plus-icon">+</div>
+            
+            <!-- Task-Specific Layers -->
+            <div class="tasks-grid">
+                <!-- Classification -->
+                <div class="task-card">
+                    <div class="task-icon">📊</div>
+                    <div class="task-title">Sequence Classification</div>
+                    
+                    <div class="task-method">
+                        <div class="method-label">Uses:</div>
+                        <div class="token-display">
+                            <div class="token special">[CLS]</div>
+                        </div>
+                        <div class="method-text">token representation</div>
+                    </div>
+                    
+                    <div class="task-example">
+                        Sentiment Analysis,<br>Text Classification
+                    </div>
+                </div>
+                
+                <!-- Token Classification -->
+                <div class="task-card">
+                    <div class="task-icon">🏷️</div>
+                    <div class="task-title">Token Classification</div>
+                    
+                    <div class="task-method">
+                        <div class="method-label">Uses:</div>
+                        <div class="token-display">
+                            <div class="token">T₁</div>
+                            <div class="token">T₂</div>
+                            <div class="token">T₃</div>
+                        </div>
+                        <div class="method-text">each token's output</div>
+                    </div>
+                    
+                    <div class="task-example">
+                        NER, POS Tagging
+                    </div>
+                </div>
+                
+                <!-- Question Answering -->
+                <div class="task-card">
+                    <div class="task-icon">❓</div>
+                    <div class="task-title">Question Answering</div>
+                    
+                    <div class="task-method">
+                        <div class="method-label">Predicts:</div>
+                        <div class="method-text" style="margin-top: 4px;">
+                            Start & End spans
+                        </div>
+                    </div>
+                    
+                    <div class="task-example">
+                        SQuAD, Reading<br>Comprehension
+                    </div>
+                </div>
+            </div>
+            
+            <div class="arrow-down-center">↓</div>
+            
+            <div style="background: #C8E6C9; border: 2px solid #4CAF50; border-radius: 8px; padding: 12px; text-align: center;">
+                <div style="font-size: 18px; font-weight: 600; color: #2E7D32; margin-bottom: 4px;">
+                    ⚡ End-to-End Fine-tuning
+                </div>
+                <div style="font-size: 16px; color: #1B5E20;">
+                    All parameters updated with task-specific data
+                </div>
+            </div>
+            
+            <!-- Bottom Info Cards -->
+            <div class="bottom-info">
+                <div class="info-card">
+                    <div class="info-icon">🚀</div>
+                    <div class="info-content">
+                        <div class="info-title">Fast Training</div>
+                        <div class="info-text">Only <strong>few epochs</strong> needed</div>
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-icon">🎯</div>
+                    <div class="info-content">
+                        <div class="info-title">Task-Specific</div>
+                        <div class="info-text">Add layer on <strong>top of BERT</strong></div>
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-icon">🔄</div>
+                    <div class="info-content">
+                        <div class="info-title">Transfer Learning</div>
+                        <div class="info-text"><strong>Few-shot</strong> & zero-shot</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

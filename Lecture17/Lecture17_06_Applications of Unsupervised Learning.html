@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unsupervised Learning Applications</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .center-node {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, #1E64C8 0%, #2979d9 100%);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 8px 25px rgba(30, 100, 200, 0.3);
+            z-index: 10;
+        }
+        
+        .center-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+        
+        .center-title {
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+            line-height: 1.3;
+        }
+        
+        .applications-grid {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .app-card {
+            position: absolute;
+            width: 220px;
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .app-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(30, 100, 200, 0.2);
+            border-color: #2979d9;
+            z-index: 5;
+        }
+        
+        .app-card.top-left {
+            top: 20px;
+            left: 40px;
+        }
+        
+        .app-card.top-center {
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .app-card.top-right {
+            top: 20px;
+            right: 40px;
+        }
+        
+        .app-card.middle-left {
+            top: 50%;
+            left: 20px;
+            transform: translateY(-50%);
+        }
+        
+        .app-card.middle-right {
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+        }
+        
+        .app-card.bottom-left {
+            bottom: 20px;
+            left: 40px;
+        }
+        
+        .app-card.bottom-center {
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .app-card.bottom-right {
+            bottom: 20px;
+            right: 40px;
+        }
+        
+        .app-icon {
+            font-size: 28px;
+            text-align: center;
+        }
+        
+        .app-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            line-height: 1.2;
+        }
+        
+        .app-desc {
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+            line-height: 1.3;
+        }
+        
+        /* Connection lines */
+        .connection-line {
+            position: absolute;
+            background: linear-gradient(90deg, rgba(30, 100, 200, 0.3) 0%, rgba(30, 100, 200, 0.1) 100%);
+            height: 2px;
+            transform-origin: left center;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .line-1 {
+            top: 120px;
+            left: 150px;
+            width: 200px;
+            transform: rotate(-25deg);
+        }
+        
+        .line-2 {
+            top: 80px;
+            left: 480px;
+            width: 100px;
+            transform: rotate(-90deg);
+        }
+        
+        .line-3 {
+            top: 120px;
+            right: 150px;
+            width: 200px;
+            transform: rotate(25deg);
+        }
+        
+        .line-4 {
+            top: 270px;
+            left: 230px;
+            width: 150px;
+        }
+        
+        .line-5 {
+            top: 270px;
+            right: 230px;
+            width: 150px;
+        }
+        
+        .line-6 {
+            bottom: 120px;
+            left: 150px;
+            width: 200px;
+            transform: rotate(25deg);
+        }
+        
+        .line-7 {
+            bottom: 80px;
+            left: 480px;
+            width: 100px;
+            transform: rotate(90deg);
+        }
+        
+        .line-8 {
+            bottom: 120px;
+            right: 150px;
+            width: 200px;
+            transform: rotate(-25deg);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="applications-grid">
+            <!-- Connection lines -->
+            <div class="connection-line line-1"></div>
+            <div class="connection-line line-2"></div>
+            <div class="connection-line line-3"></div>
+            <div class="connection-line line-4"></div>
+            <div class="connection-line line-5"></div>
+            <div class="connection-line line-6"></div>
+            <div class="connection-line line-7"></div>
+            <div class="connection-line line-8"></div>
+            
+            <!-- Center Node -->
+            <div class="center-node">
+                <div class="center-icon">🎯</div>
+                <div class="center-title">Unsupervised<br>Learning<br>Applications</div>
+            </div>
+            
+            <!-- Application Cards -->
+            <div class="app-card top-left">
+                <div class="app-icon">👥</div>
+                <div class="app-title">Customer Segmentation</div>
+                <div class="app-desc">Group customers by behavior patterns</div>
+            </div>
+            
+            <div class="app-card top-center">
+                <div class="app-icon">⚠️</div>
+                <div class="app-title">Anomaly Detection</div>
+                <div class="app-desc">Fraud detection, intrusion detection</div>
+            </div>
+            
+            <div class="app-card top-right">
+                <div class="app-icon">🎬</div>
+                <div class="app-title">Recommendation Systems</div>
+                <div class="app-desc">Find similar items without ratings</div>
+            </div>
+            
+            <div class="app-card middle-left">
+                <div class="app-icon">🖼️</div>
+                <div class="app-title">Image Compression</div>
+                <div class="app-desc">Reduce dimensionality efficiently</div>
+            </div>
+            
+            <div class="app-card middle-right">
+                <div class="app-icon">🛒</div>
+                <div class="app-title">Market Basket Analysis</div>
+                <div class="app-desc">Discover product associations</div>
+            </div>
+            
+            <div class="app-card bottom-left">
+                <div class="app-icon">📄</div>
+                <div class="app-title">Document Clustering</div>
+                <div class="app-desc">Organize articles and papers</div>
+            </div>
+            
+            <div class="app-card bottom-center">
+                <div class="app-icon">🧬</div>
+                <div class="app-title">Biological Analysis</div>
+                <div class="app-desc">Gene expression patterns</div>
+            </div>
+            
+            <div class="app-card bottom-right">
+                <div class="app-icon">⚙️</div>
+                <div class="app-title">Feature Engineering</div>
+                <div class="app-desc">Create better features for models</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

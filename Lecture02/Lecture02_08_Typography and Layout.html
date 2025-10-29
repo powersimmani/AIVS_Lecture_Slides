@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Typography and Layout Principles</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #FFFFFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            padding: 30px 40px;
+        }
+        
+        .title-section {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .main-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .subtitle {
+            font-size: 17px;
+            color: #666666;
+        }
+        
+        .content-wrapper {
+            display: flex;
+            gap: 25px;
+            flex: 1;
+        }
+        
+        .left-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .hierarchy-demo {
+            background: #F8FBFF;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 12px;
+        }
+        
+        .demo-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .hierarchy-item {
+            padding: 8px 12px;
+            border-left: 4px solid #1E64C8;
+            background: #FFFFFF;
+            border-radius: 4px;
+        }
+        
+        .level-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1E64C8;
+            line-height: 1.3;
+        }
+        
+        .level-subtitle {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            line-height: 1.3;
+        }
+        
+        .level-body {
+            font-size: 16px;
+            font-weight: 400;
+            color: #666666;
+            line-height: 1.4;
+        }
+        
+        .label {
+            font-size: 12px;
+            color: #999999;
+            font-weight: 500;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .spacing-demo {
+            background: #FFFFFF;
+            border: 2px solid #E0E0E0;
+            border-radius: 10px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .spacing-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .spacing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        
+        .spacing-box {
+            background: #E3F2FD;
+            border: 2px dashed #1E64C8;
+            border-radius: 6px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #1E64C8;
+            font-weight: 500;
+        }
+        
+        .right-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .principles-card {
+            background: #FFFFFF;
+            border: 2px solid #E0E0E0;
+            border-radius: 10px;
+            padding: 20px;
+            flex: 1;
+        }
+        
+        .principles-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 14px;
+            text-align: center;
+        }
+        
+        .principles-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .principle-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 8px;
+            background: #F8FBFF;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+        
+        .principle-item:hover {
+            background: #E3F2FD;
+            transform: translateX(5px);
+        }
+        
+        .principle-icon {
+            width: 28px;
+            height: 28px;
+            background: #1E64C8;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+            font-weight: 600;
+        }
+        
+        .principle-content {
+            flex: 1;
+        }
+        
+        .principle-text {
+            font-size: 16px;
+            color: #333333;
+            line-height: 1.4;
+        }
+        
+        .principle-text strong {
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .best-practices {
+            background: #FFF9E6;
+            border: 2px solid #FFC107;
+            border-radius: 10px;
+            padding: 18px;
+        }
+        
+        .bp-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .bp-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .bp-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+            color: #333333;
+        }
+        
+        .check-icon {
+            color: #4CAF50;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .cross-icon {
+            color: #F44336;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .hierarchy-demo, .spacing-demo, .principles-card, .best-practices {
+            animation: slideIn 0.5s ease forwards;
+        }
+        
+        .hierarchy-demo { animation-delay: 0.1s; }
+        .spacing-demo { animation-delay: 0.2s; }
+        .principles-card { animation-delay: 0.3s; }
+        .best-practices { animation-delay: 0.4s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Typography and Layout Principles</div>
+            <div class="subtitle">Creating Clear and Professional Visualizations</div>
+        </div>
+        
+        <div class="content-wrapper">
+            <div class="left-panel">
+                <!-- Visual Hierarchy Demo -->
+                <div class="hierarchy-demo">
+                    <div class="demo-title">Visual Hierarchy</div>
+                    <div class="hierarchy-item">
+                        <div class="label">Title (24pt)</div>
+                        <div class="level-title">Main Visualization Title</div>
+                    </div>
+                    <div class="hierarchy-item">
+                        <div class="label">Subtitle (20pt)</div>
+                        <div class="level-subtitle">Supporting Context</div>
+                    </div>
+                    <div class="hierarchy-item">
+                        <div class="label">Body (16pt)</div>
+                        <div class="level-body">Detailed information and annotations with proper spacing and clarity</div>
+                    </div>
+                </div>
+                
+                <!-- Spacing Grid Demo -->
+                <div class="spacing-demo">
+                    <div class="spacing-title">Grid System & White Space</div>
+                    <div class="spacing-grid">
+                        <div class="spacing-box">Chart</div>
+                        <div class="spacing-box">Legend</div>
+                        <div class="spacing-box">Metrics</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <!-- Key Principles -->
+                <div class="principles-card">
+                    <div class="principles-title">Key Principles</div>
+                    <div class="principles-list">
+                        <div class="principle-item">
+                            <div class="principle-icon">1</div>
+                            <div class="principle-content">
+                                <div class="principle-text"><strong>Sans-serif</strong> for digital, <strong>serif</strong> for print</div>
+                            </div>
+                        </div>
+                        
+                        <div class="principle-item">
+                            <div class="principle-icon">2</div>
+                            <div class="principle-content">
+                                <div class="principle-text"><strong>12-14pt minimum</strong> for readability</div>
+                            </div>
+                        </div>
+                        
+                        <div class="principle-item">
+                            <div class="principle-icon">3</div>
+                            <div class="principle-content">
+                                <div class="principle-text"><strong>2-3 font families</strong> maximum</div>
+                            </div>
+                        </div>
+                        
+                        <div class="principle-item">
+                            <div class="principle-icon">4</div>
+                            <div class="principle-content">
+                                <div class="principle-text"><strong>Consistent alignment</strong> is professional</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Best Practices -->
+                <div class="best-practices">
+                    <div class="bp-title">
+                        <span>✓</span>
+                        Best Practices
+                    </div>
+                    <div class="bp-list">
+                        <div class="bp-item">
+                            <span class="check-icon">✓</span>
+                            <span>White space improves clarity</span>
+                        </div>
+                        <div class="bp-item">
+                            <span class="check-icon">✓</span>
+                            <span>Grid systems ensure balance</span>
+                        </div>
+                        <div class="bp-item">
+                            <span class="check-icon">✓</span>
+                            <span>Annotations enhance content</span>
+                        </div>
+                        <div class="bp-item">
+                            <span class="cross-icon">✗</span>
+                            <span>Avoid cluttering with text</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

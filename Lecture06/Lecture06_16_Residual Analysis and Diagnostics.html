@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Residual Analysis and Diagnostics</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: white;
+            font-family: Aptos, 'Segoe UI', sans-serif;
+        }
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+            padding: 30px;
+            box-sizing: border-box;
+        }
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+        }
+        .definition-box {
+            background: #f0f7ff;
+            border-left: 4px solid #1E64C8;
+            padding: 12px 18px;
+            border-radius: 6px;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        .definition-text {
+            font-size: 16px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+        .definition-formula {
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            color: #1E64C8;
+            font-weight: 700;
+            margin-top: 5px;
+        }
+        
+        .plots-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 18px;
+        }
+        .plot-card {
+            background: #f8f9fb;
+            border-radius: 8px;
+            padding: 15px;
+            border-top: 3px solid #1E64C8;
+        }
+        .plot-card:nth-child(2) {
+            border-top-color: #4A90E2;
+        }
+        .plot-card:nth-child(3) {
+            border-top-color: #7BB3F0;
+        }
+        .plot-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .plot-visual {
+            background: white;
+            height: 100px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        .plot-svg {
+            width: 100%;
+            height: 100%;
+        }
+        .plot-description {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.4;
+            text-align: center;
+        }
+        
+        .patterns-section {
+            background: #f8f9fb;
+            border-radius: 10px;
+            padding: 18px;
+            margin-bottom: 15px;
+        }
+        .patterns-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        .patterns-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        .pattern-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .pattern-box {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+        }
+        .pattern-box.good {
+            border: 2px solid #27ae60;
+        }
+        .pattern-box.bad {
+            border: 2px solid #e74c3c;
+        }
+        .pattern-label {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .good .pattern-label {
+            color: #27ae60;
+        }
+        .bad .pattern-label {
+            color: #e74c3c;
+        }
+        .pattern-mini-plot {
+            height: 60px;
+            background: #f8f9fb;
+            border-radius: 4px;
+            margin-bottom: 6px;
+        }
+        .pattern-text {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .checklist-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+        }
+        .checklist-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .checklist-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        .checklist-item {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 14px;
+        }
+        .checklist-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Residual Analysis and Diagnostics</div>
+        
+        <div class="definition-box">
+            <div class="definition-text">Residuals: Differences between observed and predicted values</div>
+            <div class="definition-formula">Residual = y - ŷ</div>
+        </div>
+
+        <div class="plots-grid">
+            <!-- Residual Plot -->
+            <div class="plot-card">
+                <div class="plot-title">Residual Plot</div>
+                <div class="plot-visual">
+                    <svg class="plot-svg" viewBox="0 0 200 100">
+                        <!-- Axes -->
+                        <line x1="20" y1="50" x2="180" y2="50" stroke="#ccc" stroke-width="1.5"/>
+                        <line x1="20" y1="10" x2="20" y2="90" stroke="#ccc" stroke-width="1.5"/>
+                        <!-- Random scatter -->
+                        <circle cx="40" cy="45" r="3" fill="#1E64C8" opacity="0.7"/>
+                        <circle cx="60" cy="55" r="3" fill="#1E64C8" opacity="0.7"/>
+                        <circle cx="80" cy="42" r="3" fill="#1E64C8" opacity="0.7"/>
+                        <circle cx="100" cy="58" r="3" fill="#1E64C8" opacity="0.7"/>
+                        <circle cx="120" cy="48" r="3" fill="#1E64C8" opacity="0.7"/>
+                        <circle cx="140" cy="52" r="3" fill="#1E64C8" opacity="0.7"/>
+                        <circle cx="160" cy="46" r="3" fill="#1E64C8" opacity="0.7"/>
+                        <text x="100" y="95" text-anchor="middle" font-size="10" fill="#888">Fitted Values</text>
+                    </svg>
+                </div>
+                <div class="plot-description">Random scatter around zero indicates good fit</div>
+            </div>
+
+            <!-- Q-Q Plot -->
+            <div class="plot-card">
+                <div class="plot-title">Q-Q Plot</div>
+                <div class="plot-visual">
+                    <svg class="plot-svg" viewBox="0 0 200 100">
+                        <!-- Diagonal line -->
+                        <line x1="20" y1="80" x2="180" y2="20" stroke="#e74c3c" stroke-width="2" stroke-dasharray="3,3"/>
+                        <!-- Points along line -->
+                        <circle cx="40" cy="70" r="3" fill="#4A90E2" opacity="0.7"/>
+                        <circle cx="60" cy="60" r="3" fill="#4A90E2" opacity="0.7"/>
+                        <circle cx="80" cy="50" r="3" fill="#4A90E2" opacity="0.7"/>
+                        <circle cx="100" cy="40" r="3" fill="#4A90E2" opacity="0.7"/>
+                        <circle cx="120" cy="35" r="3" fill="#4A90E2" opacity="0.7"/>
+                        <circle cx="140" cy="30" r="3" fill="#4A90E2" opacity="0.7"/>
+                        <circle cx="160" cy="25" r="3" fill="#4A90E2" opacity="0.7"/>
+                        <text x="100" y="95" text-anchor="middle" font-size="10" fill="#888">Theoretical Quantiles</text>
+                    </svg>
+                </div>
+                <div class="plot-description">Checks normal distribution of residuals</div>
+            </div>
+
+            <!-- Scale-Location Plot -->
+            <div class="plot-card">
+                <div class="plot-title">Scale-Location Plot</div>
+                <div class="plot-visual">
+                    <svg class="plot-svg" viewBox="0 0 200 100">
+                        <!-- Horizontal line -->
+                        <line x1="20" y1="50" x2="180" y2="50" stroke="#f39c12" stroke-width="2" stroke-dasharray="3,3"/>
+                        <!-- Random scatter -->
+                        <circle cx="40" cy="48" r="3" fill="#7BB3F0" opacity="0.7"/>
+                        <circle cx="60" cy="52" r="3" fill="#7BB3F0" opacity="0.7"/>
+                        <circle cx="80" cy="45" r="3" fill="#7BB3F0" opacity="0.7"/>
+                        <circle cx="100" cy="55" r="3" fill="#7BB3F0" opacity="0.7"/>
+                        <circle cx="120" cy="50" r="3" fill="#7BB3F0" opacity="0.7"/>
+                        <circle cx="140" cy="47" r="3" fill="#7BB3F0" opacity="0.7"/>
+                        <circle cx="160" cy="53" r="3" fill="#7BB3F0" opacity="0.7"/>
+                        <text x="100" y="95" text-anchor="middle" font-size="10" fill="#888">Fitted Values</text>
+                    </svg>
+                </div>
+                <div class="plot-description">Detects heteroscedasticity (non-constant variance)</div>
+            </div>
+        </div>
+
+        <div class="patterns-section">
+            <div class="patterns-title">Ideal vs Problematic Patterns</div>
+            <div class="pattern-comparison">
+                <div class="pattern-box good">
+                    <div class="pattern-label">✓ Good Pattern</div>
+                    <svg class="pattern-mini-plot" viewBox="0 0 200 60">
+                        <line x1="10" y1="30" x2="190" y2="30" stroke="#ccc" stroke-width="1"/>
+                        <circle cx="30" cy="28" r="2.5" fill="#27ae60"/>
+                        <circle cx="50" cy="35" r="2.5" fill="#27ae60"/>
+                        <circle cx="70" cy="25" r="2.5" fill="#27ae60"/>
+                        <circle cx="90" cy="32" r="2.5" fill="#27ae60"/>
+                        <circle cx="110" cy="27" r="2.5" fill="#27ae60"/>
+                        <circle cx="130" cy="33" r="2.5" fill="#27ae60"/>
+                        <circle cx="150" cy="29" r="2.5" fill="#27ae60"/>
+                        <circle cx="170" cy="31" r="2.5" fill="#27ae60"/>
+                    </svg>
+                    <div class="pattern-text">Random scatter, constant variance</div>
+                </div>
+
+                <div class="pattern-box bad">
+                    <div class="pattern-label">✗ Bad Pattern</div>
+                    <svg class="pattern-mini-plot" viewBox="0 0 200 60">
+                        <line x1="10" y1="30" x2="190" y2="30" stroke="#ccc" stroke-width="1"/>
+                        <path d="M 20 35 Q 60 25, 100 30 T 180 25" stroke="#e74c3c" stroke-width="2" fill="none"/>
+                        <circle cx="30" cy="33" r="2.5" fill="#e74c3c"/>
+                        <circle cx="70" cy="27" r="2.5" fill="#e74c3c"/>
+                        <circle cx="110" cy="30" r="2.5" fill="#e74c3c"/>
+                        <circle cx="150" cy="26" r="2.5" fill="#e74c3c"/>
+                    </svg>
+                    <div class="pattern-text">Curved pattern, non-linearity</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="checklist-box">
+            <div class="checklist-title">🔍 What to Check</div>
+            <div class="checklist-grid">
+                <div class="checklist-item">
+                    <div class="checklist-icon">📐</div>
+                    <div>Non-linearity</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checklist-icon">📊</div>
+                    <div>Heteroscedasticity</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checklist-icon">🎯</div>
+                    <div>Outliers</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="checklist-icon">📈</div>
+                    <div>Normal distribution</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

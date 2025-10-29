@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gaussian Mixture Models</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+            color: #666;
+            margin-top: -10px;
+        }
+        
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            flex: 1;
+        }
+        
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        
+        .model-box {
+            background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 12px;
+            padding: 16px;
+        }
+        
+        .box-header {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .model-desc {
+            font-size: 15px;
+            color: #555;
+            text-align: center;
+            line-height: 1.4;
+            margin-bottom: 12px;
+        }
+        
+        .component-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        
+        .component-item {
+            background: white;
+            border: 1px solid #1E64C8;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        .component-symbol {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .component-name {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .em-algorithm {
+            background: linear-gradient(135deg, #f3e5f5 0%, #ffffff 100%);
+            border: 2px solid #9C27B0;
+            border-radius: 12px;
+            padding: 16px;
+            flex: 1;
+        }
+        
+        .em-algorithm .box-header {
+            color: #9C27B0;
+            border-color: #9C27B0;
+        }
+        
+        .em-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .em-step {
+            background: white;
+            border: 1px solid #9C27B0;
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .step-label {
+            min-width: 28px;
+            height: 28px;
+            background: #9C27B0;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .step-text {
+            flex: 1;
+        }
+        
+        .step-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #9C27B0;
+            margin-bottom: 3px;
+        }
+        
+        .step-desc {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.3;
+        }
+        
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        
+        .comparison-box {
+            background: linear-gradient(135deg, #fff8e1 0%, #ffffff 100%);
+            border: 2px solid #FFA726;
+            border-radius: 12px;
+            padding: 16px;
+        }
+        
+        .comparison-box .box-header {
+            color: #F57C00;
+            border-color: #FFA726;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .compare-item {
+            background: white;
+            border: 1px solid #FFA726;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        .compare-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: #F57C00;
+            margin-bottom: 6px;
+        }
+        
+        .compare-value {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.3;
+        }
+        
+        .advantages-box {
+            background: linear-gradient(135deg, #e8f5e9 0%, #ffffff 100%);
+            border: 2px solid #4CAF50;
+            border-radius: 12px;
+            padding: 16px;
+            flex: 1;
+        }
+        
+        .advantages-box .box-header {
+            color: #388E3C;
+            border-color: #4CAF50;
+        }
+        
+        .advantage-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .advantage-list li {
+            font-size: 15px;
+            color: #333;
+            padding-left: 24px;
+            position: relative;
+            line-height: 1.4;
+        }
+        
+        .advantage-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4CAF50;
+            font-weight: bold;
+            font-size: 20px;
+        }
+        
+        .model-selection {
+            background: linear-gradient(135deg, #e0f2f1 0%, #ffffff 100%);
+            border: 2px solid #00897B;
+            border-radius: 12px;
+            padding: 14px;
+            text-align: center;
+        }
+        
+        .selection-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #00897B;
+            margin-bottom: 6px;
+        }
+        
+        .selection-methods {
+            font-size: 15px;
+            color: #555;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .limitation-box {
+            background: linear-gradient(135deg, #ffebee 0%, #ffffff 100%);
+            border: 2px solid #e57373;
+            border-radius: 10px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .limitation-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        
+        .limitation-text {
+            font-size: 14px;
+            color: #d32f2f;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Gaussian Mixture Models (GMM)</div>
+        <div class="subtitle">Model-based soft clustering approach</div>
+        
+        <div class="main-grid">
+            <div class="left-section">
+                <div class="model-box">
+                    <div class="box-header">📊 Model Components</div>
+                    <div class="model-desc">Data generated from mixture of k Gaussian distributions</div>
+                    <div class="component-grid">
+                        <div class="component-item">
+                            <div class="component-symbol">μ</div>
+                            <div class="component-name">Mean</div>
+                        </div>
+                        <div class="component-item">
+                            <div class="component-symbol">Σ</div>
+                            <div class="component-name">Covariance</div>
+                        </div>
+                        <div class="component-item">
+                            <div class="component-symbol">π</div>
+                            <div class="component-name">Weight</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="em-algorithm">
+                    <div class="box-header">🔄 EM Algorithm</div>
+                    <div class="em-steps">
+                        <div class="em-step">
+                            <div class="step-label">E</div>
+                            <div class="step-text">
+                                <div class="step-name">Expectation Step</div>
+                                <div class="step-desc">Assign probabilities to clusters</div>
+                            </div>
+                        </div>
+                        
+                        <div class="em-step">
+                            <div class="step-label">M</div>
+                            <div class="step-text">
+                                <div class="step-name">Maximization Step</div>
+                                <div class="step-desc">Update parameters (μ, Σ, π)</div>
+                            </div>
+                        </div>
+                        
+                        <div class="em-step">
+                            <div class="step-label">↻</div>
+                            <div class="step-text">
+                                <div class="step-name">Iterate</div>
+                                <div class="step-desc">Repeat until convergence</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-section">
+                <div class="comparison-box">
+                    <div class="box-header">⚖️ K-means vs GMM</div>
+                    <div class="comparison-grid">
+                        <div class="compare-item">
+                            <div class="compare-label">K-means</div>
+                            <div class="compare-value">Hard assignment<br>Spherical clusters</div>
+                        </div>
+                        <div class="compare-item">
+                            <div class="compare-label">GMM</div>
+                            <div class="compare-value">Soft assignment<br>Elliptical clusters</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="advantages-box">
+                    <div class="box-header">💪 Advantages</div>
+                    <ul class="advantage-list">
+                        <li>Probability distribution over clusters</li>
+                        <li>Models elliptical clusters</li>
+                        <li>Soft assignment flexibility</li>
+                        <li>Captures uncertainty</li>
+                    </ul>
+                </div>
+                
+                <div class="model-selection">
+                    <div class="selection-label">📈 Model Selection</div>
+                    <div class="selection-methods">BIC • AIC</div>
+                    <div style="font-size: 13px; color: #666; margin-top: 4px;">Choose optimal k</div>
+                </div>
+                
+                <div class="limitation-box">
+                    <div class="limitation-icon">⚠️</div>
+                    <div class="limitation-text">Assumes Gaussian distribution</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

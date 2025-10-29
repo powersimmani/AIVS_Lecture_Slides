@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decision Tree Transparency</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+            padding: 30px 40px;
+            display: flex;
+            gap: 30px;
+        }
+        
+        /* Left section - tree visualization */
+        .tree-section {
+            flex: 1.2;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .tree-container {
+            flex: 1;
+            position: relative;
+            padding: 20px;
+        }
+        
+        /* Tree nodes */
+        .node {
+            position: absolute;
+            background: white;
+            border: 3px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px 16px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(30, 100, 200, 0.15);
+            transition: all 0.2s;
+            cursor: pointer;
+            min-width: 120px;
+        }
+        
+        .node:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.25);
+        }
+        
+        /* Root node */
+        .node.root {
+            background: linear-gradient(135deg, #1E64C8 0%, #2A7DE1 100%);
+            color: white;
+            border-color: #1E64C8;
+            font-weight: 700;
+        }
+        
+        /* Leaf nodes */
+        .node.leaf {
+            background: #F0F7FF;
+            border: 2px solid #B8D4F1;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        .node.leaf.positive {
+            background: #E8F5E9;
+            border-color: #4CAF50;
+            color: #2E7D32;
+        }
+        
+        .node.leaf.negative {
+            background: #FFEBEE;
+            border-color: #E57373;
+            color: #C62828;
+        }
+        
+        .node-label {
+            font-size: 13px;
+            color: inherit;
+            line-height: 1.3;
+        }
+        
+        .node-value {
+            font-size: 11px;
+            opacity: 0.8;
+            margin-top: 2px;
+        }
+        
+        /* Position nodes (3 levels) */
+        /* Level 0 - Root */
+        .node-0 { left: 50%; top: 10px; transform: translateX(-50%); }
+        
+        /* Level 1 */
+        .node-1 { left: 25%; top: 100px; transform: translateX(-50%); }
+        .node-2 { left: 75%; top: 100px; transform: translateX(-50%); }
+        
+        /* Level 2 */
+        .node-3 { left: 12%; top: 190px; transform: translateX(-50%); }
+        .node-4 { left: 38%; top: 190px; transform: translateX(-50%); }
+        .node-5 { left: 62%; top: 190px; transform: translateX(-50%); }
+        .node-6 { left: 88%; top: 190px; transform: translateX(-50%); }
+        
+        /* Level 3 - Leaves */
+        .node-7 { left: 6%; top: 280px; transform: translateX(-50%); }
+        .node-8 { left: 18%; top: 280px; transform: translateX(-50%); }
+        .node-9 { left: 32%; top: 280px; transform: translateX(-50%); }
+        .node-10 { left: 44%; top: 280px; transform: translateX(-50%); }
+        .node-11 { left: 56%; top: 280px; transform: translateX(-50%); }
+        .node-12 { left: 68%; top: 280px; transform: translateX(-50%); }
+        .node-13 { left: 82%; top: 280px; transform: translateX(-50%); }
+        .node-14 { left: 94%; top: 280px; transform: translateX(-50%); }
+        
+        /* Connection lines */
+        svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        .edge {
+            stroke: #B8D4F1;
+            stroke-width: 2;
+            fill: none;
+        }
+        
+        .edge.highlighted {
+            stroke: #1E64C8;
+            stroke-width: 3;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        
+        .edge-label {
+            font-size: 11px;
+            fill: #666;
+            font-weight: 600;
+        }
+        
+        /* Right section - key points */
+        .info-section {
+            flex: 0.8;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 16px;
+        }
+        
+        .info-card {
+            background: #F8FAFC;
+            border-left: 4px solid #1E64C8;
+            border-radius: 8px;
+            padding: 14px 16px;
+            transition: all 0.2s;
+        }
+        
+        .info-card:hover {
+            background: #F0F7FF;
+            transform: translateX(4px);
+        }
+        
+        .info-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .info-desc {
+            font-size: 15px;
+            color: #666;
+            line-height: 1.4;
+        }
+        
+        /* Legend */
+        .legend {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 14px;
+            background: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .legend-box {
+            width: 24px;
+            height: 16px;
+            border-radius: 4px;
+            border: 2px solid;
+        }
+        
+        .legend-box.decision {
+            background: white;
+            border-color: #1E64C8;
+        }
+        
+        .legend-box.positive {
+            background: #E8F5E9;
+            border-color: #4CAF50;
+        }
+        
+        .legend-box.negative {
+            background: #FFEBEE;
+            border-color: #E57373;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Tree Visualization -->
+        <div class="tree-section">
+            <div class="title">Decision Tree Structure</div>
+            
+            <div class="tree-container">
+                <!-- SVG for connection lines -->
+                <svg>
+                    <!-- Level 0 to 1 -->
+                    <line x1="50%" y1="60" x2="25%" y2="110" class="edge highlighted"/>
+                    <line x1="50%" y1="60" x2="75%" y2="110" class="edge"/>
+                    
+                    <!-- Level 1 to 2 -->
+                    <line x1="25%" y1="150" x2="12%" y2="200" class="edge highlighted"/>
+                    <line x1="25%" y1="150" x2="38%" y2="200" class="edge"/>
+                    <line x1="75%" y1="150" x2="62%" y2="200" class="edge"/>
+                    <line x1="75%" y1="150" x2="88%" y2="200" class="edge"/>
+                    
+                    <!-- Level 2 to 3 (leaves) -->
+                    <line x1="12%" y1="240" x2="6%" y2="285" class="edge highlighted"/>
+                    <line x1="12%" y1="240" x2="18%" y2="285" class="edge"/>
+                    <line x1="38%" y1="240" x2="32%" y2="285" class="edge"/>
+                    <line x1="38%" y1="240" x2="44%" y2="285" class="edge"/>
+                    <line x1="62%" y1="240" x2="56%" y2="285" class="edge"/>
+                    <line x1="62%" y1="240" x2="68%" y2="285" class="edge"/>
+                    <line x1="88%" y1="240" x2="82%" y2="285" class="edge"/>
+                    <line x1="88%" y1="240" x2="94%" y2="285" class="edge"/>
+                    
+                    <!-- Edge labels -->
+                    <text x="36%" y="85" class="edge-label">≤</text>
+                    <text x="64%" y="85" class="edge-label">&gt;</text>
+                </svg>
+                
+                <!-- Nodes -->
+                <!-- Level 0 - Root -->
+                <div class="node root node-0">
+                    <div class="node-label">Age ≤ 45?</div>
+                </div>
+                
+                <!-- Level 1 -->
+                <div class="node node-1">
+                    <div class="node-label">Income ≤ 50K?</div>
+                </div>
+                <div class="node node-2">
+                    <div class="node-label">Credit ≤ 700?</div>
+                </div>
+                
+                <!-- Level 2 -->
+                <div class="node node-3">
+                    <div class="node-label">Education<br>≤ Bachelor?</div>
+                </div>
+                <div class="node node-4">
+                    <div class="node-label">Experience<br>≤ 5 years?</div>
+                </div>
+                <div class="node node-5">
+                    <div class="node-label">Debt Ratio<br>≤ 0.4?</div>
+                </div>
+                <div class="node node-6">
+                    <div class="node-label">Employment<br>≤ 2 years?</div>
+                </div>
+                
+                <!-- Level 3 - Leaves -->
+                <div class="node leaf negative node-7">
+                    <div class="node-label">Reject</div>
+                    <div class="node-value">85%</div>
+                </div>
+                <div class="node leaf positive node-8">
+                    <div class="node-label">Approve</div>
+                    <div class="node-value">72%</div>
+                </div>
+                <div class="node leaf positive node-9">
+                    <div class="node-label">Approve</div>
+                    <div class="node-value">68%</div>
+                </div>
+                <div class="node leaf negative node-10">
+                    <div class="node-label">Reject</div>
+                    <div class="node-value">78%</div>
+                </div>
+                <div class="node leaf positive node-11">
+                    <div class="node-label">Approve</div>
+                    <div class="node-value">91%</div>
+                </div>
+                <div class="node leaf negative node-12">
+                    <div class="node-label">Reject</div>
+                    <div class="node-value">81%</div>
+                </div>
+                <div class="node leaf positive node-13">
+                    <div class="node-label">Approve</div>
+                    <div class="node-value">88%</div>
+                </div>
+                <div class="node leaf negative node-14">
+                    <div class="node-label">Reject</div>
+                    <div class="node-value">93%</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Information Section -->
+        <div class="info-section">
+            <div class="info-card">
+                <div class="info-title">If-Then Rules</div>
+                <div class="info-desc">Binary splits create human-readable decision paths</div>
+            </div>
+            
+            <div class="info-card">
+                <div class="info-title">Complete Path</div>
+                <div class="info-desc">Full decision logic visible from root to leaf</div>
+            </div>
+            
+            <div class="info-card">
+                <div class="info-title">Feature Importance</div>
+                <div class="info-desc">Determined by split frequency and information gain</div>
+            </div>
+            
+            <div class="info-card">
+                <div class="info-title">Natural Interactions</div>
+                <div class="info-desc">Hierarchical splits handle feature interactions</div>
+            </div>
+            
+            <div class="info-card">
+                <div class="info-title">Trade-offs</div>
+                <div class="info-desc">Deep trees lose interpretability; pruning balances accuracy</div>
+            </div>
+            
+            <!-- Legend -->
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-box decision"></div>
+                    <span>Decision Node</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box positive"></div>
+                    <span>Approve Outcome</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box negative"></div>
+                    <span>Reject Outcome</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

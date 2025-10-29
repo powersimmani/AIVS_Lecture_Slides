@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Defining the Logistic Regression Model</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px;
+            position: relative;
+        }
+        
+        .title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .content-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            height: calc(100% - 50px);
+        }
+        
+        .formula-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            border-radius: 10px;
+            padding: 20px 24px;
+            color: white;
+            text-align: center;
+        }
+        
+        .formula-label {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            opacity: 0.95;
+        }
+        
+        .formula-main {
+            font-size: 20px;
+            font-weight: 700;
+            font-style: italic;
+            margin-bottom: 8px;
+        }
+        
+        .formula-expanded {
+            font-size: 18px;
+            font-weight: 600;
+            font-style: italic;
+            opacity: 0.95;
+        }
+        
+        .architecture-flow {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 16px 20px;
+        }
+        
+        .flow-step {
+            flex: 1;
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 14px 16px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .flow-step:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.2);
+        }
+        
+        .step-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+        
+        .step-content {
+            font-size: 17px;
+            color: #1E64C8;
+            font-weight: 600;
+            font-style: italic;
+        }
+        
+        .step-desc {
+            font-size: 14px;
+            color: #666;
+            margin-top: 4px;
+        }
+        
+        .arrow-flow {
+            font-size: 28px;
+            color: #1E64C8;
+            font-weight: bold;
+        }
+        
+        .sigmoid-step {
+            border-color: #9c27b0;
+        }
+        
+        .sigmoid-step .step-content {
+            color: #9c27b0;
+        }
+        
+        .output-step {
+            border-color: #28a745;
+        }
+        
+        .output-step .step-content {
+            color: #28a745;
+        }
+        
+        .decision-section {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 12px;
+            align-items: center;
+        }
+        
+        .decision-box {
+            background: white;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 14px 16px;
+            text-align: center;
+        }
+        
+        .decision-label {
+            font-size: 15px;
+            color: #f57c00;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        
+        .decision-rule {
+            font-size: 17px;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .threshold-icon {
+            font-size: 24px;
+            color: #ffc107;
+        }
+        
+        .note-box {
+            background: #fff8e6;
+            border: 2px solid #ffc107;
+            border-radius: 6px;
+            padding: 10px 14px;
+            text-align: center;
+            font-size: 15px;
+            color: #f57c00;
+            font-weight: 500;
+        }
+        
+        .parameters-section {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .param-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-left: 5px solid #1E64C8;
+            border-radius: 8px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .param-icon {
+            width: 32px;
+            height: 32px;
+            background: #1E64C8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .param-content {
+            flex: 1;
+        }
+        
+        .param-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .param-desc {
+            font-size: 15px;
+            color: #555;
+        }
+        
+        .goal-box {
+            background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+            border-radius: 8px;
+            padding: 14px 18px;
+            color: white;
+            text-align: center;
+            font-size: 17px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Defining the Logistic Regression Model</div>
+        
+        <div class="content-layout">
+            <!-- Complete Formula -->
+            <div class="formula-box">
+                <div class="formula-label">Complete Formulation:</div>
+                <div class="formula-main">P(y=1|x) = σ(wᵀx + b)</div>
+                <div class="formula-expanded">= 1 / (1 + e⁻⁽ʷᵀˣ⁺ᵇ⁾)</div>
+            </div>
+            
+            <!-- Architecture Flow -->
+            <div class="architecture-flow">
+                <div class="flow-step">
+                    <div class="step-label">Step 1</div>
+                    <div class="step-content">wᵀx + b</div>
+                    <div class="step-desc">Linear combination</div>
+                </div>
+                
+                <div class="arrow-flow">→</div>
+                
+                <div class="flow-step sigmoid-step">
+                    <div class="step-label">Step 2</div>
+                    <div class="step-content">σ(...)</div>
+                    <div class="step-desc">Sigmoid function</div>
+                </div>
+                
+                <div class="arrow-flow">→</div>
+                
+                <div class="flow-step output-step">
+                    <div class="step-label">Output</div>
+                    <div class="step-content">P ∈ [0,1]</div>
+                    <div class="step-desc">Probability</div>
+                </div>
+            </div>
+            
+            <!-- Decision Rule -->
+            <div class="decision-section">
+                <div class="decision-box">
+                    <div class="decision-label">Decision Rule:</div>
+                    <div class="decision-rule">Predict Class 1 if<br>P(y=1|x) ≥ 0.5</div>
+                </div>
+                
+                <div class="threshold-icon">⚙</div>
+                
+                <div class="note-box">
+                    Threshold can be adjusted based on application needs
+                </div>
+            </div>
+            
+            <!-- Parameters -->
+            <div class="parameters-section">
+                <div class="param-card">
+                    <div class="param-icon">w</div>
+                    <div class="param-content">
+                        <div class="param-name">Weight Vector w</div>
+                        <div class="param-desc">Model parameters to learn</div>
+                    </div>
+                </div>
+                
+                <div class="param-card">
+                    <div class="param-icon">b</div>
+                    <div class="param-content">
+                        <div class="param-name">Bias b</div>
+                        <div class="param-desc">Intercept term to learn</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Training Goal -->
+            <div class="goal-box">
+                Training Goal: Find optimal w and b from data
+            </div>
+        </div>
+    </div>
+</body>
+</html>

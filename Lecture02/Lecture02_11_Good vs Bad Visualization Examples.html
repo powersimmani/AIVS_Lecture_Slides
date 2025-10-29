@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Good vs Bad Visualizations</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #FFFFFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            padding: 25px 35px;
+        }
+        
+        .title-section {
+            text-align: center;
+            margin-bottom: 18px;
+        }
+        
+        .main-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            font-size: 17px;
+            color: #666666;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            flex: 1;
+        }
+        
+        .comparison-card {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 10px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+        
+        .comparison-card:hover {
+            border-color: #1E64C8;
+            box-shadow: 0 4px 15px rgba(30, 100, 200, 0.15);
+            transform: translateY(-3px);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #F0F0F0;
+        }
+        
+        .card-number {
+            width: 28px;
+            height: 28px;
+            background: #1E64C8;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .card-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .comparison-content {
+            display: flex;
+            gap: 10px;
+            flex: 1;
+        }
+        
+        .side {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .side-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 6px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .bad-label {
+            background: #FFEBEE;
+            color: #D32F2F;
+        }
+        
+        .good-label {
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+        
+        .icon {
+            font-size: 18px;
+        }
+        
+        .side-description {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+            padding: 8px;
+            background: #F8F8F8;
+            border-radius: 6px;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .bad-side .side-description {
+            background: #FFEBEE;
+            border-left: 3px solid #D32F2F;
+        }
+        
+        .good-side .side-description {
+            background: #E8F5E9;
+            border-left: 3px solid #2E7D32;
+        }
+        
+        .vs-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 700;
+            color: #999;
+            width: 35px;
+            flex-shrink: 0;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .comparison-card {
+            animation: fadeInUp 0.5s ease forwards;
+        }
+        
+        .comparison-card:nth-child(1) { animation-delay: 0.1s; }
+        .comparison-card:nth-child(2) { animation-delay: 0.2s; }
+        .comparison-card:nth-child(3) { animation-delay: 0.3s; }
+        .comparison-card:nth-child(4) { animation-delay: 0.4s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Good vs Bad Visualization Examples</div>
+            <div class="subtitle">Common Pitfalls and Best Practices</div>
+        </div>
+        
+        <div class="comparison-grid">
+            <!-- Comparison 1: Pie Charts vs Bar Charts -->
+            <div class="comparison-card">
+                <div class="card-header">
+                    <div class="card-number">1</div>
+                    <div class="card-title">Chart Type Selection</div>
+                </div>
+                <div class="comparison-content">
+                    <div class="side bad-side">
+                        <div class="side-label bad-label">
+                            <span class="icon">✗</span>
+                            <span>Bad</span>
+                        </div>
+                        <div class="side-description">
+                            3D pie charts distort proportions and values
+                        </div>
+                    </div>
+                    <div class="vs-divider">vs</div>
+                    <div class="side good-side">
+                        <div class="side-label good-label">
+                            <span class="icon">✓</span>
+                            <span>Good</span>
+                        </div>
+                        <div class="side-description">
+                            Simple 2D bar charts for clear comparisons
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Comparison 2: Dual Y-Axes -->
+            <div class="comparison-card">
+                <div class="card-header">
+                    <div class="card-number">2</div>
+                    <div class="card-title">Axis Management</div>
+                </div>
+                <div class="comparison-content">
+                    <div class="side bad-side">
+                        <div class="side-label bad-label">
+                            <span class="icon">✗</span>
+                            <span>Bad</span>
+                        </div>
+                        <div class="side-description">
+                            Dual y-axes mislead by arbitrary scaling
+                        </div>
+                    </div>
+                    <div class="vs-divider">vs</div>
+                    <div class="side good-side">
+                        <div class="side-label good-label">
+                            <span class="icon">✓</span>
+                            <span>Good</span>
+                        </div>
+                        <div class="side-description">
+                            Normalized or separate charts for clarity
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Comparison 3: Y-Axis Starting Point -->
+            <div class="comparison-card">
+                <div class="card-header">
+                    <div class="card-number">3</div>
+                    <div class="card-title">Y-Axis Baseline</div>
+                </div>
+                <div class="comparison-content">
+                    <div class="side bad-side">
+                        <div class="side-label bad-label">
+                            <span class="icon">✗</span>
+                            <span>Bad</span>
+                        </div>
+                        <div class="side-description">
+                            Truncated y-axis exaggerates differences
+                        </div>
+                    </div>
+                    <div class="vs-divider">vs</div>
+                    <div class="side good-side">
+                        <div class="side-label good-label">
+                            <span class="icon">✓</span>
+                            <span>Good</span>
+                        </div>
+                        <div class="side-description">
+                            Start at zero or clearly indicate breaks
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Comparison 4: Color Usage -->
+            <div class="comparison-card">
+                <div class="card-header">
+                    <div class="card-number">4</div>
+                    <div class="card-title">Color Application</div>
+                </div>
+                <div class="comparison-content">
+                    <div class="side bad-side">
+                        <div class="side-label bad-label">
+                            <span class="icon">✗</span>
+                            <span>Bad</span>
+                        </div>
+                        <div class="side-description">
+                            Too many colors causing confusion
+                        </div>
+                    </div>
+                    <div class="vs-divider">vs</div>
+                    <div class="side good-side">
+                        <div class="side-label good-label">
+                            <span class="icon">✓</span>
+                            <span>Good</span>
+                        </div>
+                        <div class="side-description">
+                            Intentional color use highlighting key insights
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

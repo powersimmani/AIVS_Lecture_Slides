@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Other Improvements</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            position: relative;
+            padding: 25px 40px;
+        }
+        
+        .header {
+            margin-bottom: 20px;
+        }
+        
+        .part-label {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .improvements-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .improvement-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 16px 18px;
+            position: relative;
+            transition: transform 0.2s;
+        }
+        
+        .improvement-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.2);
+        }
+        
+        .improvement-card.highlight {
+            border-color: #4CAF50;
+            background: rgba(76, 175, 80, 0.05);
+        }
+        
+        .improvement-card.special {
+            border-color: #FF9800;
+            background: rgba(255, 152, 0, 0.05);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .card-icon {
+            font-size: 24px;
+        }
+        
+        .card-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .improvement-card.highlight .card-name {
+            color: #4CAF50;
+        }
+        
+        .improvement-card.special .card-name {
+            color: #FF9800;
+        }
+        
+        .card-year {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: #1E64C8;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .improvement-card.highlight .card-year {
+            background: #4CAF50;
+        }
+        
+        .improvement-card.special .card-year {
+            background: #FF9800;
+        }
+        
+        .card-desc {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .card-feature {
+            display: inline-block;
+            background: #F5F9FF;
+            color: #1E64C8;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            margin-top: 8px;
+        }
+        
+        .improvement-card.highlight .card-feature {
+            background: #E8F5E9;
+            color: #4CAF50;
+        }
+        
+        .improvement-card.special .card-feature {
+            background: #FFF3E0;
+            color: #FF9800;
+        }
+        
+        .bottom-section {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .info-box {
+            flex: 1;
+            border-radius: 10px;
+            padding: 14px 18px;
+        }
+        
+        .info-box.evolution {
+            background: #F5F9FF;
+            border: 2px solid #1E64C8;
+        }
+        
+        .info-box.alternative {
+            background: #FFF3E0;
+            border: 2px solid #FF9800;
+        }
+        
+        .box-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .box-title.evolution {
+            color: #1E64C8;
+        }
+        
+        .box-title.alternative {
+            color: #FF9800;
+        }
+        
+        .box-text {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="part-label">Part 5/6: Improvement Techniques</div>
+            <div class="title">Other Improvements</div>
+        </div>
+        
+        <div class="improvements-grid">
+            <div class="improvement-card highlight">
+                <div class="card-year">2017</div>
+                <div class="card-header">
+                    <div class="card-icon">📐</div>
+                    <div class="card-name">ProGAN</div>
+                </div>
+                <div class="card-desc">
+                    Progressive growing of resolution for high-quality image generation
+                </div>
+                <span class="card-feature">Resolution Scaling</span>
+            </div>
+            
+            <div class="improvement-card">
+                <div class="card-year">2018</div>
+                <div class="card-header">
+                    <div class="card-icon">👁️</div>
+                    <div class="card-name">SAGAN</div>
+                </div>
+                <div class="card-desc">
+                    Self-attention mechanisms for long-range dependencies
+                </div>
+                <span class="card-feature">Attention</span>
+            </div>
+            
+            <div class="improvement-card">
+                <div class="card-year">2017</div>
+                <div class="card-header">
+                    <div class="card-icon">🔄</div>
+                    <div class="card-name">CycleGAN</div>
+                </div>
+                <div class="card-desc">
+                    Unpaired image-to-image translation with cycle consistency
+                </div>
+                <span class="card-feature">Unpaired Translation</span>
+            </div>
+            
+            <div class="improvement-card highlight">
+                <div class="card-year">2018</div>
+                <div class="card-header">
+                    <div class="card-icon">🎨</div>
+                    <div class="card-name">StyleGAN</div>
+                </div>
+                <div class="card-desc">
+                    Style-based generator architecture with unprecedented control
+                </div>
+                <span class="card-feature">Style Control</span>
+            </div>
+            
+            <div class="improvement-card">
+                <div class="card-year">2018</div>
+                <div class="card-header">
+                    <div class="card-icon">📏</div>
+                    <div class="card-name">BigGAN</div>
+                </div>
+                <div class="card-desc">
+                    Large-scale training with architectural tricks and optimization
+                </div>
+                <span class="card-feature">Scale</span>
+            </div>
+            
+            <div class="improvement-card">
+                <div class="card-year">2019</div>
+                <div class="card-header">
+                    <div class="card-icon">🖼️</div>
+                    <div class="card-name">GauGAN</div>
+                </div>
+                <div class="card-desc">
+                    NVIDIA's semantic image synthesis from layout sketches
+                </div>
+                <span class="card-feature">Semantic Control</span>
+            </div>
+        </div>
+        
+        <div class="bottom-section">
+            <div class="info-box evolution">
+                <div class="box-title evolution">
+                    <span>🚀</span>
+                    <span>Continuous Evolution</span>
+                </div>
+                <div class="box-text">
+                    Each variant addresses specific limitations and pushes boundaries in different directions: resolution, quality, control, and applicability
+                </div>
+            </div>
+            
+            <div class="info-box alternative">
+                <div class="box-title alternative">
+                    <span>💡</span>
+                    <span>Alternative Approach</span>
+                </div>
+                <div class="box-text">
+                    Diffusion models emerged as a powerful alternative, offering stable training and high-quality generation
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

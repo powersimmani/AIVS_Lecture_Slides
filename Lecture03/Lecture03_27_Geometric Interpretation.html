@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geometric Interpretation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: #ffffff;
+            position: relative;
+            padding: 25px 35px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .header-title {
+            font-size: 20px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 20px;
+            flex: 1;
+        }
+        
+        .left-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .visual-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 15px;
+            flex: 1;
+        }
+        
+        .visual-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .geometric-diagram {
+            position: relative;
+            height: 220px;
+            background: #f8fafb;
+            border-radius: 6px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .space-plane {
+            position: absolute;
+            width: 280px;
+            height: 140px;
+            background: rgba(30, 100, 200, 0.1);
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            transform: perspective(400px) rotateX(15deg);
+        }
+        
+        .space-label {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .vector {
+            position: absolute;
+            transform-origin: bottom center;
+        }
+        
+        .vector-y {
+            left: 50%;
+            bottom: 35%;
+            width: 3px;
+            height: 120px;
+            background: #1E64C8;
+        }
+        
+        .vector-y::after {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-bottom: 8px solid #1E64C8;
+        }
+        
+        .vector-yhat {
+            left: 50%;
+            bottom: 35%;
+            width: 3px;
+            height: 80px;
+            background: #28a745;
+        }
+        
+        .vector-yhat::after {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-bottom: 8px solid #28a745;
+        }
+        
+        .residual {
+            position: absolute;
+            left: 50%;
+            bottom: 55%;
+            width: 2px;
+            height: 40px;
+            background: red;
+            border-left: 2px dashed red;
+        }
+        
+        .residual::after {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-bottom: 8px solid red;
+        }
+        
+        .right-angle {
+            position: absolute;
+            left: calc(50% - 8px);
+            bottom: calc(35% + 80px);
+            width: 12px;
+            height: 12px;
+            border-right: 2px solid red;
+            border-bottom: 2px solid red;
+        }
+        
+        .vector-label {
+            position: absolute;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        
+        .label-y {
+            left: calc(50% + 15px);
+            top: 10%;
+            color: #1E64C8;
+        }
+        
+        .label-yhat {
+            left: calc(50% + 15px);
+            bottom: 40%;
+            color: #28a745;
+        }
+        
+        .label-e {
+            left: calc(50% + 15px);
+            top: 40%;
+            color: red;
+        }
+        
+        .insight-box {
+            background: #f0f7ff;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 10px 15px;
+            text-align: center;
+        }
+        
+        .insight-content {
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .highlight {
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .concept-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 11px 13px;
+        }
+        
+        .concept-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+        
+        .concept-content {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .matrix-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 11px 13px;
+        }
+        
+        .matrix-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+            text-align: center;
+        }
+        
+        .matrix-formula {
+            background: #f8fafb;
+            padding: 6px 8px;
+            border-radius: 4px;
+            font-size: 15px;
+            color: #333;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            margin-bottom: 4px;
+        }
+        
+        .orthogonality-box {
+            background: #1E64C8;
+            color: white;
+            border-radius: 8px;
+            padding: 11px 13px;
+            text-align: center;
+        }
+        
+        .ortho-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .ortho-formula {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 6px 8px;
+            border-radius: 4px;
+            font-size: 15px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .unification-box {
+            background: #f0f7ff;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 10px 13px;
+            text-align: center;
+        }
+        
+        .unif-content {
+            font-size: 15px;
+            color: #333;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-title">Geometric Interpretation</div>
+        </div>
+        
+        <div class="main-grid">
+            <div class="left-panel">
+                <div class="visual-box">
+                    <div class="visual-title">Projection onto Column Space</div>
+                    <div class="geometric-diagram">
+                        <div class="space-plane">
+                            <div class="space-label">Column Space of X</div>
+                        </div>
+                        <div class="vector vector-y"></div>
+                        <div class="vector vector-yhat"></div>
+                        <div class="residual"></div>
+                        <div class="right-angle"></div>
+                        <div class="vector-label label-y">Y</div>
+                        <div class="vector-label label-yhat">ŷ = Xβ̂</div>
+                        <div class="vector-label label-e">e = Y - ŷ</div>
+                    </div>
+                </div>
+                
+                <div class="insight-box">
+                    <div class="insight-content">
+                        <span class="highlight">ŷ</span> is the closest point in column space to <span class="highlight">Y</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <div class="concept-box">
+                    <div class="concept-title">Column Space</div>
+                    <div class="concept-content">
+                        All possible linear combinations of predictors
+                    </div>
+                </div>
+                
+                <div class="concept-box">
+                    <div class="concept-title">Prediction ŷ</div>
+                    <div class="concept-content">
+                        Projection of Y onto column space of X
+                    </div>
+                </div>
+                
+                <div class="concept-box">
+                    <div class="concept-title">Residual e</div>
+                    <div class="concept-content">
+                        Orthogonal to column space (perpendicular)
+                    </div>
+                </div>
+                
+                <div class="matrix-box">
+                    <div class="matrix-title">Projection Matrix</div>
+                    <div class="matrix-formula">P = X(XᵀX)⁻¹Xᵀ</div>
+                    <div class="matrix-formula">ŷ = PY</div>
+                </div>
+                
+                <div class="matrix-box">
+                    <div class="matrix-title">Residual Maker</div>
+                    <div class="matrix-formula">M = I - P</div>
+                    <div class="matrix-formula">e = MY</div>
+                </div>
+                
+                <div class="orthogonality-box">
+                    <div class="ortho-title">Orthogonality</div>
+                    <div class="ortho-formula">⟨e, Xⱼ⟩ = 0</div>
+                    <div style="font-size: 14px; margin-top: 4px;">for all predictors</div>
+                </div>
+                
+                <div class="unification-box">
+                    <div class="unif-content">
+                        Unifies <strong>Linear Algebra</strong><br>and <strong>Statistics</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

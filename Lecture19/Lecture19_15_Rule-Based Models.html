@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rule-Based Models</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+            padding: 30px 40px;
+            display: flex;
+            gap: 30px;
+        }
+        
+        /* Left section - rules */
+        .rules-section {
+            flex: 1.2;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .rules-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            flex: 1;
+        }
+        
+        /* Rule card */
+        .rule-card {
+            background: white;
+            border: 2px solid #E5E7EB;
+            border-radius: 12px;
+            padding: 18px;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .rule-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(180deg, #1E64C8 0%, #2A7DE1 100%);
+        }
+        
+        .rule-card:hover {
+            border-color: #1E64C8;
+            box-shadow: 0 6px 16px rgba(30, 100, 200, 0.15);
+            transform: translateY(-2px);
+        }
+        
+        .rule-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        
+        .rule-number {
+            flex-shrink: 0;
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #1E64C8 0%, #2A7DE1 100%);
+            color: white;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            font-weight: 700;
+            box-shadow: 0 2px 6px rgba(30, 100, 200, 0.2);
+        }
+        
+        .rule-label {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1E64C8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .rule-content {
+            margin-bottom: 12px;
+        }
+        
+        .rule-if {
+            font-size: 17px;
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 6px;
+        }
+        
+        .keyword {
+            font-weight: 700;
+            color: #1E64C8;
+        }
+        
+        .condition {
+            background: #F0F7FF;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 15px;
+        }
+        
+        .rule-then {
+            font-size: 17px;
+            color: #333;
+            padding: 10px;
+            background: #E8F5E9;
+            border-radius: 6px;
+            border-left: 3px solid #4CAF50;
+        }
+        
+        .rule-then.reject {
+            background: #FFEBEE;
+            border-left-color: #E57373;
+        }
+        
+        /* Metrics */
+        .metrics {
+            display: flex;
+            gap: 16px;
+            padding-top: 10px;
+            border-top: 1px solid #E5E7EB;
+        }
+        
+        .metric {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .metric-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+        }
+        
+        .metric-bar {
+            width: 80px;
+            height: 8px;
+            background: #E5E7EB;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .metric-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #1E64C8 0%, #4A94E5 100%);
+            border-radius: 4px;
+        }
+        
+        .metric-value {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1E64C8;
+        }
+        
+        /* Right section - info */
+        .info-section {
+            flex: 0.8;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .subtitle {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+        
+        .info-card {
+            background: #F8FAFC;
+            border-left: 4px solid #1E64C8;
+            border-radius: 8px;
+            padding: 14px 16px;
+            transition: all 0.2s;
+        }
+        
+        .info-card:hover {
+            background: #F0F7FF;
+            transform: translateX(4px);
+        }
+        
+        .info-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .info-desc {
+            font-size: 15px;
+            color: #666;
+            line-height: 1.4;
+        }
+        
+        /* Legend box */
+        .legend {
+            background: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 8px;
+            padding: 14px;
+            margin-top: 10px;
+        }
+        
+        .legend-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .legend-items {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .legend-icon {
+            width: 20px;
+            height: 12px;
+            border-radius: 2px;
+        }
+        
+        .legend-icon.coverage {
+            background: linear-gradient(90deg, #1E64C8 0%, #4A94E5 100%);
+        }
+        
+        .legend-icon.confidence {
+            background: linear-gradient(90deg, #1E64C8 0%, #4A94E5 100%);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Rules Section -->
+        <div class="rules-section">
+            <div class="title">Rule-Based Decision System</div>
+            
+            <div class="rules-container">
+                <!-- Rule 1 -->
+                <div class="rule-card">
+                    <div class="rule-header">
+                        <div class="rule-number">1</div>
+                        <div class="rule-label">Rule</div>
+                    </div>
+                    <div class="rule-content">
+                        <div class="rule-if">
+                            <span class="keyword">IF</span> 
+                            <span class="condition">Age > 30</span> 
+                            <span class="keyword">AND</span> 
+                            <span class="condition">Income > 50K</span>
+                        </div>
+                        <div class="rule-then">
+                            <span class="keyword">THEN</span> Decision = <strong>APPROVE</strong>
+                        </div>
+                    </div>
+                    <div class="metrics">
+                        <div class="metric">
+                            <span class="metric-label">Coverage:</span>
+                            <div class="metric-bar">
+                                <div class="metric-fill" style="width: 85%;"></div>
+                            </div>
+                            <span class="metric-value">85%</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Confidence:</span>
+                            <div class="metric-bar">
+                                <div class="metric-fill" style="width: 92%;"></div>
+                            </div>
+                            <span class="metric-value">92%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Rule 2 -->
+                <div class="rule-card">
+                    <div class="rule-header">
+                        <div class="rule-number">2</div>
+                        <div class="rule-label">Rule</div>
+                    </div>
+                    <div class="rule-content">
+                        <div class="rule-if">
+                            <span class="keyword">IF</span> 
+                            <span class="condition">Credit Score > 700</span> 
+                            <span class="keyword">AND</span> 
+                            <span class="condition">Debt Ratio < 0.3</span>
+                        </div>
+                        <div class="rule-then">
+                            <span class="keyword">THEN</span> Decision = <strong>APPROVE</strong>
+                        </div>
+                    </div>
+                    <div class="metrics">
+                        <div class="metric">
+                            <span class="metric-label">Coverage:</span>
+                            <div class="metric-bar">
+                                <div class="metric-fill" style="width: 72%;"></div>
+                            </div>
+                            <span class="metric-value">72%</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Confidence:</span>
+                            <div class="metric-bar">
+                                <div class="metric-fill" style="width: 88%;"></div>
+                            </div>
+                            <span class="metric-value">88%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Rule 3 -->
+                <div class="rule-card">
+                    <div class="rule-header">
+                        <div class="rule-number">3</div>
+                        <div class="rule-label">Rule</div>
+                    </div>
+                    <div class="rule-content">
+                        <div class="rule-if">
+                            <span class="keyword">IF</span> 
+                            <span class="condition">Age < 25</span> 
+                            <span class="keyword">AND</span> 
+                            <span class="condition">Employment < 1 year</span>
+                        </div>
+                        <div class="rule-then reject">
+                            <span class="keyword">THEN</span> Decision = <strong>REJECT</strong>
+                        </div>
+                    </div>
+                    <div class="metrics">
+                        <div class="metric">
+                            <span class="metric-label">Coverage:</span>
+                            <div class="metric-bar">
+                                <div class="metric-fill" style="width: 65%;"></div>
+                            </div>
+                            <span class="metric-value">65%</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Confidence:</span>
+                            <div class="metric-bar">
+                                <div class="metric-fill" style="width: 78%;"></div>
+                            </div>
+                            <span class="metric-value">78%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Info Section -->
+        <div class="info-section">
+            <div class="subtitle">Key Concepts</div>
+            
+            <div class="info-card">
+                <div class="info-title">IF-THEN Structure</div>
+                <div class="info-desc">Rules extracted from data patterns with logical conditions</div>
+            </div>
+            
+            <div class="info-card">
+                <div class="info-title">Coverage</div>
+                <div class="info-desc">Number of instances satisfying rule conditions</div>
+            </div>
+            
+            <div class="info-card">
+                <div class="info-title">Confidence</div>
+                <div class="info-desc">Prediction accuracy for instances matching rule</div>
+            </div>
+            
+            <div class="info-card">
+                <div class="info-title">Interpretability</div>
+                <div class="info-desc">Each prediction explained by triggering rules</div>
+            </div>
+            
+            <div class="info-card">
+                <div class="info-title">Trade-offs</div>
+                <div class="info-desc">Balancing concise rule sets with high coverage and accuracy</div>
+            </div>
+            
+            <!-- Legend -->
+            <div class="legend">
+                <div class="legend-title">Metrics Guide</div>
+                <div class="legend-items">
+                    <div class="legend-item">
+                        <div class="legend-icon coverage"></div>
+                        <span><strong>Coverage:</strong> % of data covered</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-icon confidence"></div>
+                        <span><strong>Confidence:</strong> % prediction accuracy</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

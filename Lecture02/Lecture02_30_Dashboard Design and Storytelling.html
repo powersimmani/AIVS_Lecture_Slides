@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Design & Storytelling</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #FFFFFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            padding: 25px 35px;
+        }
+        
+        .title-section {
+            text-align: center;
+            margin-bottom: 14px;
+        }
+        
+        .main-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .subtitle {
+            font-size: 17px;
+            color: #666666;
+        }
+        
+        .content-wrapper {
+            display: flex;
+            gap: 18px;
+            flex: 1;
+        }
+        
+        .left-panel {
+            flex: 1.6;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        /* Dashboard Wireframe */
+        .dashboard-wireframe {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px;
+            flex: 1.2;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .wireframe-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+            text-align: center;
+        }
+        
+        .wireframe-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        /* KPI Section */
+        .kpi-section {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            height: 70px;
+        }
+        
+        .kpi-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #42A5F5 100%);
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            padding: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .kpi-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.3);
+        }
+        
+        .kpi-value {
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .kpi-label {
+            font-size: 10px;
+            margin-top: 2px;
+        }
+        
+        /* Main Content Grid */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 8px;
+            flex: 1;
+        }
+        
+        .chart-box {
+            background: #F8F8F8;
+            border: 2px solid #E0E0E0;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .chart-box:hover {
+            border-color: #1E64C8;
+            background: #E3F2FD;
+        }
+        
+        .priority-high {
+            border-width: 3px;
+            border-color: #1E64C8;
+        }
+        
+        .priority-label {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: #1E64C8;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 9px;
+            font-weight: 700;
+        }
+        
+        .side-grid {
+            display: grid;
+            grid-template-rows: repeat(2, 1fr);
+            gap: 8px;
+        }
+        
+        /* Storytelling Flow */
+        .storytelling-section {
+            background: #F8FBFF;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px;
+            flex: 0.8;
+        }
+        
+        .storytelling-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .story-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+        
+        .story-step {
+            flex: 1;
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .story-step:hover {
+            border-color: #1E64C8;
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.2);
+        }
+        
+        .step-number {
+            width: 30px;
+            height: 30px;
+            background: #1E64C8;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 700;
+        }
+        
+        .step-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+        }
+        
+        .step-desc {
+            font-size: 11px;
+            color: #666;
+            text-align: center;
+            line-height: 1.3;
+        }
+        
+        .arrow {
+            font-size: 24px;
+            color: #1E64C8;
+            font-weight: bold;
+        }
+        
+        .right-panel {
+            flex: 0.4;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .principles-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .principle-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 15px;
+            color: #333;
+            line-height: 1.3;
+            margin-bottom: 8px;
+            padding: 6px 8px;
+            background: #F8FBFF;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        
+        .principle-item:hover {
+            background: #E3F2FD;
+            transform: translateX(5px);
+        }
+        
+        .principle-icon {
+            color: #1E64C8;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .interactive-card {
+            background: #FFF9E6;
+            border: 2px solid #FFC107;
+            border-radius: 10px;
+            padding: 14px;
+        }
+        
+        .interactive-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .interactive-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 15px;
+            color: #333;
+            margin-bottom: 6px;
+        }
+        
+        .interactive-icon {
+            color: #F57C00;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .tips-card {
+            background: #E8F5E9;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            padding: 14px;
+        }
+        
+        .tips-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2E7D32;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .tip-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 15px;
+            color: #333;
+            margin-bottom: 6px;
+        }
+        
+        .check-icon {
+            color: #4CAF50;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .dashboard-wireframe, .storytelling-section, .principles-card, .interactive-card, .tips-card {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        .dashboard-wireframe { animation-delay: 0.1s; }
+        .storytelling-section { animation-delay: 0.2s; }
+        .principles-card { animation-delay: 0.3s; }
+        .interactive-card { animation-delay: 0.4s; }
+        .tips-card { animation-delay: 0.5s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Dashboard Design & Storytelling</div>
+            <div class="subtitle">Information Hierarchy and Narrative Structure</div>
+        </div>
+        
+        <div class="content-wrapper">
+            <div class="left-panel">
+                <!-- Dashboard Wireframe -->
+                <div class="dashboard-wireframe">
+                    <div class="wireframe-title">Dashboard Layout: Information Hierarchy</div>
+                    <div class="wireframe-content">
+                        <!-- KPI Section -->
+                        <div class="kpi-section">
+                            <div class="kpi-box">
+                                <div class="kpi-value">$2.4M</div>
+                                <div class="kpi-label">Revenue</div>
+                            </div>
+                            <div class="kpi-box">
+                                <div class="kpi-value">15.2%</div>
+                                <div class="kpi-label">Growth</div>
+                            </div>
+                            <div class="kpi-box">
+                                <div class="kpi-value">8,542</div>
+                                <div class="kpi-label">Users</div>
+                            </div>
+                            <div class="kpi-box">
+                                <div class="kpi-value">92%</div>
+                                <div class="kpi-label">Satisfaction</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Main Content Grid -->
+                        <div class="main-grid">
+                            <div class="chart-box priority-high">
+                                <span class="priority-label">HIGH</span>
+                                Main Chart: Trend Analysis
+                            </div>
+                            <div class="side-grid">
+                                <div class="chart-box">
+                                    Supporting Chart 1
+                                </div>
+                                <div class="chart-box">
+                                    Supporting Chart 2
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Bottom Details -->
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; height: 60px;">
+                            <div class="chart-box">Detail View 1</div>
+                            <div class="chart-box">Detail View 2</div>
+                            <div class="chart-box">Detail View 3</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Storytelling Flow -->
+                <div class="storytelling-section">
+                    <div class="storytelling-title">Data Storytelling Structure</div>
+                    <div class="story-flow">
+                        <div class="story-step">
+                            <div class="step-number">1</div>
+                            <div class="step-label">Setup</div>
+                            <div class="step-desc">Context & background</div>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div class="story-step">
+                            <div class="step-number">2</div>
+                            <div class="step-label">Conflict</div>
+                            <div class="step-desc">Problem or insight</div>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div class="story-step">
+                            <div class="step-number">3</div>
+                            <div class="step-label">Resolution</div>
+                            <div class="step-desc">Data-driven solution</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <div class="principles-card">
+                    <div class="card-title">
+                        <span>📋</span>
+                        Design Principles
+                    </div>
+                    <div class="principle-item">
+                        <span class="principle-icon">1</span>
+                        <span>Define audience & message</span>
+                    </div>
+                    <div class="principle-item">
+                        <span class="principle-icon">2</span>
+                        <span>KPIs at top</span>
+                    </div>
+                    <div class="principle-item">
+                        <span class="principle-icon">3</span>
+                        <span>Consistent layout & colors</span>
+                    </div>
+                    <div class="principle-item">
+                        <span class="principle-icon">4</span>
+                        <span>Progressive disclosure</span>
+                    </div>
+                </div>
+                
+                <div class="interactive-card">
+                    <div class="interactive-title">🖱️ Interactive Elements</div>
+                    <div class="interactive-item">
+                        <span class="interactive-icon">▸</span>
+                        <span>Filters</span>
+                    </div>
+                    <div class="interactive-item">
+                        <span class="interactive-icon">▸</span>
+                        <span>Drill-downs</span>
+                    </div>
+                    <div class="interactive-item">
+                        <span class="interactive-icon">▸</span>
+                        <span>Hover details</span>
+                    </div>
+                    <div class="interactive-item">
+                        <span class="interactive-icon">▸</span>
+                        <span>Dynamic updates</span>
+                    </div>
+                </div>
+                
+                <div class="tips-card">
+                    <div class="tips-title">✓ Best Practices</div>
+                    <div class="tip-item">
+                        <span class="check-icon">✓</span>
+                        <span>Test with users</span>
+                    </div>
+                    <div class="tip-item">
+                        <span class="check-icon">✓</span>
+                        <span>Iterate based on feedback</span>
+                    </div>
+                    <div class="tip-item">
+                        <span class="check-icon">✓</span>
+                        <span>Measure engagement</span>
+                    </div>
+                    <div class="tip-item">
+                        <span class="check-icon">✓</span>
+                        <span>Keep it simple</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

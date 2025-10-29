@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Value Function Analysis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            position: relative;
+            padding: 25px 40px;
+        }
+        
+        .header {
+            margin-bottom: 20px;
+        }
+        
+        .part-label {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .main-content {
+            display: flex;
+            gap: 25px;
+            margin-bottom: 20px;
+        }
+        
+        .left-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .player-box {
+            background: white;
+            border: 3px solid #1E64C8;
+            border-radius: 10px;
+            padding: 18px 20px;
+        }
+        
+        .player-box.maximize {
+            background: #1E64C8;
+            color: white;
+        }
+        
+        .player-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .player-icon {
+            font-size: 24px;
+        }
+        
+        .player-goal {
+            font-size: 16px;
+            margin-bottom: 8px;
+            opacity: 0.95;
+        }
+        
+        .player-formula {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            background: rgba(255,255,255,0.15);
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-top: 6px;
+        }
+        
+        .player-box:not(.maximize) .player-formula {
+            background: #F5F9FF;
+            color: #1E64C8;
+        }
+        
+        .interpretation-box {
+            background: #F5F9FF;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 16px 20px;
+        }
+        
+        .interp-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+        }
+        
+        .interp-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin: 8px 0;
+            font-size: 15px;
+            color: #333;
+        }
+        
+        .bullet {
+            color: #1E64C8;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .right-panel {
+            flex: 1;
+        }
+        
+        .landscape-visual {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 20px;
+            height: 100%;
+        }
+        
+        .visual-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .graph-area {
+            position: relative;
+            height: 200px;
+            background: #F5F9FF;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        
+        .axis-label {
+            position: absolute;
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .axis-label.x {
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .axis-label.y {
+            top: 50%;
+            left: -10px;
+            transform: translateY(-50%) rotate(-90deg);
+        }
+        
+        .curve-container {
+            position: relative;
+            height: 150px;
+            margin: 10px 20px;
+        }
+        
+        .value-curve {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+        }
+        
+        .curve-path {
+            stroke: #1E64C8;
+            stroke-width: 3;
+            fill: none;
+        }
+        
+        .optimum-point {
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            background: #4CAF50;
+            border: 3px solid white;
+            border-radius: 50%;
+            box-shadow: 0 0 0 2px #4CAF50;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .optimum-label {
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #4CAF50;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        
+        .bottom-section {
+            background: #1E64C8;
+            color: white;
+            border-radius: 10px;
+            padding: 18px 24px;
+        }
+        
+        .bottom-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .conditions {
+            display: flex;
+            justify-content: space-around;
+            gap: 20px;
+        }
+        
+        .condition {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .condition-label {
+            font-size: 15px;
+            margin-bottom: 8px;
+            opacity: 0.9;
+        }
+        
+        .condition-formula {
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            font-weight: 600;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 12px;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="part-label">Part 2/6: Mathematical Foundations</div>
+            <div class="title">Value Function Analysis</div>
+        </div>
+        
+        <div class="main-content">
+            <div class="left-panel">
+                <div class="player-box maximize">
+                    <div class="player-title">
+                        <span class="player-icon">🔼</span>
+                        <span>Discriminator Maximizes</span>
+                    </div>
+                    <div class="player-goal">Correctly classify real and fake samples</div>
+                    <div class="player-formula">
+                        max<sub>D</sub> V(D,G)
+                    </div>
+                </div>
+                
+                <div class="player-box">
+                    <div class="player-title">
+                        <span class="player-icon">🔽</span>
+                        <span>Generator Minimizes</span>
+                    </div>
+                    <div class="player-goal">Fool the discriminator effectively</div>
+                    <div class="player-formula">
+                        min<sub>G</sub> V(D,G)
+                    </div>
+                </div>
+                
+                <div class="interpretation-box">
+                    <div class="interp-title">Theoretical Insights</div>
+                    <div class="interp-item">
+                        <span class="bullet">•</span>
+                        <span>Cross-entropy loss interpretation</span>
+                    </div>
+                    <div class="interp-item">
+                        <span class="bullet">•</span>
+                        <span>Jensen-Shannon divergence connection</span>
+                    </div>
+                    <div class="interp-item">
+                        <span class="bullet">•</span>
+                        <span>Global optimality guarantees</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <div class="landscape-visual">
+                    <div class="visual-title">Value Function Landscape</div>
+                    <div class="graph-area">
+                        <div class="axis-label y">V(D, G)</div>
+                        <div class="axis-label x">Training Progress</div>
+                        
+                        <div class="curve-container">
+                            <svg class="value-curve" viewBox="0 0 400 150" preserveAspectRatio="none">
+                                <path class="curve-path" d="M 0,120 Q 100,20 200,75 T 400,75" />
+                            </svg>
+                            <div class="optimum-point"></div>
+                            <div class="optimum-label">Equilibrium</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 20px; padding: 14px; background: #F5F9FF; border-radius: 8px;">
+                        <div style="font-size: 16px; font-weight: 600; color: #1E64C8; margin-bottom: 8px; text-align: center;">
+                            Optimal Discriminator
+                        </div>
+                        <div style="font-family: 'Courier New', monospace; font-size: 15px; color: #1E64C8; text-align: center;">
+                            D*(x) = p<sub>data</sub>(x) / (p<sub>data</sub>(x) + p<sub>g</sub>(x))
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bottom-section">
+            <div class="bottom-title">Global Optimality Conditions</div>
+            <div class="conditions">
+                <div class="condition">
+                    <div class="condition-label">Theoretical Optimum</div>
+                    <div class="condition-formula">p<sub>g</sub> = p<sub>data</sub></div>
+                </div>
+                <div class="condition">
+                    <div class="condition-label">Discriminator at Equilibrium</div>
+                    <div class="condition-formula">D*(x) = 1/2</div>
+                </div>
+                <div class="condition">
+                    <div class="condition-label">Value Function</div>
+                    <div class="condition-formula">V(D*, G*) = -log(4)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

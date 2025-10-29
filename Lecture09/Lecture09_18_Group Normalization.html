@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Group Normalization</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: #ffffff;
+            padding: 20px 40px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 25px;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 25px;
+            height: 450px;
+        }
+        
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        
+        .visual-box {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 12px;
+            padding: 20px;
+            flex: 1;
+        }
+        
+        .visual-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .groups-container {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin: 20px 0;
+        }
+        
+        .group-box {
+            background: white;
+            border: 3px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .group-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+        
+        .channels-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
+        }
+        
+        .channel-cell {
+            width: 35px;
+            height: 35px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+            border: 2px solid;
+        }
+        
+        .group1-channel {
+            background: linear-gradient(135deg, #42a5f5 0%, #1e88e5 100%);
+            border-color: #1565c0;
+        }
+        
+        .group2-channel {
+            background: linear-gradient(135deg, #66bb6a 0%, #4caf50 100%);
+            border-color: #2e7d32;
+        }
+        
+        .group3-channel {
+            background: linear-gradient(135deg, #ffa726 0%, #ff9800 100%);
+            border-color: #ef6c00;
+        }
+        
+        .norm-icon {
+            font-size: 20px;
+        }
+        
+        .comparison-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 14px;
+        }
+        
+        .comparison-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .comparison-items {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+        
+        .comparison-item {
+            text-align: center;
+            font-size: 14px;
+            color: #2c3e50;
+        }
+        
+        .item-label {
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+        
+        .arrow-compare {
+            font-size: 24px;
+            color: #666;
+        }
+        
+        .batch-size-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .batch-size-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #f57c00;
+            margin-bottom: 6px;
+        }
+        
+        .batch-size-text {
+            font-size: 14px;
+            color: #2c3e50;
+        }
+        
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .section-header {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 5px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .feature-card {
+            background: #f8f9fb;
+            border-left: 4px solid #1E64C8;
+            padding: 13px 16px;
+            border-radius: 6px;
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.5;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            background: #eef3fb;
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(30, 100, 200, 0.15);
+        }
+        
+        .highlight {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .usage-box {
+            background: #e8f5e9;
+            border: 2px solid #4caf50;
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin-top: 10px;
+        }
+        
+        .usage-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #4caf50;
+            margin-bottom: 8px;
+        }
+        
+        .usage-text {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Group Normalization</div>
+        
+        <div class="main-content">
+            <div class="left-section">
+                <div class="visual-box">
+                    <div class="visual-title">Divides Channels into Groups</div>
+                    
+                    <div class="groups-container">
+                        <div class="group-box">
+                            <div class="group-label">Group 1</div>
+                            <div class="channels-grid">
+                                <div class="channel-cell group1-channel">C1</div>
+                                <div class="channel-cell group1-channel">C2</div>
+                                <div class="channel-cell group1-channel">C3</div>
+                                <div class="channel-cell group1-channel">C4</div>
+                            </div>
+                            <div class="norm-icon">✓</div>
+                        </div>
+                        
+                        <div class="group-box">
+                            <div class="group-label">Group 2</div>
+                            <div class="channels-grid">
+                                <div class="channel-cell group2-channel">C5</div>
+                                <div class="channel-cell group2-channel">C6</div>
+                                <div class="channel-cell group2-channel">C7</div>
+                                <div class="channel-cell group2-channel">C8</div>
+                            </div>
+                            <div class="norm-icon">✓</div>
+                        </div>
+                        
+                        <div class="group-box">
+                            <div class="group-label">Group 3</div>
+                            <div class="channels-grid">
+                                <div class="channel-cell group3-channel">C9</div>
+                                <div class="channel-cell group3-channel">C10</div>
+                                <div class="channel-cell group3-channel">C11</div>
+                                <div class="channel-cell group3-channel">C12</div>
+                            </div>
+                            <div class="norm-icon">✓</div>
+                        </div>
+                    </div>
+                    
+                    <div class="batch-size-box">
+                        <div class="batch-size-title">Typical: 32 channels per group</div>
+                        <div class="batch-size-text">Each group normalized independently</div>
+                    </div>
+                </div>
+                
+                <div class="comparison-box">
+                    <div class="comparison-title">Compromise Between</div>
+                    <div class="comparison-items">
+                        <div class="comparison-item">
+                            <div class="item-label">Layer Norm</div>
+                            (All channels)
+                        </div>
+                        <div class="arrow-compare">↔</div>
+                        <div class="comparison-item">
+                            <div class="item-label">Group Norm</div>
+                            (Channel groups)
+                        </div>
+                        <div class="arrow-compare">↔</div>
+                        <div class="comparison-item">
+                            <div class="item-label">Instance Norm</div>
+                            (Per channel)
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-section">
+                <div class="section-header">Key Features</div>
+                
+                <div class="feature-card">
+                    <span class="highlight">Independent of batch size</span> like Layer Norm
+                </div>
+                
+                <div class="feature-card">
+                    Better than Layer Norm for <span class="highlight">visual tasks (CNNs)</span>
+                </div>
+                
+                <div class="feature-card">
+                    <span class="highlight">Stable performance</span> across different batch sizes
+                </div>
+                
+                <div class="feature-card">
+                    Compromise between <span class="highlight">Layer Norm and Instance Norm</span>
+                </div>
+                
+                <div class="usage-box">
+                    <div class="usage-title">✓ Ideal For</div>
+                    <div class="usage-text">
+                        <strong>Small batch training</strong> in tasks like object detection and segmentation
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

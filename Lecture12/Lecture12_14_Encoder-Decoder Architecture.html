@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encoder-Decoder Architecture</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #ffffff;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 40px;
+            position: relative;
+        }
+        
+        .architecture {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+            gap: 20px;
+        }
+        
+        /* Encoder Section */
+        .encoder-section {
+            flex: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .section-header {
+            background: #1E64C8;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .header-decoder {
+            background: #5088d4;
+        }
+        
+        .icon {
+            font-size: 24px;
+        }
+        
+        .encoder-content {
+            flex: 1;
+            background: #f0f4f8;
+            border-radius: 8px;
+            padding: 20px;
+            border: 3px solid #1E64C8;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+        }
+        
+        .decoder-content {
+            border-color: #5088d4;
+            background: #f0f6fc;
+        }
+        
+        /* Input/Output Layer */
+        .io-layer {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .layer-label {
+            font-size: 14px;
+            color: #666;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .io-boxes {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+        
+        .io-box {
+            width: 65px;
+            height: 50px;
+            background: white;
+            border: 2px solid #d0d9e3;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: #555;
+            font-weight: 500;
+        }
+        
+        /* RNN Layer */
+        .rnn-layer {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .rnn-boxes {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .rnn-cell {
+            width: 65px;
+            height: 65px;
+            background: #1E64C8;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            position: relative;
+        }
+        
+        .rnn-cell-decoder {
+            background: #5088d4;
+        }
+        
+        .cell-label {
+            font-size: 16px;
+        }
+        
+        .cell-time {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+        
+        /* Arrows */
+        .v-arrow {
+            text-align: center;
+            font-size: 24px;
+            color: #999;
+            line-height: 1;
+        }
+        
+        .arrow-up {
+            color: #1E64C8;
+        }
+        
+        .arrow-down {
+            color: #5088d4;
+        }
+        
+        /* Horizontal connections between RNN cells */
+        .h-connection {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 3px;
+            background: white;
+            opacity: 0.5;
+        }
+        
+        .conn-1 {
+            left: 73px;
+            width: 8px;
+        }
+        
+        .conn-2 {
+            left: 146px;
+            width: 8px;
+        }
+        
+        /* Context Vector */
+        .context-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+        
+        .context-vector {
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, #1E64C8 0%, #5088d4 100%);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 8px 24px rgba(30, 100, 200, 0.4);
+            position: relative;
+        }
+        
+        .context-label {
+            font-size: 14px;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+        
+        .context-value {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .context-arrow-left,
+        .context-arrow-right {
+            position: absolute;
+            width: 20px;
+            height: 3px;
+            background: #1E64C8;
+        }
+        
+        .context-arrow-left {
+            left: -20px;
+            background: #1E64C8;
+        }
+        
+        .context-arrow-right {
+            right: -20px;
+            background: #5088d4;
+        }
+        
+        .context-arrow-left::after {
+            content: '';
+            position: absolute;
+            right: -4px;
+            top: -3px;
+            width: 0;
+            height: 0;
+            border-left: 6px solid #1E64C8;
+            border-top: 4px solid transparent;
+            border-bottom: 4px solid transparent;
+        }
+        
+        .context-arrow-right::after {
+            content: '';
+            position: absolute;
+            right: -4px;
+            top: -3px;
+            width: 0;
+            height: 0;
+            border-left: 6px solid #5088d4;
+            border-top: 4px solid transparent;
+            border-bottom: 4px solid transparent;
+        }
+        
+        .context-description {
+            text-align: center;
+            font-size: 13px;
+            color: #666;
+            max-width: 100px;
+            line-height: 1.3;
+        }
+        
+        /* Decoder Section */
+        .decoder-section {
+            flex: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        /* Special tokens */
+        .special-token {
+            background: #ffc107 !important;
+            color: #333 !important;
+            border-color: #ffc107 !important;
+            font-weight: 700;
+        }
+        
+        /* Info Box */
+        .info-box {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-size: 14px;
+            color: #856404;
+            text-align: center;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="architecture">
+            <!-- Encoder Section -->
+            <div class="encoder-section">
+                <div class="section-header">
+                    <span class="icon">📥</span>
+                    <span>Encoder</span>
+                </div>
+                
+                <div class="encoder-content">
+                    <!-- Input -->
+                    <div class="io-layer">
+                        <div class="layer-label">Input Sequence</div>
+                        <div class="io-boxes">
+                            <div class="io-box">x₁</div>
+                            <div class="io-box">x₂</div>
+                            <div class="io-box">x₃</div>
+                        </div>
+                    </div>
+                    
+                    <div class="v-arrow arrow-up">↑</div>
+                    
+                    <!-- RNN Cells -->
+                    <div class="rnn-layer">
+                        <div class="layer-label">RNN Cells</div>
+                        <div class="rnn-boxes">
+                            <div class="rnn-cell">
+                                <div class="cell-label">h₁</div>
+                                <div class="cell-time">t=1</div>
+                            </div>
+                            <div class="h-connection conn-1"></div>
+                            <div class="rnn-cell">
+                                <div class="cell-label">h₂</div>
+                                <div class="cell-time">t=2</div>
+                            </div>
+                            <div class="h-connection conn-2"></div>
+                            <div class="rnn-cell">
+                                <div class="cell-label">h₃</div>
+                                <div class="cell-time">t=3</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="v-arrow arrow-up">↑</div>
+                    
+                    <div style="text-align: center; font-size: 14px; color: #1E64C8; font-weight: 600;">
+                        Final hidden state → Context
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Context Vector -->
+            <div class="context-section">
+                <div class="context-vector">
+                    <div class="context-arrow-left"></div>
+                    <div class="context-arrow-right"></div>
+                    <div class="context-label">Context</div>
+                    <div class="context-value">c</div>
+                </div>
+                <div class="context-description">
+                    Fixed-size representation
+                </div>
+            </div>
+            
+            <!-- Decoder Section -->
+            <div class="decoder-section">
+                <div class="section-header header-decoder">
+                    <span class="icon">📤</span>
+                    <span>Decoder</span>
+                </div>
+                
+                <div class="decoder-content">
+                    <div style="text-align: center; font-size: 14px; color: #5088d4; font-weight: 600;">
+                        Context → Generate output
+                    </div>
+                    
+                    <div class="v-arrow arrow-down">↓</div>
+                    
+                    <!-- RNN Cells -->
+                    <div class="rnn-layer">
+                        <div class="layer-label">RNN Cells</div>
+                        <div class="rnn-boxes">
+                            <div class="rnn-cell rnn-cell-decoder">
+                                <div class="cell-label">s₁</div>
+                                <div class="cell-time">t=1</div>
+                            </div>
+                            <div class="h-connection conn-1"></div>
+                            <div class="rnn-cell rnn-cell-decoder">
+                                <div class="cell-label">s₂</div>
+                                <div class="cell-time">t=2</div>
+                            </div>
+                            <div class="h-connection conn-2"></div>
+                            <div class="rnn-cell rnn-cell-decoder">
+                                <div class="cell-label">s₃</div>
+                                <div class="cell-time">t=3</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="v-arrow arrow-down">↓</div>
+                    
+                    <!-- Output -->
+                    <div class="io-layer">
+                        <div class="layer-label">Output Sequence</div>
+                        <div class="io-boxes">
+                            <div class="io-box special-token">START</div>
+                            <div class="io-box">y₁</div>
+                            <div class="io-box">y₂</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="info-box">
+            ⚡ Encoder compresses input → Context vector (c) → Decoder generates output
+        </div>
+    </div>
+</body>
+</html>

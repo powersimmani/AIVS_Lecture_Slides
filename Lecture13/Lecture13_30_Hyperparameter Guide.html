@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hyperparameter Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 30px;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .main-content {
+            display: flex;
+            gap: 14px;
+            flex: 1;
+        }
+        
+        .model-comparison {
+            flex: 1.3;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .comparison-table {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            overflow: hidden;
+            flex: 1;
+        }
+        
+        .table-header {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr 1fr;
+            background: #1E64C8;
+            color: white;
+        }
+        
+        .header-cell {
+            padding: 12px 14px;
+            font-size: 17px;
+            font-weight: 600;
+            text-align: center;
+            border-right: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .header-cell:last-child {
+            border-right: none;
+        }
+        
+        .table-row {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr 1fr;
+            border-top: 1px solid #d0d0d0;
+        }
+        
+        .row-label {
+            padding: 12px 14px;
+            background: #f0f7ff;
+            font-weight: 600;
+            font-size: 15px;
+            color: #1E64C8;
+            display: flex;
+            align-items: center;
+            border-right: 1px solid #d0d0d0;
+        }
+        
+        .row-value {
+            padding: 12px 14px;
+            font-size: 16px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border-right: 1px solid #d0d0d0;
+            font-weight: 600;
+        }
+        
+        .row-value:last-child {
+            border-right: none;
+        }
+        
+        .base-value {
+            color: #1E64C8;
+        }
+        
+        .large-value {
+            color: #7c3aed;
+        }
+        
+        .additional-params {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .param-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 16px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .param-icon {
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+        
+        .param-content {
+            flex: 1;
+        }
+        
+        .param-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 3px;
+        }
+        
+        .param-value {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.3;
+        }
+        
+        .highlight {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .optimizer-card {
+            background: #f0fdf4;
+            border: 2px solid #16a34a;
+            border-radius: 8px;
+            padding: 12px 16px;
+        }
+        
+        .optimizer-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #16a34a;
+            margin-bottom: 6px;
+            text-align: center;
+        }
+        
+        .optimizer-params {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        
+        .optimizer-param {
+            background: white;
+            border-radius: 4px;
+            padding: 6px 10px;
+            text-align: center;
+            font-size: 14px;
+        }
+        
+        .param-label {
+            color: #666;
+            font-size: 12px;
+        }
+        
+        .param-num {
+            font-weight: 600;
+            color: #16a34a;
+            font-size: 15px;
+        }
+        
+        .note-box {
+            background: #fff9f0;
+            border: 2px solid #f59e0b;
+            border-radius: 8px;
+            padding: 10px 16px;
+            text-align: center;
+        }
+        
+        .note-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+        
+        .note-text {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .note-highlight {
+            font-weight: 600;
+            color: #d97700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Hyperparameter Guide</div>
+        
+        <div class="main-content">
+            <div class="model-comparison">
+                <div class="comparison-table">
+                    <div class="table-header">
+                        <div class="header-cell">Parameter</div>
+                        <div class="header-cell">Base Model</div>
+                        <div class="header-cell">Large Model</div>
+                    </div>
+                    
+                    <div class="table-row">
+                        <div class="row-label">📐 d_model</div>
+                        <div class="row-value base-value">512</div>
+                        <div class="row-value large-value">1024</div>
+                    </div>
+                    
+                    <div class="table-row">
+                        <div class="row-label">🏗️ Layers (N)</div>
+                        <div class="row-value base-value">6</div>
+                        <div class="row-value large-value">12+</div>
+                    </div>
+                    
+                    <div class="table-row">
+                        <div class="row-label">🎯 Attention Heads (h)</div>
+                        <div class="row-value base-value">8</div>
+                        <div class="row-value large-value">16</div>
+                    </div>
+                    
+                    <div class="table-row">
+                        <div class="row-label">🔷 d_ff (FFN hidden)</div>
+                        <div class="row-value base-value">2048</div>
+                        <div class="row-value large-value">4096</div>
+                    </div>
+                    
+                    <div class="table-row">
+                        <div class="row-label">💧 Dropout Rate</div>
+                        <div class="row-value base-value">0.1</div>
+                        <div class="row-value large-value">0.1</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="additional-params">
+                <div class="param-card">
+                    <div class="param-icon">🔥</div>
+                    <div class="param-content">
+                        <div class="param-title">Warmup Steps</div>
+                        <div class="param-value">
+                            <span class="highlight">4000</span> steps (typical)
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="param-card">
+                    <div class="param-icon">📦</div>
+                    <div class="param-content">
+                        <div class="param-title">Batch Size</div>
+                        <div class="param-value">
+                            As <span class="highlight">large as GPU memory</span> allows
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="optimizer-card">
+                    <div class="optimizer-title">⚙️ Adam Optimizer</div>
+                    <div class="optimizer-params">
+                        <div class="optimizer-param">
+                            <div class="param-label">β₁</div>
+                            <div class="param-num">0.9</div>
+                        </div>
+                        <div class="optimizer-param">
+                            <div class="param-label">β₂</div>
+                            <div class="param-num">0.98</div>
+                        </div>
+                        <div class="optimizer-param" style="grid-column: 1 / -1;">
+                            <div class="param-label">ε</div>
+                            <div class="param-num">10⁻⁹</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="note-box">
+                    <div class="note-icon">💡</div>
+                    <div class="note-text">
+                        <span class="note-highlight">Base model</span> suitable for most tasks<br>
+                        <span class="note-highlight">Large model</span> for complex problems
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

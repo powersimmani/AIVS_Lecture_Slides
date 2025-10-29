@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language Modeling Objectives</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: #ffffff;
+            padding: 25px 40px;
+        }
+        
+        .title {
+            font-size: 26px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+        
+        .model-section {
+            background: #F8F9FA;
+            border-radius: 12px;
+            padding: 20px;
+            border: 3px solid #1E64C8;
+        }
+        
+        .model-header {
+            text-align: center;
+            margin-bottom: 15px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .model-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+        
+        .model-subtitle {
+            font-size: 16px;
+            color: #666666;
+        }
+        
+        .visual-example {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .token-sequence {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .token {
+            background: #E8F4F8;
+            border: 2px solid #1E64C8;
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #1E64C8;
+        }
+        
+        .token.masked {
+            background: #FFE0B2;
+            border-color: #FF9800;
+            color: #E65100;
+        }
+        
+        .token.predict {
+            background: #C8E6C9;
+            border-color: #4CAF50;
+            color: #2E7D32;
+            font-weight: 600;
+        }
+        
+        .arrow-down {
+            text-align: center;
+            font-size: 24px;
+            color: #1E64C8;
+            margin: 5px 0;
+        }
+        
+        .formula {
+            text-align: center;
+            font-size: 16px;
+            color: #333333;
+            background: #F5F5F5;
+            padding: 8px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .features-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 16px;
+            color: #333333;
+        }
+        
+        .feature-icon {
+            color: #1E64C8;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .bottom-notes {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .note-box {
+            background: #E8F4F8;
+            border-left: 4px solid #1E64C8;
+            border-radius: 6px;
+            padding: 12px 15px;
+        }
+        
+        .note-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .note-text {
+            font-size: 16px;
+            color: #333333;
+            line-height: 1.4;
+        }
+        
+        .highlight {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Language Modeling Objective Functions</div>
+        
+        <div class="comparison-grid">
+            <!-- Autoregressive LM -->
+            <div class="model-section">
+                <div class="model-header">
+                    <div class="model-title">Autoregressive LM</div>
+                    <div class="model-subtitle">Causal / Left-to-Right</div>
+                </div>
+                
+                <div class="visual-example">
+                    <div class="token-sequence">
+                        <div class="token">The</div>
+                        <div class="token">cat</div>
+                        <div class="token">sat</div>
+                        <div class="token">on</div>
+                        <div class="token predict">?</div>
+                    </div>
+                    <div class="arrow-down">↓</div>
+                    <div class="formula">P(w_t | w_1, ..., w_{t-1})</div>
+                </div>
+                
+                <div class="features-list">
+                    <div class="feature-item">
+                        <div class="feature-icon">→</div>
+                        <div>Predict <span class="highlight">next token</span></div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">⚡</div>
+                        <div><span class="highlight">Causal masking</span> (uni-directional)</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">✏️</div>
+                        <div>Good for <span class="highlight">generation</span> tasks</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">📝</div>
+                        <div>GPT-style models</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Masked LM -->
+            <div class="model-section">
+                <div class="model-header">
+                    <div class="model-title">Masked LM</div>
+                    <div class="model-subtitle">Bidirectional Context</div>
+                </div>
+                
+                <div class="visual-example">
+                    <div class="token-sequence">
+                        <div class="token">The</div>
+                        <div class="token">cat</div>
+                        <div class="token masked">[MASK]</div>
+                        <div class="token">on</div>
+                        <div class="token">the</div>
+                    </div>
+                    <div class="arrow-down">↓</div>
+                    <div class="formula">P(w_masked | context)</div>
+                </div>
+                
+                <div class="features-list">
+                    <div class="feature-item">
+                        <div class="feature-icon">🎯</div>
+                        <div>Predict <span class="highlight">masked tokens</span></div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">↔️</div>
+                        <div><span class="highlight">Bidirectional</span> context (left+right)</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🧠</div>
+                        <div>Better <span class="highlight">understanding</span></div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">📖</div>
+                        <div>BERT-style models</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bottom-notes">
+            <div class="note-box">
+                <div class="note-title">🎓 Training Approach</div>
+                <div class="note-text">
+                    <strong>Self-supervision</strong> enables learning from unlimited text using <strong>cross-entropy loss</strong>
+                </div>
+            </div>
+            
+            <div class="note-box">
+                <div class="note-title">🔧 Architecture Fit</div>
+                <div class="note-text">
+                    Different objectives suit different architectures and <strong>downstream tasks</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introduction to Sigmoid Function</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            padding: 30px;
+            position: relative;
+        }
+        
+        .title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .content-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            height: calc(100% - 50px);
+        }
+        
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .definition-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            border-radius: 10px;
+            padding: 20px 24px;
+            color: white;
+            text-align: center;
+        }
+        
+        .def-label {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            opacity: 0.95;
+        }
+        
+        .def-formula {
+            font-size: 24px;
+            font-weight: 700;
+            font-style: italic;
+        }
+        
+        .features-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex: 1;
+        }
+        
+        .feature-item {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-left: 5px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+        }
+        
+        .feature-item:hover {
+            background: #f8fbff;
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.15);
+        }
+        
+        .feature-icon {
+            width: 28px;
+            height: 28px;
+            background: #1E64C8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .feature-text {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+            flex: 1;
+        }
+        
+        .solve-item {
+            background: #e8f5e9;
+            border-color: #28a745;
+            border-left-color: #28a745;
+        }
+        
+        .solve-item .feature-icon {
+            background: #28a745;
+        }
+        
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .output-box {
+            background: white;
+            border: 3px solid #9c27b0;
+            border-radius: 10px;
+            padding: 18px 20px;
+            text-align: center;
+        }
+        
+        .output-label {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .output-formula {
+            font-size: 20px;
+            color: #9c27b0;
+            font-weight: 700;
+            font-style: italic;
+        }
+        
+        .curve-visual {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        
+        .curve-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 15px;
+        }
+        
+        .curve-container {
+            width: 100%;
+            height: 180px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .sigmoid-curve {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        
+        .sigmoid-path {
+            stroke: #1E64C8;
+            stroke-width: 3;
+            fill: none;
+        }
+        
+        .axis-line {
+            stroke: #666;
+            stroke-width: 1.5;
+            opacity: 0.5;
+        }
+        
+        .axis-label {
+            font-size: 14px;
+            fill: #666;
+            font-weight: 500;
+        }
+        
+        .point-marker {
+            fill: #dc3545;
+        }
+        
+        .threshold-box {
+            background: #fff8e6;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 12px 16px;
+            text-align: center;
+        }
+        
+        .threshold-text {
+            font-size: 16px;
+            color: #f57c00;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Introduction to Sigmoid Function</div>
+        
+        <div class="content-layout">
+            <!-- Left Section -->
+            <div class="left-section">
+                <div class="definition-box">
+                    <div class="def-label">Definition:</div>
+                    <div class="def-formula">σ(z) = 1 / (1 + e⁻ᶻ)</div>
+                </div>
+                
+                <div class="features-list">
+                    <div class="feature-item">
+                        <div class="feature-icon">📊</div>
+                        <div class="feature-text">
+                            Maps any real number to (0,1) range
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="feature-icon">P</div>
+                        <div class="feature-text">
+                            Perfect for probability interpretation
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="feature-icon">S</div>
+                        <div class="feature-text">
+                            S-shaped curve: Smooth transition between 0 and 1
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item solve-item">
+                        <div class="feature-icon">✓</div>
+                        <div class="feature-text">
+                            <strong>Solves</strong> the "prediction outside [0,1]" problem
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right Section -->
+            <div class="right-section">
+                <div class="output-box">
+                    <div class="output-label">Output:</div>
+                    <div class="output-formula">P(y=1|x) = σ(wᵀx + b)</div>
+                </div>
+                
+                <div class="curve-visual">
+                    <div class="curve-title">S-Shaped Curve</div>
+                    <div class="curve-container">
+                        <svg class="sigmoid-curve" viewBox="0 0 300 180">
+                            <!-- Axes -->
+                            <line x1="30" y1="160" x2="270" y2="160" class="axis-line"/>
+                            <line x1="150" y1="20" x2="150" y2="160" class="axis-line"/>
+                            
+                            <!-- Sigmoid curve -->
+                            <path d="M 30,155 Q 75,150 100,130 Q 125,90 150,90 Q 175,90 200,50 Q 225,30 270,25" 
+                                  class="sigmoid-path"/>
+                            
+                            <!-- Decision point -->
+                            <circle cx="150" cy="90" r="5" class="point-marker"/>
+                            
+                            <!-- Labels -->
+                            <text x="150" y="175" class="axis-label" text-anchor="middle">z = 0</text>
+                            <text x="20" y="95" class="axis-label" text-anchor="end">0.5</text>
+                            <text x="20" y="165" class="axis-label" text-anchor="end">0</text>
+                            <text x="20" y="30" class="axis-label" text-anchor="end">1</text>
+                        </svg>
+                    </div>
+                </div>
+                
+                <div class="threshold-box">
+                    <div class="threshold-text">
+                        Input z=0 → Output σ=0.5 (decision threshold)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

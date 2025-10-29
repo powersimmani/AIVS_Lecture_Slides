@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stratified K-fold</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: white;
+            font-family: Aptos, 'Segoe UI', sans-serif;
+        }
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+            padding: 30px;
+            box-sizing: border-box;
+        }
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 20px;
+        }
+        .comparison-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .comparison-card {
+            background: #f8f9fb;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        .wrong-card {
+            border: 3px solid #e74c3c;
+        }
+        .correct-card {
+            border: 3px solid #27ae60;
+        }
+        .card-header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .card-icon {
+            font-size: 32px;
+            margin-bottom: 5px;
+        }
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+        }
+        .wrong-card .card-title { color: #e74c3c; }
+        .correct-card .card-title { color: #27ae60; }
+        
+        .dataset-info {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 15px;
+            color: #666;
+        }
+        .ratio-display {
+            font-weight: 600;
+            color: #1E64C8;
+            font-size: 16px;
+        }
+        
+        .folds-display {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .fold-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .fold-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #555;
+            min-width: 50px;
+        }
+        .fold-bar {
+            flex: 1;
+            height: 35px;
+            border-radius: 6px;
+            display: flex;
+            overflow: hidden;
+        }
+        .class-segment {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .class-a { background: #1E64C8; }
+        .class-b { background: #e74c3c; }
+        
+        .fold-ratio {
+            font-size: 13px;
+            color: #666;
+            min-width: 70px;
+            text-align: right;
+        }
+        .ratio-good { color: #27ae60; font-weight: 600; }
+        .ratio-bad { color: #e74c3c; font-weight: 600; }
+        
+        .benefits-section {
+            background: #f8f9fb;
+            border-radius: 10px;
+            padding: 18px;
+            margin-bottom: 15px;
+        }
+        .benefits-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        .benefit-item {
+            background: white;
+            padding: 12px 15px;
+            border-radius: 6px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 15px;
+            color: #555;
+        }
+        .benefit-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        
+        .use-case-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .use-case-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .use-case-text {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Stratified K-fold Cross Validation</div>
+        
+        <div class="comparison-section">
+            <!-- Regular K-fold (Wrong for imbalanced) -->
+            <div class="comparison-card wrong-card">
+                <div class="card-header">
+                    <div class="card-icon">❌</div>
+                    <div class="card-title">Regular K-fold</div>
+                </div>
+                
+                <div class="dataset-info">
+                    Original: <span class="ratio-display">70% Class A, 30% Class B</span>
+                </div>
+                
+                <div class="folds-display">
+                    <div class="fold-item">
+                        <div class="fold-label">Fold 1:</div>
+                        <div class="fold-bar">
+                            <div class="class-segment class-a" style="flex: 8;">80% A</div>
+                            <div class="class-segment class-b" style="flex: 2;">20% B</div>
+                        </div>
+                        <div class="fold-ratio ratio-bad">80:20 ⚠️</div>
+                    </div>
+                    
+                    <div class="fold-item">
+                        <div class="fold-label">Fold 2:</div>
+                        <div class="fold-bar">
+                            <div class="class-segment class-a" style="flex: 6;">60% A</div>
+                            <div class="class-segment class-b" style="flex: 4;">40% B</div>
+                        </div>
+                        <div class="fold-ratio ratio-bad">60:40 ⚠️</div>
+                    </div>
+                    
+                    <div class="fold-item">
+                        <div class="fold-label">Fold 3:</div>
+                        <div class="fold-bar">
+                            <div class="class-segment class-a" style="flex: 7.5;">75% A</div>
+                            <div class="class-segment class-b" style="flex: 2.5;">25% B</div>
+                        </div>
+                        <div class="fold-ratio ratio-bad">75:25 ⚠️</div>
+                    </div>
+                    
+                    <div class="fold-item">
+                        <div class="fold-label">Fold 4:</div>
+                        <div class="fold-bar">
+                            <div class="class-segment class-a" style="flex: 6.5;">65% A</div>
+                            <div class="class-segment class-b" style="flex: 3.5;">35% B</div>
+                        </div>
+                        <div class="fold-ratio ratio-bad">65:35 ⚠️</div>
+                    </div>
+                    
+                    <div class="fold-item">
+                        <div class="fold-label">Fold 5:</div>
+                        <div class="fold-bar">
+                            <div class="class-segment class-a" style="flex: 7;">70% A</div>
+                            <div class="class-segment class-b" style="flex: 3;">30% B</div>
+                        </div>
+                        <div class="fold-ratio ratio-bad">70:30 ⚠️</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stratified K-fold (Correct) -->
+            <div class="comparison-card correct-card">
+                <div class="card-header">
+                    <div class="card-icon">✅</div>
+                    <div class="card-title">Stratified K-fold</div>
+                </div>
+                
+                <div class="dataset-info">
+                    Original: <span class="ratio-display">70% Class A, 30% Class B</span>
+                </div>
+                
+                <div class="folds-display">
+                    <div class="fold-item">
+                        <div class="fold-label">Fold 1:</div>
+                        <div class="fold-bar">
+                            <div class="class-segment class-a" style="flex: 7;">70% A</div>
+                            <div class="class-segment class-b" style="flex: 3;">30% B</div>
+                        </div>
+                        <div class="fold-ratio ratio-good">70:30 ✓</div>
+                    </div>
+                    
+                    <div class="fold-item">
+                        <div class="fold-label">Fold 2:</div>
+                        <div class="fold-bar">
+                            <div class="class-segment class-a" style="flex: 7;">70% A</div>
+                            <div class="class-segment class-b" style="flex: 3;">30% B</div>
+                        </div>
+                        <div class="fold-ratio ratio-good">70:30 ✓</div>
+                    </div>
+                    
+                    <div class="fold-item">
+                        <div class="fold-label">Fold 3:</div>
+                        <div class="fold-bar">
+                            <div class="class-segment class-a" style="flex: 7;">70% A</div>
+                            <div class="class-segment class-b" style="flex: 3;">30% B</div>
+                        </div>
+                        <div class="fold-ratio ratio-good">70:30 ✓</div>
+                    </div>
+                    
+                    <div class="fold-item">
+                        <div class="fold-label">Fold 4:</div>
+                        <div class="fold-bar">
+                            <div class="class-segment class-a" style="flex: 7;">70% A</div>
+                            <div class="class-segment class-b" style="flex: 3;">30% B</div>
+                        </div>
+                        <div class="fold-ratio ratio-good">70:30 ✓</div>
+                    </div>
+                    
+                    <div class="fold-item">
+                        <div class="fold-label">Fold 5:</div>
+                        <div class="fold-bar">
+                            <div class="class-segment class-a" style="flex: 7;">70% A</div>
+                            <div class="class-segment class-b" style="flex: 3;">30% B</div>
+                        </div>
+                        <div class="fold-ratio ratio-good">70:30 ✓</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="benefits-section">
+            <div class="benefits-title">🎯 Key Benefits</div>
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <span class="benefit-icon">⚖️</span>
+                    <span>Maintains class distribution in each fold</span>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-icon">📊</span>
+                    <span>Reduces variance in performance estimates</span>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-icon">🎯</span>
+                    <span>Essential for imbalanced datasets</span>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-icon">✓</span>
+                    <span>More reliable for classification tasks</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="use-case-box">
+            <div class="use-case-title">💡 When to Use</div>
+            <div class="use-case-text">
+                Always prefer stratified K-fold for classification problems, especially with imbalanced classes
+            </div>
+        </div>
+    </div>
+</body>
+</html>

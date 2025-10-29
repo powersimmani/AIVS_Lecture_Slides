@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Present and Future of LLMs</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: #ffffff;
+            padding: 25px 40px;
+        }
+        
+        .title {
+            font-size: 26px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        /* Trends Grid */
+        .trends-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+        
+        .trend-card {
+            background: #F8F9FA;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .trend-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.3);
+            border-color: #2E7FD8;
+        }
+        
+        .trend-icon {
+            font-size: 36px;
+            margin-bottom: 8px;
+        }
+        
+        .trend-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .trend-desc {
+            font-size: 14px;
+            color: #666666;
+            line-height: 1.3;
+        }
+        
+        /* Highlighted Trends */
+        .highlight-section {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .highlight-card {
+            background: #E8F4F8;
+            border-left: 4px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        
+        .highlight-icon {
+            font-size: 32px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .highlight-content {
+            flex: 1;
+        }
+        
+        .highlight-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .highlight-text {
+            font-size: 16px;
+            color: #333333;
+            line-height: 1.4;
+        }
+        
+        /* Bottom Section */
+        .bottom-section {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .domain-card {
+            background: #E8F5E9;
+            border: 3px solid #4CAF50;
+            border-radius: 10px;
+            padding: 12px 15px;
+        }
+        
+        .domain-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #2E7D32;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .domain-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        
+        .domain-tag {
+            background: white;
+            border: 2px solid #4CAF50;
+            border-radius: 12px;
+            padding: 4px 10px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #2E7D32;
+        }
+        
+        .agi-card {
+            background: #FFF9E6;
+            border: 3px solid #FFC107;
+            border-radius: 10px;
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .agi-icon {
+            font-size: 48px;
+            flex-shrink: 0;
+        }
+        
+        .agi-content {
+            flex: 1;
+        }
+        
+        .agi-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #F57C00;
+            margin-bottom: 4px;
+        }
+        
+        .agi-text {
+            font-size: 16px;
+            color: #555555;
+            line-height: 1.4;
+        }
+        
+        .highlight {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .badge {
+            background: #1E64C8;
+            color: white;
+            border-radius: 12px;
+            padding: 2px 8px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Present and Future: Current Trends in LLMs</div>
+        
+        <div class="main-content">
+            <!-- Trends Grid -->
+            <div class="trends-grid">
+                <div class="trend-card">
+                    <div class="trend-icon">🎨</div>
+                    <div class="trend-title">Multimodal</div>
+                    <div class="trend-desc">Text, image, audio, video integration</div>
+                </div>
+                
+                <div class="trend-card">
+                    <div class="trend-icon">⚡</div>
+                    <div class="trend-title">Mixture of Experts</div>
+                    <div class="trend-desc">Sparse activation for efficiency</div>
+                </div>
+                
+                <div class="trend-card">
+                    <div class="trend-icon">📏</div>
+                    <div class="trend-title">Long Context</div>
+                    <div class="trend-desc">100K+ tokens processing</div>
+                </div>
+                
+                <div class="trend-card">
+                    <div class="trend-icon">🧠</div>
+                    <div class="trend-title">Better Reasoning</div>
+                    <div class="trend-desc">Math, logic, commonsense</div>
+                </div>
+            </div>
+            
+            <!-- Highlighted Trends -->
+            <div class="highlight-section">
+                <div class="highlight-card">
+                    <div class="highlight-icon">🔍</div>
+                    <div class="highlight-content">
+                        <div class="highlight-title">Retrieval Augmentation</div>
+                        <div class="highlight-text">
+                            Combining <span class="highlight">LMs with knowledge bases</span> for accurate information
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="highlight-card">
+                    <div class="highlight-icon">📱</div>
+                    <div class="highlight-content">
+                        <div class="highlight-title">Smaller Efficient Models</div>
+                        <div class="highlight-text">
+                            <span class="highlight">On-device</span> and <span class="highlight">edge deployment</span> capabilities
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Additional Sections -->
+            <div class="highlight-section">
+                <div class="highlight-card">
+                    <div class="highlight-icon">🔢</div>
+                    <div class="highlight-content">
+                        <div class="highlight-title">Enhanced Capabilities</div>
+                        <div class="highlight-text">
+                            Improvements in <span class="highlight">mathematical reasoning</span>, logical thinking, and commonsense understanding
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="highlight-card">
+                    <div class="highlight-icon">📚</div>
+                    <div class="highlight-content">
+                        <div class="highlight-title">Context Processing</div>
+                        <div class="highlight-text">
+                            Processing <span class="highlight">100K+ tokens</span> enables handling entire books and documents
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bottom Section -->
+            <div class="bottom-section">
+                <div class="domain-card">
+                    <div class="domain-title">
+                        <span>🏥</span>
+                        <span>Specialized Domain Models</span>
+                    </div>
+                    <div class="domain-tags">
+                        <div class="domain-tag">Medical</div>
+                        <div class="domain-tag">Legal</div>
+                        <div class="domain-tag">Scientific</div>
+                        <div class="domain-tag">Finance</div>
+                        <div class="domain-tag">Engineering</div>
+                    </div>
+                </div>
+                
+                <div class="agi-card">
+                    <div class="agi-icon">🤖</div>
+                    <div class="agi-content">
+                        <div class="agi-title">AGI Considerations</div>
+                        <div class="agi-text">
+                            Focus on <strong>capabilities</strong>, <strong>safety</strong>, and <strong>alignment</strong> as we approach AGI
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

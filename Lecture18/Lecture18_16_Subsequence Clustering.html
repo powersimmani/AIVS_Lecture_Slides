@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subsequence Clustering</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            padding: 25px;
+            gap: 18px;
+        }
+        
+        .header {
+            text-align: center;
+        }
+        
+        .main-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .pipeline-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 18px;
+        }
+        
+        .pipeline-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 14px;
+            text-align: center;
+        }
+        
+        .pipeline-flow {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            justify-content: space-between;
+        }
+        
+        .pipeline-step {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .step-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 16px;
+            width: 100%;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .step-box:hover {
+            background: #f0f6ff;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.2);
+        }
+        
+        .step-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        
+        .step-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .step-desc {
+            font-size: 15px;
+            color: #666;
+            line-height: 1.3;
+        }
+        
+        .arrow {
+            color: #1E64C8;
+            font-size: 28px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            flex: 1;
+        }
+        
+        .challenges-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .challenge-card {
+            background: white;
+            border-left: 4px solid #f44336;
+            border-radius: 6px;
+            padding: 12px 14px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+        }
+        
+        .challenge-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #f44336;
+            margin-bottom: 4px;
+        }
+        
+        .challenge-desc {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.3;
+        }
+        
+        .method-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .method-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .method-card:hover {
+            background: #f0f6ff;
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.2);
+        }
+        
+        .method-icon {
+            font-size: 32px;
+            flex-shrink: 0;
+        }
+        
+        .method-content {
+            flex: 1;
+        }
+        
+        .method-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .method-desc {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.4;
+        }
+        
+        .stomp-card {
+            background: #fff8f0;
+            border-color: #ff9800;
+        }
+        
+        .stomp-card .method-name {
+            color: #ff9800;
+        }
+        
+        .applications-box {
+            background: #e8f5e9;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            padding: 14px 16px;
+        }
+        
+        .app-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #4CAF50;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        .app-item {
+            background: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid #4CAF50;
+        }
+        
+        .app-icon {
+            font-size: 20px;
+        }
+        
+        .app-text {
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .use-case-box {
+            background: #f3e5f5;
+            border: 2px solid #9C27B0;
+            border-radius: 10px;
+            padding: 14px 16px;
+        }
+        
+        .use-case-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #9C27B0;
+            margin-bottom: 8px;
+        }
+        
+        .use-case-text {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .visual-demo {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+            border: 1px solid #e0e0e0;
+            margin-top: 8px;
+        }
+        
+        .demo-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        
+        .sliding-window-viz {
+            height: 60px;
+            position: relative;
+            background: linear-gradient(to bottom, #f8f9fa 0%, white 100%);
+            border-radius: 6px;
+        }
+        
+        .timeline {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+        }
+        
+        .timeline-path {
+            stroke: #1E64C8;
+            stroke-width: 2;
+            fill: none;
+        }
+        
+        .window-box {
+            position: absolute;
+            top: 5px;
+            height: 50px;
+            background: rgba(255, 152, 0, 0.2);
+            border: 2px solid #ff9800;
+            border-radius: 4px;
+        }
+        
+        .window-1 {
+            left: 10%;
+            width: 20%;
+        }
+        
+        .window-2 {
+            left: 35%;
+            width: 20%;
+        }
+        
+        .window-3 {
+            left: 60%;
+            width: 20%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="main-title">Subsequence Clustering</div>
+            <div class="subtitle">Finding Recurring Patterns in Long Time Series</div>
+        </div>
+        
+        <div class="pipeline-section">
+            <div class="pipeline-title">Subsequence Extraction & Clustering Pipeline</div>
+            <div class="pipeline-flow">
+                <div class="pipeline-step">
+                    <div class="step-box">
+                        <div class="step-icon">📈</div>
+                        <div class="step-title">Long Time Series</div>
+                        <div class="step-desc">Input data stream</div>
+                    </div>
+                </div>
+                
+                <div class="arrow">→</div>
+                
+                <div class="pipeline-step">
+                    <div class="step-box">
+                        <div class="step-icon">🪟</div>
+                        <div class="step-title">Sliding Window</div>
+                        <div class="step-desc">Extract subsequences</div>
+                    </div>
+                </div>
+                
+                <div class="arrow">→</div>
+                
+                <div class="pipeline-step">
+                    <div class="step-box">
+                        <div class="step-icon">🔍</div>
+                        <div class="step-title">Matrix Profile</div>
+                        <div class="step-desc">Motif discovery</div>
+                    </div>
+                </div>
+                
+                <div class="arrow">→</div>
+                
+                <div class="pipeline-step">
+                    <div class="step-box">
+                        <div class="step-icon">📊</div>
+                        <div class="step-title">Cluster Patterns</div>
+                        <div class="step-desc">Group similar motifs</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="visual-demo">
+                <div class="demo-label">Sliding Window Example:</div>
+                <div class="sliding-window-viz">
+                    <svg class="timeline" viewBox="0 0 100 40" preserveAspectRatio="none">
+                        <path class="timeline-path" d="M 0,20 Q 10,10 20,20 T 40,20 T 60,20 T 80,20 T 100,20"/>
+                    </svg>
+                    <div class="window-box window-1"></div>
+                    <div class="window-box window-2"></div>
+                    <div class="window-box window-3"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="content-grid">
+            <div class="challenges-section">
+                <div class="section-title">Key Challenges</div>
+                
+                <div class="challenge-card">
+                    <div class="challenge-title">⚠️ Trivial Matches</div>
+                    <div class="challenge-desc">Self-matches and near-duplicates</div>
+                </div>
+                
+                <div class="challenge-card">
+                    <div class="challenge-title">⚠️ Overlapping Patterns</div>
+                    <div class="challenge-desc">Adjacent subsequences too similar</div>
+                </div>
+                
+                <div class="method-section" style="margin-top: 12px;">
+                    <div class="section-title">Solutions</div>
+                    
+                    <div class="method-card">
+                        <div class="method-icon">🧮</div>
+                        <div class="method-content">
+                            <div class="method-name">Matrix Profile</div>
+                            <div class="method-desc">Efficient motif discovery technique</div>
+                        </div>
+                    </div>
+                    
+                    <div class="method-card stomp-card">
+                        <div class="method-icon">⚡</div>
+                        <div class="method-content">
+                            <div class="method-name">STOMP Algorithm</div>
+                            <div class="method-desc">Scalable Time series Ordered-search Matrix Profile</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="method-section">
+                <div class="section-title">Applications & Use Cases</div>
+                
+                <div class="applications-box">
+                    <div class="app-title">
+                        <span>🎯</span>
+                        <span>Key Applications</span>
+                    </div>
+                    <div class="app-grid">
+                        <div class="app-item">
+                            <div class="app-icon">🚨</div>
+                            <div class="app-text">Anomaly Detection</div>
+                        </div>
+                        <div class="app-item">
+                            <div class="app-icon">🔎</div>
+                            <div class="app-text">Pattern Mining</div>
+                        </div>
+                        <div class="app-item">
+                            <div class="app-icon">🔄</div>
+                            <div class="app-text">Motif Discovery</div>
+                        </div>
+                        <div class="app-item">
+                            <div class="app-icon">📡</div>
+                            <div class="app-text">Sensor Analysis</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="use-case-box">
+                    <div class="use-case-title">💡 Example Use Case</div>
+                    <div class="use-case-text">
+                        Identify repeated behaviors in IoT sensor data: recurring activity patterns, operational cycles, or anomalous sequences in manufacturing or healthcare monitoring systems.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image - SIFT, SURF, HOG</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Aptos', 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            padding: 30px;
+        }
+        
+        .title {
+            font-size: 26px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 22px;
+            text-align: center;
+        }
+        
+        .descriptors-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+        
+        .descriptor-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .descriptor-card:hover {
+            background: #F0F6FF;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.2);
+        }
+        
+        .desc-header {
+            text-align: center;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .desc-icon {
+            font-size: 32px;
+            margin-bottom: 6px;
+        }
+        
+        .desc-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .desc-full-name {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.3;
+        }
+        
+        .desc-description {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.5;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .desc-features {
+            list-style: none;
+        }
+        
+        .feature-item {
+            font-size: 15px;
+            color: #444;
+            line-height: 1.5;
+            margin-bottom: 6px;
+            padding-left: 18px;
+            position: relative;
+        }
+        
+        .feature-item:before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #1E64C8;
+            font-weight: bold;
+        }
+        
+        .properties-section {
+            background: #F0F6FF;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin-bottom: 16px;
+        }
+        
+        .prop-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .prop-text {
+            font-size: 16px;
+            color: #333;
+            text-align: center;
+            line-height: 1.5;
+        }
+        
+        .context-section {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .context-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .context-icon {
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+        
+        .context-text {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .context-label {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Image Descriptors: SIFT, SURF & HOG</div>
+        
+        <div class="descriptors-grid">
+            <div class="descriptor-card">
+                <div class="desc-header">
+                    <div class="desc-icon">🔍</div>
+                    <div class="desc-name">SIFT</div>
+                    <div class="desc-full-name">Scale-Invariant Feature Transform</div>
+                </div>
+                <div class="desc-description">
+                    Detects and describes local features
+                </div>
+                <ul class="desc-features">
+                    <li class="feature-item">Scale invariant</li>
+                    <li class="feature-item">Rotation invariant</li>
+                    <li class="feature-item">Partial illumination invariance</li>
+                </ul>
+            </div>
+            
+            <div class="descriptor-card">
+                <div class="desc-header">
+                    <div class="desc-icon">⚡</div>
+                    <div class="desc-name">SURF</div>
+                    <div class="desc-full-name">Speeded Up Robust Features</div>
+                </div>
+                <div class="desc-description">
+                    Faster approximation of SIFT
+                </div>
+                <ul class="desc-features">
+                    <li class="feature-item">Improved speed</li>
+                    <li class="feature-item">Similar robustness</li>
+                    <li class="feature-item">Efficient computation</li>
+                </ul>
+            </div>
+            
+            <div class="descriptor-card">
+                <div class="desc-header">
+                    <div class="desc-icon">📊</div>
+                    <div class="desc-name">HOG</div>
+                    <div class="desc-full-name">Histogram of Oriented Gradients</div>
+                </div>
+                <div class="desc-description">
+                    Captures edge orientation distribution
+                </div>
+                <ul class="desc-features">
+                    <li class="feature-item">Shape description</li>
+                    <li class="feature-item">Edge patterns</li>
+                    <li class="feature-item">Object detection</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="properties-section">
+            <div class="prop-title">🎯 Capabilities</div>
+            <div class="prop-text">
+                Enable robust object recognition and image matching
+            </div>
+        </div>
+        
+        <div class="context-section">
+            <div class="context-card">
+                <div class="context-icon">🕰️</div>
+                <div class="context-text">
+                    <span class="context-label">Historical Context:</span> Widely used before deep learning era for computer vision tasks
+                </div>
+            </div>
+            
+            <div class="context-card">
+                <div class="context-icon">💼</div>
+                <div class="context-text">
+                    <span class="context-label">Current Use:</span> Still valuable for lightweight applications and limited data scenarios
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

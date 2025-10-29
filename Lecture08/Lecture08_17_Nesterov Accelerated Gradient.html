@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nesterov Accelerated Gradient</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 30px;
+            background: #ffffff;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .main-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .content-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            height: 440px;
+        }
+        
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .innovation-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.3);
+        }
+        
+        .innovation-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .innovation-desc {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .update-rule-box {
+            background: #f0f8ff;
+            border: 3px solid #1E64C8;
+            border-radius: 10px;
+            padding: 18px;
+            flex: 1;
+        }
+        
+        .rule-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .rule-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .rule-step {
+            background: white;
+            border: 2px dashed #1E64C8;
+            border-radius: 8px;
+            padding: 12px;
+        }
+        
+        .step-label {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 6px;
+        }
+        
+        .step-formula {
+            font-size: 18px;
+            color: #1E64C8;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .lookahead-highlight {
+            background: #e8f1fd;
+            border-left: 4px solid #28a745;
+            padding: 12px 14px;
+            border-radius: 4px;
+            margin-top: 8px;
+        }
+        
+        .lookahead-text {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+        
+        .lookahead-icon {
+            color: #28a745;
+            font-weight: 600;
+        }
+        
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .comparison-box {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 18px;
+        }
+        
+        .comparison-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .comparison-item {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 6px;
+            padding: 12px;
+        }
+        
+        .comparison-item.nesterov {
+            background: #e8f1fd;
+            border-color: #28a745;
+        }
+        
+        .comparison-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+            text-align: center;
+        }
+        
+        .comparison-item.nesterov .comparison-label {
+            color: #28a745;
+        }
+        
+        .comparison-desc {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.4;
+            text-align: center;
+        }
+        
+        .advantages-box {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 18px;
+            flex: 1;
+        }
+        
+        .advantages-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+        }
+        
+        .advantage-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .advantage-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .advantage-icon {
+            background: #28a745;
+            color: white;
+            min-width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .advantage-text {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+        
+        .tradeoff-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .tradeoff-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        
+        .tradeoff-text {
+            font-size: 16px;
+            color: #856404;
+            line-height: 1.5;
+        }
+        
+        .usage-box {
+            background: linear-gradient(135deg, #e8f1fd 0%, #f0f8ff 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 14px 16px;
+            text-align: center;
+        }
+        
+        .usage-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .usage-text {
+            font-size: 16px;
+            color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="main-title">Nesterov Accelerated Gradient (NAG)</div>
+            <div class="subtitle">Improved Momentum with Look-Ahead Gradient Calculation</div>
+        </div>
+        
+        <div class="content-layout">
+            <div class="left-section">
+                <div class="innovation-box">
+                    <div class="innovation-title">🔍 Key Innovation</div>
+                    <div class="innovation-desc">
+                        "Look-ahead" mechanism<br>
+                        Calculates gradient at anticipated future position
+                    </div>
+                </div>
+                
+                <div class="update-rule-box">
+                    <div class="rule-title">Update Rules</div>
+                    <div class="rule-steps">
+                        <div class="rule-step">
+                            <div class="step-label">1. Velocity Update (Look-ahead)</div>
+                            <div class="step-formula">v = βv + ∇L(θ - βv)</div>
+                        </div>
+                        
+                        <div class="rule-step">
+                            <div class="step-label">2. Parameter Update</div>
+                            <div class="step-formula">θ = θ - ηv</div>
+                        </div>
+                    </div>
+                    
+                    <div class="lookahead-highlight">
+                        <div class="lookahead-text">
+                            <span class="lookahead-icon">⚡</span> <strong>Key Point:</strong> Calculates gradient at θ - βv position for more accurate direction prediction
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-section">
+                <div class="comparison-box">
+                    <div class="comparison-title">vs Standard Momentum</div>
+                    <div class="comparison-grid">
+                        <div class="comparison-item">
+                            <div class="comparison-label">Momentum</div>
+                            <div class="comparison-desc">
+                                Calculates gradient at<br>current position
+                            </div>
+                        </div>
+                        <div class="comparison-item nesterov">
+                            <div class="comparison-label">Nesterov</div>
+                            <div class="comparison-desc">
+                                Calculates gradient at<br>future position
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="advantages-box">
+                    <div class="advantages-title">✨ Advantages</div>
+                    <div class="advantage-list">
+                        <div class="advantage-item">
+                            <div class="advantage-icon">✓</div>
+                            <div class="advantage-text">
+                                Better convergence characteristics than standard momentum
+                            </div>
+                        </div>
+                        <div class="advantage-item">
+                            <div class="advantage-icon">✓</div>
+                            <div class="advantage-text">
+                                Reduces overshooting through early trajectory correction
+                            </div>
+                        </div>
+                        <div class="advantage-item">
+                            <div class="advantage-icon">✓</div>
+                            <div class="advantage-text">
+                                Particularly effective for convex optimization problems
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tradeoff-box">
+                    <div class="tradeoff-icon">⚖️</div>
+                    <div class="tradeoff-text">
+                        <strong>Trade-off:</strong> Slightly higher computational cost than standard momentum
+                    </div>
+                </div>
+                
+                <div class="usage-box">
+                    <div class="usage-title">💡 Widely Used</div>
+                    <div class="usage-text">
+                        Widely used in major deep learning frameworks like PyTorch and TensorFlow
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Output Layer Design - Regression vs Classification</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Aptos', 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 40px;
+        }
+        
+        .main-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+        }
+        
+        .comparison-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            flex: 1;
+        }
+        
+        .task-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .task-header {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .classification-header {
+            background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
+        }
+        
+        .architecture-box {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            flex: 1;
+        }
+        
+        .classification-box {
+            border-color: #4caf50;
+        }
+        
+        .network-visual {
+            background: white;
+            border-radius: 6px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            border: 1px solid #ddd;
+        }
+        
+        .layer-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+        }
+        
+        .layer-title {
+            font-size: 12px;
+            color: #666;
+            font-weight: 600;
+        }
+        
+        .nodes {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .node {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .hidden-node {
+            background: #5e35b1;
+            border: 2px solid #4527a0;
+            color: white;
+        }
+        
+        .output-node-reg {
+            background: #1E64C8;
+            border: 2px solid #1557b0;
+            color: white;
+        }
+        
+        .output-node-class {
+            background: #4caf50;
+            border: 2px solid #388e3c;
+            color: white;
+        }
+        
+        .arrow {
+            font-size: 24px;
+            color: #999;
+            font-weight: bold;
+        }
+        
+        .activation-label {
+            background: #e3f2fd;
+            color: #1E64C8;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .class-activation {
+            background: #e8f5e9;
+            color: #4caf50;
+        }
+        
+        .config-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .config-item {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 10px;
+            align-items: center;
+            background: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            border: 1px solid #e0e0e0;
+            font-size: 15px;
+        }
+        
+        .config-label {
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .config-value {
+            color: #1E64C8;
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .class-value {
+            color: #4caf50;
+        }
+        
+        .details-section {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .details-card {
+            background: #f8f9fa;
+            border-left: 4px solid #1E64C8;
+            padding: 15px;
+            border-radius: 4px;
+        }
+        
+        .class-card {
+            border-color: #4caf50;
+        }
+        
+        .card-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+        }
+        
+        .class-title {
+            color: #4caf50;
+        }
+        
+        .detail-items {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .detail-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        
+        .bullet {
+            color: #1E64C8;
+            font-weight: bold;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .class-bullet {
+            color: #4caf50;
+        }
+        
+        .detail-text {
+            color: #555;
+        }
+        
+        .example-box {
+            grid-column: 1 / -1;
+            background: #fff3cd;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            border-radius: 4px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .example-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .example-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #e65100;
+        }
+        
+        .example-text {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-title">Output Layer Design: Regression vs Classification</div>
+        
+        <div class="comparison-layout">
+            <!-- Regression Section -->
+            <div class="task-section">
+                <div class="task-header">Regression</div>
+                <div class="architecture-box">
+                    <div class="network-visual">
+                        <div class="layer-group">
+                            <div class="layer-title">Hidden</div>
+                            <div class="nodes">
+                                <div class="node hidden-node">h</div>
+                                <div class="node hidden-node">h</div>
+                                <div class="node hidden-node">h</div>
+                            </div>
+                        </div>
+                        
+                        <div class="arrow">→</div>
+                        
+                        <div class="layer-group">
+                            <div class="layer-title">Output</div>
+                            <div class="nodes">
+                                <div class="node output-node-reg">ŷ</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="activation-label">Linear / No Activation</div>
+                    
+                    <div class="config-list">
+                        <div class="config-item">
+                            <div class="config-label">Output Units:</div>
+                            <div class="config-value">1 (or n)</div>
+                        </div>
+                        <div class="config-item">
+                            <div class="config-label">Activation:</div>
+                            <div class="config-value">None (linear)</div>
+                        </div>
+                        <div class="config-item">
+                            <div class="config-label">Loss Function:</div>
+                            <div class="config-value">MSE, MAE</div>
+                        </div>
+                        <div class="config-item">
+                            <div class="config-label">Output Range:</div>
+                            <div class="config-value">(-∞, +∞)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Classification Section -->
+            <div class="task-section">
+                <div class="task-header classification-header">Classification</div>
+                <div class="architecture-box classification-box">
+                    <div class="network-visual">
+                        <div class="layer-group">
+                            <div class="layer-title">Hidden</div>
+                            <div class="nodes">
+                                <div class="node hidden-node">h</div>
+                                <div class="node hidden-node">h</div>
+                                <div class="node hidden-node">h</div>
+                            </div>
+                        </div>
+                        
+                        <div class="arrow">→</div>
+                        
+                        <div class="layer-group">
+                            <div class="layer-title">Output</div>
+                            <div class="nodes">
+                                <div class="node output-node-class">C₁</div>
+                                <div class="node output-node-class">C₂</div>
+                                <div class="node output-node-class">C₃</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="activation-label class-activation">Sigmoid / Softmax</div>
+                    
+                    <div class="config-list">
+                        <div class="config-item">
+                            <div class="config-label">Output Units:</div>
+                            <div class="config-value class-value">K classes</div>
+                        </div>
+                        <div class="config-item">
+                            <div class="config-label">Activation:</div>
+                            <div class="config-value class-value">Softmax</div>
+                        </div>
+                        <div class="config-item">
+                            <div class="config-label">Loss Function:</div>
+                            <div class="config-value class-value">Cross-Entropy</div>
+                        </div>
+                        <div class="config-item">
+                            <div class="config-label">Output Range:</div>
+                            <div class="config-value class-value">[0, 1] (probs)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Details Section -->
+            <div class="details-section">
+                <div class="details-card">
+                    <div class="card-title">Regression Details</div>
+                    <div class="detail-items">
+                        <div class="detail-row">
+                            <span class="bullet">•</span>
+                            <span class="detail-text"><strong>Task:</strong> Predict continuous values</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="bullet">•</span>
+                            <span class="detail-text"><strong>Examples:</strong> House price, temperature, stock price</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="bullet">•</span>
+                            <span class="detail-text"><strong>Loss:</strong> MSE = (1/n)Σ(ŷ - y)²</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="bullet">•</span>
+                            <span class="detail-text"><strong>No constraint</strong> on output values</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="details-card class-card">
+                    <div class="card-title class-title">Classification Details</div>
+                    <div class="detail-items">
+                        <div class="detail-row">
+                            <span class="bullet class-bullet">•</span>
+                            <span class="detail-text"><strong>Task:</strong> Predict discrete classes</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="bullet class-bullet">•</span>
+                            <span class="detail-text"><strong>Examples:</strong> Image labels, sentiment, diagnosis</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="bullet class-bullet">•</span>
+                            <span class="detail-text"><strong>Loss:</strong> CE = -Σ y log(ŷ)</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="bullet class-bullet">•</span>
+                            <span class="detail-text"><strong>Probabilities</strong> sum to 1.0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Example Box -->
+            <div class="example-box">
+                <div class="example-item">
+                    <div class="example-title">📊 Regression Example</div>
+                    <div class="example-text">
+                        Input: [bedroom=3, sqft=2000]<br>
+                        Output: $450,000 (continuous)
+                    </div>
+                </div>
+                
+                <div class="example-item">
+                    <div class="example-title">🏷️ Classification Example</div>
+                    <div class="example-text">
+                        Input: [image pixels]<br>
+                        Output: [cat: 0.8, dog: 0.15, bird: 0.05]
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

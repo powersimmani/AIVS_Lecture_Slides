@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Overall Seq2Seq Process</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #ffffff;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 35px;
+            position: relative;
+        }
+        
+        .main-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .seq2seq-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: calc(100% - 40px);
+            gap: 16px;
+        }
+        
+        /* Encoder Section */
+        .encoder-section {
+            flex: 1;
+            height: 100%;
+            background: #f0f4f8;
+            border-radius: 10px;
+            padding: 16px;
+            border: 3px solid #1E64C8;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .section-header {
+            background: #1E64C8;
+            color: white;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        
+        .header-decoder {
+            background: #5088d4;
+        }
+        
+        .section-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            gap: 10px;
+        }
+        
+        /* Input/Output */
+        .io-row {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .io-label {
+            font-size: 13px;
+            color: #666;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .io-boxes {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+        }
+        
+        .io-box {
+            width: 55px;
+            height: 42px;
+            background: white;
+            border: 2px solid #d0d9e3;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #555;
+            font-weight: 500;
+        }
+        
+        .special-token {
+            background: #fff3cd;
+            border-color: #ffc107;
+            color: #856404;
+            font-weight: 700;
+            font-size: 11px;
+        }
+        
+        /* RNN Cells */
+        .rnn-row {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .rnn-boxes {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .rnn-cell {
+            width: 55px;
+            height: 55px;
+            background: #1E64C8;
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            position: relative;
+        }
+        
+        .rnn-cell-decoder {
+            background: #5088d4;
+        }
+        
+        .cell-main {
+            font-size: 15px;
+        }
+        
+        .cell-sub {
+            font-size: 11px;
+            opacity: 0.8;
+        }
+        
+        /* Horizontal connections */
+        .h-conn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 2px;
+            background: white;
+            opacity: 0.5;
+        }
+        
+        .conn-1 { left: 61px; width: 6px; }
+        .conn-2 { left: 122px; width: 6px; }
+        .conn-3 { left: 183px; width: 6px; }
+        
+        /* Arrows */
+        .v-arrow {
+            text-align: center;
+            font-size: 20px;
+            color: #999;
+            line-height: 1;
+        }
+        
+        .arrow-encode {
+            color: #1E64C8;
+        }
+        
+        .arrow-decode {
+            color: #5088d4;
+        }
+        
+        /* Context Vector */
+        .context-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+        
+        .context-vector {
+            width: 75px;
+            height: 75px;
+            background: linear-gradient(135deg, #1E64C8 0%, #5088d4 100%);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 6px 20px rgba(30, 100, 200, 0.4);
+            position: relative;
+        }
+        
+        .context-label {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        
+        .context-value {
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .context-arrow {
+            position: absolute;
+            height: 2px;
+            background: currentColor;
+        }
+        
+        .arrow-left {
+            left: -16px;
+            width: 16px;
+            color: #1E64C8;
+        }
+        
+        .arrow-right {
+            right: -16px;
+            width: 16px;
+            color: #5088d4;
+        }
+        
+        .arrow-left::after {
+            content: '';
+            position: absolute;
+            right: -3px;
+            top: -2.5px;
+            width: 0;
+            height: 0;
+            border-left: 5px solid #1E64C8;
+            border-top: 3px solid transparent;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .arrow-right::after {
+            content: '';
+            position: absolute;
+            right: -3px;
+            top: -2.5px;
+            width: 0;
+            height: 0;
+            border-left: 5px solid #5088d4;
+            border-top: 3px solid transparent;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .context-desc {
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            max-width: 85px;
+            line-height: 1.3;
+            font-weight: 600;
+        }
+        
+        /* Decoder Section */
+        .decoder-section {
+            flex: 1;
+            height: 100%;
+            background: #f0f6fc;
+            border-radius: 10px;
+            padding: 16px;
+            border: 3px solid #5088d4;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Example Box */
+        .example-box {
+            position: absolute;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #e8f2ff;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .example-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .example-content {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #555;
+        }
+        
+        .example-arrow {
+            color: #1E64C8;
+            font-weight: bold;
+        }
+        
+        /* Process Steps */
+        .process-note {
+            position: absolute;
+            top: 30px;
+            left: 35px;
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 13px;
+            color: #856404;
+            font-weight: 600;
+            max-width: 200px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-title">Complete Sequence-to-Sequence Process</div>
+        
+        <div class="process-note">
+            🔄 Variable Input → Fixed Context → Variable Output
+        </div>
+        
+        <div class="seq2seq-flow">
+            <!-- Encoder Section -->
+            <div class="encoder-section">
+                <div class="section-header">📥 Encoder</div>
+                
+                <div class="section-content">
+                    <!-- Input -->
+                    <div class="io-row">
+                        <div class="io-label">Input Sequence</div>
+                        <div class="io-boxes">
+                            <div class="io-box">I</div>
+                            <div class="io-box">love</div>
+                            <div class="io-box">AI</div>
+                            <div class="io-box special-token">EOS</div>
+                        </div>
+                    </div>
+                    
+                    <div class="v-arrow arrow-encode">↑</div>
+                    
+                    <!-- Embedding -->
+                    <div class="io-row">
+                        <div class="io-label">Embeddings</div>
+                        <div class="io-boxes">
+                            <div class="io-box" style="background: #e8f2ff; border-color: #1E64C8; color: #1E64C8;">e₁</div>
+                            <div class="io-box" style="background: #e8f2ff; border-color: #1E64C8; color: #1E64C8;">e₂</div>
+                            <div class="io-box" style="background: #e8f2ff; border-color: #1E64C8; color: #1E64C8;">e₃</div>
+                            <div class="io-box" style="background: #e8f2ff; border-color: #1E64C8; color: #1E64C8;">e₄</div>
+                        </div>
+                    </div>
+                    
+                    <div class="v-arrow arrow-encode">↑</div>
+                    
+                    <!-- RNN -->
+                    <div class="rnn-row">
+                        <div class="io-label">RNN Cells</div>
+                        <div class="rnn-boxes">
+                            <div class="rnn-cell">
+                                <div class="cell-main">h₁</div>
+                                <div class="cell-sub">t=1</div>
+                            </div>
+                            <div class="h-conn conn-1"></div>
+                            <div class="rnn-cell">
+                                <div class="cell-main">h₂</div>
+                                <div class="cell-sub">t=2</div>
+                            </div>
+                            <div class="h-conn conn-2"></div>
+                            <div class="rnn-cell">
+                                <div class="cell-main">h₃</div>
+                                <div class="cell-sub">t=3</div>
+                            </div>
+                            <div class="h-conn conn-3"></div>
+                            <div class="rnn-cell">
+                                <div class="cell-main">h₄</div>
+                                <div class="cell-sub">t=4</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="v-arrow arrow-encode">↑</div>
+                    
+                    <div style="text-align: center; font-size: 12px; color: #1E64C8; font-weight: 600;">
+                        Compress to context
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Context Vector -->
+            <div class="context-section">
+                <div class="context-vector">
+                    <div class="context-arrow arrow-left"></div>
+                    <div class="context-arrow arrow-right"></div>
+                    <div class="context-label">Context</div>
+                    <div class="context-value">c</div>
+                </div>
+                <div class="context-desc">
+                    Fixed-size representation
+                </div>
+            </div>
+            
+            <!-- Decoder Section -->
+            <div class="decoder-section">
+                <div class="section-header header-decoder">📤 Decoder</div>
+                
+                <div class="section-content">
+                    <div style="text-align: center; font-size: 12px; color: #5088d4; font-weight: 600;">
+                        Generate from context
+                    </div>
+                    
+                    <div class="v-arrow arrow-decode">↓</div>
+                    
+                    <!-- RNN -->
+                    <div class="rnn-row">
+                        <div class="io-label">RNN Cells</div>
+                        <div class="rnn-boxes">
+                            <div class="rnn-cell rnn-cell-decoder">
+                                <div class="cell-main">s₁</div>
+                                <div class="cell-sub">t=1</div>
+                            </div>
+                            <div class="h-conn conn-1"></div>
+                            <div class="rnn-cell rnn-cell-decoder">
+                                <div class="cell-main">s₂</div>
+                                <div class="cell-sub">t=2</div>
+                            </div>
+                            <div class="h-conn conn-2"></div>
+                            <div class="rnn-cell rnn-cell-decoder">
+                                <div class="cell-main">s₃</div>
+                                <div class="cell-sub">t=3</div>
+                            </div>
+                            <div class="h-conn conn-3"></div>
+                            <div class="rnn-cell rnn-cell-decoder">
+                                <div class="cell-main">s₄</div>
+                                <div class="cell-sub">t=4</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="v-arrow arrow-decode">↓</div>
+                    
+                    <!-- Softmax -->
+                    <div class="io-row">
+                        <div class="io-label">Softmax</div>
+                        <div class="io-boxes">
+                            <div class="io-box" style="background: #f0f6fc; border-color: #5088d4; color: #5088d4;">P(y₁)</div>
+                            <div class="io-box" style="background: #f0f6fc; border-color: #5088d4; color: #5088d4;">P(y₂)</div>
+                            <div class="io-box" style="background: #f0f6fc; border-color: #5088d4; color: #5088d4;">P(y₃)</div>
+                            <div class="io-box" style="background: #f0f6fc; border-color: #5088d4; color: #5088d4;">P(y₄)</div>
+                        </div>
+                    </div>
+                    
+                    <div class="v-arrow arrow-decode">↓</div>
+                    
+                    <!-- Output -->
+                    <div class="io-row">
+                        <div class="io-label">Output Sequence</div>
+                        <div class="io-boxes">
+                            <div class="io-box special-token">START</div>
+                            <div class="io-box">나는</div>
+                            <div class="io-box">AI를</div>
+                            <div class="io-box">사랑해</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="example-box">
+            <div class="example-label">Example:</div>
+            <div class="example-content">
+                <span>"I love AI"</span>
+                <span class="example-arrow">→</span>
+                <span style="font-weight: 600; color: #1E64C8;">[Context c]</span>
+                <span class="example-arrow">→</span>
+                <span>"나는 AI를 사랑해"</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

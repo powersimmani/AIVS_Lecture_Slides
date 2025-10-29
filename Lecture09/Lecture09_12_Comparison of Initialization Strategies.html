@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comparison of Initialization Strategies</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: #ffffff;
+            padding: 20px 40px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 25px;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .comparison-table thead {
+            background: linear-gradient(135deg, #1E64C8 0%, #2E74D8 100%);
+            color: white;
+        }
+        
+        .comparison-table th {
+            padding: 16px;
+            text-align: left;
+            font-size: 17px;
+            font-weight: 600;
+        }
+        
+        .comparison-table th:first-child {
+            width: 200px;
+        }
+        
+        .comparison-table th:nth-child(2) {
+            width: 350px;
+        }
+        
+        .comparison-table td {
+            padding: 16px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+        
+        .comparison-table tbody tr {
+            transition: all 0.3s ease;
+        }
+        
+        .comparison-table tbody tr:hover {
+            background: #f8f9fb;
+        }
+        
+        .method-name {
+            font-weight: 600;
+            color: #1E64C8;
+            font-size: 17px;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .status-avoid {
+            background: #ffebee;
+            color: #c62828;
+            border: 1px solid #ef5350;
+        }
+        
+        .status-basic {
+            background: #fff3e0;
+            color: #ef6c00;
+            border: 1px solid #ffa726;
+        }
+        
+        .status-good {
+            background: #e3f2fd;
+            color: #1565c0;
+            border: 1px solid #42a5f5;
+        }
+        
+        .status-best {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #66bb6a;
+        }
+        
+        .highlight {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .footer-note {
+            margin-top: 20px;
+            padding: 16px 20px;
+            background: #f8f9fb;
+            border-left: 4px solid #1E64C8;
+            border-radius: 6px;
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+        
+        .footer-note strong {
+            color: #1E64C8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Comparison of Initialization Strategies</div>
+        
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Method</th>
+                    <th>Best Use Case</th>
+                    <th>Recommendation</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><div class="method-name">Zero Init</div></td>
+                    <td>
+                        <span class="highlight">Never use</span> - causes symmetry problem
+                    </td>
+                    <td>
+                        <span class="status-badge status-avoid">❌ Avoid</span>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><div class="method-name">Random Small Values</div></td>
+                    <td>
+                        Basic approach, often <span class="highlight">insufficient</span> for deep networks
+                    </td>
+                    <td>
+                        <span class="status-badge status-basic">⚠️ Basic</span>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><div class="method-name">Xavier/Glorot</div></td>
+                    <td>
+                        Best for <span class="highlight">tanh/sigmoid</span> activations
+                    </td>
+                    <td>
+                        <span class="status-badge status-good">✓ Recommended</span>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><div class="method-name">He Initialization</div></td>
+                    <td>
+                        Best for <span class="highlight">ReLU</span> and variants (LeakyReLU, PReLU)
+                    </td>
+                    <td>
+                        <span class="status-badge status-good">✓ Recommended</span>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><div class="method-name">LSUV</div></td>
+                    <td>
+                        Best for <span class="highlight">extremely deep networks</span> (100+ layers)
+                    </td>
+                    <td>
+                        <span class="status-badge status-best">✓✓ Advanced</span>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><div class="method-name">Pre-trained Weights</div></td>
+                    <td>
+                        Best when <span class="highlight">transfer learning</span> is applicable
+                    </td>
+                    <td>
+                        <span class="status-badge status-best">✓✓ Preferred</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="footer-note">
+            <strong>Key Takeaway:</strong> Choice depends on network architecture and activation functions. Modern practice favors He initialization for ReLU networks and pre-trained weights when available.
+        </div>
+    </div>
+</body>
+</html>

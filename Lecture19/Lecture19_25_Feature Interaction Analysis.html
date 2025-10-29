@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feature Interaction Analysis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+            padding: 25px 35px;
+            display: flex;
+            gap: 25px;
+        }
+        
+        /* Left section - heatmap */
+        .heatmap-section {
+            flex: 1.4;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .subtitle {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .heatmap-container {
+            flex: 1;
+            background: white;
+            border: 2px solid #E5E7EB;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .heatmap-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .matrix-wrapper {
+            flex: 1;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .y-labels {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            padding: 15px 0;
+        }
+        
+        .y-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+            text-align: right;
+            padding-right: 8px;
+        }
+        
+        .matrix-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .matrix-grid {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            grid-template-rows: repeat(8, 1fr);
+            gap: 3px;
+        }
+        
+        .matrix-cell {
+            border-radius: 4px;
+            transition: all 0.2s;
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 700;
+            color: white;
+        }
+        
+        .matrix-cell:hover {
+            transform: scale(1.15);
+            z-index: 10;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        /* Interaction strength colors */
+        .strength-0 { background: #F5F5F5; color: #999; }
+        .strength-1 { background: #E3F2FD; color: #666; }
+        .strength-2 { background: #BBDEFB; color: #666; }
+        .strength-3 { background: #90CAF9; color: #333; }
+        .strength-4 { background: #64B5F6; color: white; }
+        .strength-5 { background: #42A5F5; color: white; }
+        .strength-6 { background: #2196F3; color: white; }
+        .strength-7 { background: #1E88E5; color: white; }
+        .strength-8 { background: #1976D2; color: white; }
+        .strength-9 { background: #1565C0; color: white; }
+        .strength-10 { background: #0D47A1; color: white; }
+        
+        .x-labels {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 8px;
+        }
+        
+        .x-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+            text-align: center;
+        }
+        
+        /* Color scale */
+        .color-scale {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 12px;
+            justify-content: center;
+        }
+        
+        .scale-bar {
+            width: 250px;
+            height: 14px;
+            background: linear-gradient(90deg, 
+                #F5F5F5 0%, 
+                #E3F2FD 10%, 
+                #90CAF9 30%, 
+                #42A5F5 50%, 
+                #1E88E5 70%, 
+                #1565C0 90%, 
+                #0D47A1 100%);
+            border-radius: 7px;
+            border: 1px solid #E5E7EB;
+        }
+        
+        .scale-label {
+            font-size: 12px;
+            color: #666;
+            font-weight: 600;
+        }
+        
+        /* Info section */
+        .info-section {
+            flex: 0.6;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+        
+        .methods-box {
+            background: linear-gradient(135deg, #F0F7FF 0%, #E5F1FF 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px;
+        }
+        
+        .methods-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 10px;
+        }
+        
+        .method-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .method-icon {
+            color: #1E64C8;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .info-card {
+            background: #F8FAFC;
+            border-left: 4px solid #1E64C8;
+            border-radius: 8px;
+            padding: 10px 12px;
+            transition: all 0.2s;
+        }
+        
+        .info-card:hover {
+            background: #F0F7FF;
+            transform: translateX(4px);
+        }
+        
+        .info-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 3px;
+        }
+        
+        .info-desc {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.3;
+        }
+        
+        /* Interpretation box */
+        .interpretation-box {
+            background: white;
+            border: 2px solid #E5E7EB;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: auto;
+        }
+        
+        .interpretation-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .interpretation-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+            font-size: 12px;
+        }
+        
+        .color-sample {
+            width: 20px;
+            height: 12px;
+            border-radius: 3px;
+            border: 1px solid #E5E7EB;
+        }
+        
+        .sample-weak { background: #E3F2FD; }
+        .sample-medium { background: #42A5F5; }
+        .sample-strong { background: #0D47A1; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Heatmap Section -->
+        <div class="heatmap-section">
+            <div class="title">Feature Interaction Analysis</div>
+            <div class="subtitle">Pairwise Interaction Strength Matrix</div>
+            
+            <div class="heatmap-container">
+                <div class="heatmap-title">H-Statistic Interaction Matrix</div>
+                
+                <div class="matrix-wrapper">
+                    <!-- Y-axis labels -->
+                    <div class="y-labels">
+                        <div class="y-label">Age</div>
+                        <div class="y-label">Income</div>
+                        <div class="y-label">Credit</div>
+                        <div class="y-label">Debt</div>
+                        <div class="y-label">Employ</div>
+                        <div class="y-label">Educ</div>
+                        <div class="y-label">Savings</div>
+                        <div class="y-label">Region</div>
+                    </div>
+                    
+                    <!-- Matrix content -->
+                    <div class="matrix-content">
+                        <div class="matrix-grid">
+                            <!-- Row 1: Age -->
+                            <div class="matrix-cell strength-0">0</div>
+                            <div class="matrix-cell strength-8">0.65</div>
+                            <div class="matrix-cell strength-3">0.23</div>
+                            <div class="matrix-cell strength-2">0.18</div>
+                            <div class="matrix-cell strength-4">0.31</div>
+                            <div class="matrix-cell strength-1">0.12</div>
+                            <div class="matrix-cell strength-2">0.15</div>
+                            <div class="matrix-cell strength-1">0.08</div>
+                            
+                            <!-- Row 2: Income -->
+                            <div class="matrix-cell strength-8">0.65</div>
+                            <div class="matrix-cell strength-0">0</div>
+                            <div class="matrix-cell strength-7">0.58</div>
+                            <div class="matrix-cell strength-9">0.72</div>
+                            <div class="matrix-cell strength-5">0.41</div>
+                            <div class="matrix-cell strength-3">0.26</div>
+                            <div class="matrix-cell strength-6">0.49</div>
+                            <div class="matrix-cell strength-2">0.16</div>
+                            
+                            <!-- Row 3: Credit -->
+                            <div class="matrix-cell strength-3">0.23</div>
+                            <div class="matrix-cell strength-7">0.58</div>
+                            <div class="matrix-cell strength-0">0</div>
+                            <div class="matrix-cell strength-6">0.52</div>
+                            <div class="matrix-cell strength-4">0.34</div>
+                            <div class="matrix-cell strength-2">0.19</div>
+                            <div class="matrix-cell strength-3">0.28</div>
+                            <div class="matrix-cell strength-1">0.11</div>
+                            
+                            <!-- Row 4: Debt -->
+                            <div class="matrix-cell strength-2">0.18</div>
+                            <div class="matrix-cell strength-9">0.72</div>
+                            <div class="matrix-cell strength-6">0.52</div>
+                            <div class="matrix-cell strength-0">0</div>
+                            <div class="matrix-cell strength-3">0.27</div>
+                            <div class="matrix-cell strength-2">0.21</div>
+                            <div class="matrix-cell strength-5">0.38</div>
+                            <div class="matrix-cell strength-1">0.09</div>
+                            
+                            <!-- Row 5: Employment -->
+                            <div class="matrix-cell strength-4">0.31</div>
+                            <div class="matrix-cell strength-5">0.41</div>
+                            <div class="matrix-cell strength-4">0.34</div>
+                            <div class="matrix-cell strength-3">0.27</div>
+                            <div class="matrix-cell strength-0">0</div>
+                            <div class="matrix-cell strength-3">0.29</div>
+                            <div class="matrix-cell strength-2">0.17</div>
+                            <div class="matrix-cell strength-1">0.13</div>
+                            
+                            <!-- Row 6: Education -->
+                            <div class="matrix-cell strength-1">0.12</div>
+                            <div class="matrix-cell strength-3">0.26</div>
+                            <div class="matrix-cell strength-2">0.19</div>
+                            <div class="matrix-cell strength-2">0.21</div>
+                            <div class="matrix-cell strength-3">0.29</div>
+                            <div class="matrix-cell strength-0">0</div>
+                            <div class="matrix-cell strength-2">0.16</div>
+                            <div class="matrix-cell strength-1">0.10</div>
+                            
+                            <!-- Row 7: Savings -->
+                            <div class="matrix-cell strength-2">0.15</div>
+                            <div class="matrix-cell strength-6">0.49</div>
+                            <div class="matrix-cell strength-3">0.28</div>
+                            <div class="matrix-cell strength-5">0.38</div>
+                            <div class="matrix-cell strength-2">0.17</div>
+                            <div class="matrix-cell strength-2">0.16</div>
+                            <div class="matrix-cell strength-0">0</div>
+                            <div class="matrix-cell strength-1">0.07</div>
+                            
+                            <!-- Row 8: Region -->
+                            <div class="matrix-cell strength-1">0.08</div>
+                            <div class="matrix-cell strength-2">0.16</div>
+                            <div class="matrix-cell strength-1">0.11</div>
+                            <div class="matrix-cell strength-1">0.09</div>
+                            <div class="matrix-cell strength-1">0.13</div>
+                            <div class="matrix-cell strength-1">0.10</div>
+                            <div class="matrix-cell strength-1">0.07</div>
+                            <div class="matrix-cell strength-0">0</div>
+                        </div>
+                        
+                        <!-- X-axis labels -->
+                        <div class="x-labels">
+                            <div class="x-label">Age</div>
+                            <div class="x-label">Income</div>
+                            <div class="x-label">Credit</div>
+                            <div class="x-label">Debt</div>
+                            <div class="x-label">Employ</div>
+                            <div class="x-label">Educ</div>
+                            <div class="x-label">Savings</div>
+                            <div class="x-label">Region</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Color scale -->
+                <div class="color-scale">
+                    <span class="scale-label">Weak</span>
+                    <div class="scale-bar"></div>
+                    <span class="scale-label">Strong</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Info Section -->
+        <div class="info-section">
+            <div class="section-title">Methods</div>
+            
+            <div class="methods-box">
+                <div class="methods-title">Interaction Detection</div>
+                <div class="method-item">
+                    <span class="method-icon">•</span>
+                    <span><strong>H-statistic:</strong> Quantify strength</span>
+                </div>
+                <div class="method-item">
+                    <span class="method-icon">•</span>
+                    <span><strong>2D PDP:</strong> Visual effects</span>
+                </div>
+                <div class="method-item">
+                    <span class="method-icon">•</span>
+                    <span><strong>SHAP:</strong> Pairwise values</span>
+                </div>
+                <div class="method-item">
+                    <span class="method-icon">•</span>
+                    <span><strong>PD-based:</strong> Joint vs separate</span>
+                </div>
+            </div>
+            
+            <div class="info-card">
+                <div class="info-title">Non-additive</div>
+                <div class="info-desc">Features work together synergistically</div>
+            </div>
+            
+            <div class="info-card">
+                <div class="info-title">Understanding</div>
+                <div class="info-desc">Model behavior & debugging</div>
+            </div>
+            
+            <div class="info-card">
+                <div class="info-title">Engineering</div>
+                <div class="info-desc">Guide interaction term creation</div>
+            </div>
+            
+            <div class="info-card">
+                <div class="info-title">Complexity</div>
+                <div class="info-desc">O(n²) - quadratic with features</div>
+            </div>
+            
+            <!-- Interpretation -->
+            <div class="interpretation-box">
+                <div class="interpretation-title">Interpretation Guide</div>
+                <div class="interpretation-item">
+                    <div class="color-sample sample-weak"></div>
+                    <span>0.0-0.3: Weak interaction</span>
+                </div>
+                <div class="interpretation-item">
+                    <div class="color-sample sample-medium"></div>
+                    <span>0.3-0.6: Moderate interaction</span>
+                </div>
+                <div class="interpretation-item">
+                    <div class="color-sample sample-strong"></div>
+                    <span>0.6-1.0: Strong interaction</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

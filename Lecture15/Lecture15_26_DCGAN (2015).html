@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DCGAN Architecture</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            position: relative;
+            padding: 25px 40px;
+        }
+        
+        .header {
+            margin-bottom: 18px;
+        }
+        
+        .part-label {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-top: 4px;
+        }
+        
+        .main-content {
+            display: flex;
+            gap: 25px;
+        }
+        
+        .left-panel {
+            flex: 1.4;
+        }
+        
+        .architecture-box {
+            background: #F5F9FF;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 18px;
+            margin-bottom: 15px;
+        }
+        
+        .arch-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        
+        .networks {
+            display: flex;
+            gap: 20px;
+            justify-content: space-around;
+        }
+        
+        .network-col {
+            flex: 1;
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 14px;
+        }
+        
+        .network-col.generator {
+            border-color: #FF6B6B;
+        }
+        
+        .network-header {
+            font-size: 17px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 12px;
+            color: #1E64C8;
+        }
+        
+        .network-col.generator .network-header {
+            color: #FF6B6B;
+        }
+        
+        .layer {
+            background: #F5F9FF;
+            border-radius: 6px;
+            padding: 8px 10px;
+            margin-bottom: 8px;
+            font-size: 13px;
+            text-align: center;
+        }
+        
+        .layer.input {
+            background: #E3F2FD;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .layer.output {
+            background: #E8F5E9;
+            font-weight: 600;
+            color: #4CAF50;
+        }
+        
+        .layer-arrow {
+            text-align: center;
+            color: #1E64C8;
+            font-size: 16px;
+            margin: 4px 0;
+        }
+        
+        .key-features {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 16px 18px;
+        }
+        
+        .features-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin: 8px 0;
+            font-size: 15px;
+            color: #333;
+        }
+        
+        .check-icon {
+            color: #4CAF50;
+            font-weight: 700;
+            flex-shrink: 0;
+            font-size: 16px;
+        }
+        
+        .right-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        
+        .guidelines-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 16px 18px;
+        }
+        
+        .guidelines-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+        }
+        
+        .guideline-item {
+            background: #F5F9FF;
+            border-radius: 6px;
+            padding: 10px 12px;
+            margin-bottom: 8px;
+        }
+        
+        .guideline-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .guideline-text {
+            font-size: 14px;
+            color: #333;
+        }
+        
+        .benefits-box {
+            background: #E8F5E9;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            padding: 14px 18px;
+            flex: 1;
+        }
+        
+        .benefits-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #4CAF50;
+            margin-bottom: 10px;
+        }
+        
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 6px 0;
+            font-size: 15px;
+            color: #333;
+        }
+        
+        .star-icon {
+            color: #4CAF50;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="part-label">Part 5/6: Improvement Techniques</div>
+            <div class="title">DCGAN (2015)</div>
+            <div class="subtitle">Deep Convolutional GAN</div>
+        </div>
+        
+        <div class="main-content">
+            <div class="left-panel">
+                <div class="architecture-box">
+                    <div class="arch-title">Architecture Overview</div>
+                    <div class="networks">
+                        <div class="network-col generator">
+                            <div class="network-header">Generator</div>
+                            <div class="layer input">z (Noise)</div>
+                            <div class="layer-arrow">↓</div>
+                            <div class="layer">Project & Reshape</div>
+                            <div class="layer-arrow">↓</div>
+                            <div class="layer">Fractional-Strided Conv</div>
+                            <div class="layer">Batch Norm + ReLU</div>
+                            <div class="layer-arrow">↓</div>
+                            <div class="layer">Fractional-Strided Conv</div>
+                            <div class="layer">Batch Norm + ReLU</div>
+                            <div class="layer-arrow">↓</div>
+                            <div class="layer">Fractional-Strided Conv</div>
+                            <div class="layer">Batch Norm + ReLU</div>
+                            <div class="layer-arrow">↓</div>
+                            <div class="layer">Conv + Tanh</div>
+                            <div class="layer-arrow">↓</div>
+                            <div class="layer output">Image</div>
+                        </div>
+                        
+                        <div class="network-col">
+                            <div class="network-header">Discriminator</div>
+                            <div class="layer input">Image</div>
+                            <div class="layer-arrow">↓</div>
+                            <div class="layer">Strided Conv</div>
+                            <div class="layer">LeakyReLU</div>
+                            <div class="layer-arrow">↓</div>
+                            <div class="layer">Strided Conv</div>
+                            <div class="layer">Batch Norm + LeakyReLU</div>
+                            <div class="layer-arrow">↓</div>
+                            <div class="layer">Strided Conv</div>
+                            <div class="layer">Batch Norm + LeakyReLU</div>
+                            <div class="layer-arrow">↓</div>
+                            <div class="layer">Strided Conv</div>
+                            <div class="layer">LeakyReLU</div>
+                            <div class="layer-arrow">↓</div>
+                            <div class="layer output">Sigmoid</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="key-features">
+                    <div class="features-title">Key Features</div>
+                    <div class="feature-item">
+                        <span class="check-icon">✓</span>
+                        <span>Replace fully connected layers with convolutions</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="check-icon">✓</span>
+                        <span>No pooling layers - use strided convolutions</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="check-icon">✓</span>
+                        <span>Batch normalization in both G and D</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <div class="guidelines-box">
+                    <div class="guidelines-title">Architecture Guidelines</div>
+                    <div class="guideline-item">
+                        <div class="guideline-label">Generator</div>
+                        <div class="guideline-text">Fractional-strided conv + ReLU (tanh output)</div>
+                    </div>
+                    <div class="guideline-item">
+                        <div class="guideline-label">Discriminator</div>
+                        <div class="guideline-text">Strided conv + LeakyReLU</div>
+                    </div>
+                    <div class="guideline-item">
+                        <div class="guideline-label">Normalization</div>
+                        <div class="guideline-text">Batch norm (except G output, D input)</div>
+                    </div>
+                </div>
+                
+                <div class="benefits-box">
+                    <div class="benefits-title">✓ Benefits</div>
+                    <div class="benefit-item">
+                        <span class="star-icon">★</span>
+                        <span>Stable training</span>
+                    </div>
+                    <div class="benefit-item">
+                        <span class="star-icon">★</span>
+                        <span>Higher resolutions</span>
+                    </div>
+                    <div class="benefit-item">
+                        <span class="star-icon">★</span>
+                        <span>Better image quality</span>
+                    </div>
+                    <div class="benefit-item">
+                        <span class="star-icon">★</span>
+                        <span>Foundation for future GANs</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

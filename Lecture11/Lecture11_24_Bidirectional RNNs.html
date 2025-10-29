@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bidirectional RNNs</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+            padding: 25px 45px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 25px;
+        }
+        
+        .architecture-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874D8 100%);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+        
+        .arch-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .arch-diagram {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .direction-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 16px;
+        }
+        
+        .direction-label {
+            width: 100px;
+            font-weight: 600;
+        }
+        
+        .sequence-flow {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .node {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 14px;
+            border-radius: 6px;
+        }
+        
+        .arrow {
+            font-size: 20px;
+        }
+        
+        .combine-box {
+            background: rgba(255, 255, 255, 0.3);
+            padding: 10px 20px;
+            border-radius: 6px;
+            margin-top: 8px;
+            font-weight: 600;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .feature-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .feature-icon {
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+        
+        .feature-text {
+            font-size: 16px;
+            color: #2C3E50;
+            line-height: 1.4;
+        }
+        
+        .bottom-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+        
+        .use-case, .limitation {
+            border-radius: 8px;
+            padding: 16px 20px;
+        }
+        
+        .use-case {
+            background: #E8F1FC;
+            border: 2px solid #1E64C8;
+        }
+        
+        .limitation {
+            background: #FDECEA;
+            border: 2px solid #E74C3C;
+        }
+        
+        .section-header {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .use-case .section-header {
+            color: #1E64C8;
+        }
+        
+        .limitation .section-header {
+            color: #E74C3C;
+        }
+        
+        .content-text {
+            font-size: 16px;
+            color: #2C3E50;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Bidirectional RNNs</div>
+        
+        <div class="architecture-box">
+            <div class="arch-title">Dual-Direction Architecture</div>
+            <div class="arch-diagram">
+                <div class="direction-row">
+                    <div class="direction-label">Forward →</div>
+                    <div class="sequence-flow">
+                        <div class="node">x₁</div>
+                        <span class="arrow">→</span>
+                        <div class="node">x₂</div>
+                        <span class="arrow">→</span>
+                        <div class="node">x₃</div>
+                        <span class="arrow">→</span>
+                        <div class="node">x₄</div>
+                    </div>
+                </div>
+                <div class="direction-row">
+                    <div class="direction-label">← Backward</div>
+                    <div class="sequence-flow">
+                        <div class="node">x₄</div>
+                        <span class="arrow">→</span>
+                        <div class="node">x₃</div>
+                        <span class="arrow">→</span>
+                        <div class="node">x₂</div>
+                        <span class="arrow">→</span>
+                        <div class="node">x₁</div>
+                    </div>
+                </div>
+                <div class="combine-box">⊕ Concatenate or Average</div>
+            </div>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🔮</div>
+                <div class="feature-text">
+                    <strong>Captures future context</strong> for current prediction
+                </div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📋</div>
+                <div class="feature-text">
+                    <strong>Full sequence required</strong> before processing
+                </div>
+            </div>
+        </div>
+        
+        <div class="bottom-section">
+            <div class="use-case">
+                <div class="section-header">
+                    <span>✓</span>
+                    <span>Best For</span>
+                </div>
+                <div class="content-text">
+                    Tasks with full sequence available:<br>
+                    • Named Entity Recognition<br>
+                    • POS Tagging<br>
+                    • Sentiment Analysis
+                </div>
+            </div>
+            
+            <div class="limitation">
+                <div class="section-header">
+                    <span>⚠</span>
+                    <span>Cannot Be Used For</span>
+                </div>
+                <div class="content-text">
+                    Real-time streaming applications where future context is unavailable
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

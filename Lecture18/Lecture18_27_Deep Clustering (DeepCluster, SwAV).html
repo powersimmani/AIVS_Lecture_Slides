@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deep Clustering: DeepCluster & SwAV</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 18px;
+            padding: 25px;
+        }
+        
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        
+        .method-box {
+            background: white;
+            border: 2px solid #9C27B0;
+            border-radius: 12px;
+            padding: 16px;
+            flex: 1;
+        }
+        
+        .method-title {
+            font-size: 19px;
+            font-weight: 700;
+            color: #9C27B0;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .method-icon {
+            font-size: 28px;
+        }
+        
+        .method-features {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .feature-item {
+            background: #f3e5f5;
+            padding: 10px 12px;
+            border-radius: 6px;
+            font-size: 16px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            line-height: 1.4;
+        }
+        
+        .feature-icon {
+            color: #9C27B0;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        
+        .swav-box {
+            border-color: #1E64C8;
+        }
+        
+        .swav-box .method-title {
+            color: #1E64C8;
+        }
+        
+        .swav-box .feature-item {
+            background: #e8f4ff;
+        }
+        
+        .swav-box .feature-icon {
+            color: #1E64C8;
+        }
+        
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        
+        .architecture-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 18px;
+            flex: 1;
+        }
+        
+        .arch-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 14px;
+            text-align: center;
+        }
+        
+        .swav-diagram {
+            background: white;
+            border-radius: 10px;
+            padding: 16px;
+            height: 200px;
+            position: relative;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .view-branch {
+            position: absolute;
+            width: 45%;
+        }
+        
+        .view-left {
+            left: 5%;
+            top: 10%;
+        }
+        
+        .view-right {
+            right: 5%;
+            top: 10%;
+        }
+        
+        .view-box {
+            background: #e8f4ff;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .view-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .view-desc {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .encoder-box {
+            background: #fff8f0;
+            border: 2px solid #ff9800;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .encoder-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: #ff9800;
+        }
+        
+        .prototype-box {
+            background: #f3e5f5;
+            border: 2px solid #9C27B0;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        .prototype-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: #9C27B0;
+        }
+        
+        .swap-arrow {
+            position: absolute;
+            top: 50%;
+            left: 48%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .arrow-icon {
+            font-size: 32px;
+            color: #4CAF50;
+        }
+        
+        .swap-label {
+            background: #4CAF50;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        
+        .advantages-section {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        .adv-card {
+            background: white;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            padding: 12px 14px;
+            text-align: center;
+        }
+        
+        .adv-icon {
+            font-size: 24px;
+            margin-bottom: 6px;
+        }
+        
+        .adv-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #4CAF50;
+            margin-bottom: 4px;
+        }
+        
+        .adv-desc {
+            font-size: 14px;
+            color: #555;
+        }
+        
+        .sota-badge {
+            background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%);
+            color: white;
+            padding: 12px 18px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 17px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left-section">
+            <div class="method-box">
+                <div class="method-title">
+                    <span class="method-icon">🔄</span>
+                    <span>DeepCluster</span>
+                </div>
+                <div class="method-features">
+                    <div class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Alternates clustering and representation learning</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Cluster assignments as pseudo-labels</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Iterative refinement process</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="method-box swav-box">
+                <div class="method-title">
+                    <span class="method-icon">🔀</span>
+                    <span>SwAV</span>
+                </div>
+                <div class="method-features">
+                    <div class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Swapping Assignments between Views</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Online clustering with prototypes</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Learnable cluster centroids</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>No pairwise comparisons needed</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="right-section">
+            <div class="architecture-section">
+                <div class="arch-title">SwAV Architecture & Training Process</div>
+                
+                <div class="swav-diagram">
+                    <div class="view-branch view-left">
+                        <div class="view-box">
+                            <div class="view-label">View 1</div>
+                            <div class="view-desc">Augmentation A</div>
+                        </div>
+                        <div class="encoder-box">
+                            <div class="encoder-label">Encoder</div>
+                        </div>
+                        <div class="prototype-box">
+                            <div class="prototype-label">Prototypes</div>
+                        </div>
+                    </div>
+                    
+                    <div class="view-branch view-right">
+                        <div class="view-box">
+                            <div class="view-label">View 2</div>
+                            <div class="view-desc">Augmentation B</div>
+                        </div>
+                        <div class="encoder-box">
+                            <div class="encoder-label">Encoder</div>
+                        </div>
+                        <div class="prototype-box">
+                            <div class="prototype-label">Prototypes</div>
+                        </div>
+                    </div>
+                    
+                    <div class="swap-arrow">
+                        <div class="arrow-icon">⇄</div>
+                        <div class="swap-label">Swapped Prediction</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="advantages-section">
+                <div class="adv-card">
+                    <div class="adv-icon">⚡</div>
+                    <div class="adv-title">Efficient</div>
+                    <div class="adv-desc">No pairwise comparisons</div>
+                </div>
+                
+                <div class="adv-card">
+                    <div class="adv-icon">🎯</div>
+                    <div class="adv-title">Online</div>
+                    <div class="adv-desc">Real-time clustering</div>
+                </div>
+                
+                <div class="adv-card">
+                    <div class="adv-icon">🧠</div>
+                    <div class="adv-title">Prototypes</div>
+                    <div class="adv-desc">Learnable centroids</div>
+                </div>
+                
+                <div class="adv-card">
+                    <div class="adv-icon">📈</div>
+                    <div class="adv-title">Scalable</div>
+                    <div class="adv-desc">Large datasets</div>
+                </div>
+            </div>
+            
+            <div class="sota-badge">
+                🏆 State-of-the-Art Self-Supervised Learning Results
+            </div>
+        </div>
+    </div>
+</body>
+</html>

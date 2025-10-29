@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mixup and CutMix</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: #ffffff;
+            padding: 20px 40px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 25px;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+        }
+        
+        .method-card {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .method-header {
+            text-align: center;
+        }
+        
+        .method-name {
+            font-size: 22px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .method-subtitle {
+            font-size: 15px;
+            color: #666;
+        }
+        
+        .visual-demo {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            min-height: 130px;
+        }
+        
+        .image-box {
+            width: 70px;
+            height: 70px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            border: 3px solid;
+            position: relative;
+        }
+        
+        .image-a {
+            background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
+            border-color: #2e7d32;
+        }
+        
+        .image-b {
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+            border-color: #ef6c00;
+        }
+        
+        .image-mixed {
+            background: linear-gradient(135deg, #4caf50 0%, #ff9800 100%);
+            border-color: #1E64C8;
+            width: 80px;
+            height: 80px;
+        }
+        
+        .image-cutmix {
+            background: linear-gradient(135deg, #4caf50 0%, #4caf50 100%);
+            border-color: #1E64C8;
+            width: 80px;
+            height: 80px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cut-region {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+            border: 2px solid #ef6c00;
+        }
+        
+        .operation {
+            font-size: 24px;
+            color: #1E64C8;
+            font-weight: bold;
+        }
+        
+        .label-info {
+            text-align: center;
+            font-size: 13px;
+            color: #666;
+            margin-top: -5px;
+        }
+        
+        .formula-box {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+        }
+        
+        .formula-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .formula {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #2c3e50;
+            background: #f8f9fb;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            line-height: 1.6;
+        }
+        
+        .benefits-list {
+            background: white;
+            border-radius: 8px;
+            padding: 12px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .benefit-item {
+            font-size: 15px;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+        
+        .benefit-icon {
+            color: #4caf50;
+            margin-right: 6px;
+        }
+        
+        .shared-benefits {
+            grid-column: 1 / -1;
+            background: #e8f5e9;
+            border: 2px solid #4caf50;
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin-top: 10px;
+        }
+        
+        .shared-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #4caf50;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .shared-items {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        
+        .shared-item {
+            background: white;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            font-size: 15px;
+            color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Mixup and CutMix</div>
+        
+        <div class="main-content">
+            <div class="method-card">
+                <div class="method-header">
+                    <div class="method-name">Mixup</div>
+                    <div class="method-subtitle">Linear Interpolation</div>
+                </div>
+                
+                <div class="visual-demo">
+                    <div>
+                        <div class="image-box image-a">🐱</div>
+                        <div class="label-info">Image A</div>
+                    </div>
+                    <div class="operation">+</div>
+                    <div>
+                        <div class="image-box image-b">🐶</div>
+                        <div class="label-info">Image B</div>
+                    </div>
+                    <div class="operation">→</div>
+                    <div>
+                        <div class="image-box image-mixed">🐱🐶</div>
+                        <div class="label-info">Mixed</div>
+                    </div>
+                </div>
+                
+                <div class="formula-box">
+                    <div class="formula-title">Formula</div>
+                    <div class="formula">
+                        x<sub>mix</sub> = λ·x<sub>i</sub> + (1-λ)·x<sub>j</sub><br>
+                        y<sub>mix</sub> = λ·y<sub>i</sub> + (1-λ)·y<sub>j</sub>
+                    </div>
+                </div>
+                
+                <div class="benefits-list">
+                    <div class="benefit-item">
+                        <span class="benefit-icon">✓</span>
+                        Blends entire images
+                    </div>
+                    <div class="benefit-item">
+                        <span class="benefit-icon">✓</span>
+                        Smooth interpolation
+                    </div>
+                </div>
+            </div>
+            
+            <div class="method-card">
+                <div class="method-header">
+                    <div class="method-name">CutMix</div>
+                    <div class="method-subtitle">Cut and Paste Regions</div>
+                </div>
+                
+                <div class="visual-demo">
+                    <div>
+                        <div class="image-box image-a">🐱</div>
+                        <div class="label-info">Image A</div>
+                    </div>
+                    <div class="operation">+</div>
+                    <div>
+                        <div class="image-box image-b">🐶</div>
+                        <div class="label-info">Patch B</div>
+                    </div>
+                    <div class="operation">→</div>
+                    <div>
+                        <div class="image-box image-cutmix">
+                            🐱
+                            <div class="cut-region"></div>
+                        </div>
+                        <div class="label-info">CutMix</div>
+                    </div>
+                </div>
+                
+                <div class="formula-box">
+                    <div class="formula-title">Mixing Ratio</div>
+                    <div class="formula">
+                        λ ~ Beta(α, α)<br>
+                        Paste cut region to another
+                    </div>
+                </div>
+                
+                <div class="benefits-list">
+                    <div class="benefit-item">
+                        <span class="benefit-icon">✓</span>
+                        Retains local features
+                    </div>
+                    <div class="benefit-item">
+                        <span class="benefit-icon">✓</span>
+                        More natural appearance
+                    </div>
+                </div>
+            </div>
+            
+            <div class="shared-benefits">
+                <div class="shared-title">Shared Benefits</div>
+                <div class="shared-items">
+                    <div class="shared-item">
+                        Smoother decision boundaries
+                    </div>
+                    <div class="shared-item">
+                        Improved robustness
+                    </div>
+                    <div class="shared-item">
+                        Better calibration
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

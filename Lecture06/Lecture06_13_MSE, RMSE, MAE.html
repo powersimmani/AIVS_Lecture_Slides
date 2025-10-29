@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MSE, RMSE, MAE</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: white;
+            font-family: Aptos, 'Segoe UI', sans-serif;
+        }
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+            padding: 30px;
+            box-sizing: border-box;
+        }
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 25px;
+        }
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-bottom: 20px;
+        }
+        .metric-card {
+            background: #f8f9fb;
+            border-radius: 10px;
+            padding: 20px;
+            border-top: 4px solid #1E64C8;
+            position: relative;
+        }
+        .metric-card:nth-child(2) {
+            border-top-color: #4A90E2;
+        }
+        .metric-card:nth-child(3) {
+            border-top-color: #7BB3F0;
+        }
+        .metric-name {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        .metric-card:nth-child(2) .metric-name { color: #4A90E2; }
+        .metric-card:nth-child(3) .metric-name { color: #7BB3F0; }
+        
+        .metric-full-name {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+            text-align: center;
+            font-style: italic;
+        }
+        .formula-box {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+            margin-bottom: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        .characteristics {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.6;
+        }
+        .char-item {
+            margin-bottom: 6px;
+        }
+        .icon {
+            margin-right: 5px;
+        }
+        
+        .comparison-table {
+            background: #f8f9fb;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        .table-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .table-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 1px;
+            background: #ddd;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .table-cell {
+            background: white;
+            padding: 12px;
+            font-size: 15px;
+        }
+        .table-header {
+            background: #1E64C8;
+            color: white;
+            font-weight: 600;
+            text-align: center;
+        }
+        .table-row-header {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        .table-cell-center {
+            text-align: center;
+        }
+        
+        .key-insight {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .insight-text {
+            font-size: 17px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">MSE, RMSE, MAE</div>
+        
+        <div class="metrics-grid">
+            <!-- MSE -->
+            <div class="metric-card">
+                <div class="metric-name">MSE</div>
+                <div class="metric-full-name">Mean Squared Error</div>
+                <div class="formula-box">
+                    Σ(yᵢ - ŷᵢ)² / n
+                </div>
+                <div class="characteristics">
+                    <div class="char-item"><span class="icon">🎯</span>Squares differences</div>
+                    <div class="char-item"><span class="icon">⚡</span>Heavily penalizes large errors</div>
+                    <div class="char-item"><span class="icon">📊</span>Squared units</div>
+                </div>
+            </div>
+
+            <!-- RMSE -->
+            <div class="metric-card">
+                <div class="metric-name">RMSE</div>
+                <div class="metric-full-name">Root Mean Squared Error</div>
+                <div class="formula-box">
+                    √(Σ(yᵢ - ŷᵢ)² / n)
+                </div>
+                <div class="characteristics">
+                    <div class="char-item"><span class="icon">🎯</span>Square root of MSE</div>
+                    <div class="char-item"><span class="icon">⚡</span>Same units as target</div>
+                    <div class="char-item"><span class="icon">📊</span>More interpretable</div>
+                </div>
+            </div>
+
+            <!-- MAE -->
+            <div class="metric-card">
+                <div class="metric-name">MAE</div>
+                <div class="metric-full-name">Mean Absolute Error</div>
+                <div class="formula-box">
+                    Σ|yᵢ - ŷᵢ| / n
+                </div>
+                <div class="characteristics">
+                    <div class="char-item"><span class="icon">🎯</span>Absolute differences</div>
+                    <div class="char-item"><span class="icon">⚡</span>Treats all errors equally</div>
+                    <div class="char-item"><span class="icon">📊</span>Robust to outliers</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="comparison-table">
+            <div class="table-title">Quick Comparison</div>
+            <div class="table-grid">
+                <div class="table-cell table-header">Property</div>
+                <div class="table-cell table-header">MSE</div>
+                <div class="table-cell table-header">RMSE</div>
+                <div class="table-cell table-header">MAE</div>
+                
+                <div class="table-cell table-row-header">Outlier Sensitivity</div>
+                <div class="table-cell table-cell-center">High ⚠️</div>
+                <div class="table-cell table-cell-center">High ⚠️</div>
+                <div class="table-cell table-cell-center">Low ✓</div>
+                
+                <div class="table-cell table-row-header">Interpretability</div>
+                <div class="table-cell table-cell-center">Low</div>
+                <div class="table-cell table-cell-center">High ✓</div>
+                <div class="table-cell table-cell-center">High ✓</div>
+                
+                <div class="table-cell table-row-header">Units</div>
+                <div class="table-cell table-cell-center">Squared</div>
+                <div class="table-cell table-cell-center">Original ✓</div>
+                <div class="table-cell table-cell-center">Original ✓</div>
+            </div>
+        </div>
+
+        <div class="key-insight">
+            <div class="insight-text">🎯 Key Insight: Lower values = Better performance • Choose based on outlier importance</div>
+        </div>
+    </div>
+</body>
+</html>

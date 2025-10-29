@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CNN-based Image Features</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Aptos', 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            padding: 30px;
+        }
+        
+        .title {
+            font-size: 26px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .intro-box {
+            background: #F0F6FF;
+            border-left: 4px solid #1E64C8;
+            padding: 12px 20px;
+            margin-bottom: 20px;
+            font-size: 17px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .hierarchy-section {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 18px 20px;
+            margin-bottom: 20px;
+        }
+        
+        .hierarchy-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .layers-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        
+        .layer-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 16px 14px;
+            flex: 1;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .layer-box:hover {
+            background: #F0F6FF;
+            transform: scale(1.05);
+        }
+        
+        .layer-box:nth-child(1) {
+            border-color: #4A90E2;
+        }
+        
+        .layer-box:nth-child(3) {
+            border-color: #357ABD;
+        }
+        
+        .layer-box:nth-child(5) {
+            border-color: #1E64C8;
+        }
+        
+        .layer-label {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .layer-content {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .arrow-right {
+            color: #1E64C8;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 18px;
+        }
+        
+        .feature-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .feature-icon {
+            width: 45px;
+            height: 45px;
+            background: #1E64C8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+        
+        .feature-text {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .pretrained-section {
+            background: #1E64C8;
+            color: white;
+            border-radius: 10px;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .pretrained-icon {
+            font-size: 28px;
+        }
+        
+        .pretrained-content {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .pretrained-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .pretrained-examples {
+            font-size: 16px;
+            opacity: 0.95;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">CNN-based Image Features</div>
+        
+        <div class="intro-box">
+            Convolutional Neural Networks learn hierarchical visual features
+        </div>
+        
+        <div class="hierarchy-section">
+            <div class="hierarchy-title">Feature Hierarchy Across Layers</div>
+            <div class="layers-flow">
+                <div class="layer-box">
+                    <div class="layer-label">Early Layers</div>
+                    <div class="layer-content">Edges<br>Textures<br>Colors</div>
+                </div>
+                
+                <div class="arrow-right">→</div>
+                
+                <div class="layer-box">
+                    <div class="layer-label">Middle Layers</div>
+                    <div class="layer-content">Object Parts<br>Patterns</div>
+                </div>
+                
+                <div class="arrow-right">→</div>
+                
+                <div class="layer-box">
+                    <div class="layer-label">Deep Layers</div>
+                    <div class="layer-content">High-level Semantic<br>Concepts & Objects</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🔧</div>
+                <div class="feature-text">Convolutional filters automatically learned from data</div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🔄</div>
+                <div class="feature-text">Pooling operations provide translation invariance</div>
+            </div>
+        </div>
+        
+        <div class="pretrained-section">
+            <div class="pretrained-icon">🎯</div>
+            <div class="pretrained-content">
+                <div class="pretrained-title">Pre-trained CNNs as Feature Extractors</div>
+                <div class="pretrained-examples">VGG, ResNet, and more serve as powerful feature extractors</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

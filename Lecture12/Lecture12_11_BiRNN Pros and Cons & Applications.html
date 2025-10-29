@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BiRNN Pros and Cons & Applications</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #ffffff;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 40px;
+            position: relative;
+        }
+        
+        .layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 24px;
+            height: 100%;
+        }
+        
+        .section {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+        
+        .section:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(30, 100, 200, 0.1);
+        }
+        
+        .section-pros {
+            border-top: 4px solid #28a745;
+        }
+        
+        .section-cons {
+            border-top: 4px solid #dc3545;
+        }
+        
+        .section-applications {
+            border-top: 4px solid #1E64C8;
+            grid-column: 1 / -1;
+        }
+        
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        
+        .icon-pros {
+            background: #28a745;
+        }
+        
+        .icon-cons {
+            background: #dc3545;
+        }
+        
+        .icon-apps {
+            background: #1E64C8;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .content-list {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .list-item {
+            display: flex;
+            align-items: start;
+            gap: 10px;
+            padding: 12px;
+            background: white;
+            border-radius: 6px;
+            font-size: 16px;
+            color: #555;
+            line-height: 1.4;
+            border-left: 3px solid transparent;
+            transition: all 0.2s ease;
+        }
+        
+        .list-item:hover {
+            border-left-color: currentColor;
+            transform: translateX(4px);
+        }
+        
+        .item-icon {
+            font-size: 18px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+        
+        .icon-check {
+            color: #28a745;
+        }
+        
+        .icon-cross {
+            color: #dc3545;
+        }
+        
+        .applications-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+        
+        .app-card {
+            background: white;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+        
+        .app-card:hover {
+            border-color: #1E64C8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.15);
+        }
+        
+        .app-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        
+        .app-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .app-desc {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.3;
+        }
+        
+        .highlight {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="layout">
+            <!-- Pros Section -->
+            <div class="section section-pros">
+                <div class="section-header">
+                    <div class="icon icon-pros">✓</div>
+                    <div class="section-title">Advantages</div>
+                </div>
+                <div class="content-list">
+                    <div class="list-item">
+                        <div class="item-icon icon-check">✓</div>
+                        <div><span class="highlight">Full context</span> - captures both past and future information</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="item-icon icon-check">✓</div>
+                        <div><span class="highlight">Better representations</span> - richer hidden states at each time step</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="item-icon icon-check">✓</div>
+                        <div><span class="highlight">Improved accuracy</span> - superior performance on many NLP tasks</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="item-icon icon-check">✓</div>
+                        <div><span class="highlight">Disambiguation</span> - resolves ambiguity using surrounding context</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Cons Section -->
+            <div class="section section-cons">
+                <div class="section-header">
+                    <div class="icon icon-cons">✗</div>
+                    <div class="section-title">Disadvantages</div>
+                </div>
+                <div class="content-list">
+                    <div class="list-item">
+                        <div class="item-icon icon-cross">✗</div>
+                        <div><span class="highlight">Cannot stream</span> - requires full sequence before processing</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="item-icon icon-cross">✗</div>
+                        <div><span class="highlight">Higher computation</span> - 2x parameters and memory compared to unidirectional</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="item-icon icon-cross">✗</div>
+                        <div><span class="highlight">Not for generation</span> - unsuitable for autoregressive tasks</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="item-icon icon-cross">✗</div>
+                        <div><span class="highlight">Slower training</span> - increased training time and inference latency</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Applications Section -->
+            <div class="section section-applications">
+                <div class="section-header">
+                    <div class="icon icon-apps">⚙</div>
+                    <div class="section-title">Key Applications</div>
+                </div>
+                <div class="applications-grid">
+                    <div class="app-card">
+                        <div class="app-icon">🏷️</div>
+                        <div class="app-title">Named Entity Recognition</div>
+                        <div class="app-desc">Identify entities using full sentence context</div>
+                    </div>
+                    <div class="app-card">
+                        <div class="app-icon">📝</div>
+                        <div class="app-title">POS Tagging</div>
+                        <div class="app-desc">Accurate part-of-speech labeling with context</div>
+                    </div>
+                    <div class="app-card">
+                        <div class="app-icon">💭</div>
+                        <div class="app-title">Sentiment Analysis</div>
+                        <div class="app-desc">Capture sentiment from entire text</div>
+                    </div>
+                    <div class="app-card">
+                        <div class="app-icon">🎯</div>
+                        <div class="app-title">Slot Filling</div>
+                        <div class="app-desc">Extract structured info from utterances</div>
+                    </div>
+                    <div class="app-card">
+                        <div class="app-icon">🔗</div>
+                        <div class="app-title">Dependency Parsing</div>
+                        <div class="app-desc">Understand syntactic relationships</div>
+                    </div>
+                    <div class="app-card">
+                        <div class="app-icon">🗣️</div>
+                        <div class="app-title">Speech Recognition</div>
+                        <div class="app-desc">Phoneme prediction with context</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

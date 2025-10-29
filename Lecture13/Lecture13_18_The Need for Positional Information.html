@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Need for Positional Information</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 30px;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .problem-section {
+            background: #fff5f5;
+            border: 2px solid #dc3545;
+            border-radius: 8px;
+            padding: 18px 24px;
+        }
+        
+        .problem-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #dc3545;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .problem-statement {
+            font-size: 17px;
+            color: #333;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        
+        .highlight-red {
+            font-weight: 600;
+            color: #dc3545;
+        }
+        
+        .example-box {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            align-items: center;
+            margin-top: 8px;
+        }
+        
+        .sentence-box {
+            background: white;
+            border: 2px solid #dc3545;
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .equals-sign {
+            font-size: 28px;
+            color: #dc3545;
+            font-weight: 700;
+        }
+        
+        .comparison-section {
+            display: flex;
+            gap: 16px;
+            flex: 1;
+        }
+        
+        .comparison-card {
+            flex: 1;
+            border-radius: 8px;
+            padding: 18px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .rnn-card {
+            background: #f0f7ff;
+            border: 2px solid #1E64C8;
+        }
+        
+        .transformer-card {
+            background: #fff9f0;
+            border: 2px solid #f59e0b;
+        }
+        
+        .card-header {
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 2px solid;
+        }
+        
+        .rnn-card .card-header {
+            border-color: #1E64C8;
+        }
+        
+        .transformer-card .card-header {
+            border-color: #f59e0b;
+        }
+        
+        .card-icon {
+            font-size: 28px;
+            margin-bottom: 6px;
+        }
+        
+        .card-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .rnn-card .card-title {
+            color: #1E64C8;
+        }
+        
+        .transformer-card .card-title {
+            color: #d97700;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: start;
+            gap: 10px;
+        }
+        
+        .feature-icon {
+            font-size: 20px;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+        
+        .feature-text {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .highlight-blue {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .highlight-orange {
+            font-weight: 600;
+            color: #d97700;
+        }
+        
+        .solution-box {
+            background: #f0fdf4;
+            border: 2px solid #16a34a;
+            border-radius: 8px;
+            padding: 14px 20px;
+            text-align: center;
+        }
+        
+        .solution-icon {
+            font-size: 28px;
+            margin-bottom: 6px;
+        }
+        
+        .solution-title {
+            font-size: 19px;
+            font-weight: 600;
+            color: #16a34a;
+            margin-bottom: 4px;
+        }
+        
+        .solution-text {
+            font-size: 17px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .highlight-green {
+            font-weight: 600;
+            color: #16a34a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">The Need for Positional Information</div>
+        
+        <div class="problem-section">
+            <div class="problem-title">⚠️ Core Problem</div>
+            <div class="problem-statement">
+                Self-attention is <span class="highlight-red">permutation invariant</span><br>
+                Without position information, word order is ignored!
+            </div>
+            <div class="example-box">
+                <div class="sentence-box">"cat ate mouse"</div>
+                <div class="equals-sign">=</div>
+                <div class="sentence-box">"mouse ate cat"</div>
+            </div>
+        </div>
+        
+        <div class="comparison-section">
+            <div class="comparison-card rnn-card">
+                <div class="card-header">
+                    <div class="card-icon">🔄</div>
+                    <div class="card-title">RNN Approach</div>
+                </div>
+                
+                <div class="feature-item">
+                    <span class="feature-icon">✅</span>
+                    <div class="feature-text">
+                        <span class="highlight-blue">Inherently encodes position</span> through sequential processing
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <span class="feature-icon">📍</span>
+                    <div class="feature-text">
+                        Position is implicit in the processing order
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <span class="feature-icon">⏱️</span>
+                    <div class="feature-text">
+                        No additional mechanism needed
+                    </div>
+                </div>
+            </div>
+            
+            <div class="comparison-card transformer-card">
+                <div class="card-header">
+                    <div class="card-icon">⚡</div>
+                    <div class="card-title">Transformer Approach</div>
+                </div>
+                
+                <div class="feature-item">
+                    <span class="feature-icon">❌</span>
+                    <div class="feature-text">
+                        Parallel processing = <span class="highlight-orange">no inherent position</span>
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <span class="feature-icon">➕</span>
+                    <div class="feature-text">
+                        Needs <span class="highlight-orange">explicit positional information</span>
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <span class="feature-icon">🎯</span>
+                    <div class="feature-text">
+                        Critical: Word order is crucial for meaning
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="solution-box">
+            <div class="solution-icon">✨</div>
+            <div class="solution-title">Solution</div>
+            <div class="solution-text">
+                <span class="highlight-green">Positional encodings</span> must be added to input embeddings <span class="highlight-green">before the first layer</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

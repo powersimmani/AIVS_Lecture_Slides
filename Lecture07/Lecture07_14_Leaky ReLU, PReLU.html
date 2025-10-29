@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaky ReLU & PReLU</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            overflow-x: hidden;
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 960px;
+            width: 95vw;
+            min-height: 540px;
+            height: auto;
+            background: white;
+            position: relative;
+            overflow: hidden;
+            padding: 20px 35px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 20px;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 18px;
+        }
+        
+        .function-card {
+            background: white;
+            border: 3px solid;
+            border-radius: 12px;
+            padding: 18px;
+            transition: all 0.3s ease;
+        }
+        
+        .function-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .function-card.leaky {
+            background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+            border-color: #4CAF50;
+        }
+        
+        .function-card.prelu {
+            background: linear-gradient(135deg, #F3E5F5 0%, #E1BEE7 100%);
+            border-color: #9C27B0;
+        }
+        
+        .card-header {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .function-card.leaky .card-header {
+            color: #2E7D32;
+        }
+        
+        .function-card.prelu .card-header {
+            color: #6A1B9A;
+        }
+        
+        .formula-section {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .formula-text {
+            font-size: 17px;
+            color: #333;
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 8px;
+        }
+        
+        .alpha-info {
+            font-size: 15px;
+            color: #666;
+            font-style: italic;
+        }
+        
+        .graph-container {
+            width: 100%;
+            height: 100px;
+            background: white;
+            border-radius: 8px;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .graph-svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .feature-list {
+            list-style: none;
+        }
+        
+        .feature-item {
+            font-size: 15px;
+            color: #333;
+            padding-left: 22px;
+            position: relative;
+            margin-bottom: 6px;
+            line-height: 1.4;
+        }
+        
+        .feature-item::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            font-weight: 700;
+            font-size: 16px;
+        }
+        
+        .function-card.leaky .feature-item::before {
+            color: #4CAF50;
+        }
+        
+        .function-card.prelu .feature-item::before {
+            color: #9C27B0;
+        }
+        
+        .comparison-table {
+            background: #F0F6FF;
+            border: 3px solid #1E64C8;
+            border-radius: 12px;
+            padding: 15px 20px;
+        }
+        
+        .table-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .table-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .table-cell {
+            background: white;
+            border-radius: 8px;
+            padding: 10px 12px;
+            text-align: center;
+        }
+        
+        .table-cell.header {
+            font-weight: 700;
+            color: #1E64C8;
+            font-size: 16px;
+        }
+        
+        .table-cell.content {
+            font-size: 15px;
+            color: #333;
+        }
+        
+        .table-cell.leaky-col {
+            border: 2px solid #4CAF50;
+        }
+        
+        .table-cell.prelu-col {
+            border: 2px solid #9C27B0;
+        }
+        
+        .highlight {
+            font-weight: 700;
+            color: #1E64C8;
+        }
+    
+        
+        /* Responsive adjustments */
+        @media screen and (max-width: 1000px) {
+            .container {
+                width: 98vw !important;
+                max-width: 98vw !important;
+                padding: 15px 20px !important;
+            }
+        }
+        
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: 10px 15px !important;
+            }
+            
+            .title {
+                font-size: 20px !important;
+            }
+            
+            /* 그리드 레이아웃을 1열로 */
+            .challenges-grid,
+            .comparison-grid,
+            .solutions-grid,
+            .guide-grid,
+            .findings-section,
+            .benefits-grid,
+            .applications-section,
+            .guidelines-grid,
+            .components-section,
+            .techniques-grid,
+            .deployment-section {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .gradient-flow,
+            .network-visual,
+            .flow-steps,
+            .comparison-section {
+                flex-direction: column !important;
+                gap: 15px !important;
+            }
+            
+            .arrow-back,
+            .arrow,
+            .arrow-right,
+            .arrow-connector {
+                transform: rotate(90deg);
+                margin: 5px 0 !important;
+            }
+        }
+        
+        @media screen and (max-width: 480px) {
+            .container {
+                padding: 8px 10px !important;
+            }
+            
+            .title {
+                font-size: 18px !important;
+            }
+            
+            .card-header,
+            .scenario-label,
+            .card-title,
+            .function-title {
+                font-size: 16px !important;
+            }
+        }
+    
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Leaky ReLU & PReLU: Addressing Dead Neurons</div>
+        
+        <div class="comparison-grid">
+            <div class="function-card leaky">
+                <div class="card-header">Leaky ReLU</div>
+                
+                <div class="formula-section">
+                    <div class="formula-text">f(x) = max(αx, x)</div>
+                    <div class="alpha-info">α = 0.01 (fixed)</div>
+                </div>
+                
+                <div class="graph-container">
+                    <svg class="graph-svg" viewBox="0 0 200 80">
+                        <line x1="20" y1="40" x2="180" y2="40" stroke="#999" stroke-width="1.5"/>
+                        <line x1="100" y1="10" x2="100" y2="70" stroke="#999" stroke-width="1.5"/>
+                        <polyline points="20,45 100,40 180,10" fill="none" stroke="#4CAF50" stroke-width="3"/>
+                        <circle cx="100" cy="40" r="3" fill="#4CAF50"/>
+                        <text x="15" y="50" font-size="10" fill="#666">-x</text>
+                        <text x="175" y="15" font-size="10" fill="#666">+x</text>
+                    </svg>
+                </div>
+                
+                <ul class="feature-list">
+                    <li class="feature-item">Prevents dead neurons</li>
+                    <li class="feature-item">Small negative slope (0.01)</li>
+                    <li class="feature-item">Minimal computational cost</li>
+                </ul>
+            </div>
+            
+            <div class="function-card prelu">
+                <div class="card-header">PReLU</div>
+                
+                <div class="formula-section">
+                    <div class="formula-text">f(x) = max(αx, x)</div>
+                    <div class="alpha-info">α learned during training</div>
+                </div>
+                
+                <div class="graph-container">
+                    <svg class="graph-svg" viewBox="0 0 200 80">
+                        <line x1="20" y1="40" x2="180" y2="40" stroke="#999" stroke-width="1.5"/>
+                        <line x1="100" y1="10" x2="100" y2="70" stroke="#999" stroke-width="1.5"/>
+                        <polyline points="20,50 100,40 180,10" fill="none" stroke="#9C27B0" stroke-width="3" stroke-dasharray="3,3" opacity="0.5"/>
+                        <polyline points="20,45 100,40 180,10" fill="none" stroke="#9C27B0" stroke-width="3"/>
+                        <circle cx="100" cy="40" r="3" fill="#9C27B0"/>
+                        <text x="15" y="55" font-size="9" fill="#9C27B0">adaptive</text>
+                        <text x="175" y="15" font-size="10" fill="#666">+x</text>
+                    </svg>
+                </div>
+                
+                <ul class="feature-list">
+                    <li class="feature-item">Learnable parameter α</li>
+                    <li class="feature-item">Adapts per channel/layer</li>
+                    <li class="feature-item">Better in deep networks</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="comparison-table">
+            <div class="table-title">Performance Comparison</div>
+            <div class="table-grid">
+                <div class="table-cell header">Aspect</div>
+                <div class="table-cell header leaky-col">Leaky ReLU</div>
+                <div class="table-cell header prelu-col">PReLU</div>
+                
+                <div class="table-cell content">Flexibility</div>
+                <div class="table-cell content leaky-col">Fixed α</div>
+                <div class="table-cell content prelu-col">Adaptive α</div>
+                
+                <div class="table-cell content">Complexity</div>
+                <div class="table-cell content leaky-col">Minimal</div>
+                <div class="table-cell content prelu-col">Slight increase</div>
+                
+                <div class="table-cell content">Use Case</div>
+                <div class="table-cell content leaky-col">General purpose</div>
+                <div class="table-cell content prelu-col">Deep CNNs</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

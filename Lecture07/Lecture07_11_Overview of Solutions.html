@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Overview of Solutions</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            overflow-x: hidden;
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 960px;
+            width: 95vw;
+            min-height: 540px;
+            height: auto;
+            background: white;
+            position: relative;
+            overflow: hidden;
+            padding: 20px 35px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 22px;
+        }
+        
+        .solutions-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 18px;
+        }
+        
+        .solution-category {
+            background: white;
+            border: 3px solid #1E64C8;
+            border-radius: 12px;
+            padding: 16px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .solution-category:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(30, 100, 200, 0.15);
+        }
+        
+        .solution-category.activation {
+            background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+            border-color: #4CAF50;
+        }
+        
+        .solution-category.initialization {
+            background: linear-gradient(135deg, #FFF3E0 0%, #FFE0B2 100%);
+            border-color: #FF9800;
+        }
+        
+        .solution-category.normalization {
+            background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+            border-color: #2196F3;
+        }
+        
+        .solution-category.architecture {
+            background: linear-gradient(135deg, #F3E5F5 0%, #E1BEE7 100%);
+            border-color: #9C27B0;
+        }
+        
+        .solution-category.optimization {
+            background: linear-gradient(135deg, #FCE4EC 0%, #F8BBD0 100%);
+            border-color: #E91E63;
+        }
+        
+        .solution-category.regularization {
+            background: linear-gradient(135deg, #E0F2F1 0%, #B2DFDB 100%);
+            border-color: #009688;
+        }
+        
+        .category-icon {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .category-title {
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            padding-right: 40px;
+        }
+        
+        .solution-category.activation .category-title {
+            color: #2E7D32;
+        }
+        
+        .solution-category.initialization .category-title {
+            color: #E65100;
+        }
+        
+        .solution-category.normalization .category-title {
+            color: #1565C0;
+        }
+        
+        .solution-category.architecture .category-title {
+            color: #6A1B9A;
+        }
+        
+        .solution-category.optimization .category-title {
+            color: #C2185B;
+        }
+        
+        .solution-category.regularization .category-title {
+            color: #00695C;
+        }
+        
+        .solution-content {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.5;
+            margin-bottom: 6px;
+        }
+        
+        .solution-examples {
+            font-size: 15px;
+            color: #555;
+            font-weight: 600;
+            margin-top: 6px;
+            padding-top: 6px;
+            border-top: 2px solid rgba(0,0,0,0.1);
+        }
+        
+        .target-label {
+            display: inline-block;
+            font-size: 12px;
+            background: rgba(255,255,255,0.8);
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-top: 4px;
+            font-weight: 600;
+            color: #666;
+        }
+        
+        .bottom-section {
+            background: #F0F6FF;
+            border: 3px solid #1E64C8;
+            border-radius: 12px;
+            padding: 15px 20px;
+            text-align: center;
+        }
+        
+        .bottom-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .bottom-content {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .highlight {
+            color: #1E64C8;
+            font-weight: 700;
+        }
+    
+        
+        /* Responsive adjustments */
+        @media screen and (max-width: 1000px) {
+            .container {
+                width: 98vw !important;
+                max-width: 98vw !important;
+                padding: 15px 20px !important;
+            }
+        }
+        
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: 10px 15px !important;
+            }
+            
+            .title {
+                font-size: 20px !important;
+            }
+            
+            /* 그리드 레이아웃을 1열로 */
+            .challenges-grid,
+            .comparison-grid,
+            .solutions-grid,
+            .guide-grid,
+            .findings-section,
+            .benefits-grid,
+            .applications-section,
+            .guidelines-grid,
+            .components-section,
+            .techniques-grid,
+            .deployment-section {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .gradient-flow,
+            .network-visual,
+            .flow-steps,
+            .comparison-section {
+                flex-direction: column !important;
+                gap: 15px !important;
+            }
+            
+            .arrow-back,
+            .arrow,
+            .arrow-right,
+            .arrow-connector {
+                transform: rotate(90deg);
+                margin: 5px 0 !important;
+            }
+        }
+        
+        @media screen and (max-width: 480px) {
+            .container {
+                padding: 8px 10px !important;
+            }
+            
+            .title {
+                font-size: 18px !important;
+            }
+            
+            .card-header,
+            .scenario-label,
+            .card-title,
+            .function-title {
+                font-size: 16px !important;
+            }
+        }
+    
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Solutions to Deep Learning Challenges</div>
+        
+        <div class="solutions-grid">
+            <div class="solution-category activation">
+                <div class="category-icon">⚡</div>
+                <div class="category-title">Better Activation Functions</div>
+                <div class="solution-content">Prevents vanishing gradients during backpropagation</div>
+                <div class="solution-examples">ReLU, Leaky ReLU, ELU, GELU</div>
+                <div class="target-label">→ Vanishing Gradient</div>
+            </div>
+            
+            <div class="solution-category initialization">
+                <div class="category-icon">🎯</div>
+                <div class="category-title">Smart Initialization</div>
+                <div class="solution-content">Maintains gradient scale across layers</div>
+                <div class="solution-examples">Xavier, He Initialization</div>
+                <div class="target-label">→ Gradient Issues</div>
+            </div>
+            
+            <div class="solution-category normalization">
+                <div class="category-icon">📊</div>
+                <div class="category-title">Normalization Techniques</div>
+                <div class="solution-content">Stabilizes training and speeds up convergence</div>
+                <div class="solution-examples">Batch Norm, Layer Norm</div>
+                <div class="target-label">→ Training Stability</div>
+            </div>
+            
+            <div class="solution-category architecture">
+                <div class="category-icon">🔗</div>
+                <div class="category-title">Skip Connections</div>
+                <div class="solution-content">Creates gradient highways through the network</div>
+                <div class="solution-examples">ResNet, Highway Networks</div>
+                <div class="target-label">→ Vanishing Gradient</div>
+            </div>
+            
+            <div class="solution-category optimization">
+                <div class="category-icon">🚀</div>
+                <div class="category-title">Careful Optimization</div>
+                <div class="solution-content">Adaptive learning rates for stable updates</div>
+                <div class="solution-examples">Adam, RMSprop, AdaGrad</div>
+                <div class="target-label">→ Training Efficiency</div>
+            </div>
+            
+            <div class="solution-category regularization">
+                <div class="category-icon">🛡️</div>
+                <div class="category-title">Regularization & Clipping</div>
+                <div class="solution-content">Prevents overfitting and gradient explosion</div>
+                <div class="solution-examples">Dropout, Weight Decay, Grad Clipping</div>
+                <div class="target-label">→ Overfitting & Explosion</div>
+            </div>
+        </div>
+        
+        <div class="bottom-section">
+            <div class="bottom-title">Modern Deep Learning</div>
+            <div class="bottom-content">
+                <span class="highlight">Robust training</span> is achieved by combining multiple techniques together
+            </div>
+        </div>
+    </div>
+</body>
+</html>

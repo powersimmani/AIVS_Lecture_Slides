@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural Architecture Search</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            overflow-x: hidden;
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 960px;
+            width: 95vw;
+            min-height: 540px;
+            height: auto;
+            background: white;
+            position: relative;
+            overflow: hidden;
+            padding: 20px 35px;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 16px;
+        }
+        
+        .goal-box {
+            background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+            border: 3px solid #1E64C8;
+            border-radius: 12px;
+            padding: 10px 18px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        
+        .goal-label {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 3px;
+        }
+        
+        .goal-text {
+            font-size: 16px;
+            color: #333;
+        }
+        
+        .process-flow {
+            background: white;
+            border: 3px solid #1E64C8;
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 14px;
+        }
+        
+        .flow-title {
+            text-align: center;
+            font-size: 15px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 12px;
+        }
+        
+        .flow-steps {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+        
+        .step-box {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .step-circle {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            border: 3px solid;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+        
+        .step-circle:hover {
+            transform: scale(1.08);
+        }
+        
+        .step-box.search-space .step-circle {
+            background: linear-gradient(135deg, #FFE0B2 0%, #FFCC80 100%);
+            border-color: #FF9800;
+        }
+        
+        .step-box.strategy .step-circle {
+            background: linear-gradient(135deg, #C8E6C9 0%, #A5D6A7 100%);
+            border-color: #4CAF50;
+        }
+        
+        .step-box.result .step-circle {
+            background: linear-gradient(135deg, #E1BEE7 0%, #CE93D8 100%);
+            border-color: #9C27B0;
+        }
+        
+        .step-icon {
+            font-size: 24px;
+            margin-bottom: 2px;
+        }
+        
+        .step-number {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .step-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            text-align: center;
+        }
+        
+        .arrow-right {
+            font-size: 28px;
+            color: #1E64C8;
+            font-weight: 700;
+        }
+        
+        .components-section {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        
+        .component-card {
+            background: white;
+            border: 2px solid;
+            border-radius: 10px;
+            padding: 10px 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .component-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .component-card.space {
+            border-color: #FF9800;
+            background: linear-gradient(135deg, #FFF3E0 0%, #FFE0B2 100%);
+        }
+        
+        .component-card.strategy {
+            border-color: #4CAF50;
+            background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+        }
+        
+        .component-card.success {
+            border-color: #9C27B0;
+            background: linear-gradient(135deg, #F3E5F5 0%, #E1BEE7 100%);
+        }
+        
+        .component-card.cost {
+            border-color: #F44336;
+            background: linear-gradient(135deg, #FFEBEE 0%, #FFCDD2 100%);
+        }
+        
+        .card-title {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .component-card.space .card-title {
+            color: #E65100;
+        }
+        
+        .component-card.strategy .card-title {
+            color: #2E7D32;
+        }
+        
+        .component-card.success .card-title {
+            color: #6A1B9A;
+        }
+        
+        .component-card.cost .card-title {
+            color: #C62828;
+        }
+        
+        .card-icon {
+            margin-right: 8px;
+            font-size: 16px;
+        }
+        
+        .card-content {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .future-box {
+            background: #E8F5E9;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            padding: 10px 16px;
+            text-align: center;
+        }
+        
+        .future-icon {
+            font-size: 18px;
+            margin-right: 8px;
+        }
+        
+        .future-text {
+            font-size: 15px;
+            color: #333;
+            display: inline;
+        }
+        
+        .highlight {
+            font-weight: 700;
+            color: #2E7D32;
+        }
+    
+        
+        /* Responsive adjustments */
+        @media screen and (max-width: 1000px) {
+            .container {
+                width: 98vw !important;
+                max-width: 98vw !important;
+                padding: 15px 20px !important;
+            }
+        }
+        
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: 10px 15px !important;
+            }
+            
+            .title {
+                font-size: 20px !important;
+            }
+            
+            /* 그리드 레이아웃을 1열로 */
+            .challenges-grid,
+            .comparison-grid,
+            .solutions-grid,
+            .guide-grid,
+            .findings-section,
+            .benefits-grid,
+            .applications-section,
+            .guidelines-grid,
+            .components-section,
+            .techniques-grid,
+            .deployment-section,
+            .savings-grid,
+            .results-grid,
+            .functions-grid,
+            .features-grid,
+            .comparison-section,
+            .bottom-section {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .gradient-flow,
+            .network-visual,
+            .flow-steps,
+            .bottleneck-flow,
+            .example-flow,
+            .dimension-box,
+            .inception-structure .parallel-paths,
+            .comparison-section {
+                flex-direction: column !important;
+                gap: 15px !important;
+            }
+            
+            .arrow-back,
+            .arrow,
+            .arrow-right,
+            .arrow-connector,
+            .conv-arrow {
+                transform: rotate(90deg);
+                margin: 5px 0 !important;
+            }
+            
+            /* SVG와 layer 위치 조정 */
+            .layers-container,
+            .architecture-visual {
+                height: auto !important;
+                min-height: 300px !important;
+            }
+            
+            .layer-node {
+                position: relative !important;
+                left: auto !important;
+                margin: 10px 0 !important;
+            }
+        }
+        
+        @media screen and (max-width: 480px) {
+            .container {
+                padding: 8px 10px !important;
+            }
+            
+            .title {
+                font-size: 18px !important;
+            }
+            
+            .card-header,
+            .scenario-label,
+            .card-title,
+            .function-title,
+            .arch-title,
+            .flow-title {
+                font-size: 16px !important;
+            }
+            
+            .layer-box,
+            .conv-box,
+            .step-circle,
+            .layer-circle {
+                font-size: 14px !important;
+                padding: 8px !important;
+            }
+        }
+    
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Neural Architecture Search (NAS)</div>
+        
+        <div class="goal-box">
+            <div class="goal-label">GOAL</div>
+            <div class="goal-text">Automatically discover optimal network architectures using ML</div>
+        </div>
+        
+        <div class="process-flow">
+            <div class="flow-title">NAS Process</div>
+            <div class="flow-steps">
+                <div class="step-box search-space">
+                    <div class="step-circle">
+                        <div class="step-icon">🔍</div>
+                        <div class="step-number">Step 1</div>
+                    </div>
+                    <div class="step-label">Search Space</div>
+                </div>
+                
+                <div class="arrow-right">→</div>
+                
+                <div class="step-box strategy">
+                    <div class="step-circle">
+                        <div class="step-icon">🧠</div>
+                        <div class="step-number">Step 2</div>
+                    </div>
+                    <div class="step-label">Search Strategy</div>
+                </div>
+                
+                <div class="arrow-right">→</div>
+                
+                <div class="step-box result">
+                    <div class="step-circle">
+                        <div class="step-icon">⭐</div>
+                        <div class="step-number">Step 3</div>
+                    </div>
+                    <div class="step-label">Optimal Architecture</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="components-section">
+            <div class="component-card space">
+                <div class="card-title">
+                    <span class="card-icon">🔍</span>
+                    Search Space
+                </div>
+                <div class="card-content">
+                    Operations · Connections · Layer counts · Kernel sizes · Channel counts
+                </div>
+            </div>
+            
+            <div class="component-card strategy">
+                <div class="card-title">
+                    <span class="card-icon">🎯</span>
+                    Search Strategies
+                </div>
+                <div class="card-content">
+                    Reinforcement learning · Evolutionary algorithms · Gradient-based
+                </div>
+            </div>
+            
+            <div class="component-card success">
+                <div class="card-title">
+                    <span class="card-icon">🏆</span>
+                    Success Stories
+                </div>
+                <div class="card-content">
+                    NASNet · EfficientNet · AmoebaNet - State-of-the-art results
+                </div>
+            </div>
+            
+            <div class="component-card cost">
+                <div class="card-title">
+                    <span class="card-icon">⚡</span>
+                    Computational Cost
+                </div>
+                <div class="card-content">
+                    Originally thousands of GPU-hours · Now more efficient methods
+                </div>
+            </div>
+        </div>
+        
+        <div class="future-box">
+            <span class="future-icon">🚀</span>
+            <span class="future-text">
+                <span class="highlight">Future Direction:</span> Architecture search becoming standard practice for deployment optimization
+            </span>
+        </div>
+    </div>
+</body>
+</html>
