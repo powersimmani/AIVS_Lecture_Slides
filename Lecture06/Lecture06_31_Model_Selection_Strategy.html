@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model Selection Strategy</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: white;
+            font-family: Aptos, 'Segoe UI', sans-serif;
+        }
+        .container {
+            width: 960px;
+            min-height: 540px;
+            position: relative;
+            background: white;
+            padding: 30px;
+            padding-bottom: 400px;
+            box-sizing: border-box;
+        }
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 20px;
+        }
+        
+        .workflow-section {
+            background: #f8f9fb;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 18px;
+        }
+        .workflow-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .workflow-steps {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        .workflow-step {
+            flex: 1;
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            border-left: 4px solid #1E64C8;
+        }
+        .step-number {
+            display: inline-block;
+            background: #1E64C8;
+            color: white;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            line-height: 26px;
+            font-weight: 700;
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+        .step-text {
+            font-size: 13px;
+            color: #555;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+        .workflow-arrow {
+            font-size: 20px;
+            color: #1E64C8;
+            flex-shrink: 0;
+        }
+        
+        .data-split-section {
+            background: #f8f9fb;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 18px;
+        }
+        .split-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .split-visual {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .split-bar {
+            flex: 1;
+            height: 60px;
+            display: flex;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .split-segment {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        .train-segment {
+            background: #1E64C8;
+            flex: 6;
+        }
+        .val-segment {
+            background: #4A90E2;
+            flex: 2;
+        }
+        .test-segment {
+            background: #7BB3F0;
+            flex: 2;
+        }
+        .segment-label {
+            font-size: 14px;
+            margin-bottom: 3px;
+        }
+        .segment-percent {
+            font-size: 16px;
+            font-weight: 700;
+        }
+        .split-note {
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+        
+        .principles-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 18px;
+        }
+        .principle-card {
+            background: #f8f9fb;
+            border-radius: 8px;
+            padding: 18px;
+            border-top: 4px solid #1E64C8;
+        }
+        .principle-card:nth-child(2) {
+            border-top-color: #4A90E2;
+        }
+        .principle-card:nth-child(3) {
+            border-top-color: #7BB3F0;
+        }
+        .principle-card:nth-child(4) {
+            border-top-color: #9BC8F5;
+        }
+        .principle-icon {
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        .principle-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+        .principle-text {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.5;
+            text-align: center;
+        }
+        
+        .best-practices {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+        }
+        .practices-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        .practices-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        .practice-item {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .practice-icon {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Model Selection Strategy</div>
+        
+        <div class="workflow-section">
+            <div class="workflow-title">🎯 Complete Model Selection Workflow</div>
+            <div class="workflow-steps">
+                <div class="workflow-step">
+                    <div class="step-number">1</div>
+                    <div class="step-text">Split data into train/val/test</div>
+                </div>
+                
+                <div class="workflow-arrow">→</div>
+                
+                <div class="workflow-step">
+                    <div class="step-number">2</div>
+                    <div class="step-text">Select validation method (K-fold, etc.)</div>
+                </div>
+                
+                <div class="workflow-arrow">→</div>
+                
+                <div class="workflow-step">
+                    <div class="step-number">3</div>
+                    <div class="step-text">Train multiple models with CV</div>
+                </div>
+                
+                <div class="workflow-arrow">→</div>
+                
+                <div class="workflow-step">
+                    <div class="step-number">4</div>
+                    <div class="step-text">Tune hyperparameters on validation</div>
+                </div>
+                
+                <div class="workflow-arrow">→</div>
+                
+                <div class="workflow-step">
+                    <div class="step-number">5</div>
+                    <div class="step-text">Select best model</div>
+                </div>
+                
+                <div class="workflow-arrow">→</div>
+                
+                <div class="workflow-step">
+                    <div class="step-number">6</div>
+                    <div class="step-text">Final evaluation on test set</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="data-split-section">
+            <div class="split-title">📊 Recommended Data Split</div>
+            <div class="split-visual">
+                <div class="split-bar">
+                    <div class="split-segment train-segment">
+                        <div class="segment-label">Training Set</div>
+                        <div class="segment-percent">60%</div>
+                    </div>
+                    <div class="split-segment val-segment">
+                        <div class="segment-label">Validation</div>
+                        <div class="segment-percent">20%</div>
+                    </div>
+                    <div class="split-segment test-segment">
+                        <div class="segment-label">Test Set</div>
+                        <div class="segment-percent">20%</div>
+                    </div>
+                </div>
+            </div>
+            <div class="split-note">
+                Training: Model learning • Validation: Hyperparameter tuning & model selection • Test: Final unbiased evaluation
+            </div>
+        </div>
+
+        <div class="principles-grid">
+            <div class="principle-card">
+                <div class="principle-icon">🚫</div>
+                <div class="principle-title">Never Touch Test Set</div>
+                <div class="principle-text">Test set must remain unseen until final evaluation</div>
+            </div>
+            
+            <div class="principle-card">
+                <div class="principle-icon">🔄</div>
+                <div class="principle-title">Use Cross-Validation</div>
+                <div class="principle-text">Apply CV on training set for robust estimates</div>
+            </div>
+            
+            <div class="principle-card">
+                <div class="principle-icon">⚖️</div>
+                <div class="principle-title">Consider Data Balance</div>
+                <div class="principle-text">Use stratified splits for imbalanced datasets</div>
+            </div>
+            
+            <div class="principle-card">
+                <div class="principle-icon">📈</div>
+                <div class="principle-title">Monitor Overfitting</div>
+                <div class="principle-text">Compare train vs validation performance</div>
+            </div>
+        </div>
+
+        <div class="best-practices">
+            <div class="practices-title">✨ Key Principles</div>
+            <div class="practices-grid">
+                <div class="practice-item">
+                    <div class="practice-icon">🎯</div>
+                    <div>Choose metrics aligned with business goals</div>
+                </div>
+                <div class="practice-item">
+                    <div class="practice-icon">📊</div>
+                    <div>Use multiple metrics for comprehensive view</div>
+                </div>
+                <div class="practice-item">
+                    <div class="practice-icon">⏱️</div>
+                    <div>Balance performance with computational cost</div>
+                </div>
+                <div class="practice-item">
+                    <div class="practice-icon">🔍</div>
+                    <div>Analyze errors to understand model behavior</div>
+                </div>
+                <div class="practice-item">
+                    <div class="practice-icon">📝</div>
+                    <div>Document all decisions and experiments</div>
+                </div>
+                <div class="practice-item">
+                    <div class="practice-icon">🔄</div>
+                    <div>Iterate based on validation results</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

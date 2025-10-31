@@ -12,8 +12,8 @@
         }
         
         body {
-            font-family: Aptos, 'Segoe UI', sans-serif;
-            background: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -23,121 +23,118 @@
         
         .container {
             width: 960px;
-            height: 540px;
             background: #ffffff;
-            position: relative;
-            padding: 25px 35px;
-            display: flex;
-            flex-direction: column;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            padding: 30px 40px;
         }
         
         .header {
             text-align: center;
-            margin-bottom: 18px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #1E64C8;
         }
         
         .header-title {
-            font-size: 20px;
+            font-size: 28px;
             color: #1E64C8;
-            font-weight: 600;
+            font-weight: 700;
         }
         
         .main-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            flex: 1;
+            gap: 25px;
         }
         
-        .left-panel {
+        .left-panel, .right-panel {
             display: flex;
             flex-direction: column;
-            gap: 11px;
+            gap: 15px;
         }
         
         .concept-box {
             background: white;
             border: 2px solid #1E64C8;
-            border-radius: 8px;
-            padding: 12px 15px;
+            border-radius: 10px;
+            padding: 15px 18px;
+            box-shadow: 0 2px 6px rgba(30,100,200,0.1);
         }
         
         .concept-title {
-            font-size: 17px;
-            font-weight: 600;
+            font-size: 18px;
+            font-weight: 700;
             color: #1E64C8;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
         }
         
         .concept-desc {
-            font-size: 16px;
-            color: #555;
-            margin-bottom: 6px;
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 8px;
+            font-style: italic;
         }
         
         .formula {
-            background: #f8fafb;
-            padding: 7px 10px;
-            border-radius: 4px;
+            background: #f0f7ff;
+            padding: 10px 12px;
+            border-radius: 6px;
             font-size: 16px;
             color: #333;
             font-family: 'Courier New', monospace;
-            margin-top: 4px;
+            margin-top: 6px;
+            border-left: 3px solid #1E64C8;
         }
         
         .properties-box {
             background: #f8fafb;
             border: 2px solid #1E64C8;
-            border-radius: 8px;
-            padding: 12px 15px;
+            border-radius: 10px;
+            padding: 15px 18px;
+            box-shadow: 0 2px 6px rgba(30,100,200,0.1);
         }
         
         .prop-item {
-            font-size: 16px;
+            font-size: 15px;
             color: #333;
             font-family: 'Courier New', monospace;
-            margin-bottom: 6px;
-            padding: 5px 8px;
+            margin-bottom: 8px;
+            padding: 8px 10px;
             background: white;
-            border-radius: 3px;
+            border-radius: 5px;
+            border-left: 3px solid #4CAF50;
         }
         
-        .right-panel {
-            display: flex;
-            flex-direction: column;
-            gap: 11px;
+        .prop-item:last-child {
+            margin-bottom: 0;
         }
         
         .visual-box {
             background: white;
             border: 2px solid #1E64C8;
-            border-radius: 8px;
-            padding: 15px;
+            border-radius: 10px;
+            padding: 18px;
+            box-shadow: 0 2px 6px rgba(30,100,200,0.1);
         }
         
         .visual-title {
-            font-size: 17px;
-            font-weight: 600;
+            font-size: 18px;
+            font-weight: 700;
             color: #1E64C8;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             text-align: center;
         }
         
         .distribution-visual {
             position: relative;
-            height: 100px;
+            height: 120px;
             background: #f8fafb;
-            border-radius: 6px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 10px;
-        }
-        
-        .bell-curve-small {
-            position: relative;
-            width: 100%;
-            height: 100%;
+            padding: 15px;
         }
         
         .curve-svg {
@@ -149,8 +146,8 @@
             position: absolute;
             left: 50%;
             top: 10%;
-            bottom: 10%;
-            width: 2px;
+            bottom: 25%;
+            width: 3px;
             background: #1E64C8;
             transform: translateX(-50%);
         }
@@ -158,40 +155,68 @@
         .mean-label {
             position: absolute;
             left: 50%;
-            bottom: 5px;
+            bottom: 18px;
             transform: translateX(-50%);
-            font-size: 16px;
-            font-weight: 600;
+            font-size: 15px;
+            font-weight: 700;
             color: #1E64C8;
+            background: white;
+            padding: 3px 10px;
+            border-radius: 4px;
         }
         
         .spread-indicator {
             position: absolute;
-            top: 50%;
+            top: 38%;
             left: 30%;
             right: 30%;
             height: 2px;
-            background: rgba(30, 100, 200, 0.4);
-            border-left: 2px solid #1E64C8;
-            border-right: 2px solid #1E64C8;
+            background: rgba(255, 87, 34, 0.7);
+        }
+        
+        .spread-arrow-left {
+            position: absolute;
+            left: -2px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-top: 6px solid transparent;
+            border-bottom: 6px solid transparent;
+            border-right: 10px solid #FF5722;
+        }
+        
+        .spread-arrow-right {
+            position: absolute;
+            right: -2px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-top: 6px solid transparent;
+            border-bottom: 6px solid transparent;
+            border-left: 10px solid #FF5722;
         }
         
         .spread-label {
             position: absolute;
-            top: 50%;
+            top: -22px;
             left: 50%;
-            transform: translate(-50%, -120%);
-            font-size: 14px;
-            color: #1E64C8;
+            transform: translateX(-50%);
+            font-size: 16px;
+            font-weight: 700;
+            color: #FF5722;
             background: white;
-            padding: 2px 6px;
-            border-radius: 3px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            border: 1px solid #FF5722;
         }
         
         .covariance-visual {
             display: flex;
-            justify-content: space-around;
-            margin-top: 10px;
+            justify-content: space-between;
+            gap: 15px;
+            margin-top: 12px;
         }
         
         .cov-example {
@@ -200,103 +225,117 @@
         }
         
         .cov-label {
-            font-size: 16px;
-            font-weight: 600;
+            font-size: 15px;
+            font-weight: 700;
             color: #1E64C8;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
         
         .scatter-plot {
             width: 100%;
-            height: 80px;
+            height: 100px;
             background: #f8fafb;
-            border-radius: 6px;
+            border-radius: 8px;
             position: relative;
-            border: 1px solid #1E64C8;
+            border: 2px solid #1E64C8;
         }
         
         .dot {
             position: absolute;
-            width: 6px;
-            height: 6px;
+            width: 10px;
+            height: 10px;
             background: #1E64C8;
             border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(30,100,200,0.4);
+            transform: translate(-50%, 50%);
         }
         
         .positive-dots .dot:nth-child(1) { left: 20%; bottom: 20%; }
-        .positive-dots .dot:nth-child(2) { left: 35%; bottom: 35%; }
+        .positive-dots .dot:nth-child(2) { left: 32%; bottom: 35%; }
         .positive-dots .dot:nth-child(3) { left: 50%; bottom: 50%; }
-        .positive-dots .dot:nth-child(4) { left: 65%; bottom: 65%; }
+        .positive-dots .dot:nth-child(4) { left: 68%; bottom: 65%; }
         .positive-dots .dot:nth-child(5) { left: 80%; bottom: 80%; }
         
         .negative-dots .dot:nth-child(1) { left: 20%; bottom: 80%; }
-        .negative-dots .dot:nth-child(2) { left: 35%; bottom: 65%; }
+        .negative-dots .dot:nth-child(2) { left: 32%; bottom: 65%; }
         .negative-dots .dot:nth-child(3) { left: 50%; bottom: 50%; }
-        .negative-dots .dot:nth-child(4) { left: 65%; bottom: 35%; }
+        .negative-dots .dot:nth-child(4) { left: 68%; bottom: 35%; }
         .negative-dots .dot:nth-child(5) { left: 80%; bottom: 20%; }
         
         .trend-line {
             position: absolute;
             width: 70%;
-            height: 2px;
-            background: rgba(30, 100, 200, 0.5);
+            height: 3px;
+            background: rgba(255, 87, 34, 0.7);
             left: 15%;
+            box-shadow: 0 1px 3px rgba(255, 87, 34, 0.3);
         }
         
         .positive-trend { 
             bottom: 20%;
-            transform: rotate(30deg);
-            transform-origin: left center;
+            transform-origin: left bottom;
+            transform: rotate(32deg);
         }
         
         .negative-trend { 
             top: 20%;
-            transform: rotate(-30deg);
-            transform-origin: left center;
+            transform-origin: left top;
+            transform: rotate(-32deg);
         }
         
         .matrix-box {
             background: white;
             border: 2px solid #1E64C8;
-            border-radius: 8px;
-            padding: 12px 15px;
+            border-radius: 10px;
+            padding: 15px 18px;
+            box-shadow: 0 2px 6px rgba(30,100,200,0.1);
         }
         
         .matrix-title {
-            font-size: 17px;
-            font-weight: 600;
+            font-size: 18px;
+            font-weight: 700;
             color: #1E64C8;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             text-align: center;
         }
         
         .matrix-formula {
-            background: #f8fafb;
-            padding: 10px;
-            border-radius: 4px;
+            background: #f0f7ff;
+            padding: 12px;
+            border-radius: 6px;
             font-size: 16px;
             color: #333;
             font-family: 'Courier New', monospace;
             text-align: center;
+            border-left: 3px solid #1E64C8;
+        }
+        
+        .matrix-desc {
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+            margin-top: 8px;
+            font-style: italic;
         }
         
         .ml-application {
-            background: #1E64C8;
+            background: linear-gradient(135deg, #1E64C8 0%, #2196F3 100%);
             color: white;
-            border-radius: 8px;
-            padding: 12px 15px;
+            border-radius: 10px;
+            padding: 15px 18px;
             text-align: center;
+            box-shadow: 0 4px 8px rgba(30,100,200,0.3);
         }
         
         .ml-title {
-            font-size: 17px;
-            font-weight: 600;
-            margin-bottom: 6px;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
         }
         
         .ml-content {
-            font-size: 16px;
-            line-height: 1.4;
+            font-size: 15px;
+            line-height: 1.5;
         }
     </style>
 </head>
@@ -334,7 +373,7 @@
                 <div class="concept-box">
                     <div class="concept-title">Covariance</div>
                     <div class="formula">Cov(X,Y) = E[(X - μₓ)(Y - μᵧ)]</div>
-                    <div class="concept-desc" style="margin-top: 6px;">
+                    <div class="concept-desc" style="margin-top: 8px;">
                         Positive: X and Y increase together
                     </div>
                 </div>
@@ -344,15 +383,17 @@
                 <div class="visual-box">
                     <div class="visual-title">Variance: Spread Around Mean</div>
                     <div class="distribution-visual">
-                        <svg class="curve-svg" viewBox="0 0 200 80" preserveAspectRatio="none">
-                            <path d="M 0,80 Q 50,80 70,60 T 100,10 T 130,60 T 150,80 L 200,80" 
-                                  fill="rgba(30, 100, 200, 0.15)" 
+                        <svg class="curve-svg" viewBox="0 0 200 100" preserveAspectRatio="none">
+                            <path d="M 0,100 L 10,100 Q 40,95 60,70 Q 80,40 100,15 Q 120,40 140,70 Q 160,95 190,100 L 200,100 Z" 
+                                  fill="rgba(30, 100, 200, 0.25)" 
                                   stroke="#1E64C8" 
-                                  stroke-width="2"/>
+                                  stroke-width="2.5"/>
                         </svg>
                         <div class="mean-line"></div>
                         <div class="mean-label">μ (mean)</div>
                         <div class="spread-indicator">
+                            <div class="spread-arrow-left"></div>
+                            <div class="spread-arrow-right"></div>
                             <div class="spread-label">σ</div>
                         </div>
                     </div>
@@ -369,7 +410,6 @@
                                 <div class="dot"></div>
                                 <div class="dot"></div>
                                 <div class="dot"></div>
-                                <div class="trend-line positive-trend"></div>
                             </div>
                         </div>
                         <div class="cov-example">
@@ -380,7 +420,6 @@
                                 <div class="dot"></div>
                                 <div class="dot"></div>
                                 <div class="dot"></div>
-                                <div class="trend-line negative-trend"></div>
                             </div>
                         </div>
                     </div>
@@ -389,7 +428,7 @@
                 <div class="matrix-box">
                     <div class="matrix-title">Covariance Matrix</div>
                     <div class="matrix-formula">Σ = [Cov(Xᵢ, Xⱼ)]</div>
-                    <div style="font-size: 16px; color: #555; text-align: center; margin-top: 6px;">
+                    <div class="matrix-desc">
                         For multiple variables
                     </div>
                 </div>

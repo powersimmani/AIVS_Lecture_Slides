@@ -106,6 +106,8 @@
             font-family: 'Courier New', monospace;
             font-size: 12px;
             line-height: 1.6;
+            white-space: pre;
+            overflow-x: auto;
         }
         
         .code-label {
@@ -292,8 +294,7 @@
                     <div class="code-container pytorch-container">
                         <div>
                             <div class="code-label">1. Define Model</div>
-                            <div class="code-block">
-<span class="code-keyword">import</span> torch
+                            <div class="code-block"><span class="code-keyword">import</span> torch
 <span class="code-keyword">import</span> torch.nn <span class="code-keyword">as</span> nn
 
 <span class="code-keyword">class</span> <span class="code-function">NeuralNet</span>(nn.Module):
@@ -308,14 +309,12 @@
         x = self.<span class="code-function">fc2</span>(x)
         <span class="code-keyword">return</span> x
 
-model = <span class="code-function">NeuralNet</span>()
-                            </div>
+model = <span class="code-function">NeuralNet</span>()</div>
                         </div>
                         
                         <div>
                             <div class="code-label">2. Training Loop</div>
-                            <div class="code-block">
-criterion = nn.<span class="code-function">CrossEntropyLoss</span>()
+                            <div class="code-block">criterion = nn.<span class="code-function">CrossEntropyLoss</span>()
 optimizer = torch.optim.<span class="code-function">Adam</span>(model.<span class="code-function">parameters</span>())
 
 <span class="code-keyword">for</span> epoch <span class="code-keyword">in</span> <span class="code-function">range</span>(epochs):
@@ -327,8 +326,7 @@ optimizer = torch.optim.<span class="code-function">Adam</span>(model.<span clas
         <span class="code-comment"># Backward pass</span>
         optimizer.<span class="code-function">zero_grad</span>()
         loss.<span class="code-function">backward</span>()
-        optimizer.<span class="code-function">step</span>()
-                            </div>
+        optimizer.<span class="code-function">step</span>()</div>
                         </div>
                     </div>
                 </div>
@@ -342,8 +340,7 @@ optimizer = torch.optim.<span class="code-function">Adam</span>(model.<span clas
                     <div class="code-container tensorflow-container">
                         <div>
                             <div class="code-label">1. Define Model</div>
-                            <div class="code-block">
-<span class="code-keyword">import</span> tensorflow <span class="code-keyword">as</span> tf
+                            <div class="code-block"><span class="code-keyword">import</span> tensorflow <span class="code-keyword">as</span> tf
 <span class="code-keyword">from</span> tensorflow <span class="code-keyword">import</span> keras
 
 model = keras.<span class="code-function">Sequential</span>([
@@ -356,14 +353,12 @@ model.<span class="code-function">compile</span>(
     optimizer=<span class="code-string">'adam'</span>,
     loss=<span class="code-string">'sparse_categorical_crossentropy'</span>,
     metrics=[<span class="code-string">'accuracy'</span>]
-)
-                            </div>
+)</div>
                         </div>
                         
                         <div>
                             <div class="code-label">2. Training</div>
-                            <div class="code-block">
-<span class="code-comment"># Simple training with fit()</span>
+                            <div class="code-block"><span class="code-comment"># Simple training with fit()</span>
 history = model.<span class="code-function">fit</span>(
     x_train, y_train,
     batch_size=<span class="code-number">32</span>,
@@ -374,8 +369,7 @@ history = model.<span class="code-function">fit</span>(
 <span class="code-comment"># Evaluation</span>
 test_loss, test_acc = model.<span class="code-function">evaluate</span>(
     x_test, y_test
-)
-                            </div>
+)</div>
                         </div>
                     </div>
                 </div>

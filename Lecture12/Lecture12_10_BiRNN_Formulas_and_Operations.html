@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BiRNN Formulas and Operations</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #ffffff;
+        }
+        
+        .container {
+            width: 960px;
+            min-height: 540px;
+            padding: 40px;
+            padding-bottom: 400px;
+            position: relative;
+        }
+        
+        .main-title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 30px;
+        }
+        
+        .formulas-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .formula-group {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 24px;
+            border-left: 5px solid #1E64C8;
+        }
+        
+        .formula-group-backward {
+            border-left-color: #5088d4;
+        }
+        
+        .formula-group-output {
+            border-left-color: #7BB3F0;
+        }
+        
+        .formula-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .direction-icon {
+            width: 36px;
+            height: 36px;
+            background: #1E64C8;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        
+        .icon-backward {
+            background: #5088d4;
+        }
+        
+        .icon-output {
+            background: #7BB3F0;
+        }
+        
+        .formula-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .formula-content {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .formula-box {
+            background: white;
+            padding: 16px 20px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+        
+        .formula-box:hover {
+            border-color: #1E64C8;
+            box-shadow: 0 2px 8px rgba(30, 100, 200, 0.1);
+        }
+        
+        .formula-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            min-width: 180px;
+        }
+        
+        .formula-equation {
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            color: #333;
+            flex: 1;
+        }
+        
+        .formula-equation sub,
+        .notation-symbol sub {
+            font-size: 0.7em;
+            vertical-align: sub;
+        }
+        
+        .formula-equation sup {
+            font-size: 0.7em;
+            vertical-align: super;
+        }
+        
+        .h-forward {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .h-forward::after {
+            content: '→';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.6em;
+            color: inherit;
+        }
+        
+        .h-backward {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .h-backward::after {
+            content: '←';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.6em;
+            color: inherit;
+        }
+        
+        .formula-description {
+            margin-top: 8px;
+            padding: 12px 16px;
+            background: white;
+            border-radius: 6px;
+            font-size: 15px;
+            color: #666;
+            line-height: 1.5;
+        }
+        
+        .key-points-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        
+        .key-points-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        
+        .key-points-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+        
+        .key-point-card {
+            background: white;
+            padding: 16px;
+            border-radius: 8px;
+            border-left: 4px solid #1E64C8;
+            transition: all 0.3s ease;
+        }
+        
+        .key-point-card:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.1);
+        }
+        
+        .key-point-card:nth-child(2) {
+            border-left-color: #5088d4;
+        }
+        
+        .key-point-card:nth-child(3) {
+            border-left-color: #7BB3F0;
+        }
+        
+        .key-point-card:nth-child(4) {
+            border-left-color: #9BC8F5;
+        }
+        
+        .point-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        
+        .point-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 6px;
+        }
+        
+        .point-text {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+        
+        .notation-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            color: white;
+            padding: 20px 24px;
+            border-radius: 10px;
+            margin-bottom: 24px;
+        }
+        
+        .notation-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 14px;
+            text-align: center;
+        }
+        
+        .notation-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        
+        .notation-item {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+        }
+        
+        .notation-symbol {
+            font-family: 'Courier New', monospace;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .notation-desc {
+            font-size: 14px;
+            opacity: 0.95;
+        }
+        
+        .implementation-note {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: start;
+            gap: 12px;
+        }
+        
+        .note-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        
+        .note-content {
+            flex: 1;
+        }
+        
+        .note-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #856404;
+            margin-bottom: 6px;
+        }
+        
+        .note-text {
+            font-size: 15px;
+            color: #856404;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-title">BiRNN Formulas and Operations</div>
+        
+        <!-- Notation Guide -->
+        <div class="notation-box">
+            <div class="notation-title">📝 Notation Guide</div>
+            <div class="notation-grid">
+                <div class="notation-item">
+                    <div class="notation-symbol">x<sub>t</sub></div>
+                    <div class="notation-desc">Input at time t</div>
+                </div>
+                <div class="notation-item">
+                    <div class="notation-symbol"><span class="h-forward">h</span><sub>t</sub></div>
+                    <div class="notation-desc">Forward hidden state</div>
+                </div>
+                <div class="notation-item">
+                    <div class="notation-symbol"><span class="h-backward">h</span><sub>t</sub></div>
+                    <div class="notation-desc">Backward hidden state</div>
+                </div>
+                <div class="notation-item">
+                    <div class="notation-symbol">W<sub>f</sub>, U<sub>f</sub></div>
+                    <div class="notation-desc">Forward weights</div>
+                </div>
+                <div class="notation-item">
+                    <div class="notation-symbol">W<sub>b</sub>, U<sub>b</sub></div>
+                    <div class="notation-desc">Backward weights</div>
+                </div>
+                <div class="notation-item">
+                    <div class="notation-symbol">y<sub>t</sub></div>
+                    <div class="notation-desc">Output at time t</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Forward RNN Formulas -->
+        <div class="formulas-section">
+            <div class="formula-group">
+                <div class="formula-header">
+                    <div class="direction-icon">→</div>
+                    <div class="formula-title">Forward RNN (Left to Right)</div>
+                </div>
+                <div class="formula-content">
+                    <div class="formula-box">
+                        <div class="formula-label">Hidden State:</div>
+                        <div class="formula-equation"><span class="h-forward">h</span><sub>t</sub> = tanh(W<sub>f</sub> · x<sub>t</sub> + U<sub>f</sub> · <span class="h-forward">h</span><sub>t-1</sub> + b<sub>f</sub>)</div>
+                    </div>
+                    <div class="formula-description">
+                        Processes sequence from <strong>start to end</strong>, capturing past context. Each hidden state depends on current input and previous hidden state.
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Backward RNN Formulas -->
+            <div class="formula-group formula-group-backward">
+                <div class="formula-header">
+                    <div class="direction-icon icon-backward">←</div>
+                    <div class="formula-title">Backward RNN (Right to Left)</div>
+                </div>
+                <div class="formula-content">
+                    <div class="formula-box">
+                        <div class="formula-label">Hidden State:</div>
+                        <div class="formula-equation"><span class="h-backward">h</span><sub>t</sub> = tanh(W<sub>b</sub> · x<sub>t</sub> + U<sub>b</sub> · <span class="h-backward">h</span><sub>t+1</sub> + b<sub>b</sub>)</div>
+                    </div>
+                    <div class="formula-description">
+                        Processes sequence from <strong>end to start</strong>, capturing future context. Each hidden state depends on current input and next hidden state.
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Output Combination -->
+            <div class="formula-group formula-group-output">
+                <div class="formula-header">
+                    <div class="direction-icon icon-output">⊕</div>
+                    <div class="formula-title">Output Combination</div>
+                </div>
+                <div class="formula-content">
+                    <div class="formula-box">
+                        <div class="formula-label">Concatenation:</div>
+                        <div class="formula-equation">h<sub>t</sub> = [h⃗<sub>t</sub> ; h⃖<sub>t</sub>]</div>
+                    </div>
+                    <div class="formula-box">
+                        <div class="formula-label">Output Layer:</div>
+                        <div class="formula-equation">y<sub>t</sub> = W<sub>o</sub> · h<sub>t</sub> + b<sub>o</sub> = W<sub>o</sub> · [h⃗<sub>t</sub> ; h⃖<sub>t</sub>] + b<sub>o</sub></div>
+                    </div>
+                    <div class="formula-description">
+                        Combines both directions by <strong>concatenating</strong> forward and backward hidden states, creating a representation with <strong>full context</strong> (past + future).
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Key Points -->
+        <div class="key-points-section">
+            <div class="key-points-title">🎯 Key Computational Points</div>
+            <div class="key-points-grid">
+                <div class="key-point-card">
+                    <div class="point-icon">🔄</div>
+                    <div class="point-title">Independent Processing</div>
+                    <div class="point-text">Forward and backward RNNs have separate parameters and process independently</div>
+                </div>
+                
+                <div class="key-point-card">
+                    <div class="point-icon">📊</div>
+                    <div class="point-title">Double Dimensionality</div>
+                    <div class="point-text">Output dimension is 2× hidden size due to concatenation: [h⃗; h⃖]</div>
+                </div>
+                
+                <div class="key-point-card">
+                    <div class="point-icon">⚡</div>
+                    <div class="point-title">Parallel Computation</div>
+                    <div class="point-text">Forward and backward passes can be computed in parallel for efficiency</div>
+                </div>
+                
+                <div class="key-point-card">
+                    <div class="point-icon">🎭</div>
+                    <div class="point-title">Full Sequence Required</div>
+                    <div class="point-text">Complete sequence must be available before backward RNN can start processing</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Implementation Note -->
+        <div class="implementation-note">
+            <div class="note-icon">💡</div>
+            <div class="note-content">
+                <div class="note-title">Implementation Note</div>
+                <div class="note-text">
+                    In practice, frameworks like PyTorch and TensorFlow handle BiRNN efficiently with built-in functions (e.g., <code>nn.LSTM(bidirectional=True)</code>). The framework automatically manages the forward and backward passes, parameter initialization, and output concatenation.
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

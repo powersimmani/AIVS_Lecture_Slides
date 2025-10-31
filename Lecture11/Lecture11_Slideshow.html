@@ -39,15 +39,15 @@
         
         .controls {
             position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
+            bottom: 15px;
+            right: 15px;
             display: flex;
-            gap: 20px;
             align-items: center;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 15px 30px;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 6px 15px;
             border-radius: 50px;
+            backdrop-filter: blur(10px);
             z-index: 1000;
         }
         
@@ -55,30 +55,37 @@
             background: #1E64C8;
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 25px;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
             cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             transition: all 0.3s ease;
         }
         
         .control-btn:hover {
             background: #2874d8;
-            transform: scale(1.05);
+            transform: scale(1.1);
+        }
+        
+        .control-btn:active {
+            transform: scale(0.95);
         }
         
         .control-btn:disabled {
-            background: #666;
+            background: #555;
             cursor: not-allowed;
-            transform: scale(1);
+            opacity: 0.5;
         }
         
         .slide-counter {
             color: white;
-            font-size: 16px;
+            font-size: 12px;
             font-weight: 600;
-            min-width: 100px;
+            min-width: 60px;
             text-align: center;
         }
         
@@ -185,9 +192,9 @@
     </div>
     
     <div class="controls">
-        <button class="control-btn" onclick="previousSlide()" id="prevBtn">← Previous</button>
+        <button class="control-btn" onclick="previousSlide()" id="prevBtn">◄</button>
         <span class="slide-counter" id="slideCounter">1 / 33</span>
-        <button class="control-btn" onclick="nextSlide()" id="nextBtn">Next →</button>
+        <button class="control-btn" onclick="nextSlide()" id="nextBtn">►</button>
     </div>
 
     <script>
