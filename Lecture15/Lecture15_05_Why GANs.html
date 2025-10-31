@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birth of GANs</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 60px 20px 60px 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            background: white;
+            position: relative;
+            padding: 30px 50px;
+        }
+        
+        .title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 35px;
+        }
+        
+        .timeline {
+            display: flex;
+            align-items: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .timeline-line {
+            position: absolute;
+            width: 100%;
+            height: 3px;
+            background: #1E64C8;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+        
+        .timeline-point {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .point-circle {
+            width: 50px;
+            height: 50px;
+            background: white;
+            border: 4px solid #1E64C8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 12px;
+        }
+        
+        .point-circle.highlight {
+            background: #1E64C8;
+            color: white;
+            transform: scale(1.2);
+        }
+        
+        .point-year {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .point-label {
+            font-size: 15px;
+            color: #666;
+            text-align: center;
+            max-width: 120px;
+        }
+        
+        .main-content {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 25px;
+        }
+        
+        .paper-info {
+            flex: 1;
+            background: #F5F9FF;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 22px;
+        }
+        
+        .paper-title-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+        }
+        
+        .paper-title-text {
+            font-size: 19px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 16px;
+            line-height: 1.3;
+        }
+        
+        .paper-details {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .detail-row {
+            display: flex;
+            font-size: 15px;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            color: #1E64C8;
+            width: 90px;
+            flex-shrink: 0;
+        }
+        
+        .detail-value {
+            color: #333;
+        }
+        
+        .key-insight {
+            flex: 1;
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 22px;
+        }
+        
+        .insight-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .insight-icon {
+            font-size: 22px;
+        }
+        
+        .insight-text {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .impact-section {
+            background: #1E64C8;
+            color: white;
+            border-radius: 10px;
+            padding: 18px 24px;
+        }
+        
+        .impact-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .impact-stats {
+            display: flex;
+            justify-content: space-around;
+            gap: 20px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.95;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Birth of GANs</div>
+        
+        <div class="timeline">
+            <div class="timeline-line"></div>
+            <div class="timeline-point">
+                <div class="point-circle">📊</div>
+                <div class="point-year">2013</div>
+                <div class="point-label">VAE Era</div>
+            </div>
+            <div class="timeline-point">
+                <div class="point-circle highlight">⚡</div>
+                <div class="point-year">2014</div>
+                <div class="point-label">GAN Born</div>
+            </div>
+            <div class="timeline-point">
+                <div class="point-circle">🚀</div>
+                <div class="point-year">2015+</div>
+                <div class="point-label">Rapid Growth</div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="paper-info">
+                <div class="paper-title-label">Original Paper</div>
+                <div class="paper-title-text">
+                    "Generative Adversarial Networks"
+                </div>
+                <div class="paper-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Authors:</span>
+                        <span class="detail-value">Ian Goodfellow et al.</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Published:</span>
+                        <span class="detail-value">NIPS 2014</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Institution:</span>
+                        <span class="detail-value">Université de Montréal</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Citations:</span>
+                        <span class="detail-value">50,000+ (Most cited AI paper)</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="key-insight">
+                <div class="insight-title">
+                    <span class="insight-icon">💡</span>
+                    <span>Key Innovation</span>
+                </div>
+                <div class="insight-text">
+                    First framework to train generative models through <strong>adversarial process</strong> - two neural networks competing in a game-theoretic scenario. No need for explicit density estimation or Markov chains.
+                </div>
+            </div>
+        </div>
+        
+        <div class="impact-section">
+            <div class="impact-title">Revolutionary Impact on AI</div>
+            <div class="impact-stats">
+                <div class="stat-item">
+                    <div class="stat-number">10+</div>
+                    <div class="stat-label">Years of Innovation</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">1000+</div>
+                    <div class="stat-label">GAN Variants</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">∞</div>
+                    <div class="stat-label">Applications</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
