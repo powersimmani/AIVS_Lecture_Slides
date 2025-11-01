@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grammar of Graphics</title>
+    <title>Grammar of Graphics - Complete Guide</title>
     <style>
         * {
             margin: 0;
@@ -14,11 +14,19 @@
         body {
             font-family: Aptos, 'Segoe UI', sans-serif;
             background: #FFFFFF;
+        }
+        
+        /* ============================================
+           SECTION 1: ORIGINAL DESIGN
+           ============================================ */
+        
+        .original-section {
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             padding: 20px;
+            background: #FFFFFF;
         }
         
         .container {
@@ -294,131 +302,910 @@
             animation: fadeIn 0.6s ease forwards;
             animation-delay: 0.5s;
         }
+        
+        /* ============================================
+           SECTION 2: STEP-BY-STEP EXAMPLES
+           ============================================ */
+        
+        .examples-section {
+            background: #F5F7FA;
+            padding: 60px 20px;
+        }
+        
+        .examples-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+            background: linear-gradient(135deg, #1E64C8 0%, #2B7FDB 100%);
+            padding: 40px;
+            border-radius: 15px;
+            color: white;
+            box-shadow: 0 10px 30px rgba(30, 100, 200, 0.3);
+        }
+        
+        .section-title {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .section-subtitle {
+            font-size: 20px;
+            opacity: 0.95;
+        }
+        
+        .example-intro {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .example-header {
+            background: #FFF9E6;
+            border-left: 5px solid #FFC107;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .example-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .example-description {
+            font-size: 17px;
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        .steps-grid {
+            display: grid;
+            gap: 25px;
+        }
+        
+        .step-card {
+            display: grid;
+            grid-template-columns: 280px 1fr 400px;
+            gap: 25px;
+            padding: 25px;
+            background: white;
+            border-radius: 12px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .step-card:hover {
+            border-color: #1E64C8;
+            box-shadow: 0 8px 25px rgba(30, 100, 200, 0.15);
+            transform: translateY(-2px);
+        }
+        
+        .step-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 5px;
+            background: linear-gradient(180deg, var(--step-color-start), var(--step-color-end));
+            border-radius: 12px 0 0 12px;
+        }
+        
+        .step-card:nth-child(1) {
+            --step-color-start: #1E64C8;
+            --step-color-end: #2B7FDB;
+        }
+        
+        .step-card:nth-child(2) {
+            --step-color-start: #2B7FDB;
+            --step-color-end: #3A8FED;
+        }
+        
+        .step-card:nth-child(3) {
+            --step-color-start: #3A8FED;
+            --step-color-end: #4DA0FF;
+        }
+        
+        .step-card:nth-child(4) {
+            --step-color-start: #4DA0FF;
+            --step-color-end: #60B0FF;
+        }
+        
+        .step-card:nth-child(5) {
+            --step-color-start: #60B0FF;
+            --step-color-end: #7AC0FF;
+        }
+        
+        .step-card:nth-child(6) {
+            --step-color-start: #7AC0FF;
+            --step-color-end: #94D0FF;
+        }
+        
+        .step-card:nth-child(7) {
+            --step-color-start: #94D0FF;
+            --step-color-end: #B0E0FF;
+        }
+        
+        .step-header {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .step-number-box {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--step-color-start), var(--step-color-end));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.25);
+        }
+        
+        .step-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .step-concept {
+            font-size: 15px;
+            color: #666;
+            line-height: 1.5;
+            background: #F8FBFF;
+            padding: 12px;
+            border-radius: 6px;
+        }
+        
+        .step-content {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .code-block {
+            background: #1E1E1E;
+            color: #D4D4D4;
+            padding: 18px;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            overflow-x: auto;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        .code-keyword {
+            color: #569CD6;
+        }
+        
+        .code-function {
+            color: #DCDCAA;
+        }
+        
+        .code-string {
+            color: #CE9178;
+        }
+        
+        .code-number {
+            color: #B5CEA8;
+        }
+        
+        .code-comment {
+            color: #6A9955;
+            font-style: italic;
+        }
+        
+        .explanation {
+            background: #F8FBFF;
+            padding: 18px;
+            border-radius: 8px;
+            border-left: 4px solid var(--step-color-start);
+        }
+        
+        .explanation-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .explanation-text {
+            font-size: 15px;
+            color: #444;
+            line-height: 1.6;
+        }
+        
+        .visual-output {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .output-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+        }
+        
+        .graph-preview {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 20px;
+            height: 280px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .graph-canvas {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        
+        /* Graph axis styles */
+        .axis {
+            position: absolute;
+            background: #666;
+        }
+        
+        .axis-x {
+            bottom: 30px;
+            left: 40px;
+            right: 20px;
+            height: 2px;
+        }
+        
+        .axis-y {
+            left: 40px;
+            top: 20px;
+            bottom: 30px;
+            width: 2px;
+        }
+        
+        .axis-label {
+            position: absolute;
+            font-size: 12px;
+            color: #666;
+            font-weight: 600;
+        }
+        
+        .label-x {
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .label-y {
+            left: 5px;
+            top: 50%;
+            transform: translateY(-50%) rotate(-90deg);
+            transform-origin: center;
+        }
+        
+        /* Data points */
+        .data-point {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #1E64C8;
+            transform: translate(-50%, -50%);
+        }
+        
+        /* Trend line */
+        .trend-line {
+            position: absolute;
+            height: 2px;
+            background: #FF6B6B;
+            transform-origin: left center;
+        }
+        
+        .empty-state {
+            color: #999;
+            font-size: 16px;
+            font-style: italic;
+        }
+        
+        .divider-arrow {
+            text-align: center;
+            font-size: 32px;
+            color: #1E64C8;
+            margin: 15px 0;
+            opacity: 0.5;
+        }
+        
+        .final-result {
+            background: linear-gradient(135deg, #1E64C8 0%, #2B7FDB 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(30, 100, 200, 0.3);
+            margin-top: 30px;
+        }
+        
+        .final-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        
+        .final-description {
+            font-size: 18px;
+            opacity: 0.95;
+            line-height: 1.6;
+        }
+        
+        .highlight {
+            background: #FFF9E6;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .step-card {
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+        }
+        
+        .step-card:nth-child(1) { animation-delay: 0.1s; }
+        .step-card:nth-child(2) { animation-delay: 0.2s; }
+        .step-card:nth-child(3) { animation-delay: 0.3s; }
+        .step-card:nth-child(4) { animation-delay: 0.4s; }
+        .step-card:nth-child(5) { animation-delay: 0.5s; }
+        .step-card:nth-child(6) { animation-delay: 0.6s; }
+        .step-card:nth-child(7) { animation-delay: 0.7s; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="title-section">
-            <div class="main-title">Grammar of Graphics</div>
-            <div class="subtitle">A Systematic Framework for Building Visualizations</div>
+    <!-- ============================================
+         SECTION 1: ORIGINAL DESIGN
+         ============================================ -->
+    <div class="original-section">
+        <div class="container">
+            <div class="title-section">
+                <div class="main-title">Grammar of Graphics</div>
+                <div class="subtitle">A Systematic Framework for Building Visualizations</div>
+            </div>
+            
+            <div class="content-wrapper">
+                <div class="left-section">
+                    <div class="layers-container">
+                        <!-- Layer 1: Data -->
+                        <div class="layer">
+                            <div class="arrow-indicator">→</div>
+                            <div class="layer-content">
+                                <div class="layer-number">1</div>
+                                <div class="layer-info">
+                                    <div class="layer-title">Data</div>
+                                    <div class="layer-description">Foundation: Raw dataset to visualize</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Layer 2: Aesthetics -->
+                        <div class="layer">
+                            <div class="arrow-indicator">→</div>
+                            <div class="layer-content">
+                                <div class="layer-number">2</div>
+                                <div class="layer-info">
+                                    <div class="layer-title">Aesthetics</div>
+                                    <div class="layer-description">Map data to visual properties (x, y, color)</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Layer 3: Geometries -->
+                        <div class="layer">
+                            <div class="arrow-indicator">→</div>
+                            <div class="layer-content">
+                                <div class="layer-number">3</div>
+                                <div class="layer-info">
+                                    <div class="layer-title">Geometries</div>
+                                    <div class="layer-description">Visual marks (points, lines, bars)</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Layer 4: Statistics -->
+                        <div class="layer">
+                            <div class="arrow-indicator">→</div>
+                            <div class="layer-content">
+                                <div class="layer-number">4</div>
+                                <div class="layer-info">
+                                    <div class="layer-title">Statistics</div>
+                                    <div class="layer-description">Transform data (mean, count, regression)</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Layer 5: Scales -->
+                        <div class="layer">
+                            <div class="arrow-indicator">→</div>
+                            <div class="layer-content">
+                                <div class="layer-number">5</div>
+                                <div class="layer-info">
+                                    <div class="layer-title">Scales</div>
+                                    <div class="layer-description">Control mapping from data to aesthetics</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Layer 6: Coordinates -->
+                        <div class="layer">
+                            <div class="arrow-indicator">→</div>
+                            <div class="layer-content">
+                                <div class="layer-number">6</div>
+                                <div class="layer-info">
+                                    <div class="layer-title">Coordinates</div>
+                                    <div class="layer-description">Map to 2D plane (Cartesian, polar)</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Layer 7: Facets -->
+                        <div class="layer">
+                            <div class="arrow-indicator">→</div>
+                            <div class="layer-content">
+                                <div class="layer-number">7</div>
+                                <div class="layer-info">
+                                    <div class="layer-title">Facets</div>
+                                    <div class="layer-description">Split data into multiple subplots</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="right-section">
+                    <div class="framework-box">
+                        <div class="framework-label">Framework</div>
+                        <div class="framework-name">ggplot2</div>
+                        <div class="framework-author">by Leland Wilkinson</div>
+                    </div>
+                    
+                    <div class="info-card">
+                        <div class="info-title">Key Concepts</div>
+                        <div class="info-list">
+                            <div class="info-item">
+                                <span class="info-icon">📊</span>
+                                <span class="info-text">Build graphics incrementally</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-icon">🔄</span>
+                                <span class="info-text">Separates data from visuals</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-icon">🎨</span>
+                                <span class="info-text">Systematic & composable</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-icon">🏗️</span>
+                                <span class="info-text">Layer-based architecture</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        
-        <div class="content-wrapper">
-            <div class="left-section">
-                <div class="layers-container">
-                    <!-- Layer 1: Data -->
-                    <div class="layer">
-                        <div class="arrow-indicator">→</div>
-                        <div class="layer-content">
-                            <div class="layer-number">1</div>
-                            <div class="layer-info">
-                                <div class="layer-title">Data</div>
-                                <div class="layer-description">Foundation: Raw dataset to visualize</div>
+    </div>
+    
+    <!-- ============================================
+         SECTION 2: STEP-BY-STEP EXAMPLES
+         ============================================ -->
+    <div class="examples-section">
+        <div class="examples-container">
+            <div class="section-header">
+                <div class="section-title">Step-by-Step Implementation</div>
+                <div class="section-subtitle">Building Visualizations Layer by Layer</div>
+            </div>
+            
+            <div class="example-intro">
+                <div class="example-header">
+                    <div class="example-title">📊 Practical Example: Car Fuel Efficiency Analysis</div>
+                    <div class="example-description">
+                        Using the mtcars dataset, we'll visualize the relationship between car weight (wt) and fuel efficiency (mpg).
+                        Watch how each layer progressively builds the visualization from an empty canvas to a complete, insightful graph.
+                    </div>
+                </div>
+                
+                <div class="steps-grid">
+                    <!-- Step 1: Data -->
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-number-box">1</div>
+                            <div>
+                                <div class="step-title">Data</div>
+                                <div class="step-concept">Specify the dataset to visualize</div>
+                            </div>
+                        </div>
+                        <div class="step-content">
+                            <div class="code-block">
+<span class="code-function">ggplot</span>(<span class="code-keyword">data</span> = mtcars)
+<span class="code-comment"># Load the mtcars dataset</span>
+                            </div>
+                            <div class="explanation">
+                                <div class="explanation-title">🎯 What happens</div>
+                                <div class="explanation-text">
+                                    We load the <span class="highlight">mtcars</span> dataset. The canvas is prepared but nothing is drawn yet.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="visual-output">
+                            <div class="output-label">📊 Visual Output</div>
+                            <div class="graph-preview">
+                                <div class="empty-state">Empty canvas<br>(Data loaded)</div>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- Layer 2: Aesthetics -->
-                    <div class="layer">
-                        <div class="arrow-indicator">→</div>
-                        <div class="layer-content">
-                            <div class="layer-number">2</div>
-                            <div class="layer-info">
-                                <div class="layer-title">Aesthetics</div>
-                                <div class="layer-description">Map data to visual properties (x, y, color)</div>
+                    <div class="divider-arrow">↓</div>
+                    
+                    <!-- Step 2: Aesthetics -->
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-number-box">2</div>
+                            <div>
+                                <div class="step-title">Aesthetics</div>
+                                <div class="step-concept">Map data to visual properties</div>
+                            </div>
+                        </div>
+                        <div class="step-content">
+                            <div class="code-block">
+<span class="code-function">ggplot</span>(mtcars, 
+       <span class="code-function">aes</span>(<span class="code-keyword">x</span> = wt, <span class="code-keyword">y</span> = mpg))
+<span class="code-comment"># Map weight to x, mpg to y</span>
+                            </div>
+                            <div class="explanation">
+                                <div class="explanation-title">🎯 What happens</div>
+                                <div class="explanation-text">
+                                    Axes are created with <span class="highlight">weight</span> on x-axis and <span class="highlight">MPG</span> on y-axis. Still no data points visible.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="visual-output">
+                            <div class="output-label">📊 Visual Output</div>
+                            <div class="graph-preview">
+                                <div class="graph-canvas">
+                                    <div class="axis axis-x"></div>
+                                    <div class="axis axis-y"></div>
+                                    <div class="axis-label label-x">Weight (1000 lbs)</div>
+                                    <div class="axis-label label-y">Miles per Gallon</div>
+                                </div>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- Layer 3: Geometries -->
-                    <div class="layer">
-                        <div class="arrow-indicator">→</div>
-                        <div class="layer-content">
-                            <div class="layer-number">3</div>
-                            <div class="layer-info">
-                                <div class="layer-title">Geometries</div>
-                                <div class="layer-description">Visual marks (points, lines, bars)</div>
+                    <div class="divider-arrow">↓</div>
+                    
+                    <!-- Step 3: Geometries -->
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-number-box">3</div>
+                            <div>
+                                <div class="step-title">Geometries</div>
+                                <div class="step-concept">Choose visual representation</div>
+                            </div>
+                        </div>
+                        <div class="step-content">
+                            <div class="code-block">
+<span class="code-function">ggplot</span>(mtcars, <span class="code-function">aes</span>(x = wt, y = mpg)) +
+  <span class="code-function">geom_point</span>()
+<span class="code-comment"># Add scatter plot points</span>
+                            </div>
+                            <div class="explanation">
+                                <div class="explanation-title">🎯 What happens</div>
+                                <div class="explanation-text">
+                                    Data points appear! Each car is now a <span class="highlight">dot</span>. We can see the negative correlation: heavier cars get worse fuel efficiency.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="visual-output">
+                            <div class="output-label">📊 Visual Output</div>
+                            <div class="graph-preview">
+                                <div class="graph-canvas">
+                                    <div class="axis axis-x"></div>
+                                    <div class="axis axis-y"></div>
+                                    <div class="axis-label label-x">Weight</div>
+                                    <div class="axis-label label-y">MPG</div>
+                                    <!-- Simulated scatter points -->
+                                    <div class="data-point" style="left: 25%; bottom: 70%;"></div>
+                                    <div class="data-point" style="left: 30%; bottom: 65%;"></div>
+                                    <div class="data-point" style="left: 35%; bottom: 68%;"></div>
+                                    <div class="data-point" style="left: 40%; bottom: 60%;"></div>
+                                    <div class="data-point" style="left: 45%; bottom: 55%;"></div>
+                                    <div class="data-point" style="left: 50%; bottom: 58%;"></div>
+                                    <div class="data-point" style="left: 55%; bottom: 50%;"></div>
+                                    <div class="data-point" style="left: 60%; bottom: 45%;"></div>
+                                    <div class="data-point" style="left: 65%; bottom: 48%;"></div>
+                                    <div class="data-point" style="left: 70%; bottom: 40%;"></div>
+                                    <div class="data-point" style="left: 75%; bottom: 35%;"></div>
+                                    <div class="data-point" style="left: 80%; bottom: 38%;"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- Layer 4: Statistics -->
-                    <div class="layer">
-                        <div class="arrow-indicator">→</div>
-                        <div class="layer-content">
-                            <div class="layer-number">4</div>
-                            <div class="layer-info">
-                                <div class="layer-title">Statistics</div>
-                                <div class="layer-description">Transform data (mean, count, regression)</div>
+                    <div class="divider-arrow">↓</div>
+                    
+                    <!-- Step 4: Statistics -->
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-number-box">4</div>
+                            <div>
+                                <div class="step-title">Statistics</div>
+                                <div class="step-concept">Apply statistical transformations</div>
+                            </div>
+                        </div>
+                        <div class="step-content">
+                            <div class="code-block">
+<span class="code-function">ggplot</span>(mtcars, <span class="code-function">aes</span>(x = wt, y = mpg)) +
+  <span class="code-function">geom_point</span>() +
+  <span class="code-function">geom_smooth</span>(<span class="code-keyword">method</span> = <span class="code-string">"lm"</span>)
+<span class="code-comment"># Add linear regression line</span>
+                            </div>
+                            <div class="explanation">
+                                <div class="explanation-title">🎯 What happens</div>
+                                <div class="explanation-text">
+                                    A <span class="highlight">trend line</span> appears, showing the overall pattern. The relationship becomes clearer: for every 1000 lbs increase, MPG drops significantly.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="visual-output">
+                            <div class="output-label">📊 Visual Output</div>
+                            <div class="graph-preview">
+                                <div class="graph-canvas">
+                                    <div class="axis axis-x"></div>
+                                    <div class="axis axis-y"></div>
+                                    <div class="axis-label label-x">Weight</div>
+                                    <div class="axis-label label-y">MPG</div>
+                                    <!-- Points -->
+                                    <div class="data-point" style="left: 25%; bottom: 70%;"></div>
+                                    <div class="data-point" style="left: 30%; bottom: 65%;"></div>
+                                    <div class="data-point" style="left: 35%; bottom: 68%;"></div>
+                                    <div class="data-point" style="left: 40%; bottom: 60%;"></div>
+                                    <div class="data-point" style="left: 45%; bottom: 55%;"></div>
+                                    <div class="data-point" style="left: 50%; bottom: 58%;"></div>
+                                    <div class="data-point" style="left: 55%; bottom: 50%;"></div>
+                                    <div class="data-point" style="left: 60%; bottom: 45%;"></div>
+                                    <div class="data-point" style="left: 65%; bottom: 48%;"></div>
+                                    <div class="data-point" style="left: 70%; bottom: 40%;"></div>
+                                    <div class="data-point" style="left: 75%; bottom: 35%;"></div>
+                                    <div class="data-point" style="left: 80%; bottom: 38%;"></div>
+                                    <!-- Trend line: from top-left to bottom-right (negative correlation) -->
+                                    <svg style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;">
+                                        <line x1="15%" y1="20%" x2="85%" y2="70%" stroke="#FF6B6B" stroke-width="2"/>
+                                    </svg>
+                                </div>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- Layer 5: Scales -->
-                    <div class="layer">
-                        <div class="arrow-indicator">→</div>
-                        <div class="layer-content">
-                            <div class="layer-number">5</div>
-                            <div class="layer-info">
-                                <div class="layer-title">Scales</div>
-                                <div class="layer-description">Control mapping from data to aesthetics</div>
+                    <div class="divider-arrow">↓</div>
+                    
+                    <!-- Step 5: Scales -->
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-number-box">5</div>
+                            <div>
+                                <div class="step-title">Scales</div>
+                                <div class="step-concept">Control data-to-visual mapping</div>
+                            </div>
+                        </div>
+                        <div class="step-content">
+                            <div class="code-block">
+<span class="code-function">ggplot</span>(mtcars, 
+       <span class="code-function">aes</span>(x = wt, y = mpg, 
+           <span class="code-keyword">color</span> = cyl)) +
+  <span class="code-function">geom_point</span>(<span class="code-keyword">size</span> = <span class="code-number">3</span>) +
+  <span class="code-function">geom_smooth</span>(method = <span class="code-string">"lm"</span>) +
+  <span class="code-function">scale_color_gradient</span>(
+    <span class="code-keyword">low</span> = <span class="code-string">"blue"</span>, 
+    <span class="code-keyword">high</span> = <span class="code-string">"red"</span>)
+<span class="code-comment"># Color by cylinder count</span>
+                            </div>
+                            <div class="explanation">
+                                <div class="explanation-title">🎯 What happens</div>
+                                <div class="explanation-text">
+                                    Points are now <span class="highlight">colored</span> by cylinder count. Blue = fewer cylinders (efficient), Red = more cylinders (less efficient). Another data dimension is revealed!
+                                </div>
+                            </div>
+                        </div>
+                        <div class="visual-output">
+                            <div class="output-label">📊 Visual Output</div>
+                            <div class="graph-preview">
+                                <div class="graph-canvas">
+                                    <div class="axis axis-x"></div>
+                                    <div class="axis axis-y"></div>
+                                    <div class="axis-label label-x">Weight</div>
+                                    <div class="axis-label label-y">MPG</div>
+                                    <!-- Colored points -->
+                                    <div class="data-point" style="left: 25%; bottom: 70%; background: #4DA0FF;"></div>
+                                    <div class="data-point" style="left: 30%; bottom: 65%; background: #4DA0FF;"></div>
+                                    <div class="data-point" style="left: 35%; bottom: 68%; background: #6FB0FF;"></div>
+                                    <div class="data-point" style="left: 40%; bottom: 60%; background: #8FC0FF;"></div>
+                                    <div class="data-point" style="left: 45%; bottom: 55%; background: #FF9090;"></div>
+                                    <div class="data-point" style="left: 50%; bottom: 58%; background: #FF7070;"></div>
+                                    <div class="data-point" style="left: 55%; bottom: 50%; background: #FF9090;"></div>
+                                    <div class="data-point" style="left: 60%; bottom: 45%; background: #FF6060;"></div>
+                                    <div class="data-point" style="left: 65%; bottom: 48%; background: #FF5050;"></div>
+                                    <div class="data-point" style="left: 70%; bottom: 40%; background: #FF4040;"></div>
+                                    <div class="data-point" style="left: 75%; bottom: 35%; background: #FF3030;"></div>
+                                    <div class="data-point" style="left: 80%; bottom: 38%; background: #FF2020;"></div>
+                                    <!-- Trend line: negative correlation -->
+                                    <svg style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;">
+                                        <line x1="15%" y1="20%" x2="85%" y2="70%" stroke="#FF6B6B" stroke-width="2"/>
+                                    </svg>
+                                </div>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- Layer 6: Coordinates -->
-                    <div class="layer">
-                        <div class="arrow-indicator">→</div>
-                        <div class="layer-content">
-                            <div class="layer-number">6</div>
-                            <div class="layer-info">
-                                <div class="layer-title">Coordinates</div>
-                                <div class="layer-description">Map to 2D plane (Cartesian, polar)</div>
+                    <div class="divider-arrow">↓</div>
+                    
+                    <!-- Step 6: Coordinates -->
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-number-box">6</div>
+                            <div>
+                                <div class="step-title">Coordinates</div>
+                                <div class="step-concept">Set coordinate system</div>
+                            </div>
+                        </div>
+                        <div class="step-content">
+                            <div class="code-block">
+  ... +
+  <span class="code-function">coord_cartesian</span>(
+    <span class="code-keyword">xlim</span> = <span class="code-function">c</span>(<span class="code-number">1</span>, <span class="code-number">6</span>), 
+    <span class="code-keyword">ylim</span> = <span class="code-function">c</span>(<span class="code-number">10</span>, <span class="code-number">35</span>))
+<span class="code-comment"># Zoom to optimal view</span>
+                            </div>
+                            <div class="explanation">
+                                <div class="explanation-title">🎯 What happens</div>
+                                <div class="explanation-text">
+                                    The view is <span class="highlight">zoomed</span> to focus on the relevant data range. No data is lost, just a better viewing window. The pattern is now more visible.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="visual-output">
+                            <div class="output-label">📊 Visual Output</div>
+                            <div class="graph-preview">
+                                <div class="graph-canvas">
+                                    <div class="axis axis-x"></div>
+                                    <div class="axis axis-y"></div>
+                                    <div class="axis-label label-x">Weight (1-6)</div>
+                                    <div class="axis-label label-y">MPG (10-35)</div>
+                                    <!-- Zoomed colored points -->
+                                    <div class="data-point" style="left: 22%; bottom: 72%; background: #4DA0FF; width: 10px; height: 10px;"></div>
+                                    <div class="data-point" style="left: 28%; bottom: 67%; background: #4DA0FF; width: 10px; height: 10px;"></div>
+                                    <div class="data-point" style="left: 35%; bottom: 70%; background: #6FB0FF; width: 10px; height: 10px;"></div>
+                                    <div class="data-point" style="left: 42%; bottom: 62%; background: #8FC0FF; width: 10px; height: 10px;"></div>
+                                    <div class="data-point" style="left: 48%; bottom: 55%; background: #FF9090; width: 10px; height: 10px;"></div>
+                                    <div class="data-point" style="left: 55%; bottom: 58%; background: #FF7070; width: 10px; height: 10px;"></div>
+                                    <div class="data-point" style="left: 62%; bottom: 48%; background: #FF6060; width: 10px; height: 10px;"></div>
+                                    <div class="data-point" style="left: 68%; bottom: 43%; background: #FF5050; width: 10px; height: 10px;"></div>
+                                    <div class="data-point" style="left: 75%; bottom: 38%; background: #FF3030; width: 10px; height: 10px;"></div>
+                                    <div class="data-point" style="left: 82%; bottom: 35%; background: #FF2020; width: 10px; height: 10px;"></div>
+                                    <!-- Trend line: negative correlation -->
+                                    <svg style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;">
+                                        <line x1="15%" y1="18%" x2="85%" y2="72%" stroke="#FF6B6B" stroke-width="2"/>
+                                    </svg>
+                                </div>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- Layer 7: Facets -->
-                    <div class="layer">
-                        <div class="arrow-indicator">→</div>
-                        <div class="layer-content">
-                            <div class="layer-number">7</div>
-                            <div class="layer-info">
-                                <div class="layer-title">Facets</div>
-                                <div class="layer-description">Split data into multiple subplots</div>
+                    <div class="divider-arrow">↓</div>
+                    
+                    <!-- Step 7: Facets -->
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-number-box">7</div>
+                            <div>
+                                <div class="step-title">Facets</div>
+                                <div class="step-concept">Split into multiple subplots</div>
+                            </div>
+                        </div>
+                        <div class="step-content">
+                            <div class="code-block">
+  ... +
+  <span class="code-function">facet_wrap</span>(~ am)
+<span class="code-comment"># Separate by transmission type
+# am = 0: Automatic
+# am = 1: Manual</span>
+                            </div>
+                            <div class="explanation">
+                                <div class="explanation-title">🎯 What happens</div>
+                                <div class="explanation-text">
+                                    The graph <span class="highlight">splits</span> into two panels: automatic vs manual transmission. Now we can compare patterns between groups. Manual cars tend to be lighter and more efficient!
+                                </div>
+                            </div>
+                        </div>
+                        <div class="visual-output">
+                            <div class="output-label">📊 Visual Output</div>
+                            <div class="graph-preview" style="height: 280px;">
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; height: 100%;">
+                                    <!-- Panel 1: Automatic -->
+                                    <div style="position: relative; border: 1px solid #ddd; border-radius: 4px; padding: 10px;">
+                                        <div style="text-align: center; font-size: 11px; font-weight: 600; color: #666; margin-bottom: 5px;">Automatic (0)</div>
+                                        <div class="axis axis-x" style="bottom: 15px; left: 20px; right: 10px;"></div>
+                                        <div class="axis axis-y" style="left: 20px; top: 30px; bottom: 15px;"></div>
+                                        <div class="data-point" style="left: 45%; bottom: 48%; background: #FF6060; width: 7px; height: 7px;"></div>
+                                        <div class="data-point" style="left: 55%; bottom: 42%; background: #FF5050; width: 7px; height: 7px;"></div>
+                                        <div class="data-point" style="left: 65%; bottom: 38%; background: #FF4040; width: 7px; height: 7px;"></div>
+                                        <div class="data-point" style="left: 70%; bottom: 35%; background: #FF3030; width: 7px; height: 7px;"></div>
+                                        <div class="data-point" style="left: 75%; bottom: 32%; background: #FF2020; width: 7px; height: 7px;"></div>
+                                        <!-- Trend line: negative correlation -->
+                                        <svg style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;">
+                                            <line x1="35%" y1="40%" x2="80%" y2="68%" stroke="#FF6B6B" stroke-width="1.5"/>
+                                        </svg>
+                                    </div>
+                                    <!-- Panel 2: Manual -->
+                                    <div style="position: relative; border: 1px solid #ddd; border-radius: 4px; padding: 10px;">
+                                        <div style="text-align: center; font-size: 11px; font-weight: 600; color: #666; margin-bottom: 5px;">Manual (1)</div>
+                                        <div class="axis axis-x" style="bottom: 15px; left: 20px; right: 10px;"></div>
+                                        <div class="axis axis-y" style="left: 20px; top: 30px; bottom: 15px;"></div>
+                                        <div class="data-point" style="left: 30%; bottom: 68%; background: #4DA0FF; width: 7px; height: 7px;"></div>
+                                        <div class="data-point" style="left: 35%; bottom: 65%; background: #5DB0FF; width: 7px; height: 7px;"></div>
+                                        <div class="data-point" style="left: 42%; bottom: 62%; background: #7FC0FF; width: 7px; height: 7px;"></div>
+                                        <div class="data-point" style="left: 48%; bottom: 58%; background: #8FC0FF; width: 7px; height: 7px;"></div>
+                                        <div class="data-point" style="left: 55%; bottom: 52%; background: #9FCFFF; width: 7px; height: 7px;"></div>
+                                        <!-- Trend line: negative correlation -->
+                                        <svg style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;">
+                                            <line x1="22%" y1="24%" x2="62%" y2="52%" stroke="#FF6B6B" stroke-width="1.5"/>
+                                        </svg>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <div class="right-section">
-                <div class="framework-box">
-                    <div class="framework-label">Framework</div>
-                    <div class="framework-name">ggplot2</div>
-                    <div class="framework-author">by Leland Wilkinson</div>
-                </div>
-                
-                <div class="info-card">
-                    <div class="info-title">Key Concepts</div>
-                    <div class="info-list">
-                        <div class="info-item">
-                            <span class="info-icon">📊</span>
-                            <span class="info-text">Build graphics incrementally</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-icon">🔄</span>
-                            <span class="info-text">Separates data from visuals</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-icon">🎨</span>
-                            <span class="info-text">Systematic & composable</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-icon">🏗️</span>
-                            <span class="info-text">Layer-based architecture</span>
-                        </div>
-                    </div>
+            <div class="divider-arrow">⬇️</div>
+            
+            <div class="final-result">
+                <div class="final-title">✨ Complete Visualization Achieved</div>
+                <div class="final-description">
+                    By layering all 7 components, we've built a sophisticated multi-dimensional visualization that reveals:<br><br>
+                    <strong>📌 Key Insights:</strong><br>
+                    • Heavier cars have worse fuel efficiency (negative correlation)<br>
+                    • More cylinders → heavier cars → worse MPG (shown by red colors)<br>
+                    • Manual transmission cars are generally lighter and more efficient<br><br>
+                    <strong>This is the power of Grammar of Graphics: systematic, composable, and infinitely flexible!</strong>
                 </div>
             </div>
         </div>
