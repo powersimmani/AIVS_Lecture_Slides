@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lasso Regression (L1)</title>
+    <title>Lasso Regression (L1 Regularization) - Complete Guide</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -13,99 +14,108 @@
         
         body {
             font-family: Aptos, 'Segoe UI', sans-serif;
-            background: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            background: #f5f5f5;
             padding: 20px;
         }
         
-        .container {
-            width: 960px;
-            height: 540px;
+        .main-container {
+            max-width: 960px;
+            margin: 0 auto;
+        }
+        
+        .section {
             background: white;
-            padding: 30px;
-            position: relative;
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
         }
         
         .title {
-            font-size: 20px;
-            font-weight: 600;
-            color: #1E64C8;
-            margin-bottom: 18px;
+            font-size: 28px;
+            font-weight: 700;
+            color: #2e7d32;
+            margin-bottom: 25px;
             text-align: center;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
         }
         
-        .content-layout {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            height: calc(100% - 50px);
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2e7d32;
+            margin-bottom: 25px;
+            text-align: center;
+            border-bottom: 4px solid #2e7d32;
+            padding-bottom: 12px;
         }
         
+        /* Overview Styles */
         .penalty-box {
             background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
-            border-radius: 10px;
-            padding: 18px 24px;
+            border-radius: 12px;
+            padding: 22px 28px;
             color: white;
             text-align: center;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.3);
         }
         
         .penalty-label {
-            font-size: 16px;
-            font-weight: 500;
-            margin-bottom: 8px;
-            opacity: 0.9;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
         }
         
         .penalty-formula {
-            font-size: 20px;
-            font-weight: 600;
+            font-size: 24px;
+            font-weight: 700;
             font-style: italic;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
         }
         
         .features-section {
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            flex: 1;
+            gap: 15px;
+            margin-bottom: 25px;
         }
         
         .feature-row {
             display: flex;
-            gap: 12px;
+            gap: 15px;
         }
         
         .feature-card {
             flex: 1;
             background: white;
-            border: 2px solid #1E64C8;
-            border-radius: 8px;
-            padding: 14px 16px;
+            border: 2px solid #2e7d32;
+            border-left: 6px solid #2e7d32;
+            border-radius: 10px;
+            padding: 18px 20px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 15px;
             transition: all 0.3s;
         }
         
         .feature-card:hover {
-            background: #f8fbff;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.15);
+            background: #f1f8f4;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(46, 125, 50, 0.2);
         }
         
         .feature-icon {
-            width: 36px;
-            height: 36px;
-            background: #1E64C8;
+            width: 40px;
+            height: 40px;
+            background: #2e7d32;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 18px;
+            font-size: 20px;
             flex-shrink: 0;
         }
         
@@ -114,21 +124,22 @@
         }
         
         .feature-title {
-            font-size: 17px;
-            font-weight: 600;
-            color: #1E64C8;
-            margin-bottom: 4px;
+            font-size: 18px;
+            font-weight: 700;
+            color: #2e7d32;
+            margin-bottom: 5px;
         }
         
         .feature-desc {
             font-size: 16px;
             color: #555;
-            line-height: 1.3;
+            line-height: 1.5;
         }
         
         .highlight-card {
             background: #fff8e6;
             border-color: #ffc107;
+            border-left-color: #ffc107;
         }
         
         .highlight-card .feature-icon {
@@ -141,16 +152,17 @@
         
         .comparison-section {
             background: white;
-            border: 2px solid #6c757d;
-            border-radius: 10px;
-            padding: 16px 20px;
+            border: 3px solid #6c757d;
+            border-radius: 12px;
+            padding: 20px 25px;
+            margin-bottom: 25px;
         }
         
         .comparison-title {
-            font-size: 17px;
-            font-weight: 600;
+            font-size: 20px;
+            font-weight: 700;
             color: #495057;
-            margin-bottom: 12px;
+            margin-bottom: 15px;
             text-align: center;
         }
         
@@ -158,127 +170,1394 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 15px;
+            gap: 20px;
+            margin-bottom: 15px;
         }
         
         .method-tag {
-            padding: 8px 20px;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: 600;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 700;
         }
         
         .ridge-tag {
             background: #e3f2fd;
             color: #1565c0;
-            border: 2px solid #1565c0;
+            border: 3px solid #1565c0;
         }
         
         .vs-text {
-            font-size: 18px;
-            font-weight: 600;
+            font-size: 20px;
+            font-weight: 700;
             color: #6c757d;
         }
         
         .lasso-tag {
             background: #e8f5e9;
             color: #2e7d32;
-            border: 2px solid #2e7d32;
+            border: 3px solid #2e7d32;
         }
         
         .result-text {
-            font-size: 16px;
+            font-size: 17px;
             color: #495057;
             text-align: center;
+            line-height: 1.6;
         }
         
         .sparse-highlight {
-            font-weight: 600;
+            font-weight: 700;
             color: #2e7d32;
         }
         
         .cv-box {
             background: linear-gradient(135deg, #28a745 0%, #218838 100%);
-            border-radius: 8px;
-            padding: 14px 18px;
+            border-radius: 10px;
+            padding: 18px 22px;
             text-align: center;
             color: white;
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
         }
         
         .cv-text {
-            font-size: 17px;
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        /* 2D Visualization Styles */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .comparison-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            border: 2px solid #e9ecef;
+        }
+        
+        .comparison-card-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        
+        .l2-highlight {
+            color: #1E64C8;
+        }
+        
+        .l1-highlight {
+            color: #dc3545;
+        }
+        
+        .lambda-slider-section {
+            background: white;
+            border: 3px solid #2e7d32;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .slider-container {
+            margin: 25px 0;
+        }
+        
+        .slider-label {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .lambda-value {
+            color: #2e7d32;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 10px;
+            border-radius: 5px;
+            background: #ddd;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #2e7d32;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(46, 125, 50, 0.4);
+        }
+        
+        input[type="range"]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #2e7d32;
+            cursor: pointer;
+        }
+        
+        .coefficients-display {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 25px;
+        }
+        
+        .coeff-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-left: 5px solid #2e7d32;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .coeff-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .coeff-label {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 8px;
             font-weight: 600;
+        }
+        
+        .coeff-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #2e7d32;
+        }
+        
+        .explanation-text {
+            font-size: 17px;
+            line-height: 1.8;
+            color: #333;
+            margin-bottom: 18px;
+        }
+        
+        .highlight-box {
+            background: #e8f5e9;
+            border-left: 5px solid #28a745;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        
+        .highlight-box-yellow {
+            background: #fff8e6;
+            border-left: 5px solid #ffc107;
+        }
+        
+        .highlight-box-red {
+            background: #ffebee;
+            border-left: 5px solid #dc3545;
+        }
+        
+        .formula-box {
+            background: #f8f9fa;
+            border: 3px solid #2e7d32;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 25px 0;
+            text-align: center;
+        }
+        
+        .formula-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2e7d32;
+            font-family: 'Courier New', monospace;
+        }
+        
+        canvas {
+            display: block;
+            margin: 20px auto;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            background: white;
+        }
+        
+        .geometric-explanation {
+            background: white;
+            border: 3px solid #28a745;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .sparsity-box {
+            background: white;
+            border: 3px solid #dc3545;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        /* 3D Visualization Styles */
+        .viz-container-3d {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .canvas-wrapper {
+            border: 2px solid #2e7d32;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #f8f9fa;
+        }
+        
+        .canvas-header {
+            background: #2e7d32;
+            color: white;
+            padding: 12px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        
+        .canvas-header.ridge-header {
+            background: #1565c0;
+        }
+        
+        #canvas-ridge, #canvas-lasso {
+            display: block;
+            width: 100%;
+            height: 350px;
+        }
+        
+        .controls {
+            background: white;
+            border: 2px solid #2e7d32;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .control-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .control-label {
+            min-width: 150px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .control-value {
+            min-width: 50px;
+            font-weight: 700;
+            color: #2e7d32;
+        }
+        
+        input[type="range"].control-slider {
+            flex: 1;
+        }
+        
+        .viz-subtitle {
+            font-size: 16px;
+            color: #666;
+            text-align: center;
+            margin-bottom: 20px;
+            line-height: 1.6;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="title">Lasso Regression (L1 Regularization)</div>
-        
-        <div class="content-layout">
-            <!-- Penalty Formula -->
+    <div class="main-container">
+        <!-- Overview Section -->
+        <div class="section">
+            <div class="title">Lasso Regression (L1 Regularization)</div>
+            
             <div class="penalty-box">
-                <div class="penalty-label">Alternative Penalty:</div>
-                <div class="penalty-formula">λ∑|βᵢ|  (L1 Penalty)</div>
+                <div class="penalty-label">L1 Penalty:</div>
+                <div class="penalty-formula">RSS + λ∑|βᵢ|</div>
             </div>
             
-            <!-- Features -->
             <div class="features-section">
                 <div class="feature-row">
                     <div class="feature-card">
-                        <div class="feature-icon">⚡</div>
+                        <div class="feature-icon">🎯</div>
                         <div class="feature-content">
-                            <div class="feature-title">Key Difference</div>
-                            <div class="feature-desc">Can shrink coefficients exactly to zero</div>
+                            <div class="feature-title">Sparse Solutions</div>
+                            <div class="feature-desc">Makes some coefficients exactly zero</div>
                         </div>
                     </div>
                     
                     <div class="feature-card">
-                        <div class="feature-icon">🎯</div>
+                        <div class="feature-icon">🔍</div>
                         <div class="feature-content">
                             <div class="feature-title">Feature Selection</div>
-                            <div class="feature-desc">Performs automatic feature selection</div>
+                            <div class="feature-desc">Automatically selects important features</div>
                         </div>
                     </div>
                 </div>
                 
                 <div class="feature-row">
                     <div class="feature-card highlight-card">
-                        <div class="feature-icon">✨</div>
+                        <div class="feature-icon">⚙️</div>
                         <div class="feature-content">
-                            <div class="feature-title">Sparse Models</div>
-                            <div class="feature-desc">Only important features retained</div>
+                            <div class="feature-title">Hyperparameter λ</div>
+                            <div class="feature-desc">Controls sparsity level</div>
                         </div>
                     </div>
                     
-                    <div class="feature-card highlight-card">
-                        <div class="feature-icon">💡</div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
                         <div class="feature-content">
-                            <div class="feature-title">Use Case</div>
-                            <div class="feature-desc">Many features but few are truly relevant</div>
+                            <div class="feature-title">Interpretability</div>
+                            <div class="feature-desc">Creates simpler, more interpretable models</div>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <!-- Comparison -->
             <div class="comparison-section">
-                <div class="comparison-title">Ridge vs Lasso Comparison</div>
+                <div class="comparison-title">Ridge vs Lasso</div>
                 <div class="comparison-content">
-                    <div class="method-tag ridge-tag">Ridge</div>
+                    <div class="method-tag ridge-tag">Ridge (L2)</div>
                     <div class="vs-text">vs</div>
-                    <div class="method-tag lasso-tag">Lasso</div>
+                    <div class="method-tag lasso-tag">Lasso (L1)</div>
                 </div>
-                <div class="result-text" style="margin-top: 10px;">
-                    Lasso produces <span class="sparse-highlight">sparser solutions</span>
+                <div class="result-text">
+                    Ridge shrinks coefficients, but Lasso can make them <span class="sparse-highlight">exactly zero</span> → Feature selection!
                 </div>
             </div>
             
-            <!-- Cross-validation -->
             <div class="cv-box">
-                <div class="cv-text">Choosing λ: Cross-validation approach</div>
+                <div class="cv-text">💡 Use Cross-Validation to choose optimal λ</div>
+            </div>
+        </div>
+
+        <!-- 2D Visualization Section -->
+        <div class="section">
+            <div class="section-title">🎯 2D Visual Understanding</div>
+            
+            <!-- L1 vs L2 Comparison -->
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <div class="comparison-card-title l2-highlight">L2 (Ridge) 🔵</div>
+                    <canvas id="l2Canvas" width="280" height="280"></canvas>
+                    <p style="margin-top: 18px; font-size: 15px; color: #666; line-height: 1.6;">
+                        <strong style="color: #1E64C8;">Circle shape</strong><br>
+                        w₀² + w₁² = constant<br>
+                        Gradually shrinks coefficients
+                    </p>
+                </div>
+                
+                <div class="comparison-card">
+                    <div class="comparison-card-title l1-highlight">L1 (Lasso) 🔴</div>
+                    <canvas id="l1Canvas" width="280" height="280"></canvas>
+                    <p style="margin-top: 18px; font-size: 15px; color: #666; line-height: 1.6;">
+                        <strong style="color: #dc3545;">Diamond shape</strong><br>
+                        |w₀| + |w₁| = constant<br>
+                        <strong>Can make coefficients exactly zero</strong>
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Interactive Lambda Slider -->
+        <div class="section">
+            <div class="lambda-slider-section">
+                <h3 style="text-align: center; color: #2e7d32; margin-bottom: 25px; font-size: 22px;">
+                    🎚️ Interactive: Effect of λ on Lasso Coefficients
+                </h3>
+                
+                <div class="slider-container">
+                    <div class="slider-label">
+                        λ (Lambda) = <span class="lambda-value" id="lambdaValue">0.0</span>
+                    </div>
+                    <input type="range" id="lambdaSlider" min="0" max="100" value="0" step="1">
+                    <p style="font-size: 14px; color: #666; margin-top: 10px;">
+                        💡 Move the slider to change λ value. Notice how Lasso makes coefficients exactly zero!
+                    </p>
+                </div>
+                
+                <div class="coefficients-display">
+                    <div class="coeff-card">
+                        <div class="coeff-label">β₁ (original: 5.00)</div>
+                        <div class="coeff-value" id="coeff1">5.00</div>
+                    </div>
+                    <div class="coeff-card">
+                        <div class="coeff-label">β₂ (original: 3.00)</div>
+                        <div class="coeff-value" id="coeff2">3.00</div>
+                    </div>
+                    <div class="coeff-card">
+                        <div class="coeff-label">β₃ (original: 4.00)</div>
+                        <div class="coeff-value" id="coeff3">4.00</div>
+                    </div>
+                </div>
+                
+                <canvas id="coeffChart" width="860" height="350"></canvas>
+            </div>
+        </div>
+        
+        <!-- Geometric Explanation -->
+        <div class="section">
+            <div class="geometric-explanation">
+                <h3 style="text-align: center; color: #28a745; margin-bottom: 25px; font-size: 22px;">
+                    📐 Geometric Intuition: Why Lasso Creates Sparsity
+                </h3>
+                
+                <div class="explanation-text">
+                    Lasso regression finds the optimal solution by balancing two objectives:
+                </div>
+                
+                <div class="highlight-box">
+                    <strong style="font-size: 18px;">1️⃣ Minimize Prediction Error (RSS)</strong><br>
+                    <span style="font-size: 16px;">Want to fit the training data well</span>
+                </div>
+                
+                <div class="highlight-box">
+                    <strong style="font-size: 18px;">2️⃣ Minimize Coefficient Magnitude (λ∑|β|)</strong><br>
+                    <span style="font-size: 16px;">Want to keep the model simple with sparse coefficients</span>
+                </div>
+                
+                <div class="formula-box">
+                    <div class="formula-text">
+                        Loss = RSS + λ∑|βᵢ|
+                    </div>
+                    <div style="margin-top: 15px; font-size: 16px; color: #666; line-height: 1.6;">
+                        The diamond shape of L1 constraint<br>
+                        has corners where coefficients become exactly zero
+                    </div>
+                </div>
+                
+                <canvas id="geometricCanvas" width="860" height="450"></canvas>
+                
+                <div class="explanation-text" style="margin-top: 25px; font-size: 16px;">
+                    <strong style="color: #28a745;">🎯 Key Insight:</strong> L1 penalty creates a diamond-shaped constraint. 
+                    The optimal solution tends to hit the corners of the diamond, where one or more coefficients are exactly zero.
+                    This is why Lasso performs automatic feature selection!
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sparsity Explanation -->
+        <div class="section">
+            <div class="sparsity-box">
+                <h3 style="text-align: center; color: #dc3545; margin-bottom: 25px; font-size: 22px;">
+                    🔍 Why Sparsity Matters: Feature Selection
+                </h3>
+                
+                <div class="explanation-text">
+                    When you have many features, not all of them are useful. Lasso automatically identifies and removes 
+                    irrelevant features by setting their coefficients to zero.
+                </div>
+                
+                <div class="highlight-box-yellow">
+                    <strong style="font-size: 18px;">💼 Real-world Scenario:</strong><br>
+                    <span style="font-size: 16px;">Predicting house prices with 100 features:</span><br>
+                    <code style="font-size: 17px; background: white; padding: 8px 12px; border-radius: 5px; display: inline-block; margin-top: 8px;">
+                        Many features like "color of doorknob" are irrelevant
+                    </code><br><br>
+                    <span style="font-size: 16px;">Lasso identifies that only 15 features truly matter and sets the rest to zero.</span>
+                </div>
+                
+                <div class="highlight-box">
+                    <strong style="font-size: 18px; color: #28a745;">✅ Benefits of Sparsity:</strong><br><br>
+                    <strong>1. Interpretability:</strong> Simpler models are easier to understand<br>
+                    <strong>2. Efficiency:</strong> Fewer features mean faster predictions<br>
+                    <strong>3. Generalization:</strong> Removes noise, improving performance on new data<br>
+                    <strong>4. Cost savings:</strong> Don't need to collect/store irrelevant features
+                </div>
+                
+                <canvas id="sparsityCanvas" width="860" height="300"></canvas>
+            </div>
+        </div>
+
+        <!-- 3D Visualization Section -->
+        <div class="section">
+            <div class="section-title">🎲 3D Loss Surface Visualization</div>
+            
+            <div class="viz-subtitle">
+                Compare how the loss surface changes between Ridge (L2) and Lasso (L1) regularization.<br>
+                Notice how Lasso's solution (white sphere) tends to align with axes, indicating zero coefficients.
+            </div>
+            
+            <div class="viz-container-3d">
+                <div class="canvas-wrapper">
+                    <div class="canvas-header ridge-header">Ridge Regression (L2)</div>
+                    <canvas id="canvas-ridge"></canvas>
+                </div>
+                
+                <div class="canvas-wrapper">
+                    <div class="canvas-header">Lasso Regression (L1)</div>
+                    <canvas id="canvas-lasso"></canvas>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <div class="control-row">
+                    <span class="control-label">λ (Lambda):</span>
+                    <input type="range" id="lambda-slider-3d" class="control-slider" min="0" max="10" step="0.1" value="1">
+                    <span class="control-value" id="lambda-value-3d">1.0</span>
+                </div>
+                
+                <div class="control-row">
+                    <span class="control-label">Rotation Speed:</span>
+                    <input type="range" id="rotation-slider" class="control-slider" min="0" max="5" step="0.1" value="1">
+                    <span class="control-value" id="rotation-value">1.0</span>
+                </div>
+                
+                <p style="font-size: 14px; color: #666; margin-top: 15px; line-height: 1.6;">
+                    💡 <strong>Tip:</strong> Increase λ to see how Lasso's optimal point (white sphere) moves toward the axes, 
+                    while Ridge's point moves smoothly toward the origin. This visualizes why Lasso creates sparse solutions!
+                </p>
             </div>
         </div>
     </div>
+
+    <script>
+        // ========== 2D Visualization Code ==========
+        const originalCoeffs = [5.0, 3.0, 4.0];
+        const lambdaHistory = [];
+        const coeffHistory = [[], [], []];
+        
+        // Draw L2 (Circle) shape
+        function drawL2Shape() {
+            const canvas = document.getElementById('l2Canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const centerX = 140;
+            const centerY = 140;
+            const radius = 100;
+            
+            ctx.clearRect(0, 0, 280, 280);
+            
+            // Draw axes
+            ctx.strokeStyle = '#ccc';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(20, centerY);
+            ctx.lineTo(260, centerY);
+            ctx.moveTo(centerX, 20);
+            ctx.lineTo(centerX, 260);
+            ctx.stroke();
+            
+            // Draw L2 circles with different lambdas
+            const lambdas = [1, 0.5, 0.25];
+            const opacities = [1, 0.6, 0.3];
+            
+            lambdas.forEach((lambda, i) => {
+                ctx.strokeStyle = `rgba(30, 100, 200, ${opacities[i]})`;
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, radius * lambda, 0, 2 * Math.PI);
+                ctx.stroke();
+            });
+            
+            // Draw solution point
+            ctx.fillStyle = '#1E64C8';
+            ctx.beginPath();
+            ctx.arc(centerX + radius * 0.5 * 0.7, centerY - radius * 0.5 * 0.7, 6, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Labels
+            ctx.fillStyle = '#333';
+            ctx.font = 'bold 16px Arial';
+            ctx.fillText('w₁', 245, centerY - 8);
+            ctx.fillText('w₀', centerX + 8, 35);
+        }
+        
+        // Draw L1 (Diamond) shape
+        function drawL1Shape() {
+            const canvas = document.getElementById('l1Canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const centerX = 140;
+            const centerY = 140;
+            const size = 100;
+            
+            ctx.clearRect(0, 0, 280, 280);
+            
+            // Draw axes
+            ctx.strokeStyle = '#ccc';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(20, centerY);
+            ctx.lineTo(260, centerY);
+            ctx.moveTo(centerX, 20);
+            ctx.lineTo(centerX, 260);
+            ctx.stroke();
+            
+            // Draw L1 diamonds with different lambdas
+            const lambdas = [1, 0.6, 0.3];
+            const opacities = [1, 0.6, 0.3];
+            
+            lambdas.forEach((lambda, i) => {
+                ctx.strokeStyle = `rgba(220, 53, 69, ${opacities[i]})`;
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY - size * lambda);
+                ctx.lineTo(centerX + size * lambda, centerY);
+                ctx.lineTo(centerX, centerY + size * lambda);
+                ctx.lineTo(centerX - size * lambda, centerY);
+                ctx.closePath();
+                ctx.stroke();
+            });
+            
+            // Draw point at corner (sparse solution) - emphasized
+            ctx.fillStyle = '#dc3545';
+            ctx.beginPath();
+            ctx.arc(centerX + size * 0.6, centerY, 8, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Highlight the corner with a circle
+            ctx.strokeStyle = '#dc3545';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 3]);
+            ctx.beginPath();
+            ctx.arc(centerX + size * 0.6, centerY, 20, 0, 2 * Math.PI);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            // Labels
+            ctx.fillStyle = '#333';
+            ctx.font = 'bold 16px Arial';
+            ctx.fillText('w₁', 245, centerY - 8);
+            ctx.fillText('w₀', centerX + 8, 35);
+            
+            // Note about sparsity
+            ctx.font = 'bold 13px Arial';
+            ctx.fillStyle = '#dc3545';
+            ctx.fillText('w₀ = 0!', centerX + size * 0.6 + 10, centerY - 15);
+            ctx.fillText('(Sparse)', centerX + size * 0.6 + 10, centerY + 5);
+        }
+        
+        // Lambda slider functionality
+        const lambdaSlider = document.getElementById('lambdaSlider');
+        const lambdaValue = document.getElementById('lambdaValue');
+        const coeff1El = document.getElementById('coeff1');
+        const coeff2El = document.getElementById('coeff2');
+        const coeff3El = document.getElementById('coeff3');
+        
+        lambdaSlider.addEventListener('input', function() {
+            const lambda = parseFloat(this.value) / 10;
+            lambdaValue.textContent = lambda.toFixed(1);
+            
+            // Calculate Lasso coefficients (soft thresholding)
+            const newCoeffs = originalCoeffs.map(c => {
+                const threshold = lambda * 0.8;
+                if (Math.abs(c) <= threshold) {
+                    return 0;
+                } else {
+                    return c > 0 ? c - threshold : c + threshold;
+                }
+            });
+            
+            coeff1El.textContent = newCoeffs[0].toFixed(2);
+            coeff2El.textContent = newCoeffs[1].toFixed(2);
+            coeff3El.textContent = newCoeffs[2].toFixed(2);
+            
+            // Color coefficients that are zero
+            [coeff1El, coeff2El, coeff3El].forEach((el, idx) => {
+                if (newCoeffs[idx] === 0) {
+                    el.style.color = '#dc3545';
+                    el.parentElement.style.background = 'linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%)';
+                    el.parentElement.style.borderLeft = '5px solid #dc3545';
+                } else {
+                    el.style.color = '#2e7d32';
+                    el.parentElement.style.background = 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)';
+                    el.parentElement.style.borderLeft = '5px solid #2e7d32';
+                }
+            });
+            
+            // Store history
+            lambdaHistory.push(lambda);
+            newCoeffs.forEach((c, i) => coeffHistory[i].push(c));
+            
+            // Keep only last 50 points
+            if (lambdaHistory.length > 50) {
+                lambdaHistory.shift();
+                coeffHistory.forEach(h => h.shift());
+            }
+            
+            drawCoefficientChart();
+        });
+        
+        // Draw coefficient chart
+        function drawCoefficientChart() {
+            const canvas = document.getElementById('coeffChart');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+            const padding = 50;
+            
+            ctx.clearRect(0, 0, width, height);
+            
+            // Background
+            ctx.fillStyle = '#f8f9fa';
+            ctx.fillRect(0, 0, width, height);
+            
+            // Draw grid
+            ctx.strokeStyle = '#e9ecef';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 5; i++) {
+                const y = padding + (height - 2 * padding) * i / 5;
+                ctx.beginPath();
+                ctx.moveTo(padding, y);
+                ctx.lineTo(width - padding, y);
+                ctx.stroke();
+            }
+            
+            // Draw axes
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(padding, padding);
+            ctx.lineTo(padding, height - padding);
+            ctx.lineTo(width - padding, height - padding);
+            ctx.stroke();
+            
+            // Labels
+            ctx.fillStyle = '#333';
+            ctx.font = 'bold 16px Arial';
+            ctx.fillText('Coefficient Value', 10, 30);
+            ctx.fillText('λ →', width - 70, height - 15);
+            
+            // Y-axis labels
+            ctx.font = '13px Arial';
+            for (let i = 0; i <= 5; i++) {
+                const value = (5 - i).toFixed(0);
+                const y = padding + (height - 2 * padding) * i / 5;
+                ctx.fillText(value, 20, y + 5);
+            }
+            
+            // Draw zero line
+            ctx.strokeStyle = '#dc3545';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            const zeroY = height - padding - (0 / 5) * (height - 2 * padding);
+            ctx.beginPath();
+            ctx.moveTo(padding, zeroY);
+            ctx.lineTo(width - padding, zeroY);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            ctx.fillStyle = '#dc3545';
+            ctx.font = 'bold 12px Arial';
+            ctx.fillText('← Zero line', width - padding - 100, zeroY - 5);
+            
+            if (lambdaHistory.length < 2) return;
+            
+            const maxLambda = 10;
+            const maxCoeff = 5;
+            
+            const colors = ['#2e7d32', '#1976d2', '#f57c00'];
+            const labels = ['β₁', 'β₂', 'β₃'];
+            
+            // Draw lines
+            coeffHistory.forEach((history, idx) => {
+                ctx.strokeStyle = colors[idx];
+                ctx.lineWidth = 4;
+                ctx.beginPath();
+                
+                let prevX, prevY;
+                history.forEach((coeff, i) => {
+                    const x = padding + (lambdaHistory[i] / maxLambda) * (width - 2 * padding);
+                    const y = height - padding - (coeff / maxCoeff) * (height - 2 * padding);
+                    
+                    if (i === 0) {
+                        ctx.moveTo(x, y);
+                    } else {
+                        ctx.lineTo(x, y);
+                    }
+                    
+                    prevX = x;
+                    prevY = y;
+                });
+                
+                ctx.stroke();
+                
+                // Draw dots at end
+                if (history.length > 0) {
+                    const lastI = history.length - 1;
+                    const x = padding + (lambdaHistory[lastI] / maxLambda) * (width - 2 * padding);
+                    const y = height - padding - (history[lastI] / maxCoeff) * (height - 2 * padding);
+                    ctx.fillStyle = colors[idx];
+                    ctx.beginPath();
+                    ctx.arc(x, y, 6, 0, 2 * Math.PI);
+                    ctx.fill();
+                }
+                
+                // Draw legend
+                const legendX = width - padding - 200;
+                const legendY = padding + 20 + idx * 30;
+                ctx.fillStyle = colors[idx];
+                ctx.fillRect(legendX, legendY - 5, 30, 4);
+                ctx.fillStyle = '#333';
+                ctx.font = 'bold 15px Arial';
+                ctx.fillText(labels[idx] + ' (original: ' + originalCoeffs[idx].toFixed(1) + ')', legendX + 40, legendY);
+            });
+        }
+        
+        // Draw geometric visualization
+        function drawGeometricVisualization() {
+            const canvas = document.getElementById('geometricCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+            const centerX = width / 2;
+            const centerY = height / 2;
+            
+            ctx.clearRect(0, 0, width, height);
+            
+            // Background
+            ctx.fillStyle = '#f8f9fa';
+            ctx.fillRect(0, 0, width, height);
+            
+            // Draw axes
+            ctx.strokeStyle = '#ccc';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(50, centerY);
+            ctx.lineTo(width - 50, centerY);
+            ctx.moveTo(centerX, 50);
+            ctx.lineTo(centerX, height - 50);
+            ctx.stroke();
+            
+            // Draw RSS contours (ellipses) - moved to upper right
+            ctx.strokeStyle = '#1976d2';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            for (let i = 1; i <= 3; i++) {
+                ctx.beginPath();
+                ctx.ellipse(centerX + 120, centerY - 80, 50 * i, 35 * i, -0.3, 0, 2 * Math.PI);
+                ctx.stroke();
+            }
+            ctx.setLineDash([]);
+            
+            // Draw L1 constraint diamond
+            ctx.strokeStyle = '#dc3545';
+            ctx.lineWidth = 4;
+            const diamondSizes = [60, 120, 180];
+            diamondSizes.forEach((size, i) => {
+                ctx.globalAlpha = 1 - i * 0.25;
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY - size);
+                ctx.lineTo(centerX + size, centerY);
+                ctx.lineTo(centerX, centerY + size);
+                ctx.lineTo(centerX - size, centerY);
+                ctx.closePath();
+                ctx.stroke();
+            });
+            ctx.globalAlpha = 1;
+            
+            // Highlight the corner where solution touches
+            ctx.fillStyle = 'rgba(220, 53, 69, 0.2)';
+            ctx.beginPath();
+            ctx.arc(centerX + 120, centerY, 40, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Mark RSS optimal point
+            ctx.fillStyle = '#1976d2';
+            ctx.beginPath();
+            ctx.arc(centerX + 120, centerY - 80, 8, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Mark Lasso optimal point (at corner)
+            ctx.fillStyle = '#dc3545';
+            ctx.beginPath();
+            ctx.arc(centerX + 120, centerY, 12, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Mark origin
+            ctx.fillStyle = '#ffc107';
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 8, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Draw arrow showing movement
+            ctx.strokeStyle = '#dc3545';
+            ctx.lineWidth = 3;
+            ctx.setLineDash([]);
+            ctx.beginPath();
+            ctx.moveTo(centerX + 120, centerY - 80);
+            ctx.lineTo(centerX + 120, centerY + 10);
+            ctx.stroke();
+            
+            // Arrowhead
+            ctx.beginPath();
+            ctx.moveTo(centerX + 120, centerY + 10);
+            ctx.lineTo(centerX + 115, centerY);
+            ctx.moveTo(centerX + 120, centerY + 10);
+            ctx.lineTo(centerX + 125, centerY);
+            ctx.stroke();
+            
+            // Labels
+            ctx.fillStyle = '#333';
+            ctx.font = 'bold 16px Arial';
+            ctx.fillText('β₁', width - 70, centerY - 8);
+            ctx.fillText('β₀', centerX + 8, 65);
+            
+            ctx.font = 'bold 14px Arial';
+            ctx.fillStyle = '#1976d2';
+            ctx.fillText('RSS Minimum', centerX + 135, centerY - 95);
+            
+            ctx.fillStyle = '#dc3545';
+            ctx.fillText('Lasso Solution', centerX + 135, centerY + 20);
+            ctx.fillText('(β₀ = 0!)', centerX + 135, centerY + 40);
+            
+            ctx.fillStyle = '#ffc107';
+            ctx.fillText('Origin', centerX + 15, centerY + 25);
+            
+            ctx.font = '13px Arial';
+            ctx.fillStyle = '#1976d2';
+            ctx.fillText('← RSS Contours', centerX + 220, centerY - 150);
+            
+            ctx.fillStyle = '#dc3545';
+            ctx.fillText('L1 Diamond →', centerX - 220, centerY + 120);
+            
+            ctx.fillStyle = '#dc3545';
+            ctx.fillText('Hits corner where β₀=0', centerX - 70, centerY - 70);
+        }
+        
+        // Draw sparsity comparison chart
+        function drawSparsityChart() {
+            const canvas = document.getElementById('sparsityCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+            
+            ctx.clearRect(0, 0, width, height);
+            
+            // Background
+            ctx.fillStyle = '#f8f9fa';
+            ctx.fillRect(0, 0, width, height);
+            
+            const barWidth = 15;
+            const spacing = 20;
+            const startX = 100;
+            const numFeatures = 20;
+            
+            // Title
+            ctx.fillStyle = '#333';
+            ctx.font = 'bold 18px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('100 Features: Which ones matter?', width / 2, 30);
+            ctx.textAlign = 'left';
+            
+            // Without Lasso - all features have non-zero coefficients
+            ctx.font = 'bold 16px Arial';
+            ctx.fillText('Without Lasso: All 100 features used', startX, 70);
+            
+            for (let i = 0; i < numFeatures; i++) {
+                const height_val = 50 + Math.random() * 50;
+                const color_val = Math.random();
+                if (color_val > 0.85) {
+                    ctx.fillStyle = '#2e7d32';  // Important feature
+                } else {
+                    ctx.fillStyle = '#e0e0e0';  // Noise
+                }
+                ctx.fillRect(startX + i * spacing, 150 - height_val, barWidth, height_val);
+            }
+            ctx.fillStyle = '#666';
+            ctx.font = '12px Arial';
+            ctx.fillText('... (showing 20 of 100)', startX + numFeatures * spacing, 160);
+            
+            // Divider
+            ctx.strokeStyle = '#ccc';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([10, 5]);
+            ctx.beginPath();
+            ctx.moveTo(50, 185);
+            ctx.lineTo(width - 50, 185);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            // With Lasso - sparse coefficients
+            ctx.fillStyle = '#333';
+            ctx.font = 'bold 16px Arial';
+            ctx.fillText('With Lasso: Only 15 important features (85 set to zero!)', startX, 220);
+            
+            for (let i = 0; i < numFeatures; i++) {
+                if (i % 6 === 0 || i % 6 === 1 || i % 6 === 5) {
+                    const height_val = 50 + Math.random() * 50;
+                    ctx.fillStyle = '#2e7d32';  // Important feature kept
+                    ctx.fillRect(startX + i * spacing, 280 - height_val, barWidth, height_val);
+                } else {
+                    // Zero coefficient - show as line at bottom
+                    ctx.fillStyle = '#dc3545';
+                    ctx.fillRect(startX + i * spacing, 278, barWidth, 2);
+                }
+            }
+            ctx.fillStyle = '#666';
+            ctx.font = '12px Arial';
+            ctx.fillText('... (15 of 100 features selected)', startX + numFeatures * spacing, 285);
+        }
+        
+        // Initialize 2D visualizations
+        drawL2Shape();
+        drawL1Shape();
+        drawCoefficientChart();
+        drawGeometricVisualization();
+        drawSparsityChart();
+
+        // ========== 3D Visualization Code ==========
+        let sceneRidge, cameraRidge, rendererRidge;
+        let sceneLasso, cameraLasso, rendererLasso;
+        let surfaceRidge, surfaceLasso;
+        let markerRidge, markerLasso;
+        let lambda = 1.0;
+        let rotationSpeed = 1.0;
+
+        function initScene(canvasId, isLasso) {
+            const canvas = document.getElementById(canvasId);
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0xf8f9fa);
+
+            const camera = new THREE.PerspectiveCamera(
+                50,
+                canvas.clientWidth / canvas.clientHeight,
+                0.1,
+                1000
+            );
+            camera.position.set(15, 12, 15);
+            camera.lookAt(0, 0, 0);
+
+            const renderer = new THREE.WebGLRenderer({ 
+                canvas: canvas,
+                antialias: true 
+            });
+            renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+
+            // Add lights
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(10, 10, 10);
+            scene.add(directionalLight);
+
+            // Add coordinate labels
+            createCoordinateLabels(scene);
+
+            return { scene, camera, renderer };
+        }
+
+        function createLossSurface(lambda = 0, isLasso = false) {
+            const geometry = new THREE.BufferGeometry();
+            const resolution = 50;
+            const range = 10;
+            const step = (2 * range) / resolution;
+
+            const vertices = [];
+            const colors = [];
+            const indices = [];
+
+            for (let i = 0; i <= resolution; i++) {
+                for (let j = 0; j <= resolution; j++) {
+                    const x = -range + i * step;
+                    const z = -range + j * step;
+                    
+                    // RSS component (paraboloid centered at (2, 1))
+                    const rss = Math.pow(x - 2, 2) + 2 * Math.pow(z - 1, 2);
+                    
+                    // Penalty component
+                    let penalty;
+                    if (isLasso) {
+                        // L1 penalty (diamond shape)
+                        penalty = lambda * (Math.abs(x) + Math.abs(z));
+                    } else {
+                        // L2 penalty (circular bowl)
+                        penalty = lambda * (x * x + z * z);
+                    }
+                    
+                    // Total loss
+                    const y = rss + penalty;
+                    
+                    vertices.push(x, y * 0.1, z); // Scale y for better visualization
+
+                    // Color based on height (loss value)
+                    const normalizedY = Math.min(y / 50, 1);
+                    const color = new THREE.Color();
+                    
+                    if (isLasso) {
+                        // Red to yellow gradient for Lasso
+                        if (normalizedY < 0.5) {
+                            color.setRGB(1, normalizedY * 2, 0);
+                        } else {
+                            color.setRGB(1, 1, 2 - normalizedY * 2);
+                        }
+                    } else {
+                        // Blue to cyan gradient for Ridge
+                        if (normalizedY < 0.5) {
+                            color.setRGB(0, normalizedY * 2, 1);
+                        } else {
+                            color.setRGB(normalizedY - 0.5, 1, 1);
+                        }
+                    }
+                    
+                    colors.push(color.r, color.g, color.b);
+                }
+            }
+
+            // Create faces
+            for (let i = 0; i < resolution; i++) {
+                for (let j = 0; j < resolution; j++) {
+                    const a = i * (resolution + 1) + j;
+                    const b = a + resolution + 1;
+                    const c = a + 1;
+                    const d = b + 1;
+
+                    indices.push(a, b, c);
+                    indices.push(b, d, c);
+                }
+            }
+
+            geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+            geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+            geometry.setIndex(indices);
+            geometry.computeVertexNormals();
+
+            const material = new THREE.MeshPhongMaterial({
+                vertexColors: true,
+                side: THREE.DoubleSide,
+                shininess: 30,
+                transparent: true,
+                opacity: 0.85
+            });
+
+            return new THREE.Mesh(geometry, material);
+        }
+
+        function createCoordinateLabels(scene) {
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.width = 256;
+            canvas.height = 128;
+            
+            function createTextSprite(text, color = '#2e7d32') {
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                context.font = 'Bold 48px Arial';
+                context.fillStyle = color;
+                context.textAlign = 'center';
+                context.fillText(text, 128, 80);
+                
+                const texture = new THREE.CanvasTexture(canvas);
+                const spriteMaterial = new THREE.SpriteMaterial({ map: texture });
+                const sprite = new THREE.Sprite(spriteMaterial);
+                sprite.scale.set(2, 1, 1);
+                return sprite;
+            }
+
+            // Add axis labels
+            const labelX = createTextSprite('β₁');
+            labelX.position.set(11, 0, 0);
+            scene.add(labelX);
+
+            const labelZ = createTextSprite('β₂');
+            labelZ.position.set(0, 0, 11);
+            scene.add(labelZ);
+
+            const labelY = createTextSprite('Loss');
+            labelY.position.set(0, 11, 0);
+            scene.add(labelY);
+
+            // Add origin marker
+            const originGeometry = new THREE.SphereGeometry(0.3, 16, 16);
+            const originMaterial = new THREE.MeshPhongMaterial({ 
+                color: 0xff0000,
+                emissive: 0xff0000,
+                emissiveIntensity: 0.3
+            });
+            const originMarker = new THREE.Mesh(originGeometry, originMaterial);
+            originMarker.position.set(0, 0, 0);
+            scene.add(originMarker);
+
+            // Add origin label
+            const originLabel = createTextSprite('(0,0)', '#ff0000');
+            originLabel.position.set(0, -1, 0);
+            originLabel.scale.set(1.5, 0.75, 1);
+            scene.add(originLabel);
+
+            // Add reference grid lines at y=0 plane
+            const lineMaterial = new THREE.LineBasicMaterial({ color: 0x2e7d32, opacity: 0.3, transparent: true });
+            
+            // X-axis line
+            const xLineGeometry = new THREE.BufferGeometry().setFromPoints([
+                new THREE.Vector3(-10, 0, 0),
+                new THREE.Vector3(10, 0, 0)
+            ]);
+            const xLine = new THREE.Line(xLineGeometry, lineMaterial);
+            scene.add(xLine);
+
+            // Z-axis line
+            const zLineGeometry = new THREE.BufferGeometry().setFromPoints([
+                new THREE.Vector3(0, 0, -10),
+                new THREE.Vector3(0, 0, 10)
+            ]);
+            const zLine = new THREE.Line(zLineGeometry, lineMaterial);
+            scene.add(zLine);
+        }
+
+        function createOptimalPointMarker(lambda = 0, isLasso = false) {
+            let x, z;
+            
+            if (isLasso) {
+                // Lasso tends to make one coefficient zero (hits axis)
+                const shrinkage = lambda / (1 + lambda);
+                if (shrinkage > 0.3) {
+                    // Make z coefficient zero (hit the axis)
+                    x = 2 * (1 - shrinkage * 0.5);
+                    z = 0;
+                } else {
+                    x = 2 * (1 - shrinkage * 0.7);
+                    z = 1 * (1 - shrinkage * 0.7);
+                }
+            } else {
+                // Ridge shrinks smoothly
+                const shrinkage = lambda / (1 + lambda);
+                x = 2 * (1 - shrinkage * 0.7);
+                z = 1 * (1 - shrinkage * 0.7);
+            }
+            
+            const rss = Math.pow(x - 2, 2) + 2 * Math.pow(z - 1, 2);
+            const penalty = isLasso ? lambda * (Math.abs(x) + Math.abs(z)) : lambda * (x * x + z * z);
+            const y = (rss + penalty) * 0.1;
+
+            const geometry = new THREE.SphereGeometry(0.3, 16, 16);
+            const material = new THREE.MeshPhongMaterial({
+                color: 0xffffff,
+                emissive: isLasso ? 0xdc3545 : 0x1565c0,
+                emissiveIntensity: 0.5
+            });
+            const sphere = new THREE.Mesh(geometry, material);
+            sphere.position.set(x, y + 0.5, z);
+
+            // Add a cylinder as a marker line
+            const cylinderGeometry = new THREE.CylinderGeometry(0.05, 0.05, y + 0.5, 8);
+            const cylinderMaterial = new THREE.MeshPhongMaterial({ 
+                color: isLasso ? 0xdc3545 : 0x1565c0 
+            });
+            const cylinder = new THREE.Mesh(cylinderGeometry, cylinderMaterial);
+            cylinder.position.set(x, (y + 0.5) / 2, z);
+
+            const group = new THREE.Group();
+            group.add(sphere);
+            group.add(cylinder);
+
+            return group;
+        }
+
+        function init3D() {
+            // Initialize Ridge scene
+            const ridgeSetup = initScene('canvas-ridge', false);
+            sceneRidge = ridgeSetup.scene;
+            cameraRidge = ridgeSetup.camera;
+            rendererRidge = ridgeSetup.renderer;
+
+            // Initialize Lasso scene
+            const lassoSetup = initScene('canvas-lasso', true);
+            sceneLasso = lassoSetup.scene;
+            cameraLasso = lassoSetup.camera;
+            rendererLasso = lassoSetup.renderer;
+
+            // Create surfaces
+            updateSurfaces();
+
+            // Event listeners
+            document.getElementById('lambda-slider-3d').addEventListener('input', (e) => {
+                lambda = parseFloat(e.target.value);
+                document.getElementById('lambda-value-3d').textContent = lambda.toFixed(1);
+                updateSurfaces();
+            });
+
+            document.getElementById('rotation-slider').addEventListener('input', (e) => {
+                rotationSpeed = parseFloat(e.target.value);
+                document.getElementById('rotation-value').textContent = rotationSpeed.toFixed(1);
+            });
+
+            // Handle window resize
+            window.addEventListener('resize', onWindowResize);
+
+            animate3D();
+        }
+
+        function updateSurfaces() {
+            // Remove old surfaces
+            if (surfaceRidge) sceneRidge.remove(surfaceRidge);
+            if (surfaceLasso) sceneLasso.remove(surfaceLasso);
+            if (markerRidge) sceneRidge.remove(markerRidge);
+            if (markerLasso) sceneLasso.remove(markerLasso);
+
+            // Create new surfaces
+            surfaceRidge = createLossSurface(lambda, false); // Ridge (L2)
+            surfaceLasso = createLossSurface(lambda, true);  // Lasso (L1)
+
+            sceneRidge.add(surfaceRidge);
+            sceneLasso.add(surfaceLasso);
+
+            // Create optimal point markers
+            markerRidge = createOptimalPointMarker(lambda, false);
+            markerLasso = createOptimalPointMarker(lambda, true);
+
+            sceneRidge.add(markerRidge);
+            sceneLasso.add(markerLasso);
+        }
+
+        function onWindowResize() {
+            const canvasRidge = document.getElementById('canvas-ridge');
+            const canvasLasso = document.getElementById('canvas-lasso');
+
+            if (canvasRidge && cameraRidge && rendererRidge) {
+                cameraRidge.aspect = canvasRidge.clientWidth / canvasRidge.clientHeight;
+                cameraRidge.updateProjectionMatrix();
+                rendererRidge.setSize(canvasRidge.clientWidth, canvasRidge.clientHeight);
+            }
+
+            if (canvasLasso && cameraLasso && rendererLasso) {
+                cameraLasso.aspect = canvasLasso.clientWidth / canvasLasso.clientHeight;
+                cameraLasso.updateProjectionMatrix();
+                rendererLasso.setSize(canvasLasso.clientWidth, canvasLasso.clientHeight);
+            }
+        }
+
+        function animate3D() {
+            requestAnimationFrame(animate3D);
+
+            // Rotate both scenes
+            if (surfaceRidge) {
+                surfaceRidge.rotation.y += 0.001 * rotationSpeed;
+                markerRidge.rotation.y += 0.001 * rotationSpeed;
+            }
+            if (surfaceLasso) {
+                surfaceLasso.rotation.y += 0.001 * rotationSpeed;
+                markerLasso.rotation.y += 0.001 * rotationSpeed;
+            }
+
+            if (rendererRidge && sceneRidge && cameraRidge) {
+                rendererRidge.render(sceneRidge, cameraRidge);
+            }
+            if (rendererLasso && sceneLasso && cameraLasso) {
+                rendererLasso.render(sceneLasso, cameraLasso);
+            }
+        }
+
+        // Initialize 3D visualization when page loads
+        window.addEventListener('load', init3D);
+    </script>
 </body>
 </html>

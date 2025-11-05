@@ -23,7 +23,7 @@
         
         .container {
             width: 960px;
-            height: 540px;
+            height: 800px;
             background: #ffffff;
             position: relative;
             padding: 25px 35px;
@@ -272,6 +272,71 @@
             font-size: 15px;
             line-height: 1.4;
         }
+        
+        .example-section {
+            margin-top: 20px;
+            padding-top: 18px;
+            border-top: 2px solid #1E64C8;
+        }
+        
+        .example-title {
+            font-size: 19px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .example-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .step-box {
+            background: #f8fafb;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px;
+        }
+        
+        .step-number {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .step-formula {
+            background: white;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+            margin: 4px 0;
+            border: 1px solid #ddd;
+        }
+        
+        .step-text {
+            font-size: 14px;
+            color: #555;
+            margin: 4px 0;
+            line-height: 1.4;
+        }
+        
+        .highlight-box {
+            background: #e8f4ff;
+            padding: 8px;
+            border-radius: 4px;
+            border-left: 3px solid #1E64C8;
+            margin-top: 4px;
+        }
+        
+        .result-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
     </style>
 </head>
 <body>
@@ -373,6 +438,120 @@
                     <div class="feature-content">
                         Choosing relevant predictors<br>
                         to improve model performance
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="example-section">
+            <div class="example-title">Understanding Multicollinearity in Detail</div>
+            <div class="example-content">
+                <div class="step-box">
+                    <div class="step-number">📊 Definition</div>
+                    <div class="step-text">
+                        High correlation between two or more predictor variables
+                    </div>
+                    <div class="step-formula">Corr(Xᵢ, Xⱼ) ≈ ±1</div>
+                    <div class="highlight-box">
+                        <div class="result-text">
+                            Makes it difficult to isolate individual effects
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step-box">
+                    <div class="step-number">⚠️ Problems</div>
+                    <div class="step-text">
+                        <strong>1. Unstable estimates:</strong><br>
+                        β̂ coefficients become highly sensitive to small data changes
+                    </div>
+                    <div class="step-text">
+                        <strong>2. Large standard errors:</strong><br>
+                        Var(β̂) increases dramatically
+                    </div>
+                    <div class="step-text">
+                        <strong>3. Poor interpretability:</strong><br>
+                        Cannot determine which variable is truly important
+                    </div>
+                    <div class="highlight-box">
+                        <div class="result-text">
+                            (XᵀX)⁻¹ becomes ill-conditioned
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step-box">
+                    <div class="step-number">🔍 Detection Methods</div>
+                    <div class="step-text">
+                        <strong>1. Correlation Matrix:</strong><br>
+                        Check pairwise correlations
+                    </div>
+                    <div class="step-formula">|corr| > 0.8 → Warning</div>
+                    <div class="step-text">
+                        <strong>2. VIF (Variance Inflation Factor):</strong>
+                    </div>
+                    <div class="step-formula">VIF = 1/(1 - R²ⱼ)</div>
+                    <div class="step-text">
+                        R²ⱼ: R² when Xⱼ is regressed on other predictors
+                    </div>
+                    <div class="highlight-box">
+                        <div class="result-text">
+                            VIF > 10 → Serious multicollinearity<br>
+                            VIF > 5 → Moderate concern
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="example-content" style="margin-top: 15px;">
+                <div class="step-box">
+                    <div class="step-number">💡 Solutions</div>
+                    <div class="step-text">
+                        <strong>1. Remove variables:</strong><br>
+                        Drop one of the highly correlated predictors
+                    </div>
+                    <div class="step-text">
+                        <strong>2. Combine variables:</strong><br>
+                        Create composite index (e.g., PCA)
+                    </div>
+                    <div class="step-text">
+                        <strong>3. Regularization:</strong><br>
+                        Ridge regression (L2) or Lasso (L1)
+                    </div>
+                    <div class="step-formula">Ridge: min ||Y - Xβ||² + λ||β||²</div>
+                </div>
+                
+                <div class="step-box">
+                    <div class="step-number">📝 Example Scenario</div>
+                    <div class="step-text">
+                        Predicting house price with:
+                    </div>
+                    <div class="step-formula">• Square footage<br>• Number of rooms</div>
+                    <div class="step-text">
+                        These are highly correlated!<br>
+                        Larger houses → more rooms
+                    </div>
+                    <div class="highlight-box">
+                        <div class="result-text">
+                            Solution: Use only one,<br>
+                            or create "size index"
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step-box">
+                    <div class="step-number">🎯 Key Insights</div>
+                    <div class="step-text">
+                        <strong>Important:</strong> Multicollinearity affects <em>interpretation</em> and <em>stability</em>, but NOT prediction accuracy
+                    </div>
+                    <div class="step-text">
+                        The model can still predict well, but we cannot trust individual coefficient values
+                    </div>
+                    <div class="highlight-box">
+                        <div class="result-text">
+                            Overall model fit (R²) remains good<br>
+                            Individual t-tests become unreliable
+                        </div>
                     </div>
                 </div>
             </div>

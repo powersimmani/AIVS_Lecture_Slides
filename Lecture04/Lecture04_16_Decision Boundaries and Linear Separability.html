@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Decision Boundaries and Linear Separability</title>
+    <title>Decision Boundaries and Linear Separability - Enhanced</title>
     <style>
         * {
             margin: 0;
@@ -13,35 +13,31 @@
         
         body {
             font-family: Aptos, 'Segoe UI', sans-serif;
-            background: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            background: #f5f5f5;
             padding: 20px;
         }
         
         .container {
-            width: 960px;
-            height: 540px;
+            max-width: 1400px;
+            margin: 0 auto;
             background: white;
             padding: 30px;
-            position: relative;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         
         .title {
-            font-size: 20px;
-            font-weight: 600;
+            font-size: 28px;
+            font-weight: 700;
             color: #1E64C8;
-            margin-bottom: 18px;
+            margin-bottom: 30px;
             text-align: center;
         }
         
         .content-layout {
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            height: calc(100% - 50px);
+            gap: 20px;
         }
         
         .concepts-row {
@@ -182,6 +178,7 @@
             color: #1E64C8;
             font-weight: 600;
             transition: all 0.3s;
+            cursor: pointer;
         }
         
         .solution-tag:hover {
@@ -235,6 +232,160 @@
             font-size: 16px;
             color: #555;
         }
+
+        /* New Visualization Styles */
+        .visualization-section {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 3px solid #1E64C8;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .viz-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .viz-card {
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .viz-card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .linear-card {
+            border-color: #28a745;
+        }
+
+        .linear-card .viz-card-title {
+            color: #28a745;
+        }
+
+        .nonlinear-card {
+            border-color: #dc3545;
+        }
+
+        .nonlinear-card .viz-card-title {
+            color: #dc3545;
+        }
+
+        canvas {
+            width: 100%;
+            height: 300px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            cursor: crosshair;
+        }
+
+        .controls {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #1E64C8;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #154a94;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .canvas-3d {
+            height: 400px !important;
+        }
+
+        .info-box {
+            background: #e8f1fb;
+            border-left: 4px solid #1E64C8;
+            padding: 12px 16px;
+            margin-top: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .legend {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .class-red { background: #dc3545; }
+        .class-blue { background: #007bff; }
+        .class-green { background: #28a745; }
     </style>
 </head>
 <body>
@@ -242,7 +393,7 @@
         <div class="title">Decision Boundaries and Linear Separability</div>
         
         <div class="content-layout">
-            <!-- Concepts Row -->
+            <!-- Original Content -->
             <div class="concepts-row">
                 <div class="concept-box">
                     <div class="concept-header linear-header">
@@ -267,7 +418,6 @@
                 </div>
             </div>
             
-            <!-- XOR Problem -->
             <div class="xor-box">
                 <div class="xor-icon">⊕</div>
                 <div class="xor-text">
@@ -275,12 +425,10 @@
                 </div>
             </div>
             
-            <!-- Reality Check -->
             <div class="reality-box">
                 Real-world: Most datasets are not perfectly separable
             </div>
             
-            <!-- Solutions -->
             <div class="solutions-section">
                 <div class="solutions-title">Solutions:</div>
                 <div class="solutions-grid">
@@ -290,7 +438,6 @@
                 </div>
             </div>
             
-            <!-- Advantages -->
             <div class="advantages-section">
                 <div class="advantage-card">
                     <div class="advantage-icon">✓</div>
@@ -308,7 +455,673 @@
                     </div>
                 </div>
             </div>
+
+            <!-- New Visualization Section -->
+            <div class="visualization-section">
+                <div class="section-title">📊 2D Decision Boundary Visualization</div>
+                
+                <div class="viz-grid">
+                    <!-- Linear Separable 2D -->
+                    <div class="viz-card linear-card">
+                        <div class="viz-card-title">✓ Linearly Separable (2D)</div>
+                        <canvas id="canvas2d-linear"></canvas>
+                        <div class="legend">
+                            <div class="legend-item">
+                                <div class="legend-dot class-red"></div>
+                                <span>Class A</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-dot class-blue"></div>
+                                <span>Class B</span>
+                            </div>
+                        </div>
+                        <div class="controls">
+                            <button class="btn btn-success" onclick="generate2DLinear()">Generate Data</button>
+                            <button class="btn btn-secondary" onclick="clear2DLinear()">Clear</button>
+                        </div>
+                        <div class="info-box">
+                            A single straight line can perfectly separate the two classes
+                        </div>
+                    </div>
+
+                    <!-- Non-Linear Separable 2D (XOR) -->
+                    <div class="viz-card nonlinear-card">
+                        <div class="viz-card-title">✗ Non-Linearly Separable (XOR)</div>
+                        <canvas id="canvas2d-xor"></canvas>
+                        <div class="legend">
+                            <div class="legend-item">
+                                <div class="legend-dot class-red"></div>
+                                <span>Class A</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-dot class-blue"></div>
+                                <span>Class B</span>
+                            </div>
+                        </div>
+                        <div class="controls">
+                            <button class="btn btn-danger" onclick="generate2DXOR()">Generate XOR</button>
+                            <button class="btn btn-secondary" onclick="clear2DXOR()">Clear</button>
+                        </div>
+                        <div class="info-box">
+                            XOR pattern requires a curved (non-linear) boundary
+                        </div>
+                    </div>
+
+                    <!-- Non-Linear Separable 2D (Circles) -->
+                    <div class="viz-card nonlinear-card">
+                        <div class="viz-card-title">✗ Non-Linearly Separable (Circles)</div>
+                        <canvas id="canvas2d-circles"></canvas>
+                        <div class="legend">
+                            <div class="legend-item">
+                                <div class="legend-dot class-red"></div>
+                                <span>Inner Class</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-dot class-blue"></div>
+                                <span>Outer Class</span>
+                            </div>
+                        </div>
+                        <div class="controls">
+                            <button class="btn btn-danger" onclick="generate2DCircles()">Generate Circles</button>
+                            <button class="btn btn-secondary" onclick="clear2DCircles()">Clear</button>
+                        </div>
+                        <div class="info-box">
+                            Concentric circles require a circular boundary
+                        </div>
+                    </div>
+
+                    <!-- Non-Linear Separable 2D (Moons) -->
+                    <div class="viz-card nonlinear-card">
+                        <div class="viz-card-title">✗ Non-Linearly Separable (Moons)</div>
+                        <canvas id="canvas2d-moons"></canvas>
+                        <div class="legend">
+                            <div class="legend-item">
+                                <div class="legend-dot class-red"></div>
+                                <span>Class A</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-dot class-blue"></div>
+                                <span>Class B</span>
+                            </div>
+                        </div>
+                        <div class="controls">
+                            <button class="btn btn-danger" onclick="generate2DMoons()">Generate Moons</button>
+                            <button class="btn btn-secondary" onclick="clear2DMoons()">Clear</button>
+                        </div>
+                        <div class="info-box">
+                            Interleaved crescent shapes require a complex boundary
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3D Visualization Section -->
+                <div class="section-title">🎲 3D Decision Boundary Visualization</div>
+                
+                <div class="viz-grid">
+                    <!-- Linear Separable 3D -->
+                    <div class="viz-card linear-card">
+                        <div class="viz-card-title">✓ Linearly Separable (3D)</div>
+                        <canvas id="canvas3d-linear" class="canvas-3d"></canvas>
+                        <div class="legend">
+                            <div class="legend-item">
+                                <div class="legend-dot class-red"></div>
+                                <span>Class A</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-dot class-blue"></div>
+                                <span>Class B</span>
+                            </div>
+                        </div>
+                        <div class="controls">
+                            <button class="btn btn-success" onclick="generate3DLinear()">Generate Data</button>
+                            <button class="btn btn-primary" onclick="rotate3DLinear()">Rotate View</button>
+                            <button class="btn btn-danger" onclick="stop3DLinear()">Stop</button>
+                            <button class="btn btn-secondary" onclick="clear3DLinear()">Clear</button>
+                        </div>
+                        <div class="info-box">
+                            A single plane can separate classes in 3D space
+                        </div>
+                    </div>
+
+                    <!-- Non-Linear Separable 3D -->
+                    <div class="viz-card nonlinear-card">
+                        <div class="viz-card-title">✗ Non-Linearly Separable (3D Spheres)</div>
+                        <canvas id="canvas3d-spheres" class="canvas-3d"></canvas>
+                        <div class="legend">
+                            <div class="legend-item">
+                                <div class="legend-dot class-red"></div>
+                                <span>Inner Class</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-dot class-blue"></div>
+                                <span>Outer Class</span>
+                            </div>
+                        </div>
+                        <div class="controls">
+                            <button class="btn btn-danger" onclick="generate3DSpheres()">Generate Spheres</button>
+                            <button class="btn btn-primary" onclick="rotate3DSpheres()">Rotate View</button>
+                            <button class="btn btn-danger" onclick="stop3DSpheres()">Stop</button>
+                            <button class="btn btn-secondary" onclick="clear3DSpheres()">Clear</button>
+                        </div>
+                        <div class="info-box">
+                            Concentric spheres require a spherical boundary surface
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+
+    <script>
+        // Canvas contexts
+        let ctx2dLinear, ctx2dXOR, ctx2dCircles, ctx2dMoons;
+        let ctx3dLinear, ctx3dSpheres;
+        let rotation3DLinear = 0, rotation3DSpheres = 0;
+        let animating3DLinear = false, animating3DSpheres = false;
+
+        // Initialize canvases
+        window.onload = function() {
+            // 2D canvases
+            ctx2dLinear = document.getElementById('canvas2d-linear').getContext('2d');
+            ctx2dXOR = document.getElementById('canvas2d-xor').getContext('2d');
+            ctx2dCircles = document.getElementById('canvas2d-circles').getContext('2d');
+            ctx2dMoons = document.getElementById('canvas2d-moons').getContext('2d');
+            
+            // 3D canvases
+            ctx3dLinear = document.getElementById('canvas3d-linear').getContext('2d');
+            ctx3dSpheres = document.getElementById('canvas3d-spheres').getContext('2d');
+
+            // Set canvas sizes
+            setCanvasSize();
+
+            // Generate initial examples
+            generate2DLinear();
+            generate2DXOR();
+            generate2DCircles();
+            generate2DMoons();
+            generate3DLinear();
+            generate3DSpheres();
+        };
+
+        function setCanvasSize() {
+            const canvases = document.querySelectorAll('canvas');
+            canvases.forEach(canvas => {
+                canvas.width = canvas.offsetWidth;
+                canvas.height = canvas.offsetHeight;
+            });
+        }
+
+        // 2D Linear Separable
+        function generate2DLinear() {
+            const canvas = document.getElementById('canvas2d-linear');
+            const ctx = ctx2dLinear;
+            const w = canvas.width, h = canvas.height;
+            
+            ctx.clearRect(0, 0, w, h);
+            
+            // Draw decision boundary (line) - from top-left to bottom-right
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.moveTo(w * 0.2, h * 0.2);
+            ctx.lineTo(w * 0.8, h * 0.8);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Generate class A points (red, top-right)
+            for (let i = 0; i < 40; i++) {
+                const x = Math.random() * w * 0.5 + w * 0.4;
+                const y = Math.random() * h * 0.5;
+                drawPoint(ctx, x, y, '#dc3545', 6);
+            }
+
+            // Generate class B points (blue, bottom-left)
+            for (let i = 0; i < 40; i++) {
+                const x = Math.random() * w * 0.5;
+                const y = Math.random() * h * 0.5 + h * 0.4;
+                drawPoint(ctx, x, y, '#007bff', 6);
+            }
+        }
+
+        function clear2DLinear() {
+            ctx2dLinear.clearRect(0, 0, document.getElementById('canvas2d-linear').width, 
+                                  document.getElementById('canvas2d-linear').height);
+        }
+
+        // 2D XOR Problem
+        function generate2DXOR() {
+            const canvas = document.getElementById('canvas2d-xor');
+            const ctx = ctx2dXOR;
+            const w = canvas.width, h = canvas.height;
+            
+            ctx.clearRect(0, 0, w, h);
+
+            // Draw curved boundary suggestion
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            
+            // Draw an S-curve to separate XOR pattern
+            ctx.beginPath();
+            ctx.moveTo(w * 0.5, 0);
+            ctx.bezierCurveTo(w * 0.2, h * 0.25, w * 0.8, h * 0.75, w * 0.5, h);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            const margin = w * 0.1;
+            const half = w * 0.5;
+
+            // Class A (red) - top-left and bottom-right quadrants
+            for (let i = 0; i < 25; i++) {
+                const x = Math.random() * (half - margin * 2) + margin;
+                const y = Math.random() * (half - margin * 2) + margin;
+                drawPoint(ctx, x, y, '#dc3545', 6);
+            }
+            for (let i = 0; i < 25; i++) {
+                const x = Math.random() * (half - margin * 2) + half + margin;
+                const y = Math.random() * (half - margin * 2) + half + margin;
+                drawPoint(ctx, x, y, '#dc3545', 6);
+            }
+
+            // Class B (blue) - top-right and bottom-left quadrants
+            for (let i = 0; i < 25; i++) {
+                const x = Math.random() * (half - margin * 2) + half + margin;
+                const y = Math.random() * (half - margin * 2) + margin;
+                drawPoint(ctx, x, y, '#007bff', 6);
+            }
+            for (let i = 0; i < 25; i++) {
+                const x = Math.random() * (half - margin * 2) + margin;
+                const y = Math.random() * (half - margin * 2) + half + margin;
+                drawPoint(ctx, x, y, '#007bff', 6);
+            }
+        }
+
+        function clear2DXOR() {
+            ctx2dXOR.clearRect(0, 0, document.getElementById('canvas2d-xor').width, 
+                               document.getElementById('canvas2d-xor').height);
+        }
+
+        // 2D Circles
+        function generate2DCircles() {
+            const canvas = document.getElementById('canvas2d-circles');
+            const ctx = ctx2dCircles;
+            const w = canvas.width, h = canvas.height;
+            const cx = w / 2, cy = h / 2;
+            
+            ctx.clearRect(0, 0, w, h);
+
+            // Draw circular boundary
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.arc(cx, cy, w * 0.25, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Inner circle (red)
+            for (let i = 0; i < 40; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const radius = Math.random() * w * 0.2;
+                const x = cx + Math.cos(angle) * radius;
+                const y = cy + Math.sin(angle) * radius;
+                drawPoint(ctx, x, y, '#dc3545', 6);
+            }
+
+            // Outer circle (blue)
+            for (let i = 0; i < 50; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const radius = Math.random() * w * 0.15 + w * 0.3;
+                const x = cx + Math.cos(angle) * radius;
+                const y = cy + Math.sin(angle) * radius;
+                if (x > 0 && x < w && y > 0 && y < h) {
+                    drawPoint(ctx, x, y, '#007bff', 6);
+                }
+            }
+        }
+
+        function clear2DCircles() {
+            ctx2dCircles.clearRect(0, 0, document.getElementById('canvas2d-circles').width, 
+                                   document.getElementById('canvas2d-circles').height);
+        }
+
+        // 2D Moons
+        function generate2DMoons() {
+            const canvas = document.getElementById('canvas2d-moons');
+            const ctx = ctx2dMoons;
+            const w = canvas.width, h = canvas.height;
+            
+            ctx.clearRect(0, 0, w, h);
+
+            // Draw curved boundaries
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            
+            // Upper moon boundary
+            ctx.beginPath();
+            ctx.arc(w * 0.5, h * 0.35, w * 0.3, 0, Math.PI);
+            ctx.stroke();
+            
+            // Lower moon boundary
+            ctx.beginPath();
+            ctx.arc(w * 0.5, h * 0.65, w * 0.3, Math.PI, Math.PI * 2);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Upper moon (red)
+            for (let i = 0; i < 50; i++) {
+                const angle = Math.random() * Math.PI;
+                const radius = Math.random() * w * 0.12 + w * 0.2;
+                const x = w * 0.5 + Math.cos(angle) * radius;
+                const y = h * 0.35 + Math.sin(angle) * radius * 0.5;
+                drawPoint(ctx, x, y, '#dc3545', 6);
+            }
+
+            // Lower moon (blue)
+            for (let i = 0; i < 50; i++) {
+                const angle = Math.random() * Math.PI + Math.PI;
+                const radius = Math.random() * w * 0.12 + w * 0.2;
+                const x = w * 0.5 + Math.cos(angle) * radius;
+                const y = h * 0.65 + Math.sin(angle) * radius * 0.5;
+                drawPoint(ctx, x, y, '#007bff', 6);
+            }
+        }
+
+        function clear2DMoons() {
+            ctx2dMoons.clearRect(0, 0, document.getElementById('canvas2d-moons').width, 
+                                 document.getElementById('canvas2d-moons').height);
+        }
+
+        // 3D Linear Separable
+        function generate3DLinear() {
+            drawScene3DLinear();
+        }
+
+        function drawScene3DLinear() {
+            const canvas = document.getElementById('canvas3d-linear');
+            const ctx = ctx3dLinear;
+            const w = canvas.width, h = canvas.height;
+            
+            ctx.clearRect(0, 0, w, h);
+
+            // Draw axes
+            drawAxes3D(ctx, w, h, rotation3DLinear);
+
+            // Draw decision plane
+            drawPlane3D(ctx, w, h, rotation3DLinear);
+
+            // Generate and draw 3D points
+            const points = [];
+            
+            // Class A (red, above plane)
+            for (let i = 0; i < 40; i++) {
+                const x = (Math.random() - 0.5) * 2;
+                const y = (Math.random() - 0.5) * 2;
+                const z = Math.random() * 0.8 + 0.3;
+                points.push({x, y, z, color: '#dc3545'});
+            }
+
+            // Class B (blue, below plane)
+            for (let i = 0; i < 40; i++) {
+                const x = (Math.random() - 0.5) * 2;
+                const y = (Math.random() - 0.5) * 2;
+                const z = -Math.random() * 0.8 - 0.3;
+                points.push({x, y, z, color: '#007bff'});
+            }
+
+            // Sort by depth for proper rendering
+            points.sort((a, b) => {
+                const za = rotateZ(a, rotation3DLinear);
+                const zb = rotateZ(b, rotation3DLinear);
+                return za - zb;
+            });
+
+            // Draw points
+            points.forEach(p => {
+                const projected = project3D(p.x, p.y, p.z, w, h, rotation3DLinear);
+                drawPoint(ctx, projected.x, projected.y, p.color, 8);
+            });
+        }
+
+        function rotate3DLinear() {
+            if (!animating3DLinear) {
+                animating3DLinear = true;
+                const animate = () => {
+                    rotation3DLinear += 0.01;  // Slowed down from 0.02
+                    drawScene3DLinear();
+                    if (rotation3DLinear < Math.PI * 2 && animating3DLinear) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        rotation3DLinear = rotation3DLinear % (Math.PI * 2);
+                        animating3DLinear = false;
+                    }
+                };
+                animate();
+            }
+        }
+
+        function stop3DLinear() {
+            animating3DLinear = false;
+        }
+
+        function clear3DLinear() {
+            ctx3dLinear.clearRect(0, 0, document.getElementById('canvas3d-linear').width, 
+                                  document.getElementById('canvas3d-linear').height);
+            rotation3DLinear = 0;
+            animating3DLinear = false;
+        }
+
+        // 3D Spheres
+        function generate3DSpheres() {
+            drawScene3DSpheres();
+        }
+
+        function drawScene3DSpheres() {
+            const canvas = document.getElementById('canvas3d-spheres');
+            const ctx = ctx3dSpheres;
+            const w = canvas.width, h = canvas.height;
+            
+            ctx.clearRect(0, 0, w, h);
+
+            // Draw axes
+            drawAxes3D(ctx, w, h, rotation3DSpheres);
+
+            // Draw sphere boundary
+            drawSphere3D(ctx, w, h, rotation3DSpheres, 0.5);
+
+            // Generate and draw 3D points
+            const points = [];
+            
+            // Inner sphere (red)
+            for (let i = 0; i < 40; i++) {
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.random() * Math.PI;
+                const r = Math.random() * 0.4;
+                const x = r * Math.sin(phi) * Math.cos(theta);
+                const y = r * Math.sin(phi) * Math.sin(theta);
+                const z = r * Math.cos(phi);
+                points.push({x, y, z, color: '#dc3545'});
+            }
+
+            // Outer sphere (blue)
+            for (let i = 0; i < 50; i++) {
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.random() * Math.PI;
+                const r = Math.random() * 0.4 + 0.6;
+                const x = r * Math.sin(phi) * Math.cos(theta);
+                const y = r * Math.sin(phi) * Math.sin(theta);
+                const z = r * Math.cos(phi);
+                points.push({x, y, z, color: '#007bff'});
+            }
+
+            // Sort by depth
+            points.sort((a, b) => {
+                const za = rotateZ(a, rotation3DSpheres);
+                const zb = rotateZ(b, rotation3DSpheres);
+                return za - zb;
+            });
+
+            // Draw points
+            points.forEach(p => {
+                const projected = project3D(p.x, p.y, p.z, w, h, rotation3DSpheres);
+                drawPoint(ctx, projected.x, projected.y, p.color, 8);
+            });
+        }
+
+        function rotate3DSpheres() {
+            if (!animating3DSpheres) {
+                animating3DSpheres = true;
+                const animate = () => {
+                    rotation3DSpheres += 0.01;  // Slowed down from 0.02
+                    drawScene3DSpheres();
+                    if (rotation3DSpheres < Math.PI * 2 && animating3DSpheres) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        rotation3DSpheres = rotation3DSpheres % (Math.PI * 2);
+                        animating3DSpheres = false;
+                    }
+                };
+                animate();
+            }
+        }
+
+        function stop3DSpheres() {
+            animating3DSpheres = false;
+        }
+
+        function clear3DSpheres() {
+            ctx3dSpheres.clearRect(0, 0, document.getElementById('canvas3d-spheres').width, 
+                                   document.getElementById('canvas3d-spheres').height);
+            rotation3DSpheres = 0;
+            animating3DSpheres = false;
+        }
+
+        // Helper functions
+        function drawPoint(ctx, x, y, color, size) {
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.arc(x, y, size, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+        }
+
+        function project3D(x, y, z, width, height, rotation) {
+            // Rotate around Y axis
+            const cosR = Math.cos(rotation);
+            const sinR = Math.sin(rotation);
+            const x1 = x * cosR - z * sinR;
+            const z1 = x * sinR + z * cosR;
+            
+            // Perspective projection
+            const scale = 200 / (3 + z1);
+            const x2d = width / 2 + x1 * scale;
+            const y2d = height / 2 - y * scale;
+            
+            return {x: x2d, y: y2d};
+        }
+
+        function rotateZ(point, rotation) {
+            const cosR = Math.cos(rotation);
+            const sinR = Math.sin(rotation);
+            return point.x * sinR + point.z * cosR;
+        }
+
+        function drawAxes3D(ctx, w, h, rotation) {
+            ctx.strokeStyle = '#999';
+            ctx.lineWidth = 1;
+            ctx.setLineDash([3, 3]);
+
+            // X axis
+            let p1 = project3D(-1.5, 0, 0, w, h, rotation);
+            let p2 = project3D(1.5, 0, 0, w, h, rotation);
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+
+            // Y axis
+            p1 = project3D(0, -1.5, 0, w, h, rotation);
+            p2 = project3D(0, 1.5, 0, w, h, rotation);
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+
+            // Z axis
+            p1 = project3D(0, 0, -1.5, w, h, rotation);
+            p2 = project3D(0, 0, 1.5, w, h, rotation);
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+
+            ctx.setLineDash([]);
+        }
+
+        function drawPlane3D(ctx, w, h, rotation) {
+            ctx.fillStyle = 'rgba(40, 167, 69, 0.2)';
+            ctx.strokeStyle = '#28a745';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+
+            // Draw a plane at z=0
+            const corners = [
+                project3D(-1, -1, 0, w, h, rotation),
+                project3D(1, -1, 0, w, h, rotation),
+                project3D(1, 1, 0, w, h, rotation),
+                project3D(-1, 1, 0, w, h, rotation)
+            ];
+
+            ctx.beginPath();
+            ctx.moveTo(corners[0].x, corners[0].y);
+            for (let i = 1; i < corners.length; i++) {
+                ctx.lineTo(corners[i].x, corners[i].y);
+            }
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }
+
+        function drawSphere3D(ctx, w, h, rotation, radius) {
+            ctx.strokeStyle = '#dc3545';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+
+            // Draw multiple circles to represent sphere
+            for (let lat = -Math.PI/2; lat <= Math.PI/2; lat += Math.PI/4) {
+                ctx.beginPath();
+                for (let lon = 0; lon <= Math.PI * 2; lon += 0.1) {
+                    const x = radius * Math.cos(lat) * Math.cos(lon);
+                    const y = radius * Math.sin(lat);
+                    const z = radius * Math.cos(lat) * Math.sin(lon);
+                    const p = project3D(x, y, z, w, h, rotation);
+                    if (lon === 0) {
+                        ctx.moveTo(p.x, p.y);
+                    } else {
+                        ctx.lineTo(p.x, p.y);
+                    }
+                }
+                ctx.stroke();
+            }
+
+            ctx.setLineDash([]);
+        }
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            setCanvasSize();
+            generate2DLinear();
+            generate2DXOR();
+            generate2DCircles();
+            generate2DMoons();
+            generate3DLinear();
+            generate3DSpheres();
+        });
+    </script>
 </body>
 </html>

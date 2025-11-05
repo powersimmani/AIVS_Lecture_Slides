@@ -14,19 +14,16 @@
         body {
             font-family: Aptos, 'Segoe UI', sans-serif;
             background: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
             padding: 20px;
         }
         
-        .container {
+        .slide {
             width: 960px;
             height: 540px;
             background: white;
             padding: 30px;
-            position: relative;
+            margin: 0 auto 300px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         
         .title {
@@ -70,11 +67,20 @@
         }
         
         .formula-main {
-            font-size: 20px;
+            font-size: 28px;
             color: #1E64C8;
             font-weight: 700;
-            font-style: italic;
-            line-height: 1.5;
+            line-height: 1.8;
+        }
+        
+        .formula-main sup {
+            font-size: 0.7em;
+            vertical-align: super;
+        }
+        
+        .formula-main sub {
+            font-size: 0.7em;
+            vertical-align: sub;
         }
         
         .main-content {
@@ -237,10 +243,101 @@
             color: #555;
             line-height: 1.4;
         }
+
+        /* Styles for Example Slide */
+        .example-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            background: linear-gradient(135deg, #9c27b0 0%, #ba68c8 100%);
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .example-content {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .step-box {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 15px 20px;
+        }
+
+        .step-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .step-number {
+            width: 24px;
+            height: 24px;
+            background: #1E64C8;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .step-content {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .calculation {
+            background: white;
+            padding: 10px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            color: #555;
+            margin: 8px 0;
+        }
+
+        .result-box {
+            background: #e8f5e9;
+            border: 2px solid #28a745;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 10px;
+        }
+
+        .result-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #28a745;
+            margin-bottom: 8px;
+        }
+
+        .result-content {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.5;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
+    <!-- Slide 1: Main Concept -->
+    <div class="slide">
         <div class="title">Softmax Regression</div>
         
         <div class="content-layout">
@@ -253,7 +350,7 @@
             <div class="formula-section">
                 <div class="formula-label">Softmax Function:</div>
                 <div class="formula-main">
-                    P(y=k|x) = e^(wₖᵀx) / ∑ⱼ e^(wⱼᵀx)
+                    P(y=k|x) = e<sup>w<sub>k</sub><sup>T</sup>x</sup> / ∑<sub>j</sub> e<sup>w<sub>j</sub><sup>T</sup>x</sup>
                 </div>
             </div>
             
@@ -278,7 +375,7 @@
                     <div class="feature-card key-card">
                         <div class="feature-icon">w</div>
                         <div class="feature-text">
-                            Each class has its own weight vector <strong>wₖ</strong>
+                            Each class has its own weight vector <strong>w<sub>k</sub></strong>
                         </div>
                     </div>
                     
@@ -302,11 +399,11 @@
                     <div class="architecture-box">
                         <div class="arch-title">Weight Vectors per Class</div>
                         <div class="weight-vectors">
-                            <div class="weight-item">w₁ for Class 1</div>
-                            <div class="weight-item">w₂ for Class 2</div>
-                            <div class="weight-item">w₃ for Class 3</div>
+                            <div class="weight-item">w<sub>1</sub> for Class 1</div>
+                            <div class="weight-item">w<sub>2</sub> for Class 2</div>
+                            <div class="weight-item">w<sub>3</sub> for Class 3</div>
                             <div class="weight-item">... ...</div>
-                            <div class="weight-item">wₖ for Class K</div>
+                            <div class="weight-item">w<sub>K</sub> for Class K</div>
                         </div>
                         
                         <div class="output-flow">
@@ -321,6 +418,89 @@
                         <div class="comparison-text">
                             Sigmoid: Binary (2 classes)<br>
                             Softmax: Multiclass (K classes)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 2: Calculation Example -->
+    <div class="slide">
+        <div class="title">Softmax Regression - Calculation Example</div>
+        
+        <div class="example-title">
+            🔢 3-Class Classification Example
+        </div>
+
+        <div class="example-content">
+            <!-- Step 1 -->
+            <div class="step-box">
+                <div class="step-title">
+                    <span class="step-number">1</span>
+                    Given Input & Weights
+                </div>
+                <div class="step-content">
+                    입력 벡터: <strong>x = [2, 3]</strong><br>
+                    Weight vectors:
+                    <div class="calculation">
+                        w<sub>1</sub> = [0.5, 0.3] → Class 1 (Cat)<br>
+                        w<sub>2</sub> = [0.8, 0.4] → Class 2 (Dog)<br>
+                        w<sub>3</sub> = [0.2, 0.9] → Class 3 (Bird)
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="step-box">
+                <div class="step-title">
+                    <span class="step-number">2</span>
+                    Calculate Logits (z = w<sup>T</sup>x)
+                </div>
+                <div class="step-content">
+                    <div class="calculation">
+                        z<sub>1</sub> = w<sub>1</sub><sup>T</sup>x = 0.5×2 + 0.3×3 = 1.0 + 0.9 = <span class="highlight">1.9</span><br>
+                        z<sub>2</sub> = w<sub>2</sub><sup>T</sup>x = 0.8×2 + 0.4×3 = 1.6 + 1.2 = <span class="highlight">2.8</span><br>
+                        z<sub>3</sub> = w<sub>3</sub><sup>T</sup>x = 0.2×2 + 0.9×3 = 0.4 + 2.7 = <span class="highlight">3.1</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="step-box">
+                <div class="step-title">
+                    <span class="step-number">3</span>
+                    Apply Exponential Function
+                </div>
+                <div class="step-content">
+                    <div class="calculation">
+                        e<sup>z<sub>1</sub></sup> = e<sup>1.9</sup> ≈ <span class="highlight">6.686</span><br>
+                        e<sup>z<sub>2</sub></sup> = e<sup>2.8</sup> ≈ <span class="highlight">16.445</span><br>
+                        e<sup>z<sub>3</sub></sup> = e<sup>3.1</sup> ≈ <span class="highlight">22.198</span><br>
+                        <br>
+                        Sum = 6.686 + 16.445 + 22.198 = <span class="highlight">45.329</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="step-box">
+                <div class="step-title">
+                    <span class="step-number">4</span>
+                    Calculate Softmax Probabilities
+                </div>
+                <div class="step-content">
+                    <div class="calculation">
+                        P(y=1|x) = e<sup>z<sub>1</sub></sup> / Sum = 6.686 / 45.329 ≈ <span class="highlight">0.147 (14.7%)</span><br>
+                        P(y=2|x) = e<sup>z<sub>2</sub></sup> / Sum = 16.445 / 45.329 ≈ <span class="highlight">0.363 (36.3%)</span><br>
+                        P(y=3|x) = e<sup>z<sub>3</sub></sup> / Sum = 22.198 / 45.329 ≈ <span class="highlight">0.490 (49.0%)</span>
+                    </div>
+                    
+                    <div class="result-box">
+                        <div class="result-title">✅ Final Result</div>
+                        <div class="result-content">
+                            <strong>Prediction: Class 3 (Bird)</strong> with 49.0% probability<br>
+                            Note: All probabilities sum to 1.0 (0.147 + 0.363 + 0.490 = 1.000)
                         </div>
                     </div>
                 </div>

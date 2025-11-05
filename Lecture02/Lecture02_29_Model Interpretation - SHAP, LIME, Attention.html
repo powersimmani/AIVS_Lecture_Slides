@@ -116,52 +116,78 @@
             line-height: 1.3;
         }
         
-        /* SHAP Summary Plot */
+        /* SHAP Summary Plot - IMPROVED */
         .shap-summary {
             width: 100%;
             height: 100%;
-            padding: 10px;
+            padding: 8px 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
         
         .feature-row {
             display: flex;
             align-items: center;
-            margin-bottom: 8px;
+            height: 18px;
         }
         
         .feature-label {
-            width: 60px;
-            font-size: 11px;
-            color: #666;
+            width: 75px;
+            font-size: 10px;
+            color: #444;
             font-weight: 600;
             text-align: right;
             padding-right: 8px;
         }
         
-        .feature-bar-container {
+        .feature-plot-area {
             flex: 1;
-            height: 15px;
-            background: #F0F0F0;
-            border-radius: 3px;
+            height: 100%;
             position: relative;
-            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+        
+        .shap-axis {
+            position: absolute;
+            width: 100%;
+            height: 1px;
+            background: #CCCCCC;
+            top: 50%;
+        }
+        
+        .shap-zero-line {
+            position: absolute;
+            left: 50%;
+            width: 1px;
+            height: 100%;
+            background: #999999;
+            opacity: 0.4;
         }
         
         .feature-dots {
-            position: absolute;
+            position: relative;
             width: 100%;
             height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
         
         .shap-dot {
-            width: 4px;
-            height: 4px;
+            position: absolute;
+            width: 5px;
+            height: 5px;
             border-radius: 50%;
-            margin: 0 1px;
+            opacity: 0.75;
+            top: 50%;
+            transform: translateY(-50%);
         }
+        
+        /* Color gradient for feature values: Red (high) to Blue (low) */
+        .dot-high { background: #F44336; }
+        .dot-mid-high { background: #FF7043; }
+        .dot-mid { background: #FFA726; }
+        .dot-mid-low { background: #42A5F5; }
+        .dot-low { background: #2196F3; }
         
         /* SHAP Waterfall */
         .shap-waterfall {
@@ -182,90 +208,112 @@
         .waterfall-label {
             font-size: 11px;
             color: #666;
-            font-weight: 600;
-            width: 50px;
+            width: 60px;
             text-align: right;
         }
         
         .waterfall-bar {
-            height: 18px;
-            border-radius: 3px;
+            height: 20px;
             display: flex;
             align-items: center;
-            padding: 0 6px;
+            justify-content: center;
             font-size: 10px;
             font-weight: 600;
             color: white;
+            border-radius: 3px;
         }
         
-        .bar-positive { background: #F44336; }
-        .bar-negative { background: #1E64C8; }
-        .bar-base { background: #999; }
+        .bar-positive {
+            background: linear-gradient(90deg, #66BB6A, #4CAF50);
+        }
+        
+        .bar-negative {
+            background: linear-gradient(90deg, #EF5350, #F44336);
+        }
+        
+        .bar-base {
+            background: linear-gradient(90deg, #9E9E9E, #757575);
+        }
         
         /* LIME */
         .lime-visual {
+            padding: 15px;
             width: 100%;
-            height: 100%;
-            padding: 10px;
         }
         
         .lime-text {
-            font-size: 13px;
-            line-height: 1.6;
-            color: #333;
+            font-size: 12px;
+            line-height: 1.8;
+            text-align: center;
         }
         
         .lime-word {
             padding: 2px 4px;
+            margin: 0 2px;
             border-radius: 3px;
-            font-weight: 500;
+            display: inline-block;
         }
         
-        .word-pos { background: rgba(76, 175, 80, 0.3); color: #2E7D32; }
-        .word-neg { background: rgba(244, 67, 54, 0.3); color: #C62828; }
-        .word-neutral { background: none; color: #666; }
+        .word-pos {
+            background: rgba(76, 175, 80, 0.3);
+            border: 1px solid rgba(76, 175, 80, 0.5);
+        }
+        
+        .word-neg {
+            background: rgba(244, 67, 54, 0.3);
+            border: 1px solid rgba(244, 67, 54, 0.5);
+        }
+        
+        .word-neutral {
+            background: rgba(158, 158, 158, 0.1);
+        }
         
         /* Attention Heatmap */
         .attention-grid {
             display: grid;
             grid-template-columns: repeat(8, 1fr);
-            gap: 2px;
-            padding: 15px;
+            grid-template-rows: repeat(4, 1fr);
+            gap: 3px;
+            width: 90%;
+            height: 80%;
+            padding: 10px;
         }
         
         .attention-cell {
-            aspect-ratio: 1;
             border-radius: 2px;
-            transition: all 0.3s ease;
         }
         
-        .attention-cell:hover {
-            transform: scale(1.2);
-            z-index: 10;
-        }
-        
+        /* Right Panel */
         .right-panel {
-            flex: 0.4;
+            flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
+        }
+        
+        .comparison-card, .scope-card, .tips-card {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 10px;
+            padding: 12px;
         }
         
         .comparison-card {
-            background: white;
-            border: 2px solid #1E64C8;
-            border-radius: 10px;
-            padding: 14px;
+            flex: 2;
+        }
+        
+        .scope-card, .tips-card {
+            flex: 1;
         }
         
         .card-title {
-            font-size: 18px;
+            font-size: 15px;
             font-weight: 600;
             color: #1E64C8;
             margin-bottom: 10px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
         
         .method-section {
@@ -273,129 +321,71 @@
         }
         
         .section-header {
-            font-size: 15px;
+            font-size: 13px;
             font-weight: 600;
             color: #1E64C8;
             margin-bottom: 4px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
         }
         
         .method-item {
+            font-size: 11px;
+            color: #666;
+            margin-left: 8px;
+            margin-bottom: 2px;
             display: flex;
-            align-items: flex-start;
-            gap: 6px;
-            font-size: 15px;
-            color: #333;
-            line-height: 1.3;
-            margin-bottom: 4px;
-            padding: 4px 6px;
-            background: #F8FBFF;
-            border-radius: 4px;
+            align-items: center;
+            gap: 4px;
         }
         
         .method-icon {
             color: #1E64C8;
-            flex-shrink: 0;
+            font-weight: 600;
+        }
+        
+        .scope-title, .tips-title {
             font-size: 14px;
-        }
-        
-        .scope-card {
-            background: #FFF9E6;
-            border: 2px solid #FFC107;
-            border-radius: 10px;
-            padding: 14px;
-        }
-        
-        .scope-title {
-            font-size: 18px;
             font-weight: 600;
             color: #1E64C8;
-            margin-bottom: 10px;
-            text-align: center;
+            margin-bottom: 8px;
         }
         
         .scope-row {
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            font-size: 15px;
-            color: #333;
-            margin-bottom: 6px;
-            padding: 6px 8px;
-            background: white;
-            border-radius: 4px;
+            font-size: 11px;
+            margin-bottom: 4px;
+            padding: 3px 0;
         }
         
         .scope-label {
+            color: #666;
             font-weight: 600;
         }
         
         .scope-value {
-            color: #1E64C8;
-            font-weight: 600;
-        }
-        
-        .tips-card {
-            background: #E8F5E9;
-            border: 2px solid #4CAF50;
-            border-radius: 10px;
-            padding: 14px;
-        }
-        
-        .tips-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #2E7D32;
-            margin-bottom: 10px;
-            text-align: center;
+            color: #888;
         }
         
         .tip-item {
+            font-size: 11px;
+            color: #666;
+            margin-bottom: 4px;
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 15px;
-            color: #333;
-            margin-bottom: 5px;
+            gap: 6px;
         }
         
         .check-icon {
             color: #4CAF50;
-            font-size: 16px;
             font-weight: bold;
         }
-        
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(15px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .method-card, .comparison-card, .scope-card, .tips-card {
-            animation: fadeIn 0.5s ease forwards;
-        }
-        
-        .method-card:nth-child(1) { animation-delay: 0.1s; }
-        .method-card:nth-child(2) { animation-delay: 0.2s; }
-        .method-card:nth-child(3) { animation-delay: 0.3s; }
-        .method-card:nth-child(4) { animation-delay: 0.4s; }
-        .comparison-card { animation-delay: 0.5s; }
-        .scope-card { animation-delay: 0.6s; }
-        .tips-card { animation-delay: 0.7s; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="title-section">
-            <div class="main-title">Model Interpretation: SHAP, LIME, Attention</div>
-            <div class="subtitle">Understanding Model Decisions and Feature Contributions</div>
+            <div class="main-title">Model Interpretation Methods</div>
+            <div class="subtitle">SHAP, LIME & Attention Mechanisms</div>
         </div>
         
         <div class="content-wrapper">
@@ -406,56 +396,109 @@
                         <div class="method-title">SHAP Summary Plot</div>
                         <div class="method-visual">
                             <div class="shap-summary">
+                                <!-- Feature 1: Age -->
                                 <div class="feature-row">
-                                    <div class="feature-label">Feature A</div>
-                                    <div class="feature-bar-container">
+                                    <div class="feature-label">Age</div>
+                                    <div class="feature-plot-area">
+                                        <div class="shap-axis"></div>
+                                        <div class="shap-zero-line"></div>
                                         <div class="feature-dots">
-                                            <div class="shap-dot" style="background: #1E64C8; margin-left: -30px;"></div>
-                                            <div class="shap-dot" style="background: #1E64C8; margin-left: -25px;"></div>
-                                            <div class="shap-dot" style="background: #42A5F5; margin-left: -20px;"></div>
-                                            <div class="shap-dot" style="background: #F44336; margin-left: 15px;"></div>
-                                            <div class="shap-dot" style="background: #F44336; margin-left: 20px;"></div>
-                                            <div class="shap-dot" style="background: #FF6B6B; margin-left: 25px;"></div>
+                                            <div class="shap-dot dot-high" style="left: 65%;"></div>
+                                            <div class="shap-dot dot-high" style="left: 68%; top: 48%;"></div>
+                                            <div class="shap-dot dot-mid-high" style="left: 58%;"></div>
+                                            <div class="shap-dot dot-mid" style="left: 54%; top: 52%;"></div>
+                                            <div class="shap-dot dot-mid-low" style="left: 48%;"></div>
+                                            <div class="shap-dot dot-low" style="left: 42%; top: 48%;"></div>
+                                            <div class="shap-dot dot-low" style="left: 38%;"></div>
                                         </div>
                                     </div>
                                 </div>
+                                
+                                <!-- Feature 2: Income -->
                                 <div class="feature-row">
-                                    <div class="feature-label">Feature B</div>
-                                    <div class="feature-bar-container">
+                                    <div class="feature-label">Income</div>
+                                    <div class="feature-plot-area">
+                                        <div class="shap-axis"></div>
+                                        <div class="shap-zero-line"></div>
                                         <div class="feature-dots">
-                                            <div class="shap-dot" style="background: #1E64C8; margin-left: -20px;"></div>
-                                            <div class="shap-dot" style="background: #42A5F5; margin-left: -15px;"></div>
-                                            <div class="shap-dot" style="background: #90CAF9; margin-left: 0px;"></div>
-                                            <div class="shap-dot" style="background: #F44336; margin-left: 10px;"></div>
-                                            <div class="shap-dot" style="background: #FF6B6B; margin-left: 15px;"></div>
+                                            <div class="shap-dot dot-high" style="left: 62%;"></div>
+                                            <div class="shap-dot dot-mid-high" style="left: 59%; top: 52%;"></div>
+                                            <div class="shap-dot dot-mid" style="left: 55%;"></div>
+                                            <div class="shap-dot dot-mid" style="left: 51%; top: 48%;"></div>
+                                            <div class="shap-dot dot-mid-low" style="left: 46%;"></div>
+                                            <div class="shap-dot dot-low" style="left: 40%; top: 52%;"></div>
+                                            <div class="shap-dot dot-low" style="left: 44%;"></div>
                                         </div>
                                     </div>
                                 </div>
+                                
+                                <!-- Feature 3: Education -->
                                 <div class="feature-row">
-                                    <div class="feature-label">Feature C</div>
-                                    <div class="feature-bar-container">
+                                    <div class="feature-label">Education</div>
+                                    <div class="feature-plot-area">
+                                        <div class="shap-axis"></div>
+                                        <div class="shap-zero-line"></div>
                                         <div class="feature-dots">
-                                            <div class="shap-dot" style="background: #1E64C8; margin-left: -15px;"></div>
-                                            <div class="shap-dot" style="background: #42A5F5; margin-left: -10px;"></div>
-                                            <div class="shap-dot" style="background: #90CAF9; margin-left: -5px;"></div>
-                                            <div class="shap-dot" style="background: #FF6B6B; margin-left: 5px;"></div>
+                                            <div class="shap-dot dot-high" style="left: 58%;"></div>
+                                            <div class="shap-dot dot-mid-high" style="left: 56%; top: 48%;"></div>
+                                            <div class="shap-dot dot-mid" style="left: 52%;"></div>
+                                            <div class="shap-dot dot-mid-low" style="left: 49%; top: 52%;"></div>
+                                            <div class="shap-dot dot-low" style="left: 45%;"></div>
+                                            <div class="shap-dot dot-low" style="left: 42%; top: 48%;"></div>
                                         </div>
                                     </div>
                                 </div>
+                                
+                                <!-- Feature 4: Experience -->
                                 <div class="feature-row">
-                                    <div class="feature-label">Feature D</div>
-                                    <div class="feature-bar-container">
+                                    <div class="feature-label">Experience</div>
+                                    <div class="feature-plot-area">
+                                        <div class="shap-axis"></div>
+                                        <div class="shap-zero-line"></div>
                                         <div class="feature-dots">
-                                            <div class="shap-dot" style="background: #1E64C8; margin-left: -10px;"></div>
-                                            <div class="shap-dot" style="background: #42A5F5; margin-left: -5px;"></div>
-                                            <div class="shap-dot" style="background: #90CAF9; margin-left: 0px;"></div>
-                                            <div class="shap-dot" style="background: #F44336; margin-left: 5px;"></div>
+                                            <div class="shap-dot dot-high" style="left: 56%;"></div>
+                                            <div class="shap-dot dot-mid-high" style="left: 54%; top: 52%;"></div>
+                                            <div class="shap-dot dot-mid" style="left: 51%;"></div>
+                                            <div class="shap-dot dot-mid-low" style="left: 48%; top: 48%;"></div>
+                                            <div class="shap-dot dot-low" style="left: 44%;"></div>
+                                            <div class="shap-dot dot-low" style="left: 46%; top: 52%;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Feature 5: Location -->
+                                <div class="feature-row">
+                                    <div class="feature-label">Location</div>
+                                    <div class="feature-plot-area">
+                                        <div class="shap-axis"></div>
+                                        <div class="shap-zero-line"></div>
+                                        <div class="feature-dots">
+                                            <div class="shap-dot dot-mid" style="left: 54%;"></div>
+                                            <div class="shap-dot dot-mid" style="left: 52%; top: 48%;"></div>
+                                            <div class="shap-dot dot-mid-low" style="left: 49%;"></div>
+                                            <div class="shap-dot dot-low" style="left: 47%; top: 52%;"></div>
+                                            <div class="shap-dot dot-low" style="left: 45%;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Feature 6: Gender -->
+                                <div class="feature-row">
+                                    <div class="feature-label">Gender</div>
+                                    <div class="feature-plot-area">
+                                        <div class="shap-axis"></div>
+                                        <div class="shap-zero-line"></div>
+                                        <div class="feature-dots">
+                                            <div class="shap-dot dot-mid" style="left: 53%;"></div>
+                                            <div class="shap-dot dot-mid-low" style="left: 50%; top: 48%;"></div>
+                                            <div class="shap-dot dot-low" style="left: 48%;"></div>
+                                            <div class="shap-dot dot-low" style="left: 46%; top: 52%;"></div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="method-description">Global feature importance</div>
+                        <div class="method-description">Feature importance ranking</div>
                     </div>
                     
                     <!-- SHAP Waterfall -->

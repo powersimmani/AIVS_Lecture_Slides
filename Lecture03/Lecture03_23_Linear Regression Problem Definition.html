@@ -23,7 +23,7 @@
         
         .container {
             width: 960px;
-            height: 540px;
+            height: 720px;
             background: #ffffff;
             position: relative;
             padding: 25px 35px;
@@ -231,6 +231,125 @@
             font-weight: 500;
             margin-top: 12px;
         }
+        
+        .example-section {
+            margin-top: 20px;
+            padding-top: 18px;
+            border-top: 2px solid #1E64C8;
+        }
+        
+        .example-title {
+            font-size: 19px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .example-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .step-box {
+            background: #f8fafb;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px;
+        }
+        
+        .step-number {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .step-formula {
+            background: white;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 15px;
+            font-family: 'Courier New', monospace;
+            margin: 4px 0;
+            border: 1px solid #ddd;
+        }
+        
+        .step-text {
+            font-size: 15px;
+            color: #555;
+            margin: 4px 0;
+            line-height: 1.4;
+        }
+        
+        .highlight-box {
+            background: #e8f4ff;
+            padding: 8px;
+            border-radius: 4px;
+            border-left: 3px solid #1E64C8;
+            margin-top: 4px;
+        }
+        
+        .result-text {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .matrix-equation {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        
+        .matrix-bracket-left {
+            display: inline-flex;
+            flex-direction: column;
+            justify-content: center;
+            font-size: 36px;
+            line-height: 1;
+            color: #1E64C8;
+        }
+        
+        .matrix-bracket-left::before {
+            content: '[';
+        }
+        
+        .matrix-bracket-right {
+            display: inline-flex;
+            flex-direction: column;
+            justify-content: center;
+            font-size: 36px;
+            line-height: 1;
+            color: #1E64C8;
+        }
+        
+        .matrix-bracket-right::before {
+            content: ']';
+        }
+        
+        .matrix-content {
+            padding: 4px 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .matrix-row {
+            display: flex;
+            gap: 12px;
+            font-size: 16px;
+            color: #333;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .matrix-row span {
+            min-width: 35px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -316,6 +435,132 @@
         
         <div class="bridge-note">
             Bridge from theory to practical machine learning
+        </div>
+        
+        <div class="example-section">
+            <div class="example-title">Matrix Representation</div>
+            <div class="example-content">
+                <div class="step-box">
+                    <div class="step-number">Linear Model</div>
+                    <div class="step-text">For multiple features:</div>
+                    <div class="step-formula">y = β₀ + β₁x₁ + β₂x₂ + ... + βₚxₚ + ε</div>
+                    <div class="step-text"><strong>In matrix form:</strong></div>
+                    <div class="step-formula">Y = Xβ + ε</div>
+                    <div class="step-text">where:</div>
+                    
+                    <div class="matrix-equation">
+                        <span style="font-size: 16px; color: #1E64C8;">Y =</span>
+                        <div class="matrix-bracket-left"></div>
+                        <div class="matrix-content">
+                            <div class="matrix-row">
+                                <span>y₁</span>
+                            </div>
+                            <div class="matrix-row">
+                                <span>y₂</span>
+                            </div>
+                            <div class="matrix-row">
+                                <span>⋮</span>
+                            </div>
+                            <div class="matrix-row">
+                                <span>yₙ</span>
+                            </div>
+                        </div>
+                        <div class="matrix-bracket-right"></div>
+                        
+                        <span style="font-size: 16px; color: #1E64C8; margin-left: 15px;">X =</span>
+                        <div class="matrix-bracket-left"></div>
+                        <div class="matrix-content">
+                            <div class="matrix-row">
+                                <span>1</span>
+                                <span>x₁₁</span>
+                                <span>x₁₂</span>
+                                <span>⋯</span>
+                                <span>x₁ₚ</span>
+                            </div>
+                            <div class="matrix-row">
+                                <span>1</span>
+                                <span>x₂₁</span>
+                                <span>x₂₂</span>
+                                <span>⋯</span>
+                                <span>x₂ₚ</span>
+                            </div>
+                            <div class="matrix-row">
+                                <span>⋮</span>
+                                <span>⋮</span>
+                                <span>⋮</span>
+                                <span>⋱</span>
+                                <span>⋮</span>
+                            </div>
+                            <div class="matrix-row">
+                                <span>1</span>
+                                <span>xₙ₁</span>
+                                <span>xₙ₂</span>
+                                <span>⋯</span>
+                                <span>xₙₚ</span>
+                            </div>
+                        </div>
+                        <div class="matrix-bracket-right"></div>
+                    </div>
+                    
+                    <div class="matrix-equation">
+                        <span style="font-size: 16px; color: #1E64C8;">β =</span>
+                        <div class="matrix-bracket-left"></div>
+                        <div class="matrix-content">
+                            <div class="matrix-row">
+                                <span>β₀</span>
+                            </div>
+                            <div class="matrix-row">
+                                <span>β₁</span>
+                            </div>
+                            <div class="matrix-row">
+                                <span>⋮</span>
+                            </div>
+                            <div class="matrix-row">
+                                <span>βₚ</span>
+                            </div>
+                        </div>
+                        <div class="matrix-bracket-right"></div>
+                        
+                        <span style="font-size: 16px; color: #1E64C8; margin-left: 15px;">ε =</span>
+                        <div class="matrix-bracket-left"></div>
+                        <div class="matrix-content">
+                            <div class="matrix-row">
+                                <span>ε₁</span>
+                            </div>
+                            <div class="matrix-row">
+                                <span>ε₂</span>
+                            </div>
+                            <div class="matrix-row">
+                                <span>⋮</span>
+                            </div>
+                            <div class="matrix-row">
+                                <span>εₙ</span>
+                            </div>
+                        </div>
+                        <div class="matrix-bracket-right"></div>
+                    </div>
+                    
+                    <div class="step-text" style="margin-top: 6px; text-align: center;">
+                        Y: n×1, X: n×(p+1), β: (p+1)×1, ε: n×1
+                    </div>
+                </div>
+                
+                <div class="step-box">
+                    <div class="step-number">Least Squares Solution</div>
+                    <div class="step-text"><strong>Objective:</strong> Minimize sum of squared errors</div>
+                    <div class="step-formula">min ||Y - Xβ||²</div>
+                    <div class="step-text"><strong>Normal Equation:</strong></div>
+                    <div class="step-formula">XᵀXβ = XᵀY</div>
+                    <div class="step-text"><strong>Solution:</strong></div>
+                    <div class="step-formula">β̂ = (XᵀX)⁻¹XᵀY</div>
+                    <div class="highlight-box">
+                        <div class="result-text">Prediction: Ŷ = Xβ̂</div>
+                    </div>
+                    <div class="step-text" style="margin-top: 8px;">
+                        This requires XᵀX to be invertible<br>(X has full column rank)
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </body>

@@ -23,7 +23,7 @@
         
         .container {
             width: 960px;
-            height: 540px;
+            height: 820px;
             background: #ffffff;
             position: relative;
             padding: 25px 35px;
@@ -250,6 +250,71 @@
             color: #1E64C8;
             font-weight: 600;
         }
+        
+        .example-section {
+            margin-top: 20px;
+            padding-top: 18px;
+            border-top: 2px solid #1E64C8;
+        }
+        
+        .section-title {
+            font-size: 19px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .examples-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .step-box {
+            background: #f8fafb;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px;
+        }
+        
+        .step-number {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .step-formula {
+            background: white;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 15px;
+            font-family: 'Courier New', monospace;
+            margin: 4px 0;
+            border: 1px solid #ddd;
+        }
+        
+        .step-text {
+            font-size: 15px;
+            color: #555;
+            margin: 4px 0;
+            line-height: 1.4;
+        }
+        
+        .highlight-box {
+            background: #e8f4ff;
+            padding: 8px;
+            border-radius: 4px;
+            border-left: 3px solid #1E64C8;
+            margin-top: 4px;
+        }
+        
+        .result-text {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
     </style>
 </head>
 <body>
@@ -328,6 +393,67 @@
                         <div class="ml-item">Finding regression coefficients</div>
                         <div class="ml-item">Minimizing loss functions</div>
                         <div class="ml-item">∂L/∂β = 0 solves for optimal β</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="example-section">
+            <div class="section-title">Example: Computing Derivatives and Gradient</div>
+            <div class="examples-grid">
+                <div class="step-box">
+                    <div class="step-number">Example 1: Chain Rule</div>
+                    <div class="step-text"><strong>Given:</strong> f(x) = (3x² + 2x)⁵</div>
+                    <div class="step-text"><strong>Find:</strong> f'(x)</div>
+                    <div class="step-text"><strong>Solution:</strong> Let u = 3x² + 2x</div>
+                    <div class="step-formula">f(x) = u⁵</div>
+                    <div class="step-formula">f'(x) = 5u⁴ · u'</div>
+                    <div class="step-formula">u' = 6x + 2</div>
+                    <div class="highlight-box">
+                        <div class="result-text">f'(x) = 5(3x² + 2x)⁴(6x + 2)</div>
+                    </div>
+                </div>
+                
+                <div class="step-box">
+                    <div class="step-number">Example 2: Partial Derivatives</div>
+                    <div class="step-text"><strong>Given:</strong> f(x,y) = x²y + 3xy² + y³</div>
+                    <div class="step-text"><strong>Find:</strong> ∂f/∂x and ∂f/∂y</div>
+                    <div class="step-text"><strong>∂f/∂x:</strong> (treat y as constant)</div>
+                    <div class="step-formula">∂f/∂x = 2xy + 3y²</div>
+                    <div class="step-text"><strong>∂f/∂y:</strong> (treat x as constant)</div>
+                    <div class="step-formula">∂f/∂y = x² + 6xy + 3y²</div>
+                    <div class="highlight-box">
+                        <div class="result-text">∇f = [2xy + 3y², x² + 6xy + 3y²]ᵀ</div>
+                    </div>
+                </div>
+                
+                <div class="step-box">
+                    <div class="step-number">Example 3: Gradient Descent Step</div>
+                    <div class="step-text"><strong>Loss function:</strong> L(w) = (w - 3)²</div>
+                    <div class="step-text"><strong>Current:</strong> w = 0, learning rate α = 0.1</div>
+                    <div class="step-text"><strong>Step 1:</strong> Compute gradient</div>
+                    <div class="step-formula">∇L(w) = 2(w - 3)</div>
+                    <div class="step-formula">∇L(0) = 2(0 - 3) = -6</div>
+                    <div class="step-text"><strong>Step 2:</strong> Update parameter</div>
+                    <div class="step-formula">w_new = w - α∇L(w)</div>
+                    <div class="step-formula">w_new = 0 - 0.1(-6) = 0.6</div>
+                    <div class="highlight-box">
+                        <div class="result-text">New w = 0.6 (closer to minimum at w = 3)</div>
+                    </div>
+                </div>
+                
+                <div class="step-box">
+                    <div class="step-number">Example 4: Hessian Matrix</div>
+                    <div class="step-text"><strong>Given:</strong> f(x,y) = x² + 2xy + 3y²</div>
+                    <div class="step-text"><strong>Find:</strong> Hessian H(f)</div>
+                    <div class="step-text"><strong>First derivatives:</strong></div>
+                    <div class="step-formula">∂f/∂x = 2x + 2y</div>
+                    <div class="step-formula">∂f/∂y = 2x + 6y</div>
+                    <div class="step-text"><strong>Second derivatives:</strong></div>
+                    <div class="step-formula">∂²f/∂x² = 2, ∂²f/∂x∂y = 2</div>
+                    <div class="step-formula">∂²f/∂y∂x = 2, ∂²f/∂y² = 6</div>
+                    <div class="highlight-box">
+                        <div class="result-text">H = [2  2]<br>&nbsp;&nbsp;&nbsp;&nbsp;[2  6]</div>
                     </div>
                 </div>
             </div>
