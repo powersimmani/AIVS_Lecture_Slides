@@ -8,12 +8,14 @@
         body {
             margin: 0;
             padding: 0;
+            background: white;
+            font-family: Aptos, 'Segoe UI', sans-serif;
+        }
+        .first-section {
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background: white;
-            font-family: Aptos, 'Segoe UI', sans-serif;
         }
         .container {
             width: 960px;
@@ -184,6 +186,7 @@
     </style>
 </head>
 <body>
+    <div class="first-section">
     <div class="container">
         <div class="title">ROC Curve and AUC</div>
         
@@ -302,5 +305,256 @@
             </div>
         </div>
     </div>
+    </div><!-- End of first-section -->
+
+
+<!-- ================================================ -->
+<!-- Step-by-Step Guide Section (BELOW first slide) -->
+<!-- ================================================ -->
+
+<div style="width: 100%; background: #f8f9fa; padding: 30px 0; font-family: Aptos, 'Segoe UI', sans-serif;">
+    <div style="max-width: 960px; margin: 0 auto; padding: 0 30px;">
+        
+        <h1 style="text-align: center; font-size: 24px; font-weight: 700; color: #1E64C8; margin-bottom: 25px;">
+            ROC Curve Construction: Step-by-Step Guide
+        </h1>
+        
+        <!-- Step 1: Data Table -->
+        <div style="background: white; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px; overflow: hidden;">
+            <div style="background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%); color: white; padding: 12px 20px; display: flex; align-items: center; gap: 12px;">
+                <div style="background: rgba(255,255,255,0.3); min-width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; border: 2px solid white;">1</div>
+                <div style="font-size: 16px; font-weight: 600;">Predicted Probabilities and Actual Labels</div>
+            </div>
+            <div style="padding: 20px; display: flex; justify-content: center;">
+                <table style="border-collapse: collapse; box-shadow: 0 1px 6px rgba(0,0,0,0.06);">
+                    <thead>
+                        <tr>
+                            <th style="background: #f0f4f8; padding: 8px 20px; font-weight: 600; color: #2c3e50; border-bottom: 2px solid #1E64C8; font-size: 13px;">Sample</th>
+                            <th style="background: #f0f4f8; padding: 8px 20px; font-weight: 600; color: #2c3e50; border-bottom: 2px solid #1E64C8; font-size: 13px;">Predicted Probability</th>
+                            <th style="background: #f0f4f8; padding: 8px 20px; font-weight: 600; color: #2c3e50; border-bottom: 2px solid #1E64C8; font-size: 13px;">Actual Label</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td style="padding: 6px 20px; border-bottom: 1px solid #e0e0e0; font-size: 12px;">A</td><td style="padding: 6px 20px; border-bottom: 1px solid #e0e0e0; font-size: 12px;">0.95</td><td style="padding: 6px 20px; border-bottom: 1px solid #e0e0e0; color: #27ae60; font-weight: 600; font-size: 12px;">1 (Positive)</td></tr>
+                        <tr><td style="padding: 6px 20px; border-bottom: 1px solid #e0e0e0; font-size: 12px;">B</td><td style="padding: 6px 20px; border-bottom: 1px solid #e0e0e0; font-size: 12px;">0.85</td><td style="padding: 6px 20px; border-bottom: 1px solid #e0e0e0; color: #27ae60; font-weight: 600; font-size: 12px;">1 (Positive)</td></tr>
+                        <tr><td style="padding: 6px 20px; border-bottom: 1px solid #e0e0e0; font-size: 12px;">C</td><td style="padding: 6px 20px; border-bottom: 1px solid #e0e0e0; font-size: 12px;">0.75</td><td style="padding: 6px 20px; border-bottom: 1px solid #e0e0e0; color: #e74c3c; font-weight: 600; font-size: 12px;">0 (Negative)</td></tr>
+                        <tr><td style="padding: 6px 20px; border-bottom: 1px solid #e0e0e0; font-size: 12px;">D</td><td style="padding: 6px 20px; border-bottom: 1px solid #e0e0e0; font-size: 12px;">0.65</td><td style="padding: 6px 20px; border-bottom: 1px solid #e0e0e0; color: #27ae60; font-weight: 600; font-size: 12px;">1 (Positive)</td></tr>
+                        <tr><td style="padding: 6px 20px; border-bottom: 1px solid #e0e0e0; font-size: 12px;">E</td><td style="padding: 6px 20px; border-bottom: 1px solid #e0e0e0; font-size: 12px;">0.55</td><td style="padding: 6px 20px; border-bottom: 1px solid #e0e0e0; color: #e74c3c; font-weight: 600; font-size: 12px;">0 (Negative)</td></tr>
+                        <tr><td style="padding: 6px 20px; border-bottom: 1px solid #e0e0e0; font-size: 12px;">F</td><td style="padding: 6px 20px; border-bottom: 1px solid #e0e0e0; font-size: 12px;">0.45</td><td style="padding: 6px 20px; border-bottom: 1px solid #e0e0e0; color: #e74c3c; font-weight: 600; font-size: 12px;">0 (Negative)</td></tr>
+                        <tr><td style="padding: 6px 20px; border-bottom: 1px solid #e0e0e0; font-size: 12px;">G</td><td style="padding: 6px 20px; border-bottom: 1px solid #e0e0e0; font-size: 12px;">0.35</td><td style="padding: 6px 20px; border-bottom: 1px solid #e0e0e0; color: #27ae60; font-weight: 600; font-size: 12px;">1 (Positive)</td></tr>
+                        <tr><td style="padding: 6px 20px; font-size: 12px;">H</td><td style="padding: 6px 20px; font-size: 12px;">0.15</td><td style="padding: 6px 20px; color: #e74c3c; font-weight: 600; font-size: 12px;">0 (Negative)</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Step 2: Threshold Calculations -->
+        <div style="background: white; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px; overflow: hidden;">
+            <div style="background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%); color: white; padding: 12px 20px; display: flex; align-items: center; gap: 12px;">
+                <div style="background: rgba(255,255,255,0.3); min-width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; border: 2px solid white;">2</div>
+                <div style="font-size: 16px; font-weight: 600;">Calculate TPR and FPR at Each Threshold</div>
+            </div>
+            <div style="padding: 20px;">
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                    
+                    <!-- Threshold 0.80 -->
+                    <div style="background: #f8f9fb; border-radius: 8px; padding: 12px; border: 2px solid #e0e6ed;">
+                        <div style="font-size: 14px; font-weight: 700; color: #1E64C8; text-align: center; padding-bottom: 8px; margin-bottom: 10px; border-bottom: 2px solid #1E64C8;">Threshold = 0.80</div>
+                        <div style="background: white; padding: 8px; border-radius: 6px; margin-bottom: 8px;">
+                            <div style="font-size: 10px; font-weight: 600; color: #666; margin-bottom: 6px; text-align: center;">Confusion Matrix</div>
+                            <div style="display: grid; grid-template-columns: 35px 1fr 1fr; gap: 2px; font-size: 9px;">
+                                <div></div>
+                                <div style="padding: 5px 3px; text-align: center; border-radius: 3px; background: #e8f0f8; color: #555; font-weight: 600;">A+</div>
+                                <div style="padding: 5px 3px; text-align: center; border-radius: 3px; background: #e8f0f8; color: #555; font-weight: 600;">A-</div>
+                                <div style="padding: 5px 3px; text-align: center; border-radius: 3px; background: #e8f0f8; color: #555; font-weight: 600;">P+</div>
+                                <div style="padding: 6px 3px; text-align: center; border-radius: 3px; background: #d4edda; color: #155724; font-size: 13px; font-weight: 700;">TP 2</div>
+                                <div style="padding: 6px 3px; text-align: center; border-radius: 3px; background: #f8d7da; color: #721c24; font-size: 13px; font-weight: 700;">FP 0</div>
+                                <div style="padding: 5px 3px; text-align: center; border-radius: 3px; background: #e8f0f8; color: #555; font-weight: 600;">P-</div>
+                                <div style="padding: 6px 3px; text-align: center; border-radius: 3px; background: #fff3cd; color: #856404; font-size: 13px; font-weight: 700;">FN 2</div>
+                                <div style="padding: 6px 3px; text-align: center; border-radius: 3px; background: #d1ecf1; color: #0c5460; font-size: 13px; font-weight: 700;">TN 4</div>
+                            </div>
+                        </div>
+                        <div style="background: white; padding: 8px; border-radius: 6px; margin-bottom: 6px;">
+                            <div style="font-size: 11px; font-weight: 700; color: #1E64C8; margin-bottom: 4px;">TPR</div>
+                            <div style="font-size: 9px; color: #666; margin-bottom: 5px; font-family: 'Courier New', monospace; background: #f8f9fa; padding: 3px 5px; border-radius: 3px;">2/(2+2)=0.5</div>
+                            <div style="height: 18px; background: #e9ecef; border-radius: 9px; overflow: hidden;">
+                                <div style="height: 100%; width: 50%; background: linear-gradient(90deg, #27ae60, #2ecc71); display: flex; align-items: center; justify-content: center; font-weight: 700; color: white; font-size: 10px;">50%</div>
+                            </div>
+                        </div>
+                        <div style="background: white; padding: 8px; border-radius: 6px; margin-bottom: 8px;">
+                            <div style="font-size: 11px; font-weight: 700; color: #1E64C8; margin-bottom: 4px;">FPR</div>
+                            <div style="font-size: 9px; color: #666; margin-bottom: 5px; font-family: 'Courier New', monospace; background: #f8f9fa; padding: 3px 5px; border-radius: 3px;">0/(0+4)=0.0</div>
+                            <div style="height: 18px; background: #e9ecef; border-radius: 9px; overflow: hidden;">
+                                <div style="height: 100%; width: 0%; background: linear-gradient(90deg, #e74c3c, #ec7063); font-size: 10px;"></div>
+                            </div>
+                        </div>
+                        <div style="text-align: center; font-weight: 600; color: #27ae60; font-size: 11px; padding: 6px; background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%); border-radius: 6px; border: 1px solid #28a745;">📍 (0.00, 0.50)</div>
+                    </div>
+                    
+                    <!-- Threshold 0.60 -->
+                    <div style="background: #f8f9fb; border-radius: 8px; padding: 12px; border: 2px solid #e0e6ed;">
+                        <div style="font-size: 14px; font-weight: 700; color: #1E64C8; text-align: center; padding-bottom: 8px; margin-bottom: 10px; border-bottom: 2px solid #1E64C8;">Threshold = 0.60</div>
+                        <div style="background: white; padding: 8px; border-radius: 6px; margin-bottom: 8px;">
+                            <div style="font-size: 10px; font-weight: 600; color: #666; margin-bottom: 6px; text-align: center;">Confusion Matrix</div>
+                            <div style="display: grid; grid-template-columns: 35px 1fr 1fr; gap: 2px; font-size: 9px;">
+                                <div></div>
+                                <div style="padding: 5px 3px; text-align: center; border-radius: 3px; background: #e8f0f8; color: #555; font-weight: 600;">A+</div>
+                                <div style="padding: 5px 3px; text-align: center; border-radius: 3px; background: #e8f0f8; color: #555; font-weight: 600;">A-</div>
+                                <div style="padding: 5px 3px; text-align: center; border-radius: 3px; background: #e8f0f8; color: #555; font-weight: 600;">P+</div>
+                                <div style="padding: 6px 3px; text-align: center; border-radius: 3px; background: #d4edda; color: #155724; font-size: 13px; font-weight: 700;">TP 3</div>
+                                <div style="padding: 6px 3px; text-align: center; border-radius: 3px; background: #f8d7da; color: #721c24; font-size: 13px; font-weight: 700;">FP 1</div>
+                                <div style="padding: 5px 3px; text-align: center; border-radius: 3px; background: #e8f0f8; color: #555; font-weight: 600;">P-</div>
+                                <div style="padding: 6px 3px; text-align: center; border-radius: 3px; background: #fff3cd; color: #856404; font-size: 13px; font-weight: 700;">FN 1</div>
+                                <div style="padding: 6px 3px; text-align: center; border-radius: 3px; background: #d1ecf1; color: #0c5460; font-size: 13px; font-weight: 700;">TN 3</div>
+                            </div>
+                        </div>
+                        <div style="background: white; padding: 8px; border-radius: 6px; margin-bottom: 6px;">
+                            <div style="font-size: 11px; font-weight: 700; color: #1E64C8; margin-bottom: 4px;">TPR</div>
+                            <div style="font-size: 9px; color: #666; margin-bottom: 5px; font-family: 'Courier New', monospace; background: #f8f9fa; padding: 3px 5px; border-radius: 3px;">3/(3+1)=0.75</div>
+                            <div style="height: 18px; background: #e9ecef; border-radius: 9px; overflow: hidden;">
+                                <div style="height: 100%; width: 75%; background: linear-gradient(90deg, #27ae60, #2ecc71); display: flex; align-items: center; justify-content: center; font-weight: 700; color: white; font-size: 10px;">75%</div>
+                            </div>
+                        </div>
+                        <div style="background: white; padding: 8px; border-radius: 6px; margin-bottom: 8px;">
+                            <div style="font-size: 11px; font-weight: 700; color: #1E64C8; margin-bottom: 4px;">FPR</div>
+                            <div style="font-size: 9px; color: #666; margin-bottom: 5px; font-family: 'Courier New', monospace; background: #f8f9fa; padding: 3px 5px; border-radius: 3px;">1/(1+3)=0.25</div>
+                            <div style="height: 18px; background: #e9ecef; border-radius: 9px; overflow: hidden;">
+                                <div style="height: 100%; width: 25%; background: linear-gradient(90deg, #e74c3c, #ec7063); display: flex; align-items: center; justify-content: center; font-weight: 700; color: white; font-size: 10px;">25%</div>
+                            </div>
+                        </div>
+                        <div style="text-align: center; font-weight: 600; color: #27ae60; font-size: 11px; padding: 6px; background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%); border-radius: 6px; border: 1px solid #28a745;">📍 (0.25, 0.75)</div>
+                    </div>
+                    
+                    <!-- Threshold 0.40 -->
+                    <div style="background: #f8f9fb; border-radius: 8px; padding: 12px; border: 2px solid #e0e6ed;">
+                        <div style="font-size: 14px; font-weight: 700; color: #1E64C8; text-align: center; padding-bottom: 8px; margin-bottom: 10px; border-bottom: 2px solid #1E64C8;">Threshold = 0.40</div>
+                        <div style="background: white; padding: 8px; border-radius: 6px; margin-bottom: 8px;">
+                            <div style="font-size: 10px; font-weight: 600; color: #666; margin-bottom: 6px; text-align: center;">Confusion Matrix</div>
+                            <div style="display: grid; grid-template-columns: 35px 1fr 1fr; gap: 2px; font-size: 9px;">
+                                <div></div>
+                                <div style="padding: 5px 3px; text-align: center; border-radius: 3px; background: #e8f0f8; color: #555; font-weight: 600;">A+</div>
+                                <div style="padding: 5px 3px; text-align: center; border-radius: 3px; background: #e8f0f8; color: #555; font-weight: 600;">A-</div>
+                                <div style="padding: 5px 3px; text-align: center; border-radius: 3px; background: #e8f0f8; color: #555; font-weight: 600;">P+</div>
+                                <div style="padding: 6px 3px; text-align: center; border-radius: 3px; background: #d4edda; color: #155724; font-size: 13px; font-weight: 700;">TP 4</div>
+                                <div style="padding: 6px 3px; text-align: center; border-radius: 3px; background: #f8d7da; color: #721c24; font-size: 13px; font-weight: 700;">FP 2</div>
+                                <div style="padding: 5px 3px; text-align: center; border-radius: 3px; background: #e8f0f8; color: #555; font-weight: 600;">P-</div>
+                                <div style="padding: 6px 3px; text-align: center; border-radius: 3px; background: #fff3cd; color: #856404; font-size: 13px; font-weight: 700;">FN 0</div>
+                                <div style="padding: 6px 3px; text-align: center; border-radius: 3px; background: #d1ecf1; color: #0c5460; font-size: 13px; font-weight: 700;">TN 2</div>
+                            </div>
+                        </div>
+                        <div style="background: white; padding: 8px; border-radius: 6px; margin-bottom: 6px;">
+                            <div style="font-size: 11px; font-weight: 700; color: #1E64C8; margin-bottom: 4px;">TPR</div>
+                            <div style="font-size: 9px; color: #666; margin-bottom: 5px; font-family: 'Courier New', monospace; background: #f8f9fa; padding: 3px 5px; border-radius: 3px;">4/(4+0)=1.0</div>
+                            <div style="height: 18px; background: #e9ecef; border-radius: 9px; overflow: hidden;">
+                                <div style="height: 100%; width: 100%; background: linear-gradient(90deg, #27ae60, #2ecc71); display: flex; align-items: center; justify-content: center; font-weight: 700; color: white; font-size: 10px;">100%</div>
+                            </div>
+                        </div>
+                        <div style="background: white; padding: 8px; border-radius: 6px; margin-bottom: 8px;">
+                            <div style="font-size: 11px; font-weight: 700; color: #1E64C8; margin-bottom: 4px;">FPR</div>
+                            <div style="font-size: 9px; color: #666; margin-bottom: 5px; font-family: 'Courier New', monospace; background: #f8f9fa; padding: 3px 5px; border-radius: 3px;">2/(2+2)=0.5</div>
+                            <div style="height: 18px; background: #e9ecef; border-radius: 9px; overflow: hidden;">
+                                <div style="height: 100%; width: 50%; background: linear-gradient(90deg, #e74c3c, #ec7063); display: flex; align-items: center; justify-content: center; font-weight: 700; color: white; font-size: 10px;">50%</div>
+                            </div>
+                        </div>
+                        <div style="text-align: center; font-weight: 600; color: #27ae60; font-size: 11px; padding: 6px; background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%); border-radius: 6px; border: 1px solid #28a745;">📍 (0.50, 1.00)</div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        
+        <!-- Step 3: Plot Construction -->
+        <div style="background: white; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px; overflow: hidden;">
+            <div style="background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%); color: white; padding: 12px 20px; display: flex; align-items: center; gap: 12px;">
+                <div style="background: rgba(255,255,255,0.3); min-width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; border: 2px solid white;">3</div>
+                <div style="font-size: 16px; font-weight: 600;">Connect Points to Create ROC Curve</div>
+            </div>
+            <div style="padding: 20px;">
+                <div style="display: grid; grid-template-columns: 1fr 1.3fr; gap: 20px;">
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <div style="display: flex; gap: 10px; padding: 10px; background: #f8f9fb; border-radius: 6px; border-left: 3px solid #1E64C8;">
+                            <div style="font-size: 14px;">🔹</div>
+                            <div style="font-size: 12px; line-height: 1.5; color: #2c3e50;">Calculate (FPR, TPR) coordinates for all thresholds</div>
+                        </div>
+                        <div style="display: flex; gap: 10px; padding: 10px; background: #f8f9fb; border-radius: 6px; border-left: 3px solid #1E64C8;">
+                            <div style="font-size: 14px;">🔹</div>
+                            <div style="font-size: 12px; line-height: 1.5; color: #2c3e50;">Sort points by FPR in ascending order</div>
+                        </div>
+                        <div style="display: flex; gap: 10px; padding: 10px; background: #f8f9fb; border-radius: 6px; border-left: 3px solid #1E64C8;">
+                            <div style="font-size: 14px;">🔹</div>
+                            <div style="font-size: 12px; line-height: 1.5; color: #2c3e50;">Connect points with lines to complete ROC curve</div>
+                        </div>
+                        <div style="display: flex; gap: 10px; padding: 10px; background: #f8f9fb; border-radius: 6px; border-left: 3px solid #1E64C8;">
+                            <div style="font-size: 14px;">🔹</div>
+                            <div style="font-size: 12px; line-height: 1.5; color: #2c3e50;">Evaluate model performance using AUC</div>
+                        </div>
+                    </div>
+                    <div style="background: white; border-radius: 8px; padding: 15px; box-shadow: 0 2px 6px rgba(0,0,0,0.06);">
+                        <svg viewBox="0 0 320 280" style="width: 100%; height: auto;">
+                            <defs>
+                                <pattern id="gridp" width="32" height="32" patternUnits="userSpaceOnUse">
+                                    <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#e8e8e8" stroke-width="1"/>
+                                </pattern>
+                                <marker id="arrowm" markerWidth="8" markerHeight="8" refX="7" refY="2.5" orient="auto">
+                                    <polygon points="0 0, 8 2.5, 0 5" fill="#333"/>
+                                </marker>
+                            </defs>
+                            <rect width="320" height="280" fill="url(#gridp)"/>
+                            <line x1="40" y1="240" x2="300" y2="240" stroke="#333" stroke-width="2" marker-end="url(#arrowm)"/>
+                            <line x1="40" y1="240" x2="40" y2="20" stroke="#333" stroke-width="2" marker-end="url(#arrowm)"/>
+                            <text x="170" y="268" font-size="11" fill="#333" text-anchor="middle" font-weight="600">False Positive Rate</text>
+                            <text x="18" y="130" font-size="11" fill="#333" text-anchor="middle" font-weight="600" transform="rotate(-90 18 130)">True Positive Rate</text>
+                            <text x="36" y="244" font-size="10" fill="#666" text-anchor="end">0</text>
+                            <text x="36" y="189" font-size="10" fill="#666" text-anchor="end">0.25</text>
+                            <text x="36" y="133" font-size="10" fill="#666" text-anchor="end">0.50</text>
+                            <text x="36" y="78" font-size="10" fill="#666" text-anchor="end">0.75</text>
+                            <text x="36" y="24" font-size="10" fill="#666" text-anchor="end">1.0</text>
+                            <text x="40" y="254" font-size="10" fill="#666" text-anchor="middle">0</text>
+                            <text x="105" y="254" font-size="10" fill="#666" text-anchor="middle">0.25</text>
+                            <text x="170" y="254" font-size="10" fill="#666" text-anchor="middle">0.50</text>
+                            <text x="235" y="254" font-size="10" fill="#666" text-anchor="middle">0.75</text>
+                            <text x="300" y="254" font-size="10" fill="#666" text-anchor="middle">1.0</text>
+                            <line x1="40" y1="240" x2="300" y2="20" stroke="#e74c3c" stroke-width="2" stroke-dasharray="6,4" opacity="0.5"/>
+                            <circle cx="40" cy="240" r="5" fill="#1E64C8"/>
+                            <circle cx="40" cy="130" r="5" fill="#27ae60"/>
+                            <circle cx="105" cy="78" r="5" fill="#27ae60"/>
+                            <circle cx="170" cy="20" r="5" fill="#27ae60"/>
+                            <circle cx="300" cy="20" r="5" fill="#1E64C8"/>
+                            <path d="M 40 240 L 40 130 L 105 78 L 170 20 L 300 20" stroke="#27ae60" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M 40 240 L 40 130 L 105 78 L 170 20 L 300 20 L 300 240 Z" fill="#27ae60" opacity="0.12"/>
+                            <text x="170" y="170" font-size="15" fill="#27ae60" font-weight="700" text-anchor="middle">AUC ≈ 0.85</text>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Summary -->
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px 20px; border-radius: 10px;">
+            <div style="font-size: 17px; font-weight: 700; margin-bottom: 12px; text-align: center;">💡 Key Summary</div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
+                <div style="background: rgba(255,255,255,0.2); padding: 12px; border-radius: 6px; font-size: 12px; line-height: 1.5;">
+                    <strong style="display: block; margin-bottom: 5px; font-size: 13px;">Step 1:</strong>
+                    Predicted Probability과 Actual Label 준비
+                </div>
+                <div style="background: rgba(255,255,255,0.2); padding: 12px; border-radius: 6px; font-size: 12px; line-height: 1.5;">
+                    <strong style="display: block; margin-bottom: 5px; font-size: 13px;">Step 2:</strong>
+                    Calculate TPR and FPR at each threshold
+                </div>
+                <div style="background: rgba(255,255,255,0.2); padding: 12px; border-radius: 6px; font-size: 12px; line-height: 1.5;">
+                    <strong style="display: block; margin-bottom: 5px; font-size: 13px;">Step 3:</strong>
+                    Connect coordinates to create curve
+                </div>
+                <div style="background: rgba(255,255,255,0.2); padding: 12px; border-radius: 6px; font-size: 12px; line-height: 1.5;">
+                    <strong style="display: block; margin-bottom: 5px; font-size: 13px;">Result:</strong>
+                    Higher AUC indicates better model
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+
 </body>
 </html>
