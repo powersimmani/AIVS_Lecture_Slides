@@ -23,7 +23,8 @@
         
         .container {
             width: 960px;
-            height: 540px;
+            min-height: 540px;
+            height: auto;
             background: white;
             position: relative;
             overflow: hidden;
@@ -233,6 +234,123 @@
             font-weight: 600;
             line-height: 1.3;
         }
+        
+        .comparison-section {
+            margin-top: 18px;
+            background: #F8F9FA;
+            border-radius: 10px;
+            padding: 15px;
+        }
+        
+        .comparison-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .activation-plot {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+            border: 2px solid #ddd;
+        }
+        
+        .plot-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .plot-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #333;
+        }
+        
+        .plot-status {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+        
+        .plot-status.bad {
+            background: #FFEBEE;
+            color: #E57373;
+        }
+        
+        .plot-status.good {
+            background: #E8F5E9;
+            color: #4CAF50;
+        }
+        
+        .plot-svg {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 8px;
+        }
+        
+        .plot-formula {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+        }
+        
+        /* Responsive adjustments */
+        @media screen and (max-width: 1000px) {
+            .container {
+                width: 98vw !important;
+                max-width: 98vw !important;
+                padding: 15px 20px !important;
+            }
+        }
+        
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: 10px 15px !important;
+            }
+            
+            .title {
+                font-size: 20px !important;
+            }
+            
+            .solutions-grid,
+            .activation-grid,
+            .example-grid {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .gradient-flow {
+                flex-direction: column !important;
+                gap: 15px !important;
+            }
+            
+            .arrow-back {
+                transform: rotate(90deg);
+                margin: 5px 0 !important;
+            }
+        }
+        
+        @media screen and (max-width: 480px) {
+            .container {
+                padding: 8px 10px !important;
+            }
+            
+            .title {
+                font-size: 18px !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -323,6 +441,181 @@
             <div class="solution-card">
                 <div class="icon">📊</div>
                 <div class="text">Batch Norm</div>
+            </div>
+        </div>
+        
+        <div class="comparison-section">
+            <div class="comparison-title">Activation Function Comparison</div>
+            <div class="comparison-grid">
+                <div class="activation-plot sigmoid-plot">
+                    <div class="plot-header">
+                        <div class="plot-title">Sigmoid (σ)</div>
+                        <div class="plot-status bad">❌ Gradient Vanishing</div>
+                    </div>
+                    <svg viewBox="0 0 200 120" class="plot-svg">
+                        <!-- Grid -->
+                        <line x1="20" y1="100" x2="180" y2="100" stroke="#ddd" stroke-width="1"/>
+                        <line x1="100" y1="10" x2="100" y2="110" stroke="#ddd" stroke-width="1"/>
+                        
+                        <!-- Sigmoid curve -->
+                        <path d="M 20,95 Q 60,90 80,60 T 100,25 Q 120,10 140,8 T 180,5" 
+                              fill="none" stroke="#FF6B6B" stroke-width="3"/>
+                        
+                        <!-- Gradient flow arrows -->
+                        <g class="gradient-arrows">
+                            <text x="30" y="85" font-size="12" fill="#E57373">1.0</text>
+                            <text x="70" y="55" font-size="11" fill="#EF9A9A">0.2</text>
+                            <text x="110" y="25" font-size="10" fill="#FFCDD2">0.05</text>
+                            <text x="150" y="15" font-size="9" fill="#FFEBEE">~0</text>
+                        </g>
+                        
+                        <!-- Labels -->
+                        <text x="100" y="118" font-size="10" fill="#666" text-anchor="middle">Layers →</text>
+                    </svg>
+                    <div class="plot-formula">σ'(x) = σ(x)(1-σ(x)) ≤ 0.25</div>
+                </div>
+                
+                <div class="activation-plot relu-plot">
+                    <div class="plot-header">
+                        <div class="plot-title">ReLU</div>
+                        <div class="plot-status good">✅ Gradient Preserved</div>
+                    </div>
+                    <svg viewBox="0 0 200 120" class="plot-svg">
+                        <!-- Grid -->
+                        <line x1="20" y1="100" x2="180" y2="100" stroke="#ddd" stroke-width="1"/>
+                        <line x1="100" y1="10" x2="100" y2="110" stroke="#ddd" stroke-width="1"/>
+                        
+                        <!-- ReLU line (constant gradient) -->
+                        <line x1="20" y1="30" x2="180" y2="30" 
+                              stroke="#4CAF50" stroke-width="3"/>
+                        
+                        <!-- Gradient flow arrows -->
+                        <g class="gradient-arrows">
+                            <text x="30" y="25" font-size="12" fill="#4CAF50" font-weight="bold">1.0</text>
+                            <text x="70" y="25" font-size="12" fill="#4CAF50" font-weight="bold">1.0</text>
+                            <text x="110" y="25" font-size="12" fill="#4CAF50" font-weight="bold">1.0</text>
+                            <text x="150" y="25" font-size="12" fill="#4CAF50" font-weight="bold">1.0</text>
+                        </g>
+                        
+                        <!-- Labels -->
+                        <text x="100" y="118" font-size="10" fill="#666" text-anchor="middle">Layers →</text>
+                    </svg>
+                    <div class="plot-formula">ReLU'(x) = 1 (if x > 0)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- NEW SECTIONS -->
+        <div style="margin-top: 25px; padding-top: 20px; border-top: 3px solid #E0E0E0;">
+            <div style="font-size: 18px; font-weight: 700; color: #1E64C8; margin-bottom: 15px; text-align: center;">
+                📊 Activation Functions & Gradient Vanishing Risk
+            </div>
+            
+            <div class="activation-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px;">
+                <div style="background: #FFEBEE; border: 2px solid #EF5350; border-radius: 8px; padding: 12px;">
+                    <div style="font-weight: 700; color: #E57373; margin-bottom: 8px; text-align: center;">⚠️ High Risk</div>
+                    <div style="font-size: 15px; font-weight: 600; color: #333; margin-bottom: 6px;">Sigmoid (σ)</div>
+                    <div style="font-size: 13px; color: #666; margin-bottom: 4px;">σ'(z) = σ(z)(1-σ(z))</div>
+                    <div style="font-size: 12px; color: #E57373; font-weight: 600;">Max gradient: 0.25</div>
+                    <div style="font-size: 11px; color: #666; margin-top: 4px;">0.25⁵ = 0.00098 ❌</div>
+                </div>
+                
+                <div style="background: #FFF3E0; border: 2px solid #FF9800; border-radius: 8px; padding: 12px;">
+                    <div style="font-weight: 700; color: #F57C00; margin-bottom: 8px; text-align: center;">⚠️ Medium Risk</div>
+                    <div style="font-size: 15px; font-weight: 600; color: #333; margin-bottom: 6px;">Tanh</div>
+                    <div style="font-size: 13px; color: #666; margin-bottom: 4px;">tanh'(z) = 1 - tanh²(z)</div>
+                    <div style="font-size: 12px; color: #F57C00; font-weight: 600;">Max gradient: 1.0</div>
+                    <div style="font-size: 11px; color: #666; margin-top: 4px;">Saturates at extremes → vanish</div>
+                </div>
+                
+                <div style="background: #E8F5E9; border: 2px solid #66BB6A; border-radius: 8px; padding: 12px;">
+                    <div style="font-weight: 700; color: #4CAF50; margin-bottom: 8px; text-align: center;">✅ Lower Risk</div>
+                    <div style="font-size: 15px; font-weight: 600; color: #333; margin-bottom: 6px;">ReLU</div>
+                    <div style="font-size: 13px; color: #666; margin-bottom: 4px;">ReLU'(z) = 1 if z>0 else 0</div>
+                    <div style="font-size: 12px; color: #4CAF50; font-weight: 600;">Gradient: 0 or 1</div>
+                    <div style="font-size: 11px; color: #666; margin-top: 4px;">No saturation for z>0 ✓</div>
+                </div>
+            </div>
+
+            <div style="background: #E3F2FD; border: 2px solid #1E88E5; border-radius: 10px; padding: 15px; margin-bottom: 20px;">
+                <div style="font-size: 16px; font-weight: 700; color: #1565C0; margin-bottom: 12px; text-align: center;">
+                    🔗 Chain Rule Multiplication: How Gradients Vanish
+                </div>
+                
+                <div style="background: white; border-radius: 8px; padding: 12px; margin-bottom: 10px;">
+                    <div style="font-size: 14px; font-weight: 600; color: #333; margin-bottom: 8px;">
+                        Backpropagation through layers:
+                    </div>
+                    <div style="font-family: 'Courier New', monospace; font-size: 13px; color: #555; line-height: 1.8;">
+                        ∂L/∂W₁ = ∂L/∂a₄ × <span style="color: #1E64C8; font-weight: 700;">∂a₄/∂z₄</span> × ∂z₄/∂a₃ × <span style="color: #1E64C8; font-weight: 700;">∂a₃/∂z₃</span> × ∂z₃/∂a₂ × <span style="color: #1E64C8; font-weight: 700;">∂a₂/∂z₂</span> × ∂z₂/∂a₁ × <span style="color: #1E64C8; font-weight: 700;">∂a₁/∂z₁</span> × ∂z₁/∂W₁
+                    </div>
+                    <div style="font-size: 12px; color: #1E64C8; margin-top: 6px; font-weight: 600;">
+                        Blue terms: activation derivatives (σ', tanh', ReLU')
+                    </div>
+                </div>
+
+                <div style="background: white; border-radius: 8px; padding: 12px;">
+                    <div style="font-size: 14px; font-weight: 600; color: #333; margin-bottom: 8px;">
+                        Example with Sigmoid activation:
+                    </div>
+                    <div class="example-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div style="background: #FFEBEE; padding: 10px; border-radius: 6px;">
+                            <div style="font-size: 13px; font-weight: 600; color: #E57373; margin-bottom: 6px;">❌ Bad Case (Sigmoid)</div>
+                            <div style="font-family: 'Courier New', monospace; font-size: 12px; color: #333; line-height: 1.6;">
+                                Layer 1: grad × W₁ × σ'<br>
+                                = 1.0 × 1.0 × 0.25 = 0.25<br>
+                                Layer 2: 0.25 × 1.0 × 0.25 = 0.0625<br>
+                                Layer 3: 0.0625 × 1.0 × 0.25 = 0.0156<br>
+                                <span style="color: #E57373; font-weight: 700;">Layer 4: 0.0156 × 1.0 × 0.25 ≈ 0.004</span>
+                            </div>
+                            <div style="font-size: 11px; color: #E57373; margin-top: 6px; font-weight: 600;">
+                                10 layers: 0.25¹⁰ ≈ 0.00000095<br>
+                                Practically zero! 📉
+                            </div>
+                        </div>
+                        
+                        <div style="background: #E8F5E9; padding: 10px; border-radius: 6px;">
+                            <div style="font-size: 13px; font-weight: 600; color: #4CAF50; margin-bottom: 6px;">✅ Good Case (ReLU)</div>
+                            <div style="font-family: 'Courier New', monospace; font-size: 12px; color: #333; line-height: 1.6;">
+                                Layer 1: 1.0 × 1.0 × 1.0 = 1.0<br>
+                                Layer 2: 1.0 × 1.0 × 1.0 = 1.0<br>
+                                Layer 3: 1.0 × 1.0 × 1.0 = 1.0<br>
+                                <span style="color: #4CAF50; font-weight: 700;">Layer 4: 1.0 × 1.0 × 1.0 = 1.0</span>
+                            </div>
+                            <div style="font-size: 11px; color: #4CAF50; margin-top: 6px; font-weight: 600;">
+                                Gradient preserved!<br>
+                                Can train very deep networks ✓
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%); border: 3px solid #1E64C8; border-radius: 10px; padding: 15px;">
+                <div style="font-size: 16px; font-weight: 700; color: #1E64C8; margin-bottom: 10px; text-align: center;">
+                    📉 Real Vanishing Scenario
+                </div>
+                <div style="display: flex; align-items: center; justify-content: space-around; flex-wrap: wrap; gap: 10px;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 14px; font-weight: 600; color: #333;">Sigmoid Max Gradient</div>
+                        <div style="font-size: 24px; font-weight: 700; color: #1E64C8;">σ' = 0.25</div>
+                    </div>
+                    <div style="font-size: 28px; color: #1E64C8;">×</div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 14px; font-weight: 600; color: #333;">10 Layers</div>
+                        <div style="font-size: 24px; font-weight: 700; color: #1E64C8;">n = 10</div>
+                    </div>
+                    <div style="font-size: 28px; color: #1E64C8;">→</div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 14px; font-weight: 600; color: #333;">Gradient Scale</div>
+                        <div style="font-size: 24px; font-weight: 700; color: #1E64C8;">0.25¹⁰ ≈ 0.000001</div>
+                    </div>
+                </div>
+                <div style="margin-top: 12px; padding: 10px; background: white; border-radius: 6px;">
+                    <div style="font-size: 13px; color: #333; font-weight: 600; text-align: center;">
+                        With 20 layers: 0.25²⁰ ≈ 9.09 × 10⁻¹³ → Effectively zero! ❄️
+                    </div>
+                </div>
             </div>
         </div>
     </div>

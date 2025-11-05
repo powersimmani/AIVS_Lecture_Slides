@@ -13,35 +13,36 @@
         
         body {
             font-family: Aptos, 'Segoe UI', sans-serif;
-            background: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            background: #f5f5f5;
             padding: 20px;
         }
         
+        .wrapper {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
         .container {
-            width: 960px;
-            height: 540px;
-            position: relative;
+            width: 100%;
             background: #ffffff;
-            padding: 20px 40px;
+            padding: 30px 40px;
+            margin-bottom: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         
         .title {
             text-align: center;
-            font-size: 24px;
+            font-size: 28px;
             font-weight: 600;
             color: #1E64C8;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
         }
         
         .main-content {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 25px;
-            height: 450px;
         }
         
         .left-section {
@@ -198,78 +199,444 @@
             color: #1E64C8;
             font-weight: 600;
         }
+        
+        /* Calculation Examples Styles */
+        .calculation-title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 30px;
+        }
+        
+        .example-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+        
+        .example-card {
+            background: linear-gradient(135deg, #f8f9fb 0%, #e8eef7 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 12px;
+            padding: 20px;
+        }
+        
+        .example-header {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 15px;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #bbdefb;
+        }
+        
+        .network-info {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #1E64C8;
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            font-size: 15px;
+        }
+        
+        .info-label {
+            font-weight: 600;
+            color: #666;
+        }
+        
+        .info-value {
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .step {
+            background: white;
+            padding: 14px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+            border-left: 3px solid #1E64C8;
+        }
+        
+        .step-number {
+            display: inline-block;
+            background: #1E64C8;
+            color: white;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 26px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+        
+        .step-content {
+            display: inline;
+            font-size: 15px;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+        
+        .calculation {
+            font-family: 'Courier New', monospace;
+            background: #e3f2fd;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #1565c0;
+            text-align: center;
+            line-height: 1.8;
+        }
+        
+        .result-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #1565c0 100%);
+            color: white;
+            padding: 14px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 12px;
+            box-shadow: 0 3px 10px rgba(30, 100, 200, 0.3);
+        }
+        
+        .weight-matrix {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border: 1px solid #bbdefb;
+        }
+        
+        .matrix-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .matrix-content {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #2c3e50;
+            background: #f8f9fb;
+            padding: 12px;
+            border-radius: 4px;
+            overflow-x: auto;
+            white-space: pre;
+            line-height: 1.6;
+        }
+        
+        .note-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 15px;
+            font-size: 14px;
+            color: #856404;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="title">Xavier/Glorot Initialization</div>
-        
-        <div class="main-content">
-            <div class="left-section">
-                <div class="activation-box">
-                    <div class="activation-title">Designed for Activations</div>
-                    <div class="activation-list">
-                        <div class="activation-item">sigmoid</div>
-                        <div class="activation-item">tanh</div>
+    <div class="wrapper">
+        <!-- Original Content -->
+        <div class="container">
+            <div class="title">Xavier/Glorot Initialization</div>
+            
+            <div class="main-content">
+                <div class="left-section">
+                    <div class="activation-box">
+                        <div class="activation-title">Designed for Activations</div>
+                        <div class="activation-list">
+                            <div class="activation-item">sigmoid</div>
+                            <div class="activation-item">tanh</div>
+                        </div>
+                        
+                        <div class="variance-visual">
+                            <div class="layer-variance">
+                                <div class="layer-circle">Var</div>
+                                <div class="layer-label">Layer 1</div>
+                            </div>
+                            <div class="arrow-right">→</div>
+                            <div class="layer-variance">
+                                <div class="layer-circle">Var</div>
+                                <div class="layer-label">Layer 2</div>
+                            </div>
+                            <div class="arrow-right">→</div>
+                            <div class="layer-variance">
+                                <div class="layer-circle">Var</div>
+                                <div class="layer-label">Layer 3</div>
+                            </div>
+                        </div>
+                        <div class="variance-label">Variance maintained ≈ 1.0</div>
                     </div>
                     
-                    <div class="variance-visual">
-                        <div class="layer-variance">
-                            <div class="layer-circle">Var</div>
-                            <div class="layer-label">Layer 1</div>
+                    <div class="formula-section">
+                        <div class="formula-card">
+                            <div class="formula-label">Uniform Distribution</div>
+                            <div class="formula">
+                                W ~ U(-√(6/(n<sub>in</sub> + n<sub>out</sub>)), √(6/(n<sub>in</sub> + n<sub>out</sub>)))
+                            </div>
                         </div>
-                        <div class="arrow-right">→</div>
-                        <div class="layer-variance">
-                            <div class="layer-circle">Var</div>
-                            <div class="layer-label">Layer 2</div>
-                        </div>
-                        <div class="arrow-right">→</div>
-                        <div class="layer-variance">
-                            <div class="layer-circle">Var</div>
-                            <div class="layer-label">Layer 3</div>
+                        
+                        <div class="formula-card">
+                            <div class="formula-label">Gaussian Distribution</div>
+                            <div class="formula">
+                                W ~ N(0, 2/(n<sub>in</sub> + n<sub>out</sub>))
+                            </div>
                         </div>
                     </div>
-                    <div class="variance-label">Variance maintained ≈ 1.0</div>
                 </div>
                 
-                <div class="formula-section">
-                    <div class="formula-card">
-                        <div class="formula-label">Uniform Distribution</div>
-                        <div class="formula">
-                            W ~ U(-√(6/(n<sub>in</sub> + n<sub>out</sub>)), √(6/(n<sub>in</sub> + n<sub>out</sub>)))
-                        </div>
+                <div class="right-section">
+                    <div class="section-header">Key Properties</div>
+                    
+                    <div class="benefit-card">
+                        <span class="highlight">Variance maintained</span> across layers during forward/backward pass
                     </div>
                     
-                    <div class="formula-card">
-                        <div class="formula-label">Gaussian Distribution</div>
-                        <div class="formula">
-                            W ~ N(0, 2/(n<sub>in</sub> + n<sub>out</sub>))
-                        </div>
+                    <div class="benefit-card">
+                        Keeps activation variance approximately <span class="highlight">1.0</span>
+                    </div>
+                    
+                    <div class="benefit-card">
+                        <span class="highlight">Prevents saturation</span> in early training stages
+                    </div>
+                    
+                    <div class="benefit-card">
+                        Standard for <span class="highlight">fully connected networks</span>
+                    </div>
+                    
+                    <div class="benefit-card">
+                        Optimal for <span class="highlight">tanh/sigmoid</span> activation functions
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- New Calculation Examples Section -->
+        <div class="container">
+            <div class="calculation-title">Calculation Examples</div>
             
-            <div class="right-section">
-                <div class="section-header">Key Properties</div>
-                
-                <div class="benefit-card">
-                    <span class="highlight">Variance maintained</span> across layers during forward/backward pass
+            <div class="example-grid">
+                <!-- Example 1: Uniform Distribution -->
+                <div class="example-card">
+                    <div class="example-header">Example 1: Uniform Distribution</div>
+                    
+                    <div class="network-info">
+                        <div class="info-row">
+                            <span class="info-label">Input neurons (n<sub>in</sub>):</span>
+                            <span class="info-value">784</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Output neurons (n<sub>out</sub>):</span>
+                            <span class="info-value">128</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Weight matrix size:</span>
+                            <span class="info-value">784 × 128</span>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <span class="step-number">1</span>
+                        <span class="step-content">Calculate sum</span>
+                        <div class="calculation">
+                            n<sub>in</sub> + n<sub>out</sub> = 784 + 128 = 912
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <span class="step-number">2</span>
+                        <span class="step-content">Calculate fraction</span>
+                        <div class="calculation">
+                            6 / (n<sub>in</sub> + n<sub>out</sub>) = 6 / 912<br>
+                            = 0.006579
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <span class="step-number">3</span>
+                        <span class="step-content">Calculate square root</span>
+                        <div class="calculation">
+                            √(0.006579) = 0.0811
+                        </div>
+                    </div>
+                    
+                    <div class="result-box">
+                        W ~ U(-0.0811, +0.0811)
+                    </div>
+                    
+                    <div class="weight-matrix">
+                        <div class="matrix-title">Weight samples (partial)</div>
+                        <div class="matrix-content">[-0.0523  0.0701 -0.0198  0.0445]
+[ 0.0312 -0.0789  0.0621 -0.0356]
+[-0.0678  0.0234  0.0789 -0.0512]
+[ 0.0456 -0.0123  0.0654  0.0289]</div>
+                    </div>
                 </div>
-                
-                <div class="benefit-card">
-                    Keeps activation variance approximately <span class="highlight">1.0</span>
+
+                <!-- Example 2: Gaussian Distribution -->
+                <div class="example-card">
+                    <div class="example-header">Example 2: Gaussian Distribution</div>
+                    
+                    <div class="network-info">
+                        <div class="info-row">
+                            <span class="info-label">Input neurons (n<sub>in</sub>):</span>
+                            <span class="info-value">256</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Output neurons (n<sub>out</sub>):</span>
+                            <span class="info-value">64</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Weight matrix size:</span>
+                            <span class="info-value">256 × 64</span>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <span class="step-number">1</span>
+                        <span class="step-content">Calculate sum</span>
+                        <div class="calculation">
+                            n<sub>in</sub> + n<sub>out</sub> = 256 + 64 = 320
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <span class="step-number">2</span>
+                        <span class="step-content">Calculate variance</span>
+                        <div class="calculation">
+                            σ² = 2 / (n<sub>in</sub> + n<sub>out</sub>) = 2 / 320<br>
+                            = 0.00625
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <span class="step-number">3</span>
+                        <span class="step-content">Standard deviation (σ)</span>
+                        <div class="calculation">
+                            σ = √(0.00625) = 0.0791
+                        </div>
+                    </div>
+                    
+                    <div class="result-box">
+                        W ~ N(0, σ=0.0791)
+                    </div>
+                    
+                    <div class="weight-matrix">
+                        <div class="matrix-title">Weight samples (partial)</div>
+                        <div class="matrix-content">[-0.0423  0.0612 -0.0891  0.0234]
+[ 0.0756 -0.0189  0.0523 -0.0678]
+[-0.0345  0.0801 -0.0267  0.0445]
+[ 0.0589 -0.0734  0.0123  0.0690]</div>
+                    </div>
                 </div>
-                
-                <div class="benefit-card">
-                    <span class="highlight">Prevents saturation</span> in early training stages
+
+                <!-- Example 3: Small Network -->
+                <div class="example-card">
+                    <div class="example-header">Example 3: Small Network</div>
+                    
+                    <div class="network-info">
+                        <div class="info-row">
+                            <span class="info-label">Input neurons (n<sub>in</sub>):</span>
+                            <span class="info-value">10</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Output neurons (n<sub>out</sub>):</span>
+                            <span class="info-value">5</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Weight matrix size:</span>
+                            <span class="info-value">10 × 5</span>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <span class="step-number">1</span>
+                        <span class="step-content">Uniform Distribution calculation</span>
+                        <div class="calculation">
+                            n<sub>in</sub> + n<sub>out</sub> = 10 + 5 = 15<br>
+                            √(6/15) = √(0.4) = 0.6325
+                        </div>
+                    </div>
+                    
+                    <div class="result-box">
+                        W ~ U(-0.6325, +0.6325)
+                    </div>
+                    
+                    <div class="weight-matrix">
+                        <div class="matrix-title">Full weight matrix (10×5)</div>
+                        <div class="matrix-content">[-0.3421  0.5234 -0.1823  0.4512 -0.2901]
+[ 0.2134 -0.4823  0.3912  0.1567 -0.5123]
+[-0.4567  0.2901  0.5421 -0.3234  0.1789]
+[ 0.3789 -0.2156  0.4234 -0.5678  0.2912]
+[-0.1234  0.4567 -0.3812  0.2345  0.5234]
+[ 0.4912 -0.3567  0.1234 -0.4321  0.3678]
+[-0.2678  0.5012 -0.4156  0.1923  0.3456]
+[ 0.3234 -0.1789  0.4678 -0.2567  0.5123]
+[-0.4123  0.2678  0.3567 -0.5234  0.1456]
+[ 0.5678 -0.3012  0.2134  0.4789 -0.3901]</div>
+                    </div>
                 </div>
-                
-                <div class="benefit-card">
-                    Standard for <span class="highlight">fully connected networks</span>
-                </div>
-                
-                <div class="benefit-card">
-                    Optimal for <span class="highlight">tanh/sigmoid</span> activation functions
+
+                <!-- Example 4: Large Network -->
+                <div class="example-card">
+                    <div class="example-header">Example 4: Large Network Comparison</div>
+                    
+                    <div class="network-info">
+                        <div class="info-row">
+                            <span class="info-label">Input neurons (n<sub>in</sub>):</span>
+                            <span class="info-value">2048</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Output neurons (n<sub>out</sub>):</span>
+                            <span class="info-value">1024</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Weight matrix size:</span>
+                            <span class="info-value">2048 × 1024</span>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <span class="step-number">1</span>
+                        <span class="step-content">Uniform Distribution</span>
+                        <div class="calculation">
+                            √(6/(2048+1024)) = √(6/3072)<br>
+                            = √(0.001953) = 0.0442
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <span class="step-number">2</span>
+                        <span class="step-content">Gaussian Distribution</span>
+                        <div class="calculation">
+                            σ = √(2/3072) = √(0.000651)<br>
+                            = 0.0255
+                        </div>
+                    </div>
+                    
+                    <div class="result-box">
+                        Uniform: W ~ U(-0.0442, +0.0442)<br>
+                        Gaussian: W ~ N(0, σ=0.0255)
+                    </div>
+                    
+                    <div class="note-box">
+                        <strong>💡 Observation:</strong> As the network grows larger, the initialization range becomes smaller. This prevents the sum of many inputs from becoming too large.
+                    </div>
                 </div>
             </div>
         </div>

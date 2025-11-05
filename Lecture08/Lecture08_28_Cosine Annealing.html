@@ -91,8 +91,67 @@ body { font-family: Aptos, 'Segoe UI', sans-serif; background: #ffffff; display:
             <div class="right-section">
                 <div class="visual-box">
                     <div class="visual-title">Cosine Curve Visualization</div>
-                    <div style="background: white; border-radius: 6px; padding: 15px; height: 140px;">
-                        <div style="font-size: 14px; color: #666; text-align: center;">Smooth cosine decay from max_lr to min_lr</div>
+                    <div style="background: white; border-radius: 6px; padding: 15px; height: 140px; display: flex; align-items: center; justify-content: center;">
+                        <svg width="100%" height="120" viewBox="0 0 420 120" style="max-width: 420px;">
+                            <!-- Grid lines -->
+                            <line x1="40" y1="20" x2="400" y2="20" stroke="#e0e0e0" stroke-width="1" stroke-dasharray="2,2"/>
+                            <line x1="40" y1="95" x2="400" y2="95" stroke="#e0e0e0" stroke-width="1"/>
+                            
+                            <!-- Axes -->
+                            <line x1="40" y1="10" x2="40" y2="105" stroke="#333" stroke-width="2"/>
+                            <line x1="35" y1="100" x2="405" y2="100" stroke="#333" stroke-width="2"/>
+                            
+                            <!-- Cosine annealing curve with restarts (sawtooth pattern) -->
+                            <!-- First cycle -->
+                            <path d="M 40,20 Q 60,25 75,50 Q 90,75 100,90" 
+                                  fill="none" stroke="#DC3545" stroke-width="2.5" stroke-linecap="round"/>
+                            
+                            <!-- Restart 1 -->
+                            <line x1="100" y1="90" x2="100" y2="25" stroke="#DC3545" stroke-width="2.5" stroke-dasharray="3,3"/>
+                            
+                            <!-- Second cycle -->
+                            <path d="M 100,25 Q 120,30 135,52 Q 150,74 160,88" 
+                                  fill="none" stroke="#DC3545" stroke-width="2.5" stroke-linecap="round"/>
+                            
+                            <!-- Restart 2 -->
+                            <line x1="160" y1="88" x2="160" y2="28" stroke="#DC3545" stroke-width="2.5" stroke-dasharray="3,3"/>
+                            
+                            <!-- Third cycle -->
+                            <path d="M 160,28 Q 180,33 195,54 Q 210,75 220,87" 
+                                  fill="none" stroke="#DC3545" stroke-width="2.5" stroke-linecap="round"/>
+                            
+                            <!-- Restart 3 -->
+                            <line x1="220" y1="87" x2="220" y2="30" stroke="#DC3545" stroke-width="2.5" stroke-dasharray="3,3"/>
+                            
+                            <!-- Fourth cycle -->
+                            <path d="M 220,30 Q 240,35 255,55 Q 270,75 280,86" 
+                                  fill="none" stroke="#DC3545" stroke-width="2.5" stroke-linecap="round"/>
+                            
+                            <!-- Restart 4 -->
+                            <line x1="280" y1="86" x2="280" y2="32" stroke="#DC3545" stroke-width="2.5" stroke-dasharray="3,3"/>
+                            
+                            <!-- Fifth cycle -->
+                            <path d="M 280,32 Q 300,37 315,56 Q 330,75 340,85" 
+                                  fill="none" stroke="#DC3545" stroke-width="2.5" stroke-linecap="round"/>
+                            
+                            <!-- Restart 5 -->
+                            <line x1="340" y1="85" x2="340" y2="34" stroke="#DC3545" stroke-width="2.5" stroke-dasharray="3,3"/>
+                            
+                            <!-- Sixth cycle -->
+                            <path d="M 340,34 Q 360,39 375,57 Q 390,76 400,85" 
+                                  fill="none" stroke="#DC3545" stroke-width="2.5" stroke-linecap="round"/>
+                            
+                            <!-- Labels -->
+                            <text x="5" y="25" font-size="11" fill="#DC3545" font-weight="600">max</text>
+                            <text x="5" y="100" font-size="11" fill="#DC3545" font-weight="600">min</text>
+                            <text x="35" y="112" font-size="10" fill="#666">0</text>
+                            <text x="100" y="112" font-size="10" fill="#666">10</text>
+                            <text x="160" y="112" font-size="10" fill="#666">20</text>
+                            <text x="220" y="112" font-size="10" fill="#666">30</text>
+                            <text x="280" y="112" font-size="10" fill="#666">40</text>
+                            <text x="340" y="112" font-size="10" fill="#666">50</text>
+                            <text x="210" y="118" font-size="10" fill="#666" text-anchor="middle" font-style="italic">epoch</text>
+                        </svg>
                     </div>
                 </div>
                 

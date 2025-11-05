@@ -35,12 +35,15 @@ body { font-family: Aptos, 'Segoe UI', sans-serif; background: #ffffff; display:
         .char-text { font-size: 16px; color: #2c3e50; line-height: 1.5; }
         .visual-box { background: #f8f9fa; border: 2px solid #1E64C8; border-radius: 8px; padding: 18px; flex: 1; }
         .visual-title { font-size: 17px; font-weight: 600; color: #1E64C8; margin-bottom: 12px; text-align: center; }
-        .step-visual { display: flex; align-items: flex-end; justify-content: space-around; height: 120px; background: white; border-radius: 6px; padding: 10px; margin-bottom: 10px; }
-        .bar { width: 60px; background: #1E64C8; border-radius: 4px 4px 0 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 8px; color: white; font-size: 14px; font-weight: 600; }
-        .bar.step1 { height: 100%; }
-        .bar.step2 { height: 66%; }
-        .bar.step3 { height: 33%; }
-        .bar-label { font-size: 12px; color: #666; margin-top: 6px; }
+        
+        .step-visual { height: 140px; background: white; border-radius: 6px; padding: 15px 15px 25px 35px; margin-bottom: 10px; position: relative; }
+        .chart-area { height: 100%; border-left: 2px solid #666; border-bottom: 2px solid #666; position: relative; }
+        .chart-canvas { width: 100%; height: 100%; }
+        .axis-label { position: absolute; font-size: 11px; color: #666; font-weight: 600; }
+        .y-axis { left: -32px; top: -8px; writing-mode: vertical-lr; transform: rotate(180deg); }
+        .x-axis { bottom: -22px; left: 50%; transform: translateX(-50%); }
+        .epoch-markers { display: flex; justify-content: space-between; font-size: 11px; color: #666; margin-left: 35px; padding: 0 2px; }
+        
         .usage-box { background: linear-gradient(135deg, #e8f1fd 0%, #f0f8ff 100%); border: 2px solid #1E64C8; border-radius: 8px; padding: 14px 16px; text-align: center; }
         .usage-title { font-size: 16px; font-weight: 600; color: #1E64C8; margin-bottom: 6px; }
         .usage-text { font-size: 16px; color: #2c3e50; line-height: 1.4; }
@@ -126,18 +129,17 @@ body { font-family: Aptos, 'Segoe UI', sans-serif; background: #ffffff; display:
                 <div class="visual-box">
                     <div class="visual-title">Learning Rate Progression</div>
                     <div class="step-visual">
-                        <div>
-                            <div class="bar step1">1.0</div>
-                            <div class="bar-label">0-30</div>
+                        <div class="chart-area">
+                            <canvas class="chart-canvas" id="lrChart"></canvas>
+                            <div class="axis-label y-axis">Learning Rate</div>
+                            <div class="axis-label x-axis">Epoch</div>
                         </div>
-                        <div>
-                            <div class="bar step2">0.1</div>
-                            <div class="bar-label">30-60</div>
-                        </div>
-                        <div>
-                            <div class="bar step3">0.01</div>
-                            <div class="bar-label">60-90</div>
-                        </div>
+                    </div>
+                    <div class="epoch-markers">
+                        <span>0</span>
+                        <span>30</span>
+                        <span>60</span>
+                        <span>90</span>
                     </div>
                 </div>
                 
@@ -150,5 +152,62 @@ body { font-family: Aptos, 'Segoe UI', sans-serif; background: #ffffff; display:
             </div>
         </div>
     </div>
+    
+    <script>
+        const canvas = document.getElementById('lrChart');
+        const ctx = canvas.getContext('2d');
+        
+        // Set canvas size
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width;
+        canvas.height = rect.height;
+        
+        const width = canvas.width;
+        const height = canvas.height;
+        const padding = 5;
+        
+        // Drawing area
+        const drawWidth = width - padding * 2;
+        const drawHeight = height - padding * 2;
+        
+        // Step decay data: [epoch, lr]
+        const data = [
+            [0, 0.1],
+            [30, 0.1],
+            [30, 0.01],
+            [60, 0.01],
+            [60, 0.001],
+            [90, 0.001]
+        ];
+        
+        // Scale factors
+        const maxEpoch = 90;
+        const maxLR = 0.1;
+        
+        // Draw step line
+        ctx.strokeStyle = '#1E64C8';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        
+        for (let i = 0; i < data.length; i++) {
+            const x = padding + (data[i][0] / maxEpoch) * drawWidth;
+            const y = padding + drawHeight - (data[i][1] / maxLR) * drawHeight;
+            
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        
+        ctx.stroke();
+        
+        // Add subtle fill under the line
+        ctx.fillStyle = 'rgba(30, 100, 200, 0.1)';
+        ctx.lineTo(padding + drawWidth, padding + drawHeight);
+        ctx.lineTo(padding, padding + drawHeight);
+        ctx.closePath();
+        ctx.fill();
+    </script>
 </body>
 </html>

@@ -127,7 +127,51 @@ body { font-family: Aptos, 'Segoe UI', sans-serif; background: #ffffff; display:
                 <div class="visual-box">
                     <div class="visual-title">Decay Curve Visualization</div>
                     <div style="background: white; border-radius: 6px; padding: 15px; height: 140px; position: relative;">
-                        <div style="font-size: 14px; color: #666; text-align: center;">Smooth exponential decay curve from initial_lr to near-zero</div>
+                        <svg width="100%" height="110" viewBox="0 0 400 110" style="display: block;">
+                            <!-- Grid lines -->
+                            <line x1="40" y1="5" x2="40" y2="95" stroke="#e0e0e0" stroke-width="2"/>
+                            <line x1="40" y1="95" x2="380" y2="95" stroke="#e0e0e0" stroke-width="2"/>
+                            
+                            <!-- Y-axis labels -->
+                            <text x="30" y="10" font-size="11" fill="#666" text-anchor="end">1.0</text>
+                            <text x="30" y="50" font-size="11" fill="#666" text-anchor="end">0.5</text>
+                            <text x="30" y="99" font-size="11" fill="#666" text-anchor="end">0.0</text>
+                            
+                            <!-- X-axis labels -->
+                            <text x="40" y="108" font-size="11" fill="#666" text-anchor="middle">0</text>
+                            <text x="210" y="108" font-size="11" fill="#666" text-anchor="middle">epochs</text>
+                            <text x="380" y="108" font-size="11" fill="#666" text-anchor="middle">n</text>
+                            
+                            <!-- Gradient fill under curve -->
+                            <defs>
+                                <linearGradient id="curveGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#28a745;stop-opacity:0.2" />
+                                    <stop offset="100%" style="stop-color:#28a745;stop-opacity:0.05" />
+                                </linearGradient>
+                            </defs>
+                            
+                            <!-- Exponential decay curve with smooth bezier -->
+                            <path d="M 40 5 C 80 8, 120 15, 160 28 C 200 42, 240 58, 280 72 C 310 82, 340 88, 380 92" 
+                                  stroke="#28a745" 
+                                  stroke-width="3" 
+                                  fill="none" 
+                                  stroke-linecap="round"/>
+                            
+                            <!-- Fill under curve -->
+                            <path d="M 40 5 C 80 8, 120 15, 160 28 C 200 42, 240 58, 280 72 C 310 82, 340 88, 380 92 L 380 95 L 40 95 Z" 
+                                  fill="url(#curveGradient)"/>
+                            
+                            <!-- Starting point -->
+                            <circle cx="40" cy="5" r="4" fill="#1E64C8"/>
+                            <text x="70" y="8" font-size="10" fill="#1E64C8" font-weight="600">initial_lr</text>
+                            
+                            <!-- Ending point -->
+                            <circle cx="380" cy="92" r="4" fill="#dc3545"/>
+                            <text x="360" y="88" font-size="9" fill="#dc3545" text-anchor="end" font-weight="600">≈0</text>
+                            
+                            <!-- Y-axis label -->
+                            <text x="15" y="55" font-size="11" fill="#1E64C8" font-weight="600" transform="rotate(-90 15 55)">Learning Rate</text>
+                        </svg>
                     </div>
                 </div>
                 

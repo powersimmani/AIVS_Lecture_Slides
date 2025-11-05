@@ -23,7 +23,7 @@
         
         .container {
             width: 960px;
-            height: 540px;
+            min-height: 540px;
             padding: 30px;
             background: #ffffff;
             display: flex;
@@ -32,7 +32,7 @@
         
         .header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
         
         .main-title {
@@ -48,16 +48,10 @@
         }
         
         .content-wrapper {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            flex: 1;
-        }
-        
-        .left-section {
             display: flex;
             flex-direction: column;
             gap: 20px;
+            flex: 1;
         }
         
         .core-concept {
@@ -82,30 +76,23 @@
         .characteristics {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
         }
         
         .char-item {
             background: #f8f9fa;
             border-left: 4px solid #1E64C8;
-            padding: 14px 16px;
+            padding: 12px 16px;
             border-radius: 4px;
-            font-size: 16px;
+            font-size: 15px;
             line-height: 1.5;
             color: #2c3e50;
         }
         
-        .right-section {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        
         .types-container {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
         }
         
         .type-card {
@@ -113,7 +100,6 @@
             border: 2px solid #1E64C8;
             border-radius: 8px;
             padding: 18px 20px;
-            flex: 1;
         }
         
         .type-header {
@@ -137,13 +123,13 @@
         }
         
         .type-name {
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 600;
             color: #1E64C8;
         }
         
         .type-desc {
-            font-size: 16px;
+            font-size: 15px;
             color: #2c3e50;
             line-height: 1.5;
         }
@@ -152,22 +138,84 @@
             background: white;
             border: 2px dashed #1E64C8;
             border-radius: 6px;
-            padding: 12px;
+            padding: 10px;
             text-align: center;
             margin-top: 8px;
         }
         
         .formula {
-            font-size: 16px;
+            font-size: 15px;
             color: #1E64C8;
             font-weight: 500;
         }
         
-        .divider {
-            width: 2px;
-            background: #1E64C8;
-            opacity: 0.2;
-            margin: 0 15px;
+        .examples-section {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 3px solid #e0e0e0;
+        }
+        
+        .examples-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .examples-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+        
+        .example-block {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        
+        .example-header {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .example-item {
+            background: white;
+            border-radius: 6px;
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .example-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .example-pred {
+            color: #2c3e50;
+            margin-bottom: 4px;
+        }
+        
+        .example-loss {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+        
+        .formula-text {
+            background: #e8f1fd;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 12px;
+            text-align: center;
+            font-size: 14px;
+            color: #1E64C8;
+            font-weight: 500;
         }
     </style>
 </head>
@@ -179,56 +227,116 @@
         </div>
         
         <div class="content-wrapper">
-            <div class="left-section">
-                <div class="core-concept">
-                    <div class="core-title">📊 Core Concept</div>
-                    <div class="core-desc">
-                        Measures the difference between predicted probability distribution and actual labels,
-                        outputting probability distribution through Softmax activation
-                    </div>
-                </div>
-                
-                <div class="characteristics">
-                    <div class="char-item">
-                        <strong>✓</strong> Encourages high confidence for correct classes
-                    </div>
-                    <div class="char-item">
-                        <strong>✓</strong> Larger penalty for confident wrong predictions
-                    </div>
-                    <div class="char-item">
-                        <strong>≡</strong> Equivalent to maximizing log-likelihood of correct class
-                    </div>
+            <div class="core-concept">
+                <div class="core-title">📊 Core Concept</div>
+                <div class="core-desc">
+                    Measures the difference between predicted probability distribution and actual labels,
+                    outputting probability distribution through Softmax activation
                 </div>
             </div>
             
-            <div class="divider"></div>
+            <div class="characteristics">
+                <div class="char-item">
+                    <strong>✓</strong> Encourages high confidence for correct classes
+                </div>
+                <div class="char-item">
+                    <strong>✓</strong> Larger penalty for confident wrong predictions
+                </div>
+                <div class="char-item">
+                    <strong>≡</strong> Equivalent to maximizing log-likelihood of correct class
+                </div>
+            </div>
             
-            <div class="right-section">
-                <div class="types-container">
-                    <div class="type-card">
-                        <div class="type-header">
-                            <div class="type-number">1</div>
-                            <div class="type-name">Binary Cross-Entropy</div>
-                        </div>
-                        <div class="type-desc">
-                            Used for binary classification problems
-                        </div>
-                        <div class="formula-box">
-                            <div class="formula">2 Classes (0 or 1)</div>
-                        </div>
+            <div class="types-container">
+                <div class="type-card">
+                    <div class="type-header">
+                        <div class="type-number">1</div>
+                        <div class="type-name">Binary Cross-Entropy</div>
+                    </div>
+                    <div class="type-desc">
+                        Used for binary classification problems
+                    </div>
+                    <div class="formula-box">
+                        <div class="formula">2 Classes (0 or 1)</div>
+                    </div>
+                </div>
+                
+                <div class="type-card">
+                    <div class="type-header">
+                        <div class="type-number">2</div>
+                        <div class="type-name">Categorical Cross-Entropy</div>
+                    </div>
+                    <div class="type-desc">
+                        Used for multi-class classification problems
+                    </div>
+                    <div class="formula-box">
+                        <div class="formula">N Classes (Multi-class)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="examples-section">
+            <div class="examples-title">📝 Calculation Examples</div>
+            
+            <div class="examples-grid">
+                <div class="example-block">
+                    <div class="example-header">Binary Cross-Entropy Examples</div>
+                    <div class="formula-text">Loss = -[y·log(p) + (1-y)·log(1-p)]</div>
+                    
+                    <div class="example-item">
+                        <div class="example-pred">True=1, Pred=0.95</div>
+                        <div class="example-loss">Loss = 0.051</div>
                     </div>
                     
-                    <div class="type-card">
-                        <div class="type-header">
-                            <div class="type-number">2</div>
-                            <div class="type-name">Categorical Cross-Entropy</div>
-                        </div>
-                        <div class="type-desc">
-                            Used for multi-class classification problems
-                        </div>
-                        <div class="formula-box">
-                            <div class="formula">N Classes (Multi-class)</div>
-                        </div>
+                    <div class="example-item">
+                        <div class="example-pred">True=1, Pred=0.70</div>
+                        <div class="example-loss">Loss = 0.357</div>
+                    </div>
+                    
+                    <div class="example-item">
+                        <div class="example-pred">True=0, Pred=0.10</div>
+                        <div class="example-loss">Loss = 0.105</div>
+                    </div>
+                    
+                    <div class="example-item">
+                        <div class="example-pred">True=1, Pred=0.50</div>
+                        <div class="example-loss">Loss = 0.693</div>
+                    </div>
+                    
+                    <div class="example-item">
+                        <div class="example-pred">True=1, Pred=0.20</div>
+                        <div class="example-loss">Loss = 1.609</div>
+                    </div>
+                </div>
+                
+                <div class="example-block">
+                    <div class="example-header">Categorical Cross-Entropy Examples</div>
+                    <div class="formula-text">Loss = -Σ y·log(p) (only correct class)</div>
+                    
+                    <div class="example-item">
+                        <div class="example-pred">True=[0,1,0], Pred=[0.1,0.8,0.1]</div>
+                        <div class="example-loss">Loss = 0.223</div>
+                    </div>
+                    
+                    <div class="example-item">
+                        <div class="example-pred">True=[1,0,0], Pred=[0.7,0.2,0.1]</div>
+                        <div class="example-loss">Loss = 0.357</div>
+                    </div>
+                    
+                    <div class="example-item">
+                        <div class="example-pred">True=[0,0,1], Pred=[0.2,0.2,0.6]</div>
+                        <div class="example-loss">Loss = 0.511</div>
+                    </div>
+                    
+                    <div class="example-item">
+                        <div class="example-pred">True=[0,1,0], Pred=[0.4,0.4,0.2]</div>
+                        <div class="example-loss">Loss = 0.916</div>
+                    </div>
+                    
+                    <div class="example-item">
+                        <div class="example-pred">True=[1,0,0], Pred=[0.2,0.5,0.3]</div>
+                        <div class="example-loss">Loss = 1.609</div>
                     </div>
                 </div>
             </div>

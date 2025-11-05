@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Layer Normalization</title>
+    <title>Layer Normalization - Complete Guide</title>
     <style>
         * {
             margin: 0;
@@ -13,20 +13,21 @@
         
         body {
             font-family: Aptos, 'Segoe UI', sans-serif;
-            background: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            background: #f5f5f5;
             padding: 20px;
         }
         
-        .container {
+        .page {
             width: 960px;
-            height: 540px;
-            position: relative;
+            margin: 0 auto 40px;
             background: #ffffff;
             padding: 20px 40px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .container {
+            position: relative;
+            background: #ffffff;
         }
         
         .title {
@@ -41,7 +42,7 @@
             display: grid;
             grid-template-columns: 1.1fr 1fr;
             gap: 25px;
-            height: 450px;
+            min-height: 450px;
         }
         
         .left-section {
@@ -222,89 +223,450 @@
             color: #2c3e50;
             line-height: 1.4;
         }
+
+        /* New styles for additional content */
+        .formula-section {
+            background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+            border: 2px solid #8e24aa;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+
+        .formula-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #8e24aa;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .formula-box {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .formula {
+            font-size: 18px;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            color: #2c3e50;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+
+        .formula-explanation {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.6;
+            margin-top: 12px;
+        }
+
+        .param-item {
+            margin: 8px 0;
+            padding-left: 20px;
+        }
+
+        .param-symbol {
+            font-weight: 600;
+            color: #8e24aa;
+            font-family: 'Courier New', monospace;
+        }
+
+        .covariate-shift-section {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border: 2px solid #f57c00;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+
+        .shift-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #f57c00;
+            margin-bottom: 15px;
+        }
+
+        .shift-content {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .shift-text {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.7;
+            margin-bottom: 15px;
+        }
+
+        .problem-box {
+            background: #ffebee;
+            border-left: 4px solid #e53935;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .problem-title {
+            font-weight: 600;
+            color: #e53935;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .solution-box {
+            background: #e8f5e9;
+            border-left: 4px solid #43a047;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .solution-title {
+            font-weight: 600;
+            color: #43a047;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .transformer-section {
+            background: linear-gradient(135deg, #e0f2f1 0%, #b2dfdb 100%);
+            border: 2px solid #00897b;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+
+        .transformer-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #00897b;
+            margin-bottom: 15px;
+        }
+
+        .reason-card {
+            background: white;
+            border-radius: 8px;
+            padding: 18px;
+            margin: 12px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .reason-number {
+            display: inline-block;
+            background: #00897b;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 28px;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+
+        .reason-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #00897b;
+            margin-bottom: 10px;
+        }
+
+        .reason-text {
+            font-size: 15px;
+            color: #2c3e50;
+            line-height: 1.6;
+            margin-left: 38px;
+        }
+
+        .architecture-box {
+            background: #e3f2fd;
+            border: 2px dashed #1976d2;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .architecture-text {
+            font-size: 16px;
+            color: #1565c0;
+            font-weight: 600;
+        }
+
+        .model-examples {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .model-badge {
+            background: white;
+            border: 2px solid #1976d2;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-weight: 600;
+            color: #1976d2;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="title">Layer Normalization (Layer Norm)</div>
-        
-        <div class="main-content">
-            <div class="left-section">
-                <div class="comparison-box">
-                    <div class="comparison-title">Batch Norm vs Layer Norm</div>
-                    
-                    <div class="visual-comparison">
-                        <div class="norm-type">
-                            <div class="norm-label">Batch Norm</div>
-                            <div class="sample-grid">
-                                <div class="feature-cell batch-norm-cell highlight-row">F1</div>
-                                <div class="feature-cell batch-norm-cell">F2</div>
-                                <div class="feature-cell batch-norm-cell">F3</div>
-                                <div class="feature-cell batch-norm-cell highlight-row">F1</div>
-                                <div class="feature-cell batch-norm-cell">F2</div>
-                                <div class="feature-cell batch-norm-cell">F3</div>
-                                <div class="feature-cell batch-norm-cell highlight-row">F1</div>
-                                <div class="feature-cell batch-norm-cell">F2</div>
-                                <div class="feature-cell batch-norm-cell">F3</div>
+    <div class="page">
+        <div class="container">
+            <div class="title">Layer Normalization (Layer Norm)</div>
+            
+            <div class="main-content">
+                <div class="left-section">
+                    <div class="comparison-box">
+                        <div class="comparison-title">Batch Norm vs Layer Norm</div>
+                        
+                        <div class="visual-comparison">
+                            <div class="norm-type">
+                                <div class="norm-label">Batch Norm</div>
+                                <div class="sample-grid">
+                                    <div class="feature-cell batch-norm-cell highlight-row">F1</div>
+                                    <div class="feature-cell batch-norm-cell">F2</div>
+                                    <div class="feature-cell batch-norm-cell">F3</div>
+                                    <div class="feature-cell batch-norm-cell highlight-row">F1</div>
+                                    <div class="feature-cell batch-norm-cell">F2</div>
+                                    <div class="feature-cell batch-norm-cell">F3</div>
+                                    <div class="feature-cell batch-norm-cell highlight-row">F1</div>
+                                    <div class="feature-cell batch-norm-cell">F2</div>
+                                    <div class="feature-cell batch-norm-cell">F3</div>
+                                </div>
+                                <div class="sample-label">Across Batch ↓</div>
                             </div>
-                            <div class="sample-label">Across Batch ↓</div>
+                            
+                            <div class="norm-type">
+                                <div class="norm-label">Layer Norm</div>
+                                <div class="sample-grid">
+                                    <div class="feature-cell layer-norm-cell highlight-row">F1</div>
+                                    <div class="feature-cell layer-norm-cell highlight-row">F2</div>
+                                    <div class="feature-cell layer-norm-cell highlight-row">F3</div>
+                                    <div class="feature-cell layer-norm-cell">F1</div>
+                                    <div class="feature-cell layer-norm-cell">F2</div>
+                                    <div class="feature-cell layer-norm-cell">F3</div>
+                                    <div class="feature-cell layer-norm-cell">F1</div>
+                                    <div class="feature-cell layer-norm-cell">F2</div>
+                                    <div class="feature-cell layer-norm-cell">F3</div>
+                                </div>
+                                <div class="sample-label">Across Features →</div>
+                            </div>
                         </div>
                         
-                        <div class="norm-type">
-                            <div class="norm-label">Layer Norm</div>
-                            <div class="sample-grid">
-                                <div class="feature-cell layer-norm-cell highlight-row">F1</div>
-                                <div class="feature-cell layer-norm-cell highlight-row">F2</div>
-                                <div class="feature-cell layer-norm-cell highlight-row">F3</div>
-                                <div class="feature-cell layer-norm-cell">F1</div>
-                                <div class="feature-cell layer-norm-cell">F2</div>
-                                <div class="feature-cell layer-norm-cell">F3</div>
-                                <div class="feature-cell layer-norm-cell">F1</div>
-                                <div class="feature-cell layer-norm-cell">F2</div>
-                                <div class="feature-cell layer-norm-cell">F3</div>
-                            </div>
-                            <div class="sample-label">Across Features →</div>
+                        <div class="key-difference">
+                            Normalizes across <span class="diff-highlight">feature dimension</span> per sample
                         </div>
                     </div>
                     
-                    <div class="key-difference">
-                        Normalizes across <span class="diff-highlight">feature dimension</span> per sample
+                    <div class="independence-box">
+                        <div class="independence-title">✓ Independent of Batch Size</div>
+                        <div class="independence-text">
+                            Works with batch size = 1<br>
+                            Each sample normalized independently
+                        </div>
                     </div>
                 </div>
                 
-                <div class="independence-box">
-                    <div class="independence-title">✓ Independent of Batch Size</div>
-                    <div class="independence-text">
-                        Works with batch size = 1<br>
-                        Each sample normalized independently
+                <div class="right-section">
+                    <div class="section-header">Key Features</div>
+                    
+                    <div class="feature-card">
+                        <span class="highlight">Independent</span> of batch size during training/inference
+                    </div>
+                    
+                    <div class="feature-card">
+                        Each sample normalized <span class="highlight">independently</span>
+                    </div>
+                    
+                    <div class="feature-card">
+                        No dependence on <span class="highlight">batch statistics</span>
+                    </div>
+                    
+                    <div class="feature-card">
+                        Essential for <span class="highlight">RNNs and Transformers</span> (sequential models)
+                    </div>
+                    
+                    <div class="usage-box">
+                        <div class="usage-title">✓ Standard in NLP</div>
+                        <div class="usage-text">
+                            Used in modern NLP architectures:<br>
+                            <strong>BERT, GPT, and Transformers</strong>
+                        </div>
                     </div>
                 </div>
             </div>
-            
-            <div class="right-section">
-                <div class="section-header">Key Features</div>
+        </div>
+    </div>
+
+    <!-- New Additional Content -->
+    <div class="page">
+        <div class="container">
+            <div class="formula-section">
+                <div class="formula-title">📐 Layer Normalization Formula</div>
                 
-                <div class="feature-card">
-                    <span class="highlight">Independent</span> of batch size during training/inference
+                <div class="formula-box">
+                    <div class="formula">
+                        μ = (1/H) Σ xᵢ
+                    </div>
+                    <div class="formula-explanation">
+                        <strong>Mean:</strong> Average value of all features in the layer
+                    </div>
                 </div>
-                
-                <div class="feature-card">
-                    Each sample normalized <span class="highlight">independently</span>
+
+                <div class="formula-box">
+                    <div class="formula">
+                        σ² = (1/H) Σ (xᵢ - μ)²
+                    </div>
+                    <div class="formula-explanation">
+                        <strong>Variance:</strong> Average of squared deviations from the mean
+                    </div>
                 </div>
-                
-                <div class="feature-card">
-                    No dependence on <span class="highlight">batch statistics</span>
+
+                <div class="formula-box">
+                    <div class="formula">
+                        x̂ = (x - μ) / √(σ² + ε)
+                    </div>
+                    <div class="formula-explanation">
+                        <strong>Normalization:</strong> Transform to mean 0 and variance 1
+                    </div>
                 </div>
-                
-                <div class="feature-card">
-                    Essential for <span class="highlight">RNNs and Transformers</span> (sequential models)
+
+                <div class="formula-box">
+                    <div class="formula">
+                        y = γ ⊙ x̂ + β
+                    </div>
+                    <div class="formula-explanation">
+                        <strong>Scale & Shift:</strong> Adjust with learnable parameters
+                        <div class="param-item">
+                            <span class="param-symbol">γ (gamma)</span>: Scale parameter (learnable)
+                        </div>
+                        <div class="param-item">
+                            <span class="param-symbol">β (beta)</span>: Shift parameter (learnable)
+                        </div>
+                        <div class="param-item">
+                            <span class="param-symbol">ε (epsilon)</span>: Small constant for numerical stability (e.g., 10⁻⁵)
+                        </div>
+                        <div class="param-item">
+                            <span class="param-symbol">H</span>: Number of hidden units in the layer
+                        </div>
+                    </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page">
+        <div class="container">
+            <div class="covariate-shift-section">
+                <div class="shift-title">🔄 What is Internal Covariate Shift?</div>
                 
-                <div class="usage-box">
-                    <div class="usage-title">✓ Standard in NLP</div>
-                    <div class="usage-text">
-                        Used in modern NLP architectures:<br>
-                        <strong>BERT, GPT, and Transformers</strong>
+                <div class="shift-content">
+                    <div class="shift-text">
+                        <strong>Internal Covariate Shift</strong> refers to the phenomenon where the distribution 
+                        of inputs to each layer continuously changes during neural network training. 
+                        As the parameters of previous layers are updated, the statistical characteristics 
+                        of the inputs received by the current layer change with each iteration.
+                    </div>
+
+                    <div class="problem-box">
+                        <div class="problem-title">⚠️ Problems that Arise</div>
+                        <div class="shift-text">
+                            • Training instability: Each layer must constantly adapt to changing input distributions<br>
+                            • Slow convergence: Requires smaller learning rates<br>
+                            • Gradient problems: Risk of vanishing/exploding gradients<br>
+                            • Worse in deep networks: Cumulative effect increases with depth
+                        </div>
+                    </div>
+
+                    <div class="solution-box">
+                        <div class="solution-title">✅ Layer Normalization Solution</div>
+                        <div class="shift-text">
+                            • Stabilizes input distribution: Normalizes each sample independently<br>
+                            • Faster training: Enables larger learning rates<br>
+                            • Improved gradient flow: Stabilizes gradients during backpropagation<br>
+                            • Consistent representations: Model can learn stable features
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page">
+        <div class="container">
+            <div class="transformer-section">
+                <div class="transformer-title">🤖 Why Layer Norm is Used in Transformers</div>
+                
+                <div class="reason-card">
+                    <div class="reason-title">
+                        <span class="reason-number">1</span>
+                        Independent Sequence Processing
+                    </div>
+                    <div class="reason-text">
+                        Transformers process each input sequence independently. 
+                        Rather than sharing statistics across batches like Batch Normalization, 
+                        normalization needs to be applied independently for each sample (sentence).
+                    </div>
+                </div>
+
+                <div class="reason-card">
+                    <div class="reason-title">
+                        <span class="reason-number">2</span>
+                        Variable-Length Sequence Handling
+                    </div>
+                    <div class="reason-text">
+                        Sentences vary in length, and each token carries different meanings. 
+                        Layer Norm normalizes across the feature dimension of each token, 
+                        operating stably regardless of sequence length.
+                    </div>
+                </div>
+
+                <div class="reason-card">
+                    <div class="reason-title">
+                        <span class="reason-number">3</span>
+                        Self-Attention 안정화
+                    </div>
+                    <div class="reason-text">
+                        Self-Attention 메커니즘에서 각 토큰은 시퀀스의 모든 토큰을 참조합니다. 
+                        Layer Normalization은 이러한 attention 연산 전후에 적용되어 
+                        표현을 일관되게 유지하고 학습 수렴을 빠르게 합니다.
+                    </div>
+                </div>
+
+                <div class="reason-card">
+                    <div class="reason-title">
+                        <span class="reason-number">4</span>
+                        배치 크기 독립성
+                    </div>
+                    <div class="reason-text">
+                        추론(inference) 시 배치 크기가 1일 수 있습니다. 
+                        Layer Norm은 배치 크기에 의존하지 않으므로 
+                        학습과 추론에서 동일하게 동작하여 안정적입니다.
+                    </div>
+                </div>
+
+                <div class="architecture-box">
+                    <div class="architecture-text">
+                        💡 주요 NLP 모델에서의 Layer Norm 적용
+                    </div>
+                    <div class="model-examples">
+                        <div class="model-badge">BERT</div>
+                        <div class="model-badge">GPT-2/3/4</div>
+                        <div class="model-badge">T5</div>
+                        <div class="model-badge">RoBERTa</div>
+                        <div class="model-badge">BART</div>
                     </div>
                 </div>
             </div>

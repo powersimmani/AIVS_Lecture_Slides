@@ -55,10 +55,10 @@
             background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
             border: 2px solid #1E64C8;
             border-radius: 12px;
-            padding: 20px;
+            padding: 15px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: space-between;
         }
         
         .visual-title {
@@ -66,38 +66,39 @@
             font-weight: 600;
             color: #1E64C8;
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 12px;
         }
         
         .layers-container {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 10px;
         }
         
         .layer-group {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
         }
         
         .layer-boxes {
             flex: 1;
             display: flex;
-            gap: 8px;
+            gap: 6px;
         }
         
         .layer-box {
             flex: 1;
-            height: 50px;
+            height: 45px;
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             color: white;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
         }
         
         .frozen-layer {
@@ -111,12 +112,12 @@
         }
         
         .layer-label {
-            min-width: 120px;
-            font-size: 16px;
+            min-width: 110px;
+            font-size: 15px;
             color: #2c3e50;
             display: flex;
             flex-direction: column;
-            gap: 3px;
+            gap: 2px;
         }
         
         .label-main {
@@ -124,12 +125,12 @@
         }
         
         .label-sub {
-            font-size: 14px;
+            font-size: 12px;
             color: #666;
         }
         
         .arrow-icon {
-            font-size: 20px;
+            font-size: 18px;
             color: #1E64C8;
         }
         
@@ -137,28 +138,28 @@
             background: white;
             border: 2px dashed #1E64C8;
             border-radius: 8px;
-            padding: 12px;
+            padding: 10px;
             text-align: center;
         }
         
         .source-title {
-            font-size: 14px;
+            font-size: 13px;
             color: #666;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
         
         .source-items {
             display: flex;
             justify-content: center;
-            gap: 12px;
+            gap: 10px;
         }
         
         .source-item {
             background: #1E64C8;
             color: white;
-            padding: 6px 14px;
+            padding: 5px 12px;
             border-radius: 6px;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 600;
         }
         
@@ -223,6 +224,77 @@
         .icon-emoji {
             margin-right: 5px;
         }
+        
+        .flow-arrow {
+            text-align: center;
+            font-size: 24px;
+            color: #1E64C8;
+            margin: 3px 0;
+            font-weight: bold;
+        }
+        
+        .network-stage {
+            background: white;
+            border-radius: 8px;
+            padding: 8px;
+            margin: 3px 0;
+        }
+        
+        .stage-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+        
+        .freeze-indicator {
+            display: inline-block;
+            background: #64b5f6;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-left: 5px;
+        }
+        
+        .train-indicator {
+            display: inline-block;
+            background: #ffc107;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-left: 5px;
+        }
+        
+        .process-step {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 4px 0;
+        }
+        
+        .step-number {
+            background: #1E64C8;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .step-text {
+            font-size: 13px;
+            color: #2c3e50;
+        }
     </style>
 </head>
 <body>
@@ -234,7 +306,26 @@
                 <div class="network-visual">
                     <div class="visual-title">Transfer Learning Architecture</div>
                     
+                    <div class="network-stage">
+                        <div class="stage-title">🎓 Step 1: Pre-training on Large Dataset</div>
+                    </div>
+                    
+                    <div class="source-box">
+                        <div class="source-title">Pre-trained on Large Datasets</div>
+                        <div class="source-items">
+                            <div class="source-item">ImageNet</div>
+                            <div class="source-item">COCO</div>
+                            <div class="source-item">etc.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="flow-arrow">↓</div>
+                    
                     <div class="layers-container">
+                        <div class="network-stage">
+                            <div class="stage-title">🔧 Step 2: Transfer & Fine-tune</div>
+                        </div>
+                        
                         <div class="layer-group">
                             <div class="layer-label">
                                 <div class="label-main">Lower Layers</div>
@@ -242,9 +333,18 @@
                             </div>
                             <div class="arrow-icon">→</div>
                             <div class="layer-boxes">
-                                <div class="layer-box frozen-layer">Edges</div>
-                                <div class="layer-box frozen-layer">Textures</div>
-                                <div class="layer-box frozen-layer">Patterns</div>
+                                <div class="layer-box frozen-layer">
+                                    Edges
+                                    <span class="freeze-indicator">❄️ FREEZE</span>
+                                </div>
+                                <div class="layer-box frozen-layer">
+                                    Textures
+                                    <span class="freeze-indicator">❄️ FREEZE</span>
+                                </div>
+                                <div class="layer-box frozen-layer">
+                                    Patterns
+                                    <span class="freeze-indicator">❄️ FREEZE</span>
+                                </div>
                             </div>
                         </div>
                         
@@ -255,19 +355,22 @@
                             </div>
                             <div class="arrow-icon">→</div>
                             <div class="layer-boxes">
-                                <div class="layer-box finetune-layer">Domain</div>
-                                <div class="layer-box finetune-layer">Features</div>
+                                <div class="layer-box finetune-layer">
+                                    Domain
+                                    <span class="train-indicator">🔥 TRAIN</span>
+                                </div>
+                                <div class="layer-box finetune-layer">
+                                    Features
+                                    <span class="train-indicator">🔥 TRAIN</span>
+                                </div>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="source-box">
-                        <div class="source-title">Pre-trained on Large Datasets</div>
-                        <div class="source-items">
-                            <div class="source-item">ImageNet</div>
-                            <div class="source-item">COCO</div>
-                            <div class="source-item">etc.</div>
-                        </div>
+                    <div class="flow-arrow">↓</div>
+                    
+                    <div class="network-stage">
+                        <div class="stage-title">🎯 Step 3: Deploy on Target Task</div>
                     </div>
                 </div>
             </div>
@@ -296,7 +399,7 @@
                 </div>
                 
                 <div class="benefit-card">
-                    <span class="icon-emoji">🔝</span>
+                    <span class="icon-emoji">🔍</span>
                     Higher layers: <span class="highlight">domain-specific</span> features
                 </div>
                 

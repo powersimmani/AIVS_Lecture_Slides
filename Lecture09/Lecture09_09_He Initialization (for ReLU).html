@@ -23,7 +23,7 @@
         
         .container {
             width: 960px;
-            height: 540px;
+            min-height: 540px;
             position: relative;
             background: #ffffff;
             padding: 20px 40px;
@@ -42,6 +42,7 @@
             grid-template-columns: 1fr 1fr;
             gap: 25px;
             height: 450px;
+            margin-bottom: 40px;
         }
         
         .left-section {
@@ -224,6 +225,120 @@
             color: #2c3e50;
             line-height: 1.4;
         }
+
+        
+        /* Calculation Example Section */
+        .calculation-section {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 3px solid #1E64C8;
+        }
+        
+        .calc-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 25px;
+        }
+        
+        .calc-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+        
+        .calc-card {
+            background: #f8f9fb;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        
+        .calc-header {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 15px;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .calc-step {
+            background: white;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            border-left: 4px solid #4caf50;
+        }
+        
+        .step-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #4caf50;
+            margin-bottom: 5px;
+        }
+        
+        .step-content {
+            font-family: 'Courier New', monospace;
+            font-size: 15px;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+        
+        .step-result {
+            background: #e8f5e9;
+            padding: 10px;
+            margin-top: 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #2e7d32;
+        }
+        
+        .matrix-display {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.8;
+            color: #2c3e50;
+            margin-top: 10px;
+            overflow-x: auto;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            margin-top: 15px;
+            border-collapse: collapse;
+        }
+        
+        .comparison-table th {
+            background: #1E64C8;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-size: 14px;
+        }
+        
+        .comparison-table td {
+            background: white;
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+            font-size: 14px;
+        }
+        
+        .highlight-good {
+            color: #4caf50;
+            font-weight: 600;
+        }
+        
+        .highlight-bad {
+            color: #ff4444;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -292,6 +407,134 @@
                     <div class="usage-title">✓ Default Choice</div>
                     <div class="usage-text">
                         Standard initialization for modern <strong>CNN architectures</strong> and deep learning models with ReLU
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+        <!-- Calculation Example Section -->
+        <div class="calculation-section">
+            <div class="calc-title">📊 Practical Calculation Example</div>
+            
+            <div class="calc-grid">
+                <!-- Example 1: Small Layer -->
+                <div class="calc-card">
+                    <div class="calc-header">Example 1: Layer with 4 inputs → 3 outputs</div>
+                    
+                    <div class="calc-step">
+                        <div class="step-label">Step 1: Calculate Standard Deviation</div>
+                        <div class="step-content">
+                            n<sub>in</sub> = 4<br>
+                            σ = √(2/n<sub>in</sub>) = √(2/4) = √0.5<br>
+                            <div class="step-result">σ ≈ 0.707</div>
+                        </div>
+                    </div>
+                    
+                    <div class="calc-step">
+                        <div class="step-label">Step 2: Generate Weight Matrix (3×4)</div>
+                        <div class="step-content">
+                            Sample from N(0, 0.707²)
+                        </div>
+                    </div>
+                    
+                    <div class="matrix-display">
+W = [[ 0.423, -0.891,  0.156,  0.734]<br>
+     [-0.612,  0.289, -0.445,  0.821]<br>
+     [ 0.534, -0.178,  0.693, -0.356]]
+                    </div>
+                    
+                    <div class="calc-step">
+                        <div class="step-label">Verification</div>
+                        <div class="step-content">
+                            Variance ≈ 0.5 ✓<br>
+                            Compensates for ReLU killing ~50% neurons
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Example 2: Larger Layer -->
+                <div class="calc-card">
+                    <div class="calc-header">Example 2: Layer with 128 inputs → 64 outputs</div>
+                    
+                    <div class="calc-step">
+                        <div class="step-label">Step 1: Calculate Standard Deviation</div>
+                        <div class="step-content">
+                            n<sub>in</sub> = 128<br>
+                            σ = √(2/n<sub>in</sub>) = √(2/128)<br>
+                            σ = √0.015625<br>
+                            <div class="step-result">σ ≈ 0.125</div>
+                        </div>
+                    </div>
+                    
+                    <div class="calc-step">
+                        <div class="step-label">Step 2: Generate Weight Matrix (64×128)</div>
+                        <div class="step-content">
+                            Sample from N(0, 0.125²)
+                        </div>
+                    </div>
+                    
+                    <div class="matrix-display">
+W[0,:5] = [ 0.089, -0.134,  0.112, -0.078,  0.156]<br>
+W[1,:5] = [-0.091,  0.145, -0.123,  0.067, -0.089]<br>
+W[2,:5] = [ 0.134, -0.056,  0.178, -0.145,  0.103]<br>
+...<br>
+(Much smaller values due to larger n<sub>in</sub>)
+                    </div>
+                    
+                    <div class="calc-step">
+                        <div class="step-label">Key Insight</div>
+                        <div class="step-content">
+                            Larger n<sub>in</sub> → Smaller weights<br>
+                            Prevents activation explosion 🚀
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Comparison Table -->
+            <div class="calc-card" style="margin-top: 20px;">
+                <div class="calc-header">🔍 Comparison: Xavier vs He Initialization</div>
+                
+                <table class="comparison-table">
+                    <tr>
+                        <th>Layer Size (n<sub>in</sub>)</th>
+                        <th>Xavier: σ = √(1/n<sub>in</sub>)</th>
+                        <th>He: σ = √(2/n<sub>in</sub>)</th>
+                        <th>Ratio (He/Xavier)</th>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>0.500</td>
+                        <td class="highlight-good">0.707</td>
+                        <td>√2 ≈ 1.41×</td>
+                    </tr>
+                    <tr>
+                        <td>16</td>
+                        <td>0.250</td>
+                        <td class="highlight-good">0.354</td>
+                        <td>√2 ≈ 1.41×</td>
+                    </tr>
+                    <tr>
+                        <td>64</td>
+                        <td>0.125</td>
+                        <td class="highlight-good">0.177</td>
+                        <td>√2 ≈ 1.41×</td>
+                    </tr>
+                    <tr>
+                        <td>256</td>
+                        <td>0.0625</td>
+                        <td class="highlight-good">0.088</td>
+                        <td>√2 ≈ 1.41×</td>
+                    </tr>
+                </table>
+                
+                <div class="calc-step" style="margin-top: 15px;">
+                    <div class="step-label">💡 Key Takeaway</div>
+                    <div class="step-content">
+                        He initialization uses <strong>√2 times larger</strong> weights than Xavier<br>
+                        This compensates for ReLU zeroing out half the neurons<br>
+                        Result: <span class="highlight-good">Stable gradient flow</span> in deep ReLU networks
                     </div>
                 </div>
             </div>

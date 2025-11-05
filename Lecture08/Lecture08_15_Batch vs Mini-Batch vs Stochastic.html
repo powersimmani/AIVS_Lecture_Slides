@@ -15,15 +15,16 @@
             font-family: Aptos, 'Segoe UI', sans-serif;
             background: #ffffff;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
             min-height: 100vh;
             padding: 20px;
+            gap: 40px;
         }
         
         .container {
             width: 960px;
-            height: 540px;
+            min-height: 540px;
             padding: 30px;
             background: #ffffff;
         }
@@ -202,9 +203,190 @@
             color: #1E64C8;
             font-weight: 600;
         }
+        
+        /* Styles for calculation examples */
+        .example-setup {
+            background: linear-gradient(135deg, #f0f8ff 0%, #e8f1fd 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .setup-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .setup-content {
+            font-size: 15px;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+        
+        .methods-examples {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            margin-bottom: 20px;
+        }
+        
+        .example-card {
+            background: #ffffff;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 18px;
+        }
+        
+        .example-card.highlighted-example {
+            background: linear-gradient(135deg, #e8f1fd 0%, #f0f8ff 100%);
+            border: 3px solid #1E64C8;
+        }
+        
+        .example-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .example-number {
+            width: 32px;
+            height: 32px;
+            background: #1E64C8;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .example-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .example-content {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .formula-box {
+            background: #f8f9fa;
+            border-left: 4px solid #1E64C8;
+            padding: 12px 16px;
+            border-radius: 4px;
+        }
+        
+        .formula-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 6px;
+        }
+        
+        .formula {
+            font-size: 17px;
+            font-family: 'Courier New', monospace;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+        
+        .calculation-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .step {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            font-size: 15px;
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+        
+        .step-label {
+            font-weight: 600;
+            color: #1E64C8;
+            min-width: 90px;
+        }
+        
+        .example-note {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 6px;
+            padding: 10px 14px;
+            font-size: 14px;
+            color: #856404;
+            line-height: 1.5;
+        }
+        
+        .comparison-table {
+            background: #ffffff;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 18px;
+            overflow: hidden;
+        }
+        
+        .table-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 15px;
+        }
+        
+        thead {
+            background: #1E64C8;
+            color: white;
+        }
+        
+        th {
+            padding: 12px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        tbody tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .highlight-row {
+            background: linear-gradient(135deg, #e8f1fd 0%, #f0f8ff 100%);
+            font-weight: 500;
+        }
+        
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
     </style>
 </head>
 <body>
+    <!-- First Page: Comparison -->
     <div class="container">
         <div class="header">
             <div class="main-title">Batch vs Mini-Batch vs Stochastic Gradient Descent</div>
@@ -343,6 +525,164 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+    
+    <!-- Second Page: Calculation Examples -->
+    <div class="container">
+        <div class="header">
+            <div class="main-title">📐 Gradient Calculation Examples</div>
+            <div class="subtitle">Understanding How Each Method Computes Gradients</div>
+        </div>
+        
+        <div class="example-setup">
+            <div class="setup-title">Example Setup</div>
+            <div class="setup-content">
+                <strong>Dataset:</strong> N = 1000 samples &nbsp;|&nbsp; 
+                <strong>Loss Function:</strong> L(θ) = ½(y - ŷ)² &nbsp;|&nbsp;
+                <strong>Learning Rate:</strong> α = 0.01
+            </div>
+        </div>
+        
+        <div class="methods-examples">
+            <!-- Batch GD Example -->
+            <div class="example-card">
+                <div class="example-header">
+                    <div class="example-number">1</div>
+                    <div class="example-title">Batch Gradient Descent</div>
+                </div>
+                <div class="example-content">
+                    <div class="formula-box">
+                        <div class="formula-label">Gradient:</div>
+                        <div class="formula">∇L(θ) = (1/N) Σᵢ₌₁ᴺ ∇L(θ, xᵢ, yᵢ)</div>
+                    </div>
+                    <div class="calculation-steps">
+                        <div class="step">
+                            <span class="step-label">Step 1:</span>
+                            <span>Calculate loss for all 1000 samples</span>
+                        </div>
+                        <div class="step">
+                            <span class="step-label">Step 2:</span>
+                            <span>Compute average gradient: ∇L = (1/1000) Σᵢ₌₁¹⁰⁰⁰ ∇Lᵢ</span>
+                        </div>
+                        <div class="step">
+                            <span class="step-label">Step 3:</span>
+                            <span>Update parameters: θ ← θ - 0.01 × ∇L</span>
+                        </div>
+                    </div>
+                    <div class="example-note">
+                        💡 <strong>Key Feature:</strong> 1 epoch = 1 parameter update (using all 1000 samples)
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Mini-Batch GD Example -->
+            <div class="example-card highlighted-example">
+                <div class="example-header">
+                    <div class="example-number">2</div>
+                    <div class="example-title">Mini-Batch Gradient Descent</div>
+                </div>
+                <div class="example-content">
+                    <div class="formula-box">
+                        <div class="formula-label">Gradient (batch size B=100):</div>
+                        <div class="formula">∇L(θ) = (1/B) Σᵢ₌₁ᴮ ∇L(θ, xᵢ, yᵢ)</div>
+                    </div>
+                    <div class="calculation-steps">
+                        <div class="step">
+                            <span class="step-label">Batch 1:</span>
+                            <span>Use samples 1-100 → Compute ∇L₁ → θ ← θ - 0.01 × ∇L₁</span>
+                        </div>
+                        <div class="step">
+                            <span class="step-label">Batch 2:</span>
+                            <span>Use samples 101-200 → Compute ∇L₂ → θ ← θ - 0.01 × ∇L₂</span>
+                        </div>
+                        <div class="step">
+                            <span class="step-label">⋮</span>
+                            <span style="font-style: italic;">Continue...</span>
+                        </div>
+                        <div class="step">
+                            <span class="step-label">Batch 10:</span>
+                            <span>Use samples 901-1000 → Compute ∇L₁₀ → θ ← θ - 0.01 × ∇L₁₀</span>
+                        </div>
+                    </div>
+                    <div class="example-note">
+                        💡 <strong>Key Feature:</strong> 1 epoch = 10 parameter updates (1000/100 = 10 batches)
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Stochastic GD Example -->
+            <div class="example-card">
+                <div class="example-header">
+                    <div class="example-number">3</div>
+                    <div class="example-title">Stochastic Gradient Descent</div>
+                </div>
+                <div class="example-content">
+                    <div class="formula-box">
+                        <div class="formula-label">Gradient (single sample):</div>
+                        <div class="formula">∇L(θ) = ∇L(θ, xᵢ, yᵢ)</div>
+                    </div>
+                    <div class="calculation-steps">
+                        <div class="step">
+                            <span class="step-label">Sample 1:</span>
+                            <span>Use x₁, y₁ → Compute ∇L₁ → θ ← θ - 0.01 × ∇L₁</span>
+                        </div>
+                        <div class="step">
+                            <span class="step-label">Sample 2:</span>
+                            <span>Use x₂, y₂ → Compute ∇L₂ → θ ← θ - 0.01 × ∇L₂</span>
+                        </div>
+                        <div class="step">
+                            <span class="step-label">⋮</span>
+                            <span style="font-style: italic;">Continue...</span>
+                        </div>
+                        <div class="step">
+                            <span class="step-label">Sample 1000:</span>
+                            <span>Use x₁₀₀₀, y₁₀₀₀ → Compute ∇L₁₀₀₀ → θ ← θ - 0.01 × ∇L₁₀₀₀</span>
+                        </div>
+                    </div>
+                    <div class="example-note">
+                        💡 <strong>Key Feature:</strong> 1 epoch = 1000 parameter updates (update after each sample)
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="comparison-table">
+            <div class="table-title">⚖️ Method Comparison Summary</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>Sample Size</th>
+                        <th>Updates per Epoch</th>
+                        <th>Computation Time</th>
+                        <th>Gradient Accuracy</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Batch GD</strong></td>
+                        <td>N = 1000</td>
+                        <td>1</td>
+                        <td>Slowest</td>
+                        <td>Very accurate</td>
+                    </tr>
+                    <tr class="highlight-row">
+                        <td><strong>Mini-Batch GD</strong></td>
+                        <td>B = 100</td>
+                        <td>10</td>
+                        <td>Balanced</td>
+                        <td>Sufficiently accurate</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Stochastic GD</strong></td>
+                        <td>B = 1</td>
+                        <td>1000</td>
+                        <td>Fast updates</td>
+                        <td>Noisy</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </body>

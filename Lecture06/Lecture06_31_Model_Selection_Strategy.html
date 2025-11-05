@@ -214,6 +214,119 @@
             font-size: 20px;
             margin-bottom: 5px;
         }
+        
+        .comparison-section {
+            background: #f8f9fb;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 18px;
+        }
+        .comparison-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .table-wrapper {
+            overflow-x: auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        .comparison-table thead {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            color: white;
+        }
+        .comparison-table th {
+            padding: 12px 10px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+        }
+        .comparison-table th.model-col {
+            min-width: 120px;
+        }
+        .comparison-table td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #e8eaf0;
+        }
+        .comparison-table tbody tr:hover {
+            background: #f8f9fb;
+        }
+        .comparison-table tbody tr.best-model {
+            background: #e8f4f8;
+        }
+        .comparison-table tbody tr.best-model:hover {
+            background: #d4ebf3;
+        }
+        .model-name {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        .hyperparams {
+            font-size: 12px;
+            color: #555;
+            line-height: 1.6;
+        }
+        .hyperparams div {
+            font-family: 'Courier New', monospace;
+            background: #f5f7fa;
+            padding: 2px 6px;
+            margin: 2px 0;
+            border-radius: 3px;
+            display: inline-block;
+        }
+        .metric {
+            text-align: center;
+            font-weight: 600;
+            color: #1E64C8;
+            font-family: 'Courier New', monospace;
+        }
+        .time {
+            text-align: center;
+            color: #666;
+            font-family: 'Courier New', monospace;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+        }
+        .badge.best {
+            background: #28a745;
+            color: white;
+        }
+        .badge.runner-up {
+            background: #4A90E2;
+            color: white;
+        }
+        .badge.fastest {
+            background: #ffc107;
+            color: #333;
+        }
+        .badge.neutral {
+            background: #e8eaf0;
+            color: #666;
+        }
+        .comparison-note {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 13px;
+            color: #555;
+            line-height: 1.6;
+            padding: 10px;
+            background: rgba(30, 100, 200, 0.05);
+            border-radius: 6px;
+        }
     </style>
 </head>
 <body>
@@ -341,6 +454,101 @@
                     <div class="practice-icon">🔄</div>
                     <div>Iterate based on validation results</div>
                 </div>
+            </div>
+        </div>
+
+        <div class="comparison-section">
+            <div class="comparison-title">📋 Model Performance Comparison</div>
+            <div class="table-wrapper">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th class="model-col">Model</th>
+                            <th>Best Hyperparameters</th>
+                            <th>Accuracy</th>
+                            <th>Precision</th>
+                            <th>Recall</th>
+                            <th>F1 Score</th>
+                            <th>Training Time</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="best-model">
+                            <td class="model-name">Random Forest</td>
+                            <td class="hyperparams">
+                                <div>n_estimators: 200</div>
+                                <div>max_depth: 15</div>
+                                <div>min_samples_split: 5</div>
+                            </td>
+                            <td class="metric">0.942</td>
+                            <td class="metric">0.938</td>
+                            <td class="metric">0.945</td>
+                            <td class="metric">0.941</td>
+                            <td class="time">2.3s</td>
+                            <td><span class="badge best">✓ Best</span></td>
+                        </tr>
+                        <tr>
+                            <td class="model-name">XGBoost</td>
+                            <td class="hyperparams">
+                                <div>learning_rate: 0.1</div>
+                                <div>max_depth: 8</div>
+                                <div>n_estimators: 150</div>
+                            </td>
+                            <td class="metric">0.935</td>
+                            <td class="metric">0.932</td>
+                            <td class="metric">0.937</td>
+                            <td class="metric">0.934</td>
+                            <td class="time">1.8s</td>
+                            <td><span class="badge runner-up">2nd</span></td>
+                        </tr>
+                        <tr>
+                            <td class="model-name">SVM (RBF)</td>
+                            <td class="hyperparams">
+                                <div>C: 10</div>
+                                <div>gamma: 0.01</div>
+                                <div>kernel: rbf</div>
+                            </td>
+                            <td class="metric">0.918</td>
+                            <td class="metric">0.915</td>
+                            <td class="metric">0.920</td>
+                            <td class="metric">0.917</td>
+                            <td class="time">5.1s</td>
+                            <td><span class="badge neutral">-</span></td>
+                        </tr>
+                        <tr>
+                            <td class="model-name">Logistic Regression</td>
+                            <td class="hyperparams">
+                                <div>C: 1.0</div>
+                                <div>penalty: l2</div>
+                                <div>solver: lbfgs</div>
+                            </td>
+                            <td class="metric">0.887</td>
+                            <td class="metric">0.883</td>
+                            <td class="metric">0.891</td>
+                            <td class="metric">0.887</td>
+                            <td class="time">0.5s</td>
+                            <td><span class="badge fastest">⚡ Fastest</span></td>
+                        </tr>
+                        <tr>
+                            <td class="model-name">Decision Tree</td>
+                            <td class="hyperparams">
+                                <div>max_depth: 12</div>
+                                <div>min_samples_split: 10</div>
+                                <div>criterion: gini</div>
+                            </td>
+                            <td class="metric">0.865</td>
+                            <td class="metric">0.861</td>
+                            <td class="metric">0.869</td>
+                            <td class="metric">0.865</td>
+                            <td class="time">0.3s</td>
+                            <td><span class="badge neutral">-</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="comparison-note">
+                💡 All metrics evaluated on validation set using 5-fold cross-validation. Best model selected based on F1 score and generalization performance.
             </div>
         </div>
     </div>

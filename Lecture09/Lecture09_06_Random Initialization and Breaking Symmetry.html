@@ -13,20 +13,22 @@
         
         body {
             font-family: Aptos, 'Segoe UI', sans-serif;
-            background: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            background: #f5f5f5;
             padding: 20px;
         }
         
-        .container {
+        .slide {
             width: 960px;
             height: 540px;
             position: relative;
             background: #ffffff;
             padding: 20px 40px;
+            margin: 0 auto 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .slide:last-child {
+            margin-top: 200px;
         }
         
         .title {
@@ -197,16 +199,191 @@
             color: #1E64C8;
             text-align: center;
         }
+
+        /* New styles for calculation example slide */
+        .example-content {
+            height: 460px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .network-diagram {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+        }
+        
+        .layer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .layer-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+        }
+        
+        .neurons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .neuron {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 600;
+            border: 3px solid;
+        }
+        
+        .input-neuron {
+            background: #e8f5e9;
+            border-color: #4caf50;
+            color: #2e7d32;
+        }
+        
+        .hidden-neuron {
+            background: #e3f2fd;
+            border-color: #2196f3;
+            color: #1565c0;
+        }
+        
+        .connections {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .weight-label {
+            background: #fff3e0;
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 2px solid #ff9800;
+            font-size: 14px;
+            font-weight: 600;
+            color: #e65100;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .calculation-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .calc-box {
+            border-radius: 10px;
+            padding: 20px;
+            border: 2px solid;
+        }
+        
+        .zero-calc {
+            background: #fff0f0;
+            border-color: #ff4444;
+        }
+        
+        .random-calc {
+            background: #e8f4ff;
+            border-color: #1E64C8;
+        }
+        
+        .calc-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .zero-calc .calc-title {
+            color: #ff4444;
+        }
+        
+        .random-calc .calc-title {
+            color: #1E64C8;
+        }
+        
+        .calc-step {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin: 8px 0;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+        
+        .calc-result {
+            background: white;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .problem-badge {
+            background: #ffebee;
+            color: #c62828;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            display: inline-block;
+            margin-top: 8px;
+        }
+        
+        .success-badge {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            display: inline-block;
+            margin-top: 8px;
+        }
+
+        .gradient-section {
+            background: #f8f9fb;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .gradient-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+        }
+
+        .gradient-calc {
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #2c3e50;
+            line-height: 1.8;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
+    <!-- Original Slide -->
+    <div class="slide">
         <div class="title">Random Initialization and Breaking Symmetry</div>
         
         <div class="main-content">
             <div class="comparison-section">
                 <div class="comparison-box before-box">
-                    <div class="box-title">❌ Zero Initialization</div>
+                    <div class="box-title">✘ Zero Initialization</div>
                     <div class="neurons-row">
                         <div class="neuron-small neuron-zero">0</div>
                         <div class="neuron-small neuron-zero">0</div>
@@ -260,6 +437,95 @@
                 
                 <div class="benefit-card">
                     Foundation for <span class="highlight">all modern methods</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Calculation Example Slide -->
+    <div class="slide">
+        <div class="title">Practical Example: Why Zero Initialization Fails</div>
+        
+        <div class="example-content">
+            <div class="network-diagram">
+                <div class="layer">
+                    <div class="layer-label">Input Layer</div>
+                    <div class="neurons">
+                        <div class="neuron input-neuron">x₁=1</div>
+                        <div class="neuron input-neuron">x₂=2</div>
+                    </div>
+                </div>
+                
+                <div class="connections">
+                    <div class="weight-label">W₁₁, W₁₂</div>
+                    <div class="weight-label">W₂₁, W₂₂</div>
+                </div>
+                
+                <div class="layer">
+                    <div class="layer-label">Hidden Layer</div>
+                    <div class="neurons">
+                        <div class="neuron hidden-neuron">h₁</div>
+                        <div class="neuron hidden-neuron">h₂</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="calculation-grid">
+                <div class="calc-box zero-calc">
+                    <div class="calc-title">❌ Zero Initialization</div>
+                    <div class="calc-step">W₁₁ = W₁₂ = W₂₁ = W₂₂ = 0</div>
+                    <div class="calc-step" style="margin-top: 15px;">
+                        h₁ = W₁₁·x₁ + W₁₂·x₂<br>
+                        &nbsp;&nbsp; = 0·1 + 0·2 = <strong>0</strong>
+                    </div>
+                    <div class="calc-step">
+                        h₂ = W₂₁·x₁ + W₂₂·x₂<br>
+                        &nbsp;&nbsp; = 0·1 + 0·2 = <strong>0</strong>
+                    </div>
+                    <div class="calc-result">
+                        h₁ = h₂ = 0 (Identical!)
+                    </div>
+                    <div class="gradient-section">
+                        <div class="gradient-title">Gradient Update:</div>
+                        <div class="gradient-calc">
+                            ∂L/∂W₁₁ = ∂L/∂W₁₂ (same)<br>
+                            ∂L/∂W₂₁ = ∂L/∂W₂₂ (same)<br>
+                            <br>
+                            W₁₁ and W₁₂ stay identical<br>
+                            W₂₁ and W₂₂ stay identical
+                        </div>
+                    </div>
+                    <div class="problem-badge">⚠️ Symmetry Never Broken</div>
+                </div>
+                
+                <div class="calc-box random-calc">
+                    <div class="calc-title">✅ Random Initialization</div>
+                    <div class="calc-step">W₁₁=0.5, W₁₂=-0.3</div>
+                    <div class="calc-step">W₂₁=0.2, W₂₂=0.4</div>
+                    <div class="calc-step" style="margin-top: 15px;">
+                        h₁ = W₁₁·x₁ + W₁₂·x₂<br>
+                        &nbsp;&nbsp; = 0.5·1 + (-0.3)·2<br>
+                        &nbsp;&nbsp; = 0.5 - 0.6 = <strong>-0.1</strong>
+                    </div>
+                    <div class="calc-step">
+                        h₂ = W₂₁·x₁ + W₂₂·x₂<br>
+                        &nbsp;&nbsp; = 0.2·1 + 0.4·2<br>
+                        &nbsp;&nbsp; = 0.2 + 0.8 = <strong>1.0</strong>
+                    </div>
+                    <div class="calc-result">
+                        h₁ = -0.1 ≠ h₂ = 1.0 (Different!)
+                    </div>
+                    <div class="gradient-section">
+                        <div class="gradient-title">Gradient Update:</div>
+                        <div class="gradient-calc">
+                            ∂L/∂W₁₁ ≠ ∂L/∂W₁₂ (different)<br>
+                            ∂L/∂W₂₁ ≠ ∂L/∂W₂₂ (different)<br>
+                            <br>
+                            Each weight learns<br>
+                            unique features independently
+                        </div>
+                    </div>
+                    <div class="success-badge">✓ Symmetry Broken Successfully</div>
                 </div>
             </div>
         </div>
