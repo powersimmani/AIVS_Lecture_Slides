@@ -23,7 +23,6 @@
         
         .container {
             width: 960px;
-            height: 540px;
             background: white;
             padding: 30px;
             position: relative;
@@ -41,7 +40,7 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 18px;
-            height: calc(100% - 50px);
+            margin-bottom: 20px;
         }
         
         .left-section {
@@ -210,6 +209,97 @@
         .alternative-card .info-title {
             color: #f57c00;
         }
+        
+        .example-section {
+            margin-top: 20px;
+            padding-top: 18px;
+            border-top: 2px solid #1E64C8;
+        }
+        
+        .example-title {
+            font-size: 19px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 14px;
+            text-align: center;
+        }
+        
+        .example-content {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+        
+        .method-example {
+            background: #f8fafb;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .method-header {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .step-item {
+            background: white;
+            padding: 9px 11px;
+            border-radius: 4px;
+            border-left: 3px solid #1E64C8;
+        }
+        
+        .step-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .step-detail {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.5;
+        }
+        
+        .code-snippet {
+            background: #f0f7ff;
+            padding: 6px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #333;
+            margin: 4px 0;
+            word-wrap: break-word;
+        }
+        
+        .highlight-result {
+            background: #e8f4ff;
+            padding: 8px 10px;
+            border-radius: 4px;
+            border-left: 3px solid #28a745;
+            margin-top: 6px;
+        }
+        
+        .result-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #28a745;
+            margin-bottom: 3px;
+        }
+        
+        .result-detail {
+            font-size: 13px;
+            color: #555;
+            line-height: 1.4;
+        }
     </style>
 </head>
 <body>
@@ -278,6 +368,96 @@
                     <div class="info-content">
                         <div class="info-title">Permutation Importance</div>
                         <div class="info-text">Alternative robust method</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Example Section -->
+        <div class="example-section">
+            <div class="example-title">Example: Applying Feature Selection Methods</div>
+            <div class="example-content">
+                <!-- Filter Method -->
+                <div class="method-example">
+                    <div class="method-header">Filter Method</div>
+                    
+                    <div class="step-item">
+                        <div class="step-label">Step 1: Calculate Correlation</div>
+                        <div class="step-detail">Compute correlation between each feature and target</div>
+                        <div class="code-snippet">corr_matrix = X.corrwith(y)</div>
+                    </div>
+                    
+                    <div class="step-item">
+                        <div class="step-label">Step 2: Set Threshold</div>
+                        <div class="step-detail">Select features with |correlation| > 0.5</div>
+                        <div class="code-snippet">threshold = 0.5</div>
+                    </div>
+                    
+                    <div class="step-item">
+                        <div class="step-label">Step 3: Select Features</div>
+                        <div class="step-detail">Keep features above threshold</div>
+                        <div class="code-snippet">selected = corr_matrix[abs(corr_matrix) > 0.5]</div>
+                    </div>
+                    
+                    <div class="highlight-result">
+                        <div class="result-label">✓ Result</div>
+                        <div class="result-detail">Fast, independent of model<br>Good for initial screening</div>
+                    </div>
+                </div>
+                
+                <!-- Wrapper Method -->
+                <div class="method-example">
+                    <div class="method-header">Wrapper Method (RFE)</div>
+                    
+                    <div class="step-item">
+                        <div class="step-label">Step 1: Train Full Model</div>
+                        <div class="step-detail">Fit model with all features</div>
+                        <div class="code-snippet">model.fit(X_all, y)</div>
+                    </div>
+                    
+                    <div class="step-item">
+                        <div class="step-label">Step 2: Rank Features</div>
+                        <div class="step-detail">Identify least important feature</div>
+                        <div class="code-snippet">importance = model.coef_</div>
+                    </div>
+                    
+                    <div class="step-item">
+                        <div class="step-label">Step 3: Remove & Repeat</div>
+                        <div class="step-detail">Eliminate feature, retrain model</div>
+                        <div class="code-snippet">X_new = X.drop(worst_feature)<br>model.fit(X_new, y)</div>
+                    </div>
+                    
+                    <div class="highlight-result">
+                        <div class="result-label">✓ Result</div>
+                        <div class="result-detail">Model-specific selection<br>More accurate but slower</div>
+                    </div>
+                </div>
+                
+                <!-- Embedded Method -->
+                <div class="method-example">
+                    <div class="method-header">Embedded Method (Lasso)</div>
+                    
+                    <div class="step-item">
+                        <div class="step-label">Step 1: Set Regularization</div>
+                        <div class="step-detail">Choose penalty parameter λ</div>
+                        <div class="code-snippet">model = Lasso(alpha=0.1)</div>
+                    </div>
+                    
+                    <div class="step-item">
+                        <div class="step-label">Step 2: Train Model</div>
+                        <div class="step-detail">L1 penalty shrinks coefficients</div>
+                        <div class="code-snippet">model.fit(X, y)</div>
+                    </div>
+                    
+                    <div class="step-item">
+                        <div class="step-label">Step 3: Extract Features</div>
+                        <div class="step-detail">Select features with non-zero coefficients</div>
+                        <div class="code-snippet">selected = X.columns[model.coef_ != 0]</div>
+                    </div>
+                    
+                    <div class="highlight-result">
+                        <div class="result-label">✓ Result</div>
+                        <div class="result-detail">Automatic selection<br>Built into training process</div>
                     </div>
                 </div>
             </div>

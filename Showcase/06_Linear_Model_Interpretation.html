@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interpreting Linear Models</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: white;
+            padding: 30px 40px;
+            display: flex;
+            gap: 30px;
+        }
+        
+        /* Left section - equation and explanation */
+        .left-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 10px;
+        }
+        
+        /* Equation display */
+        .equation-box {
+            background: linear-gradient(135deg, #F0F7FF 0%, #E5F1FF 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .equation {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            letter-spacing: 1px;
+            line-height: 1.6;
+        }
+        
+        .subscript {
+            font-size: 18px;
+            vertical-align: sub;
+        }
+        
+        .annotation {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #B8D4F1;
+        }
+        
+        .annotation-item {
+            text-align: center;
+        }
+        
+        .annotation-label {
+            font-size: 14px;
+            color: #666;
+            font-weight: 600;
+        }
+        
+        .annotation-desc {
+            font-size: 12px;
+            color: #999;
+            margin-top: 2px;
+        }
+        
+        /* Key points */
+        .key-points {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .point {
+            background: white;
+            border-left: 4px solid #1E64C8;
+            padding: 12px 16px;
+            border-radius: 6px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s;
+        }
+        
+        .point:hover {
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.15);
+            transform: translateX(4px);
+        }
+        
+        .point-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+        
+        .point-desc {
+            font-size: 15px;
+            color: #666;
+            line-height: 1.4;
+        }
+        
+        /* Right section - coefficient chart */
+        .right-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chart-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .chart-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            padding: 10px;
+        }
+        
+        .bar-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .feature-label {
+            width: 80px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            text-align: right;
+        }
+        
+        .bar-container {
+            flex: 1;
+            position: relative;
+            height: 32px;
+        }
+        
+        .bar-center {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            width: 2px;
+            height: 100%;
+            background: #999;
+        }
+        
+        .bar {
+            position: absolute;
+            top: 4px;
+            height: 24px;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        
+        .bar:hover {
+            opacity: 0.8;
+            transform: scaleY(1.1);
+        }
+        
+        .bar.positive {
+            background: linear-gradient(90deg, #1E64C8 0%, #4A94E5 100%);
+            left: 50%;
+        }
+        
+        .bar.negative {
+            background: linear-gradient(90deg, #E85D75 0%, #C94B63 100%);
+            right: 50%;
+        }
+        
+        .value-label {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 14px;
+            font-weight: 700;
+            color: white;
+            padding: 0 8px;
+        }
+        
+        .value-label.positive {
+            left: 8px;
+        }
+        
+        .value-label.negative {
+            right: 8px;
+        }
+        
+        /* Legend */
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #E5E7EB;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .legend-box {
+            width: 20px;
+            height: 12px;
+            border-radius: 2px;
+        }
+        
+        .legend-box.positive {
+            background: linear-gradient(90deg, #1E64C8 0%, #4A94E5 100%);
+        }
+        
+        .legend-box.negative {
+            background: linear-gradient(90deg, #E85D75 0%, #C94B63 100%);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Left Section -->
+        <div class="left-section">
+            <div class="title">Linear Model Interpretation</div>
+            
+            <!-- Equation -->
+            <div class="equation-box">
+                <div class="equation">
+                    y = β<span class="subscript">0</span> + β<span class="subscript">1</span>x<span class="subscript">1</span> + β<span class="subscript">2</span>x<span class="subscript">2</span> + ... + β<span class="subscript">n</span>x<span class="subscript">n</span>
+                </div>
+                <div class="annotation">
+                    <div class="annotation-item">
+                        <div class="annotation-label">β<span class="subscript">0</span></div>
+                        <div class="annotation-desc">Intercept</div>
+                    </div>
+                    <div class="annotation-item">
+                        <div class="annotation-label">β<span class="subscript">i</span></div>
+                        <div class="annotation-desc">Coefficients</div>
+                    </div>
+                    <div class="annotation-item">
+                        <div class="annotation-label">x<span class="subscript">i</span></div>
+                        <div class="annotation-desc">Features</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Key Points -->
+            <div class="key-points">
+                <div class="point">
+                    <div class="point-title">Coefficient Magnitude</div>
+                    <div class="point-desc">Indicates feature importance</div>
+                </div>
+                
+                <div class="point">
+                    <div class="point-title">Sign Direction</div>
+                    <div class="point-desc">Shows positive/negative relationship</div>
+                </div>
+                
+                <div class="point">
+                    <div class="point-title">Regularization</div>
+                    <div class="point-desc">L1 (Lasso) for selection, L2 (Ridge) for stability</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Section - Coefficient Chart -->
+        <div class="right-section">
+            <div class="chart-title">Feature Coefficients</div>
+            
+            <div class="chart-container">
+                <!-- Feature 1 -->
+                <div class="bar-item">
+                    <div class="feature-label">Age</div>
+                    <div class="bar-container">
+                        <div class="bar-center"></div>
+                        <div class="bar positive" style="width: 60%;">
+                            <div class="value-label positive">+0.82</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Feature 2 -->
+                <div class="bar-item">
+                    <div class="feature-label">Income</div>
+                    <div class="bar-container">
+                        <div class="bar-center"></div>
+                        <div class="bar positive" style="width: 45%;">
+                            <div class="value-label positive">+0.63</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Feature 3 -->
+                <div class="bar-item">
+                    <div class="feature-label">Education</div>
+                    <div class="bar-container">
+                        <div class="bar-center"></div>
+                        <div class="bar positive" style="width: 30%;">
+                            <div class="value-label positive">+0.41</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Feature 4 -->
+                <div class="bar-item">
+                    <div class="feature-label">Distance</div>
+                    <div class="bar-container">
+                        <div class="bar-center"></div>
+                        <div class="bar negative" style="width: 40%;">
+                            <div class="value-label negative">-0.55</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Feature 5 -->
+                <div class="bar-item">
+                    <div class="feature-label">Risk Score</div>
+                    <div class="bar-container">
+                        <div class="bar-center"></div>
+                        <div class="bar negative" style="width: 55%;">
+                            <div class="value-label negative">-0.76</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Legend -->
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-box positive"></div>
+                    <span>Positive Impact</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box negative"></div>
+                    <span>Negative Impact</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

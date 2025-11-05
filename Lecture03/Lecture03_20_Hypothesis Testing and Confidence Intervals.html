@@ -23,7 +23,7 @@
         
         .container {
             width: 960px;
-            height: 540px;
+            height: 800px;
             background: #ffffff;
             position: relative;
             padding: 25px 35px;
@@ -317,6 +317,81 @@
             color: #333;
             line-height: 1.5;
         }
+        
+        .example-section {
+            margin-top: 20px;
+            padding-top: 18px;
+            border-top: 2px solid #1E64C8;
+        }
+        
+        .example-title {
+            font-size: 19px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .example-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .case-box {
+            background: #f8fafb;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px;
+        }
+        
+        .case-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .case-context {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        
+        .case-hypotheses {
+            background: white;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin: 6px 0;
+            border: 1px solid #ddd;
+        }
+        
+        .case-data {
+            background: #e8f4ff;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin: 6px 0;
+        }
+        
+        .case-result {
+            background: #1E64C8;
+            color: white;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 8px;
+        }
+        
+        .highlight-value {
+            color: #1E64C8;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -399,6 +474,88 @@
                     <div class="concept-content">
                         If H₀: θ = θ₀ is not in the CI,<br>
                         then reject H₀ at α = 0.05
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="example-section">
+            <div class="example-title">Real-World Examples: Hypothesis Testing</div>
+            <div class="example-content">
+                <div class="case-box">
+                    <div class="case-title">Case 1: Drug Efficacy</div>
+                    <div class="case-context">
+                        A pharmaceutical company tests whether a new drug reduces blood pressure more than placebo.
+                    </div>
+                    <div class="case-hypotheses">
+                        <strong>H₀:</strong> μ_drug = μ_placebo<br>
+                        <strong>H₁:</strong> μ_drug < μ_placebo
+                    </div>
+                    <div class="case-data">
+                        <strong>Data:</strong><br>
+                        n = 100 patients<br>
+                        Mean difference = -8.5 mmHg<br>
+                        SE = 2.1 mmHg<br>
+                        t-stat = -4.05
+                    </div>
+                    <div class="case-data">
+                        <strong>p-value:</strong> <span class="highlight-value">0.0001</span><br>
+                        <strong>α level:</strong> 0.05
+                    </div>
+                    <div class="case-result">
+                        Reject H₀<br>
+                        Drug is effective!
+                    </div>
+                </div>
+                
+                <div class="case-box">
+                    <div class="case-title">Case 2: A/B Testing</div>
+                    <div class="case-context">
+                        An e-commerce site tests whether a new checkout design increases conversion rate.
+                    </div>
+                    <div class="case-hypotheses">
+                        <strong>H₀:</strong> p_new = p_old<br>
+                        <strong>H₁:</strong> p_new ≠ p_old
+                    </div>
+                    <div class="case-data">
+                        <strong>Data:</strong><br>
+                        Control: 450/10000 = 4.5%<br>
+                        Treatment: 520/10000 = 5.2%<br>
+                        z-stat = 2.28
+                    </div>
+                    <div class="case-data">
+                        <strong>p-value:</strong> <span class="highlight-value">0.023</span><br>
+                        <strong>α level:</strong> 0.05
+                    </div>
+                    <div class="case-result">
+                        Reject H₀<br>
+                        New design works!
+                    </div>
+                </div>
+                
+                <div class="case-box">
+                    <div class="case-title">Case 3: Salary Regression</div>
+                    <div class="case-context">
+                        Testing whether years of education significantly predict salary (β₁ coefficient).
+                    </div>
+                    <div class="case-hypotheses">
+                        <strong>H₀:</strong> β₁ = 0<br>
+                        <strong>H₁:</strong> β₁ ≠ 0
+                    </div>
+                    <div class="case-data">
+                        <strong>Data:</strong><br>
+                        n = 500 employees<br>
+                        β̂₁ = 5,200 ($/year)<br>
+                        SE(β̂₁) = 800<br>
+                        t-stat = 6.5
+                    </div>
+                    <div class="case-data">
+                        <strong>p-value:</strong> <span class="highlight-value">< 0.001</span><br>
+                        <strong>95% CI:</strong> [3,632, 6,768]
+                    </div>
+                    <div class="case-result">
+                        Reject H₀<br>
+                        Education matters!
                     </div>
                 </div>
             </div>

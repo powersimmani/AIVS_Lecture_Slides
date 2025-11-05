@@ -23,7 +23,7 @@
         
         .container {
             width: 960px;
-            height: 540px;
+            height: 740px;
             background: #ffffff;
             position: relative;
             padding: 25px 35px;
@@ -241,6 +241,73 @@
             font-size: 16px;
             line-height: 1.4;
         }
+        
+        .realworld-section {
+            margin-top: 20px;
+            padding-top: 18px;
+            border-top: 2px solid #1E64C8;
+        }
+        
+        .realworld-title {
+            font-size: 19px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .realworld-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        
+        .realworld-card {
+            background: #f8fafb;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .realworld-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.15);
+        }
+        
+        .realworld-card-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .realworld-card-content {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .realworld-formula {
+            background: white;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        
+        .realworld-use {
+            font-size: 14px;
+            color: #555;
+            font-style: italic;
+            margin-top: 6px;
+            padding-top: 6px;
+            border-top: 1px solid #ddd;
+        }
     </style>
 </head>
 <body>
@@ -302,7 +369,7 @@
                         <div class="dist-graphic">
                             <svg class="normal-curve" viewBox="0 0 200 100" preserveAspectRatio="none">
                                 <path class="curve-path" 
-                                      d="M 0,100 Q 20,100 40,85 T 60,60 T 80,35 T 100,15 T 120,35 T 140,60 T 160,85 T 180,100 L 200,100 Z" />
+                                      d="M 0,100 C 10,100 20,95 30,85 C 40,75 50,60 60,45 C 70,30 80,20 90,15 C 95,12.5 97.5,12 100,12 C 102.5,12 105,12.5 110,15 C 120,20 130,30 140,45 C 150,60 160,75 170,85 C 180,95 190,100 200,100 Z" />
                             </svg>
                         </div>
                     </div>
@@ -328,6 +395,77 @@
                     <div class="ml-title">Enables</div>
                     <div class="ml-content">
                         Confidence intervals<br>& hypothesis tests
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="realworld-section">
+            <div class="realworld-title">Real-World Applications</div>
+            <div class="realworld-grid">
+                <div class="realworld-card">
+                    <div class="realworld-card-title">Quality Control</div>
+                    <div class="realworld-card-content">
+                        Manufacturing defect rates follow normal distribution with large samples.
+                        <div class="realworld-formula">X̄ ~ N(μ, σ²/n)</div>
+                        <div class="realworld-use">
+                            <strong>Use:</strong> Setting acceptable quality limits in production lines
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="realworld-card">
+                    <div class="realworld-card-title">A/B Testing</div>
+                    <div class="realworld-card-content">
+                        Website conversion rates comparison uses CLT for statistical significance.
+                        <div class="realworld-formula">p̂ ~ N(p, p(1-p)/n)</div>
+                        <div class="realworld-use">
+                            <strong>Use:</strong> Deciding which website design performs better
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="realworld-card">
+                    <div class="realworld-card-title">Opinion Polls</div>
+                    <div class="realworld-card-content">
+                        Survey results become normally distributed with sufficient sample size.
+                        <div class="realworld-formula">Margin of Error = 1.96×σ/√n</div>
+                        <div class="realworld-use">
+                            <strong>Use:</strong> Predicting election outcomes with confidence intervals
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="realworld-card">
+                    <div class="realworld-card-title">Financial Risk</div>
+                    <div class="realworld-card-content">
+                        Portfolio returns approximate normal distribution over time.
+                        <div class="realworld-formula">R_portfolio ~ N(μ_p, σ_p²)</div>
+                        <div class="realworld-use">
+                            <strong>Use:</strong> Value-at-Risk (VaR) calculations for investments
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="realworld-card">
+                    <div class="realworld-card-title">Medical Trials</div>
+                    <div class="realworld-card-content">
+                        Average treatment effects tested using normal approximation.
+                        <div class="realworld-formula">t = (X̄ - μ₀)/(s/√n)</div>
+                        <div class="realworld-use">
+                            <strong>Use:</strong> Determining if new drugs are effective
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="realworld-card">
+                    <div class="realworld-card-title">Machine Learning</div>
+                    <div class="realworld-card-content">
+                        Bootstrap confidence intervals rely on CLT for model evaluation.
+                        <div class="realworld-formula">Accuracy ~ N(μ_acc, σ²_acc/n)</div>
+                        <div class="realworld-use">
+                            <strong>Use:</strong> Estimating model performance reliability
+                        </div>
                     </div>
                 </div>
             </div>

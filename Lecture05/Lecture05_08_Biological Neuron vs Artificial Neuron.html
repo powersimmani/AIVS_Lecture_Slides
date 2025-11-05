@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Biological Neuron vs Artificial Neuron</title>
+    <title>Biological Neuron vs Artificial Neuron - Detailed</title>
     <style>
         * {
             margin: 0;
@@ -14,40 +14,43 @@
         body {
             font-family: 'Aptos', 'Segoe UI', sans-serif;
             background: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
+            padding: 40px 20px;
         }
         
         .container {
-            width: 960px;
-            height: 540px;
+            max-width: 1400px;
+            width: 95%;
+            margin: 0 auto;
             display: flex;
             flex-direction: column;
             gap: 25px;
             padding: 40px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
         
         .main-title {
-            font-size: 24px;
-            font-weight: 600;
+            font-size: 28px;
+            font-weight: 700;
             color: #1E64C8;
             text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #1E64C8;
         }
         
         .comparison-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 30px;
-            flex: 1;
+            margin-bottom: 40px;
         }
         
         .neuron-section {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 20px;
         }
         
         .section-title {
@@ -62,8 +65,8 @@
         .diagram-area {
             background: #f8f9fa;
             border-radius: 8px;
-            padding: 20px;
-            flex: 1;
+            padding: 50px 40px;
+            min-height: 450px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -75,70 +78,145 @@
         .bio-neuron {
             position: relative;
             width: 100%;
-            height: 100%;
+            height: 350px;
         }
         
-        .dendrites {
+        .dendrites-group {
             position: absolute;
             left: 70px;
             top: 50%;
             transform: translateY(-50%);
         }
         
-        .dendrite-line {
-            width: 45px;
-            height: 2px;
-            background: #1E64C8;
-            margin: 12px 0;
+        .dendrite-branch {
+            margin: 25px 0;
+            position: relative;
+        }
+        
+        .dendrite-main {
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #666 0%, #1E64C8 100%);
             position: relative;
         }
         
         .dendrite-label {
             position: absolute;
             left: -58px;
-            top: -8px;
+            top: -12px;
             font-size: 12px;
             color: #666;
             white-space: nowrap;
         }
         
-        .soma {
+        .dendrite-sub {
+            position: absolute;
+            width: 18px;
+            height: 2px;
+            background: #999;
+            top: -6px;
+            left: 15px;
+            transform: rotate(-25deg);
+        }
+        
+        .dendrite-sub:nth-child(3) {
+            top: 4px;
+            transform: rotate(25deg);
+        }
+        
+        .soma-complex {
             position: absolute;
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%);
-            width: 70px;
-            height: 70px;
+            width: 90px;
+            height: 90px;
+        }
+        
+        .soma {
+            width: 100%;
+            height: 100%;
             border-radius: 50%;
             background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             color: white;
             font-weight: 600;
             font-size: 15px;
             border: 3px solid #1557b0;
+            position: relative;
+        }
+        
+        .soma-label {
+            font-size: 16px;
+        }
+        
+        .soma-sublabel {
+            font-size: 10px;
+            opacity: 0.9;
+            margin-top: 3px;
+        }
+        
+        .nucleus {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            border: 2px solid rgba(255,255,255,0.5);
+        }
+        
+        .axon-hillock {
+            position: absolute;
+            right: 165px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 25px;
+            height: 18px;
+            background: linear-gradient(90deg, #2874d8 0%, #1E64C8 100%);
+            clip-path: polygon(0 0, 100% 30%, 100% 70%, 0 100%);
         }
         
         .axon {
             position: absolute;
-            right: 25px;
+            right: 90px;
             top: 50%;
             transform: translateY(-50%);
-            width: 70px;
+            width: 85px;
             height: 3px;
-            background: #1E64C8;
+            background: linear-gradient(90deg, #1E64C8 0%, #4caf50 100%);
+        }
+        
+        .myelin {
+            position: absolute;
+            width: 12px;
+            height: 10px;
+            background: #fff;
+            border: 2px solid #1E64C8;
+            border-radius: 2px;
+            top: -3.5px;
+        }
+        
+        .myelin:nth-child(1) { left: 8px; }
+        .myelin:nth-child(2) { left: 32px; }
+        .myelin:nth-child(3) { left: 56px; }
+        
+        .axon-terminal-group {
+            position: absolute;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
         }
         
         .axon-terminal {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 18px;
-            height: 18px;
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
-            background: #1E64C8;
+            background: radial-gradient(circle, #4caf50 0%, #2e7d32 100%);
+            border: 3px solid #1b5e20;
+            margin: 10px 0;
         }
         
         .bio-label {
@@ -155,20 +233,25 @@
         
         .label-soma {
             left: 50%;
-            bottom: 8px;
+            bottom: 15px;
             transform: translateX(-50%);
         }
         
         .label-axon {
-            right: 20px;
+            right: 80px;
             bottom: 10px;
+        }
+        
+        .label-terminal {
+            right: 15px;
+            top: 10px;
         }
         
         /* Artificial Neuron Styles */
         .artificial-neuron {
             position: relative;
             width: 100%;
-            height: 100%;
+            height: 350px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -309,6 +392,364 @@
             font-weight: 600;
             color: #1E64C8;
         }
+        
+        /* Perceptron Example Section */
+        .example-section {
+            margin-top: 50px;
+            padding-top: 40px;
+            border-top: 4px solid #1E64C8;
+        }
+        
+        .example-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 15px;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-radius: 8px;
+        }
+        
+        .example-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .example-box {
+            background: #fafafa;
+            border: 3px solid #1E64C8;
+            border-radius: 12px;
+            padding: 25px;
+        }
+        
+        .example-subtitle {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .data-table {
+            width: 100%;
+            margin-bottom: 20px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        
+        .data-table th {
+            background: #1E64C8;
+            color: white;
+            padding: 12px;
+            font-weight: 700;
+            text-align: center;
+        }
+        
+        .data-table td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #e0e0e0;
+            font-weight: 600;
+        }
+        
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .data-table tr:nth-child(even) {
+            background: #f5f5f5;
+        }
+        
+        .formula-box {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid #4caf50;
+            margin: 15px 0;
+        }
+        
+        .formula-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .formula-content {
+            font-size: 18px;
+            color: #1E64C8;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .step-by-step {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .step {
+            margin: 15px 0;
+            padding: 15px;
+            background: #f5f5f5;
+            border-left: 4px solid #ff9800;
+            border-radius: 6px;
+        }
+        
+        .step-number {
+            font-weight: 700;
+            color: #ff9800;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+        
+        .step-content {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .step-math {
+            font-family: 'Courier New', monospace;
+            background: white;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 8px;
+            border: 1px solid #ddd;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .result-box {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border: 3px solid #4caf50;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .result-label {
+            font-size: 18px;
+            color: #2e7d32;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .result-value {
+            font-size: 32px;
+            color: #1b5e20;
+            font-weight: 700;
+        }
+        
+        .visualization {
+            grid-column: 1 / -1;
+            background: #fafafa;
+            border: 3px solid #1E64C8;
+            border-radius: 12px;
+            padding: 30px;
+        }
+        
+        .perceptron-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            margin: 30px 0;
+            position: relative;
+            min-height: 250px;
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .input-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .input-value {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border: 3px solid #1E64C8;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #1E64C8;
+            box-shadow: 0 3px 6px rgba(30,100,200,0.2);
+        }
+        
+        .input-label {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+        
+        .input-number {
+            font-size: 20px;
+        }
+        
+        .weight-connection {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .weight-value {
+            background: #fff3cd;
+            border: 2px solid #ff9800;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-weight: 700;
+            color: #333;
+            font-size: 16px;
+        }
+        
+        .connection-line {
+            width: 100px;
+            height: 3px;
+            background: #1E64C8;
+            position: relative;
+        }
+        
+        .connection-line::after {
+            content: '';
+            position: absolute;
+            right: -5px;
+            top: -3px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid #1E64C8;
+            border-top: 4px solid transparent;
+            border-bottom: 4px solid transparent;
+        }
+        
+        .summation-node {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            border: 4px solid #1557b0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 6px 12px rgba(30,100,200,0.3);
+        }
+        
+        .sum-symbol {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .sum-value {
+            font-size: 18px;
+            font-weight: 700;
+            background: rgba(255,255,255,0.2);
+            padding: 6px 15px;
+            border-radius: 6px;
+            margin-top: 8px;
+        }
+        
+        .activation-node {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #7e57c2 0%, #9575cd 100%);
+            border: 4px solid #5e35b1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 6px 12px rgba(126,87,194,0.3);
+        }
+        
+        .activation-function {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .activation-result {
+            font-size: 16px;
+            background: rgba(255,255,255,0.2);
+            padding: 5px 12px;
+            border-radius: 6px;
+        }
+        
+        .output-node {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
+            border: 4px solid #2e7d32;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 6px 12px rgba(76,175,80,0.3);
+        }
+        
+        .output-symbol {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .output-value {
+            font-size: 28px;
+            font-weight: 700;
+        }
+        
+        .bias-node {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ffe082;
+            border: 3px solid #ff9800;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 700;
+            color: #333;
+            box-shadow: 0 3px 6px rgba(255,152,0,0.2);
+        }
+        
+        .arrow-connector {
+            width: 80px;
+            height: 3px;
+            background: #666;
+            position: relative;
+        }
+        
+        .arrow-connector::after {
+            content: '';
+            position: absolute;
+            right: -5px;
+            top: -3px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid #666;
+            border-top: 4px solid transparent;
+            border-bottom: 4px solid transparent;
+        }
     </style>
 </head>
 <body>
@@ -321,37 +762,69 @@
                 <div class="section-title">Biological Neuron</div>
                 <div class="diagram-area">
                     <div class="bio-neuron">
-                        <!-- Dendrites -->
-                        <div class="dendrites">
-                            <div class="dendrite-line">
+                        <!-- Dendrites with detail -->
+                        <div class="dendrites-group">
+                            <div class="dendrite-branch">
                                 <div class="dendrite-label">Input 1</div>
+                                <div class="dendrite-main">
+                                    <div class="dendrite-sub"></div>
+                                    <div class="dendrite-sub"></div>
+                                </div>
                             </div>
-                            <div class="dendrite-line">
+                            <div class="dendrite-branch">
                                 <div class="dendrite-label">Input 2</div>
+                                <div class="dendrite-main">
+                                    <div class="dendrite-sub"></div>
+                                    <div class="dendrite-sub"></div>
+                                </div>
                             </div>
-                            <div class="dendrite-line">
+                            <div class="dendrite-branch">
                                 <div class="dendrite-label">Input 3</div>
+                                <div class="dendrite-main">
+                                    <div class="dendrite-sub"></div>
+                                    <div class="dendrite-sub"></div>
+                                </div>
                             </div>
                         </div>
                         
-                        <!-- Soma (Cell Body) -->
-                        <div class="soma">Soma</div>
+                        <!-- Soma with nucleus -->
+                        <div class="soma-complex">
+                            <div class="soma">
+                                <div class="nucleus"></div>
+                                <div class="soma-label">Soma</div>
+                                <div class="soma-sublabel">Cell Body</div>
+                            </div>
+                        </div>
                         
-                        <!-- Axon -->
-                        <div class="axon"></div>
-                        <div class="axon-terminal"></div>
+                        <!-- Axon Hillock -->
+                        <div class="axon-hillock"></div>
+                        
+                        <!-- Axon with myelin sheath -->
+                        <div class="axon">
+                            <div class="myelin"></div>
+                            <div class="myelin"></div>
+                            <div class="myelin"></div>
+                        </div>
+                        
+                        <!-- Axon Terminals -->
+                        <div class="axon-terminal-group">
+                            <div class="axon-terminal"></div>
+                            <div class="axon-terminal"></div>
+                            <div class="axon-terminal"></div>
+                        </div>
                         
                         <!-- Labels -->
                         <div class="bio-label label-dendrites">Dendrites</div>
-                        <div class="bio-label label-soma">Cell Body</div>
+                        <div class="bio-label label-soma">Integration</div>
                         <div class="bio-label label-axon">Axon</div>
+                        <div class="bio-label label-terminal">Terminals</div>
                     </div>
                 </div>
             </div>
             
             <!-- Artificial Neuron -->
             <div class="neuron-section">
-                <div class="section-title">Artificial Neuron</div>
+                <div class="section-title">Artificial Neuron (Perceptron)</div>
                 <div class="diagram-area">
                     <div class="artificial-neuron">
                         <!-- Inputs with weights -->
@@ -393,6 +866,204 @@
             <div class="mapping-item mapping-bio">Dendrites → Soma → Axon</div>
             <div class="mapping-arrow">≈</div>
             <div class="mapping-item mapping-artificial">Weighted Inputs → Summation & Activation → Output</div>
+        </div>
+        
+        <!-- Perceptron Calculation Example -->
+        <div class="example-section">
+            <div class="example-title">🔢 Perceptron Calculation Example</div>
+            
+            <div class="example-container">
+                <!-- Given Data -->
+                <div class="example-box">
+                    <div class="example-subtitle">📊 Given Data</div>
+                    
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Variable</th>
+                                <th>Value</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>x₁</td>
+                                <td>2.0</td>
+                                <td>Input 1</td>
+                            </tr>
+                            <tr>
+                                <td>x₂</td>
+                                <td>3.0</td>
+                                <td>Input 2</td>
+                            </tr>
+                            <tr>
+                                <td>x₃</td>
+                                <td>-1.0</td>
+                                <td>Input 3</td>
+                            </tr>
+                            <tr>
+                                <td>w₁</td>
+                                <td>0.5</td>
+                                <td>Weight 1</td>
+                            </tr>
+                            <tr>
+                                <td>w₂</td>
+                                <td>-0.3</td>
+                                <td>Weight 2</td>
+                            </tr>
+                            <tr>
+                                <td>w₃</td>
+                                <td>0.8</td>
+                                <td>Weight 3</td>
+                            </tr>
+                            <tr>
+                                <td>b</td>
+                                <td>1.0</td>
+                                <td>Bias</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div class="formula-box">
+                        <div class="formula-label">📐 Perceptron Formula:</div>
+                        <div class="formula-content">
+                            y = σ(Σ wᵢxᵢ + b)<br>
+                            = σ(w₁x₁ + w₂x₂ + w₃x₃ + b)
+                        </div>
+                    </div>
+                    
+                    <div class="formula-box" style="border-color: #7e57c2;">
+                        <div class="formula-label">🔄 Activation Function (Step Function):</div>
+                        <div class="formula-content" style="color: #7e57c2;">
+                            σ(z) = 1 if z ≥ 0<br>
+                            σ(z) = 0 if z < 0
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Step by Step Calculation -->
+                <div class="example-box">
+                    <div class="example-subtitle">📝 Step-by-Step Calculation</div>
+                    
+                    <div class="step-by-step">
+                        <div class="step">
+                            <div class="step-number">Step 1: Calculate Weighted Sum</div>
+                            <div class="step-content">
+                                Multiply each input by its weight and sum all products
+                                <div class="step-math">
+                                    z = w₁x₁ + w₂x₂ + w₃x₃ + b<br>
+                                    = (0.5 × 2.0) + (-0.3 × 3.0) + (0.8 × -1.0) + 1.0<br>
+                                    = 1.0 + (-0.9) + (-0.8) + 1.0
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="step">
+                            <div class="step-number">Step 2: Sum All Terms</div>
+                            <div class="step-content">
+                                Add all terms together
+                                <div class="step-math">
+                                    z = 1.0 - 0.9 - 0.8 + 1.0<br>
+                                    z = 0.3
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="step">
+                            <div class="step-number">Step 3: Apply Activation Function</div>
+                            <div class="step-content">
+                                Apply Step function: Since z ≥ 0
+                                <div class="step-math">
+                                    y = σ(0.3) = 1<br>
+                                    (Activated because 0.3 ≥ 0!)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="result-box">
+                        <div class="result-label">🎯 Final Output</div>
+                        <div class="result-value">y = 1</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Visual Diagram -->
+            <div class="visualization">
+                <div class="example-subtitle" style="text-align: center; margin-bottom: 20px;">
+                    🎨 Visualization: Perceptron Operation Process
+                </div>
+                
+                <div class="perceptron-diagram">
+                    <div class="bias-node">bias = 1.0</div>
+                    
+                    <!-- Inputs -->
+                    <div class="input-group">
+                        <div class="input-item">
+                            <div class="input-value">
+                                <div class="input-label">x₁</div>
+                                <div class="input-number">2.0</div>
+                            </div>
+                            <div class="weight-connection">
+                                <div class="weight-value">w₁ = 0.5</div>
+                                <div class="connection-line"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="input-item">
+                            <div class="input-value">
+                                <div class="input-label">x₂</div>
+                                <div class="input-number">3.0</div>
+                            </div>
+                            <div class="weight-connection">
+                                <div class="weight-value">w₂ = -0.3</div>
+                                <div class="connection-line"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="input-item">
+                            <div class="input-value">
+                                <div class="input-label">x₃</div>
+                                <div class="input-number">-1.0</div>
+                            </div>
+                            <div class="weight-connection">
+                                <div class="weight-value">w₃ = 0.8</div>
+                                <div class="connection-line"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Summation -->
+                    <div class="summation-node">
+                        <div class="sum-symbol">Σ</div>
+                        <div style="font-size: 14px;">Weighted Sum</div>
+                        <div class="sum-value">z = 0.3</div>
+                    </div>
+                    
+                    <div class="arrow-connector"></div>
+                    
+                    <!-- Activation -->
+                    <div class="activation-node">
+                        <div class="activation-function">σ(z)</div>
+                        <div style="font-size: 12px;">Step Function</div>
+                        <div class="activation-result">σ(0.3)</div>
+                    </div>
+                    
+                    <div class="arrow-connector"></div>
+                    
+                    <!-- Output -->
+                    <div class="output-node">
+                        <div class="output-symbol">y</div>
+                        <div class="output-value">1</div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 20px; padding: 15px; background: #e3f2fd; border-radius: 8px;">
+                    <strong style="color: #1E64C8;">📌 Key Summary:</strong> 
+                    Multiply inputs by their weights and sum them (weighted sum), add the bias, 
+                    then pass through the activation function to produce the final output!
+                </div>
+            </div>
         </div>
     </div>
 </body>

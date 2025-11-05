@@ -88,9 +88,7 @@
         .dendrogram {
             width: 60px;
             display: flex;
-            flex-direction: column;
-            justify-content: space-around;
-            padding: 5px 0;
+            align-items: stretch;
         }
         
         .dendrogram svg {
@@ -175,7 +173,6 @@
             flex-direction: column;
             justify-content: space-around;
             width: 60px;
-            padding: 5px 0;
         }
         
         .label-vertical {
@@ -183,292 +180,323 @@
             font-weight: 600;
             color: #666;
             text-align: right;
+            height: calc((100% - 12px) / 7);
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
             padding-right: 8px;
         }
         
-        /* Color Scale Legend */
+        /* Color Scale */
         .color-scale {
             display: flex;
             align-items: center;
-            gap: 4px;
-            margin-top: 8px;
+            gap: 8px;
             justify-content: center;
-        }
-        
-        .scale-label {
-            font-size: 11px;
-            font-weight: 600;
-            color: #666;
+            margin-top: 8px;
         }
         
         .scale-gradient {
             width: 200px;
-            height: 20px;
+            height: 14px;
             background: linear-gradient(to right, 
                 #B71C1C 0%, 
-                #F44336 25%, 
                 #FFFFFF 50%, 
-                #2196F3 75%, 
                 #0D47A1 100%);
-            border-radius: 4px;
+            border-radius: 7px;
             border: 1px solid #E0E0E0;
         }
         
+        .scale-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: #666;
+        }
+        
+        /* Right Panel - Cards */
         .right-panel {
-            flex: 0.5;
+            flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
+        }
+        
+        .card-base {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 10px;
+            padding: 12px;
         }
         
         .interpretation-card {
+            composes: card-base;
             background: white;
-            border: 2px solid #1E64C8;
+            border: 2px solid #E0E0E0;
             border-radius: 10px;
-            padding: 14px;
+            padding: 12px;
+            flex: 1;
         }
         
         .card-title {
-            font-size: 18px;
+            font-size: 15px;
             font-weight: 600;
             color: #1E64C8;
             margin-bottom: 10px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
         
         .interp-item {
             display: flex;
-            align-items: flex-start;
+            align-items: center;
             gap: 8px;
-            font-size: 15px;
+            margin: 6px 0;
+            font-size: 11px;
             color: #333;
-            line-height: 1.3;
-            margin-bottom: 8px;
-            padding: 6px 8px;
-            background: #F8FBFF;
-            border-radius: 4px;
         }
         
         .interp-icon {
-            flex-shrink: 0;
-            font-weight: bold;
+            font-size: 14px;
         }
         
-        .icon-pos { color: #0D47A1; }
-        .icon-neg { color: #B71C1C; }
-        .icon-zero { color: #999; }
+        .icon-pos { color: #2196F3; }
+        .icon-neg { color: #F44336; }
+        .icon-zero { color: #9E9E9E; }
         
-        .usage-card {
-            background: #FFF9E6;
-            border: 2px solid #FFC107;
+        .usage-card, .tips-card {
+            background: white;
+            border: 2px solid #E0E0E0;
             border-radius: 10px;
-            padding: 14px;
+            padding: 12px;
         }
         
-        .usage-title {
-            font-size: 18px;
+        .usage-title, .tips-title {
+            font-size: 13px;
             font-weight: 600;
             color: #1E64C8;
-            margin-bottom: 10px;
-            text-align: center;
+            margin-bottom: 8px;
         }
         
-        .usage-item {
+        .usage-item, .tip-item {
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 15px;
+            margin: 5px 0;
+            font-size: 10px;
             color: #333;
-            margin-bottom: 6px;
         }
         
         .usage-icon {
-            color: #F57C00;
-            font-size: 16px;
-            font-weight: bold;
-        }
-        
-        .tips-card {
-            background: #E8F5E9;
-            border: 2px solid #4CAF50;
-            border-radius: 10px;
-            padding: 14px;
-        }
-        
-        .tips-title {
-            font-size: 18px;
+            color: #1E64C8;
             font-weight: 600;
-            color: #2E7D32;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-        
-        .tip-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 15px;
-            color: #333;
-            margin-bottom: 6px;
         }
         
         .check-icon {
             color: #4CAF50;
+            font-weight: 600;
+        }
+        
+        /* Matrix Table */
+        .matrix-container {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 10px;
+            padding: 10px;
+            overflow: auto;
+        }
+        
+        .matrix-title {
             font-size: 16px;
-            font-weight: bold;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            text-align: center;
         }
         
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(15px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .matrix-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 10px;
         }
         
-        .heatmap-container, .interpretation-card, .usage-card, .tips-card {
-            animation: fadeIn 0.5s ease forwards;
+        .matrix-table th,
+        .matrix-table td {
+            padding: 6px 4px;
+            text-align: center;
+            border: 1px solid #E0E0E0;
         }
         
-        .heatmap-container { animation-delay: 0.1s; }
-        .interpretation-card { animation-delay: 0.2s; }
-        .usage-card { animation-delay: 0.3s; }
-        .tips-card { animation-delay: 0.4s; }
+        .matrix-table th {
+            background: #F5F5F5;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .matrix-table td {
+            color: #333;
+        }
+        
+        .matrix-table tr:hover {
+            background: #F5F9FF;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="title-section">
-            <div class="main-title">Correlation Heatmap & Matrix</div>
-            <div class="subtitle">Visualizing Pairwise Relationships Between Variables</div>
+            <div class="main-title">Correlation Analysis</div>
+            <div class="subtitle">Heatmap & Correlation Matrix</div>
         </div>
         
         <div class="content-wrapper">
             <div class="left-panel">
                 <div class="heatmap-container">
-                    <div class="heatmap-title">Correlation Matrix with Hierarchical Clustering</div>
+                    <div class="heatmap-title">Correlation Heatmap with Dendrogram</div>
+                    
                     <div class="heatmap-wrapper">
-                        <!-- Dendrogram -->
+                        <!-- Dendrogram (Left) - Correctly clustered order -->
                         <div class="dendrogram">
-                            <svg viewBox="0 0 60 200">
-                                <!-- Hierarchical clustering tree -->
-                                <line x1="50" y1="20" x2="35" y2="20" stroke="#1E64C8" stroke-width="2"/>
-                                <line x1="35" y1="20" x2="35" y2="45" stroke="#1E64C8" stroke-width="2"/>
-                                <line x1="35" y1="45" x2="50" y2="45" stroke="#1E64C8" stroke-width="2"/>
+                            <svg viewBox="0 0 60 200" preserveAspectRatio="none">
+                                <!-- Hierarchical clustering based on correlation analysis
+                                     Order (top to bottom): Balance, Debt, Spending, Age, Credit, Income, Savings -->
                                 
-                                <line x1="50" y1="70" x2="35" y2="70" stroke="#1E64C8" stroke-width="2"/>
-                                <line x1="35" y1="70" x2="35" y2="95" stroke="#1E64C8" stroke-width="2"/>
-                                <line x1="35" y1="95" x2="50" y2="95" stroke="#1E64C8" stroke-width="2"/>
+                                <!-- Row 1: Balance - y=14.28 -->
+                                <line x1="50" y1="14.28" x2="35" y2="14.28" stroke="#FF6B35" stroke-width="2.5"/>
                                 
-                                <line x1="35" y1="32" x2="20" y2="32" stroke="#1E64C8" stroke-width="2"/>
-                                <line x1="20" y1="32" x2="20" y2="82" stroke="#1E64C8" stroke-width="2"/>
-                                <line x1="20" y1="82" x2="35" y2="82" stroke="#1E64C8" stroke-width="2"/>
+                                <!-- Row 2: Debt - y=42.85 -->
+                                <line x1="50" y1="42.85" x2="35" y2="42.85" stroke="#FF6B35" stroke-width="2.5"/>
                                 
-                                <line x1="50" y1="120" x2="35" y2="120" stroke="#1E64C8" stroke-width="2"/>
-                                <line x1="35" y1="120" x2="35" y2="145" stroke="#1E64C8" stroke-width="2"/>
-                                <line x1="35" y1="145" x2="50" y2="145" stroke="#1E64C8" stroke-width="2"/>
+                                <!-- Connect Balance-Debt (correlation 0.9) -->
+                                <line x1="35" y1="14.28" x2="35" y2="42.85" stroke="#FF6B35" stroke-width="2.5"/>
+                                <line x1="35" y1="28.565" x2="20" y2="28.565" stroke="#FF6B35" stroke-width="2.5"/>
                                 
-                                <line x1="50" y1="170" x2="20" y2="170" stroke="#1E64C8" stroke-width="2"/>
+                                <!-- Row 3: Spending - y=71.42 -->
+                                <line x1="50" y1="71.42" x2="15" y2="71.42" stroke="#1E64C8" stroke-width="2"/>
                                 
-                                <line x1="20" y1="57" x2="10" y2="57" stroke="#1E64C8" stroke-width="2"/>
-                                <line x1="10" y1="57" x2="10" y2="145" stroke="#1E64C8" stroke-width="2"/>
-                                <line x1="10" y1="145" x2="20" y2="145" stroke="#1E64C8" stroke-width="2"/>
+                                <!-- Row 4: Age - y=100 -->
+                                <line x1="50" y1="100" x2="30" y2="100" stroke="#4CAF50" stroke-width="2"/>
+                                
+                                <!-- Row 5: Credit - y=128.57 -->
+                                <line x1="50" y1="128.57" x2="35" y2="128.57" stroke="#4CAF50" stroke-width="2"/>
+                                
+                                <!-- Row 6: Income - y=157.14 -->
+                                <line x1="50" y1="157.14" x2="40" y2="157.14" stroke="#4CAF50" stroke-width="2"/>
+                                
+                                <!-- Row 7: Savings - y=185.71 -->
+                                <line x1="50" y1="185.71" x2="40" y2="185.71" stroke="#4CAF50" stroke-width="2"/>
+                                
+                                <!-- Connect Income-Savings (correlation 0.8) -->
+                                <line x1="40" y1="157.14" x2="40" y2="185.71" stroke="#4CAF50" stroke-width="2"/>
+                                <line x1="40" y1="171.425" x2="35" y2="171.425" stroke="#4CAF50" stroke-width="2"/>
+                                
+                                <!-- Connect Income-Savings with Credit -->
+                                <line x1="35" y1="128.57" x2="35" y2="171.425" stroke="#4CAF50" stroke-width="2"/>
+                                <line x1="35" y1="150" x2="30" y2="150" stroke="#4CAF50" stroke-width="2"/>
+                                
+                                <!-- Connect Age with Income-Savings-Credit group -->
+                                <line x1="30" y1="100" x2="30" y2="150" stroke="#4CAF50" stroke-width="2"/>
+                                <line x1="30" y1="125" x2="15" y2="125" stroke="#1E64C8" stroke-width="2"/>
+                                
+                                <!-- Connect Spending with Age-Income-Savings-Credit group -->
+                                <line x1="15" y1="71.42" x2="15" y2="125" stroke="#1E64C8" stroke-width="2"/>
+                                <line x1="15" y1="98.21" x2="5" y2="98.21" stroke="#1E64C8" stroke-width="2"/>
+                                
+                                <!-- Final connection: Balance-Debt with all others -->
+                                <line x1="20" y1="28.565" x2="20" y2="50" stroke="#FF6B35" stroke-width="2"/>
+                                <line x1="20" y1="50" x2="5" y2="50" stroke="#1E64C8" stroke-width="2"/>
+                                <line x1="5" y1="50" x2="5" y2="98.21" stroke="#1E64C8" stroke-width="2"/>
                             </svg>
                         </div>
                         
                         <div style="display: flex; flex: 1;">
-                            <!-- Labels Column -->
+                            <!-- Labels Column (reordered based on clustering) -->
                             <div class="labels-column">
-                                <div class="label-vertical">Age</div>
-                                <div class="label-vertical">Income</div>
-                                <div class="label-vertical">Credit</div>
                                 <div class="label-vertical">Balance</div>
-                                <div class="label-vertical">Spending</div>
-                                <div class="label-vertical">Savings</div>
                                 <div class="label-vertical">Debt</div>
+                                <div class="label-vertical">Spending</div>
+                                <div class="label-vertical">Age</div>
+                                <div class="label-vertical">Credit</div>
+                                <div class="label-vertical">Income</div>
+                                <div class="label-vertical">Savings</div>
                             </div>
                             
-                            <!-- Heatmap Grid -->
+                            <!-- Heatmap Grid (reordered based on clustering) -->
                             <div class="heatmap-grid-wrapper">
                                 <div class="heatmap-grid">
-                                    <!-- Row 1: Age -->
+                                    <!-- Row 1: Balance -->
                                     <div class="heatmap-cell corr-1">1.0</div>
-                                    <div class="heatmap-cell corr-07">0.7</div>
-                                    <div class="heatmap-cell corr-05">0.5</div>
-                                    <div class="heatmap-cell corr-02">0.2</div>
-                                    <div class="heatmap-cell corr-03">0.3</div>
-                                    <div class="heatmap-cell corr-04">0.4</div>
-                                    <div class="heatmap-cell corr-n02">-0.2</div>
-                                    
-                                    <!-- Row 2: Income -->
-                                    <div class="heatmap-cell corr-07">0.7</div>
-                                    <div class="heatmap-cell corr-1">1.0</div>
-                                    <div class="heatmap-cell corr-06">0.6</div>
-                                    <div class="heatmap-cell corr-04">0.4</div>
-                                    <div class="heatmap-cell corr-05">0.5</div>
-                                    <div class="heatmap-cell corr-08">0.8</div>
-                                    <div class="heatmap-cell corr-n04">-0.4</div>
-                                    
-                                    <!-- Row 3: Credit -->
-                                    <div class="heatmap-cell corr-05">0.5</div>
-                                    <div class="heatmap-cell corr-06">0.6</div>
-                                    <div class="heatmap-cell corr-1">1.0</div>
-                                    <div class="heatmap-cell corr-03">0.3</div>
-                                    <div class="heatmap-cell corr-04">0.4</div>
-                                    <div class="heatmap-cell corr-07">0.7</div>
-                                    <div class="heatmap-cell corr-n05">-0.5</div>
-                                    
-                                    <!-- Row 4: Balance -->
-                                    <div class="heatmap-cell corr-02">0.2</div>
-                                    <div class="heatmap-cell corr-04">0.4</div>
-                                    <div class="heatmap-cell corr-03">0.3</div>
-                                    <div class="heatmap-cell corr-1">1.0</div>
+                                    <div class="heatmap-cell corr-09">0.9</div>
                                     <div class="heatmap-cell corr-n01">-0.1</div>
                                     <div class="heatmap-cell corr-02">0.2</div>
-                                    <div class="heatmap-cell corr-09">0.9</div>
-                                    
-                                    <!-- Row 5: Spending -->
                                     <div class="heatmap-cell corr-03">0.3</div>
-                                    <div class="heatmap-cell corr-05">0.5</div>
                                     <div class="heatmap-cell corr-04">0.4</div>
-                                    <div class="heatmap-cell corr-n01">-0.1</div>
-                                    <div class="heatmap-cell corr-1">1.0</div>
-                                    <div class="heatmap-cell corr-06">0.6</div>
-                                    <div class="heatmap-cell corr-n03">-0.3</div>
-                                    
-                                    <!-- Row 6: Savings -->
-                                    <div class="heatmap-cell corr-04">0.4</div>
-                                    <div class="heatmap-cell corr-08">0.8</div>
-                                    <div class="heatmap-cell corr-07">0.7</div>
                                     <div class="heatmap-cell corr-02">0.2</div>
-                                    <div class="heatmap-cell corr-06">0.6</div>
+                                    
+                                    <!-- Row 2: Debt -->
+                                    <div class="heatmap-cell corr-09">0.9</div>
                                     <div class="heatmap-cell corr-1">1.0</div>
+                                    <div class="heatmap-cell corr-n03">-0.3</div>
+                                    <div class="heatmap-cell corr-n02">-0.2</div>
+                                    <div class="heatmap-cell corr-n05">-0.5</div>
+                                    <div class="heatmap-cell corr-n04">-0.4</div>
                                     <div class="heatmap-cell corr-n06">-0.6</div>
                                     
-                                    <!-- Row 7: Debt -->
-                                    <div class="heatmap-cell corr-n02">-0.2</div>
-                                    <div class="heatmap-cell corr-n04">-0.4</div>
-                                    <div class="heatmap-cell corr-n05">-0.5</div>
-                                    <div class="heatmap-cell corr-09">0.9</div>
+                                    <!-- Row 3: Spending -->
+                                    <div class="heatmap-cell corr-n01">-0.1</div>
                                     <div class="heatmap-cell corr-n03">-0.3</div>
+                                    <div class="heatmap-cell corr-1">1.0</div>
+                                    <div class="heatmap-cell corr-03">0.3</div>
+                                    <div class="heatmap-cell corr-04">0.4</div>
+                                    <div class="heatmap-cell corr-05">0.5</div>
+                                    <div class="heatmap-cell corr-06">0.6</div>
+                                    
+                                    <!-- Row 4: Age -->
+                                    <div class="heatmap-cell corr-02">0.2</div>
+                                    <div class="heatmap-cell corr-n02">-0.2</div>
+                                    <div class="heatmap-cell corr-03">0.3</div>
+                                    <div class="heatmap-cell corr-1">1.0</div>
+                                    <div class="heatmap-cell corr-05">0.5</div>
+                                    <div class="heatmap-cell corr-07">0.7</div>
+                                    <div class="heatmap-cell corr-04">0.4</div>
+                                    
+                                    <!-- Row 5: Credit -->
+                                    <div class="heatmap-cell corr-03">0.3</div>
+                                    <div class="heatmap-cell corr-n05">-0.5</div>
+                                    <div class="heatmap-cell corr-04">0.4</div>
+                                    <div class="heatmap-cell corr-05">0.5</div>
+                                    <div class="heatmap-cell corr-1">1.0</div>
+                                    <div class="heatmap-cell corr-06">0.6</div>
+                                    <div class="heatmap-cell corr-07">0.7</div>
+                                    
+                                    <!-- Row 6: Income -->
+                                    <div class="heatmap-cell corr-04">0.4</div>
+                                    <div class="heatmap-cell corr-n04">-0.4</div>
+                                    <div class="heatmap-cell corr-05">0.5</div>
+                                    <div class="heatmap-cell corr-07">0.7</div>
+                                    <div class="heatmap-cell corr-06">0.6</div>
+                                    <div class="heatmap-cell corr-1">1.0</div>
+                                    <div class="heatmap-cell corr-08">0.8</div>
+                                    
+                                    <!-- Row 7: Savings -->
+                                    <div class="heatmap-cell corr-02">0.2</div>
                                     <div class="heatmap-cell corr-n06">-0.6</div>
+                                    <div class="heatmap-cell corr-06">0.6</div>
+                                    <div class="heatmap-cell corr-04">0.4</div>
+                                    <div class="heatmap-cell corr-07">0.7</div>
+                                    <div class="heatmap-cell corr-08">0.8</div>
                                     <div class="heatmap-cell corr-1">1.0</div>
                                 </div>
                                 
-                                <!-- Bottom Labels -->
+                                <!-- Bottom Labels (reordered) -->
                                 <div class="labels-row">
-                                    <div class="label">Age</div>
-                                    <div class="label">Income</div>
-                                    <div class="label">Credit</div>
                                     <div class="label">Balance</div>
-                                    <div class="label">Spend</div>
-                                    <div class="label">Savings</div>
                                     <div class="label">Debt</div>
+                                    <div class="label">Spend</div>
+                                    <div class="label">Age</div>
+                                    <div class="label">Credit</div>
+                                    <div class="label">Income</div>
+                                    <div class="label">Savings</div>
                                 </div>
                             </div>
                         </div>
@@ -480,6 +508,96 @@
                         <div class="scale-gradient"></div>
                         <span class="scale-label">+1.0</span>
                     </div>
+                </div>
+                
+                <div class="matrix-container">
+                    <div class="matrix-title">Correlation Matrix (Original Order)</div>
+                    <table class="matrix-table">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Age</th>
+                                <th>Income</th>
+                                <th>Credit</th>
+                                <th>Balance</th>
+                                <th>Spend</th>
+                                <th>Savings</th>
+                                <th>Debt</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th>Age</th>
+                                <td>1.00</td>
+                                <td>0.70</td>
+                                <td>0.50</td>
+                                <td>0.20</td>
+                                <td>0.30</td>
+                                <td>0.40</td>
+                                <td>-0.20</td>
+                            </tr>
+                            <tr>
+                                <th>Income</th>
+                                <td>0.70</td>
+                                <td>1.00</td>
+                                <td>0.60</td>
+                                <td>0.40</td>
+                                <td>0.50</td>
+                                <td>0.80</td>
+                                <td>-0.40</td>
+                            </tr>
+                            <tr>
+                                <th>Credit</th>
+                                <td>0.50</td>
+                                <td>0.60</td>
+                                <td>1.00</td>
+                                <td>0.30</td>
+                                <td>0.40</td>
+                                <td>0.70</td>
+                                <td>-0.50</td>
+                            </tr>
+                            <tr>
+                                <th>Balance</th>
+                                <td>0.20</td>
+                                <td>0.40</td>
+                                <td>0.30</td>
+                                <td>1.00</td>
+                                <td>-0.10</td>
+                                <td>0.20</td>
+                                <td>0.90</td>
+                            </tr>
+                            <tr>
+                                <th>Spend</th>
+                                <td>0.30</td>
+                                <td>0.50</td>
+                                <td>0.40</td>
+                                <td>-0.10</td>
+                                <td>1.00</td>
+                                <td>0.60</td>
+                                <td>-0.30</td>
+                            </tr>
+                            <tr>
+                                <th>Savings</th>
+                                <td>0.40</td>
+                                <td>0.80</td>
+                                <td>0.70</td>
+                                <td>0.20</td>
+                                <td>0.60</td>
+                                <td>1.00</td>
+                                <td>-0.60</td>
+                            </tr>
+                            <tr>
+                                <th>Debt</th>
+                                <td>-0.20</td>
+                                <td>-0.40</td>
+                                <td>-0.50</td>
+                                <td>0.90</td>
+                                <td>-0.30</td>
+                                <td>-0.60</td>
+                                <td>1.00</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
             
@@ -508,22 +626,22 @@
                 </div>
                 
                 <div class="usage-card">
-                    <div class="usage-title">📋 When to Use</div>
+                    <div class="usage-title">🔍 Key Insights</div>
                     <div class="usage-item">
-                        <span class="usage-icon">▸</span>
-                        <span>EDA phase</span>
+                        <span class="usage-icon">🔴</span>
+                        <span><strong>Balance-Debt</strong>: 0.9 (very strong)</span>
                     </div>
                     <div class="usage-item">
-                        <span class="usage-icon">▸</span>
-                        <span>Feature selection</span>
+                        <span class="usage-icon">🟢</span>
+                        <span><strong>Income-Savings</strong>: 0.8 (strong)</span>
                     </div>
                     <div class="usage-item">
-                        <span class="usage-icon">▸</span>
-                        <span>Multicollinearity detection</span>
+                        <span class="usage-icon">🟢</span>
+                        <span><strong>Age-Income</strong>: 0.7 (strong)</span>
                     </div>
                     <div class="usage-item">
-                        <span class="usage-icon">▸</span>
-                        <span>Feature engineering</span>
+                        <span class="usage-icon">🔵</span>
+                        <span>Financial health cluster visible</span>
                     </div>
                 </div>
                 
@@ -535,15 +653,15 @@
                     </div>
                     <div class="tip-item">
                         <span class="check-icon">✓</span>
-                        <span>Show upper/lower triangle only</span>
-                    </div>
-                    <div class="tip-item">
-                        <span class="check-icon">✓</span>
                         <span>Cluster similar variables</span>
                     </div>
                     <div class="tip-item">
                         <span class="check-icon">✓</span>
                         <span>Identify redundant features</span>
+                    </div>
+                    <div class="tip-item">
+                        <span class="check-icon">✓</span>
+                        <span>Look for multicollinearity</span>
                     </div>
                 </div>
             </div>

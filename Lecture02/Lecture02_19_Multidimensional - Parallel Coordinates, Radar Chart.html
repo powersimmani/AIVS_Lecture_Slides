@@ -125,10 +125,10 @@
             font-weight: 600;
         }
         
-        .axis-1 { left: 15%; }
-        .axis-2 { left: 35%; }
-        .axis-3 { left: 55%; }
-        .axis-4 { left: 75%; }
+        .axis-1 { left: 15%; transform: translateX(13px); }
+        .axis-2 { left: 35%; transform: translateX(13px); }
+        .axis-3 { left: 55%; transform: translateX(13px); }
+        .axis-4 { left: 75%; transform: translateX(13px); }
         
         .data-line {
             position: absolute;
@@ -201,26 +201,21 @@
         
         .feature-item {
             display: flex;
-            align-items: flex-start;
+            align-items: center;
             gap: 8px;
-            font-size: 16px;
-            color: #333;
-            line-height: 1.4;
-            margin-bottom: 6px;
-            padding: 6px;
-            background: #F8FBFF;
-            border-radius: 4px;
+            margin: 4px 0;
+            font-size: 14px;
+            color: #666;
         }
         
         .feature-icon {
             color: #1E64C8;
             font-weight: bold;
-            flex-shrink: 0;
         }
         
         .limitations-card {
-            background: #FFF9E6;
-            border: 2px solid #FFC107;
+            background: #FFF8E1;
+            border: 2px solid #FFA726;
             border-radius: 10px;
             padding: 14px;
         }
@@ -228,25 +223,25 @@
         .limitations-title {
             font-size: 18px;
             font-weight: 600;
-            color: #1E64C8;
-            margin-bottom: 10px;
-            text-align: center;
+            color: #F57C00;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
         
         .limitation-item {
             display: flex;
-            align-items: flex-start;
+            align-items: center;
             gap: 8px;
-            font-size: 16px;
-            color: #333;
-            margin-bottom: 6px;
-            line-height: 1.3;
+            margin: 4px 0;
+            font-size: 14px;
+            color: #666;
         }
         
         .warning-icon {
             color: #F57C00;
-            font-size: 16px;
-            flex-shrink: 0;
+            font-weight: bold;
         }
         
         .use-cases {
@@ -260,52 +255,30 @@
             font-size: 18px;
             font-weight: 600;
             color: #2E7D32;
-            margin-bottom: 10px;
-            text-align: center;
+            margin-bottom: 8px;
         }
         
         .use-item {
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 16px;
-            color: #333;
-            margin-bottom: 6px;
+            margin: 4px 0;
+            font-size: 14px;
+            color: #666;
         }
         
         .check-icon {
             color: #4CAF50;
-            font-size: 16px;
             font-weight: bold;
+            font-size: 16px;
         }
-        
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(15px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .chart-card, .comparison-card, .limitations-card, .use-cases {
-            animation: fadeIn 0.5s ease forwards;
-        }
-        
-        .chart-card:nth-child(1) { animation-delay: 0.1s; }
-        .chart-card:nth-child(2) { animation-delay: 0.2s; }
-        .comparison-card { animation-delay: 0.3s; }
-        .limitations-card { animation-delay: 0.4s; }
-        .use-cases { animation-delay: 0.5s; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="title-section">
-            <div class="main-title">Multidimensional: Parallel Coordinates & Radar Chart</div>
-            <div class="subtitle">Visualizing High-Dimensional Data</div>
+            <div class="main-title">Multidimensional Visualization</div>
+            <div class="subtitle">Parallel Coordinates & Radar Chart</div>
         </div>
         
         <div class="content-wrapper">
@@ -318,76 +291,111 @@
                             <div class="parallel-coords">
                                 <!-- Axes -->
                                 <div class="axis axis-1">
-                                    <div class="axis-label">Dim 1</div>
+                                    <div class="axis-label">Dim A</div>
                                 </div>
                                 <div class="axis axis-2">
-                                    <div class="axis-label">Dim 2</div>
+                                    <div class="axis-label">Dim B</div>
                                 </div>
                                 <div class="axis axis-3">
-                                    <div class="axis-label">Dim 3</div>
+                                    <div class="axis-label">Dim C</div>
                                 </div>
                                 <div class="axis axis-4">
-                                    <div class="axis-label">Dim 4</div>
+                                    <div class="axis-label">Dim D</div>
                                 </div>
                                 
-                                <!-- Data Lines -->
+                                <!-- Data lines -->
                                 <div class="data-line">
-                                    <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-                                        <!-- Line 1 (blue) -->
+                                    <svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position: absolute; top: 20px; left: 0; width: 100%; height: calc(100% - 40px);">
+                                        <!-- Blue cluster (high values) -->
                                         <polyline
-                                            points="15,20 35,40 55,30 75,15"
+                                            points="15,25 35,35 55,30 75,20"
                                             fill="none"
                                             stroke="#1E64C8"
-                                            stroke-width="0.5"
+                                            stroke-width="0.8"
                                             opacity="0.7"/>
                                         
-                                        <!-- Line 2 (blue) -->
                                         <polyline
-                                            points="15,25 35,35 55,25 75,20"
+                                            points="15,30 35,30 55,25 75,25"
                                             fill="none"
                                             stroke="#1E64C8"
-                                            stroke-width="0.5"
+                                            stroke-width="0.8"
                                             opacity="0.7"/>
                                         
-                                        <!-- Line 3 (blue) -->
                                         <polyline
-                                            points="15,30 35,45 55,35 75,25"
+                                            points="15,35 35,40 55,35 75,30"
                                             fill="none"
                                             stroke="#1E64C8"
-                                            stroke-width="0.5"
+                                            stroke-width="0.8"
                                             opacity="0.7"/>
                                         
-                                        <!-- Line 4 (green) -->
+                                        <!-- Green cluster (low values) -->
                                         <polyline
-                                            points="15,70 35,60 55,65 75,70"
+                                            points="15,70 35,65 55,70 75,75"
                                             fill="none"
                                             stroke="#4CAF50"
-                                            stroke-width="0.5"
+                                            stroke-width="0.8"
                                             opacity="0.7"/>
                                         
-                                        <!-- Line 5 (green) -->
                                         <polyline
-                                            points="15,75 35,65 55,70 75,75"
+                                            points="15,75 35,70 55,75 75,70"
                                             fill="none"
                                             stroke="#4CAF50"
-                                            stroke-width="0.5"
+                                            stroke-width="0.8"
                                             opacity="0.7"/>
                                         
-                                        <!-- Line 6 (green) -->
                                         <polyline
-                                            points="15,80 35,70 55,75 75,80"
+                                            points="15,80 35,75 55,80 75,80"
                                             fill="none"
                                             stroke="#4CAF50"
-                                            stroke-width="0.5"
+                                            stroke-width="0.8"
                                             opacity="0.7"/>
                                         
-                                        <!-- Line 7 (orange - outlier) -->
+                                        <!-- Orange outlier -->
                                         <polyline
-                                            points="15,50 35,20 55,80 75,45"
+                                            points="15,50 35,25 55,75 75,45"
                                             fill="none"
                                             stroke="#FF9800"
-                                            stroke-width="0.7"
+                                            stroke-width="1.2"
                                             opacity="0.9"/>
+                                        
+                                        <!-- Dots to show intersection points -->
+                                        <!-- Blue cluster dots -->
+                                        <circle cx="15" cy="25" r="1.5" fill="#1E64C8"/>
+                                        <circle cx="35" cy="35" r="1.5" fill="#1E64C8"/>
+                                        <circle cx="55" cy="30" r="1.5" fill="#1E64C8"/>
+                                        <circle cx="75" cy="20" r="1.5" fill="#1E64C8"/>
+                                        
+                                        <circle cx="15" cy="30" r="1.5" fill="#1E64C8"/>
+                                        <circle cx="35" cy="30" r="1.5" fill="#1E64C8"/>
+                                        <circle cx="55" cy="25" r="1.5" fill="#1E64C8"/>
+                                        <circle cx="75" cy="25" r="1.5" fill="#1E64C8"/>
+                                        
+                                        <circle cx="15" cy="35" r="1.5" fill="#1E64C8"/>
+                                        <circle cx="35" cy="40" r="1.5" fill="#1E64C8"/>
+                                        <circle cx="55" cy="35" r="1.5" fill="#1E64C8"/>
+                                        <circle cx="75" cy="30" r="1.5" fill="#1E64C8"/>
+                                        
+                                        <!-- Green cluster dots -->
+                                        <circle cx="15" cy="70" r="1.5" fill="#4CAF50"/>
+                                        <circle cx="35" cy="65" r="1.5" fill="#4CAF50"/>
+                                        <circle cx="55" cy="70" r="1.5" fill="#4CAF50"/>
+                                        <circle cx="75" cy="75" r="1.5" fill="#4CAF50"/>
+                                        
+                                        <circle cx="15" cy="75" r="1.5" fill="#4CAF50"/>
+                                        <circle cx="35" cy="70" r="1.5" fill="#4CAF50"/>
+                                        <circle cx="55" cy="75" r="1.5" fill="#4CAF50"/>
+                                        <circle cx="75" cy="70" r="1.5" fill="#4CAF50"/>
+                                        
+                                        <circle cx="15" cy="80" r="1.5" fill="#4CAF50"/>
+                                        <circle cx="35" cy="75" r="1.5" fill="#4CAF50"/>
+                                        <circle cx="55" cy="80" r="1.5" fill="#4CAF50"/>
+                                        <circle cx="75" cy="80" r="1.5" fill="#4CAF50"/>
+                                        
+                                        <!-- Orange outlier dots -->
+                                        <circle cx="15" cy="50" r="1.8" fill="#FF9800"/>
+                                        <circle cx="35" cy="25" r="1.8" fill="#FF9800"/>
+                                        <circle cx="55" cy="75" r="1.8" fill="#FF9800"/>
+                                        <circle cx="75" cy="45" r="1.8" fill="#FF9800"/>
                                     </svg>
                                 </div>
                             </div>

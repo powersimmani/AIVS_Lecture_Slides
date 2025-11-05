@@ -157,6 +157,7 @@
             line-height: 1.8;
             flex: 1;
             overflow-y: auto;
+            white-space: pre;
         }
         
         .code-comment {
@@ -226,6 +227,219 @@
             color: #555;
             line-height: 1.4;
         }
+        
+        /* Numerical Example Styles */
+        .numerical-example {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 3px solid #1E64C8;
+        }
+        
+        .example-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .example-header-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .example-subtitle {
+            font-size: 16px;
+            color: #666;
+            font-style: italic;
+        }
+        
+        .example-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        .calc-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            border-left: 5px solid #1E64C8;
+        }
+        
+        .setup-card {
+            border-left-color: #4CAF50;
+        }
+        
+        .layer1-card {
+            border-left-color: #2196F3;
+        }
+        
+        .layer2-card {
+            border-left-color: #FF9800;
+        }
+        
+        .summary-card {
+            border-left-color: #9C27B0;
+            grid-column: 1 / -1;
+        }
+        
+        .calc-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #ddd;
+        }
+        
+        .calc-content {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .calc-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 10px;
+            background: white;
+            border-radius: 4px;
+            font-size: 15px;
+        }
+        
+        .calc-label {
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .calc-value {
+            font-family: 'Courier New', monospace;
+            color: #1E64C8;
+            font-weight: 500;
+        }
+        
+        .calc-step {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+        }
+        
+        .calc-step-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .calc-formula {
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            color: #1E64C8;
+            background: #e3f2fd;
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .calc-details {
+            margin: 10px 0;
+            padding-left: 15px;
+        }
+        
+        .calc-details div {
+            font-size: 15px;
+            color: #555;
+            margin: 5px 0;
+            line-height: 1.6;
+        }
+        
+        .calc-details strong {
+            color: #FF5722;
+            font-weight: 700;
+        }
+        
+        .calc-result {
+            background: #fff3cd;
+            padding: 8px 12px;
+            border-radius: 4px;
+            border-left: 4px solid #FFC107;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            color: #333;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+        
+        .final-output {
+            background: #d4edda;
+            border-left-color: #28a745;
+            font-size: 18px;
+        }
+        
+        .calc-arrow {
+            text-align: center;
+            font-size: 24px;
+            color: #1E64C8;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+        
+        .summary-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+        
+        .summary-item {
+            text-align: center;
+        }
+        
+        .summary-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        .summary-value {
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            color: #1E64C8;
+            font-weight: 600;
+            background: #f0f0f0;
+            padding: 8px 15px;
+            border-radius: 4px;
+        }
+        
+        .summary-value.highlight {
+            background: #4CAF50;
+            color: white;
+            font-size: 18px;
+        }
+        
+        .summary-arrow {
+            font-size: 24px;
+            color: #1E64C8;
+            font-weight: bold;
+        }
+        
+        .summary-note {
+            background: #e3f2fd;
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-size: 15px;
+            color: #555;
+            line-height: 1.5;
+        }
     </style>
 </head>
 <body>
@@ -292,20 +506,18 @@
                 <div class="section-title">Pseudocode</div>
                 <div class="algorithm-box">
                     <div class="algo-title">Forward Propagation</div>
-                    <div class="code-block">
-<span class="code-comment"># Input: x, weights W, biases b</span>
+                    <div class="code-block"><span class="code-comment"># Input: x, weights W, biases b</span>
 <span class="code-keyword">function</span> <span class="code-function">forward_propagation</span>(<span class="code-variable">x</span>):
     <span class="code-variable">h</span> = <span class="code-variable">x</span>  <span class="code-comment"># Initialize with input</span>
     
     <span class="code-keyword">for</span> <span class="code-variable">l</span> = 1 <span class="code-keyword">to</span> <span class="code-variable">L</span>:
         <span class="code-comment"># Linear combination</span>
-        <span class="code-variable">z</span> = <span class="code-variable">W[l]</span> @ <span class="code-variable">h</span> + <span class="code-variable">b[l]</span>
+        <span class="code-variable">z</span> = <span class="code-variable">W[l]</span> * <span class="code-variable">h</span> + <span class="code-variable">b[l]</span>
         
         <span class="code-comment"># Apply activation</span>
         <span class="code-variable">h</span> = <span class="code-function">activation</span>(<span class="code-variable">z</span>)
     
-    <span class="code-keyword">return</span> <span class="code-variable">h</span>  <span class="code-comment"># Final output ŷ</span>
-                    </div>
+    <span class="code-keyword">return</span> <span class="code-variable">h</span>  <span class="code-comment"># Final output ŷ</span></div>
                 </div>
                 
                 <div class="example-section">
@@ -339,6 +551,124 @@
                     <div class="point-title">Matrix Operations</div>
                     <div class="point-text">
                         Efficient computation using matrix multiplication
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Numerical Example Section -->
+        <div class="numerical-example">
+            <div class="example-header">
+                <div class="example-header-title">🔢 Numerical Example: Step-by-Step Calculation</div>
+                <div class="example-subtitle">2-Layer Network with Sigmoid Activation (σ(z) = 1/(1+e⁻ᶻ))</div>
+            </div>
+            
+            <div class="example-grid">
+                <!-- Initial Setup -->
+                <div class="calc-card setup-card">
+                    <div class="calc-title">📥 Initial Setup</div>
+                    <div class="calc-content">
+                        <div class="calc-item">
+                            <span class="calc-label">Input:</span>
+                            <span class="calc-value">x = [1.0, 2.0]ᵀ</span>
+                        </div>
+                        <div class="calc-item">
+                            <span class="calc-label">Layer 1 Weights:</span>
+                            <span class="calc-value">W⁽¹⁾ = [[0.5, 0.3], [0.2, 0.4]]</span>
+                        </div>
+                        <div class="calc-item">
+                            <span class="calc-label">Layer 1 Bias:</span>
+                            <span class="calc-value">b⁽¹⁾ = [0.1, 0.2]ᵀ</span>
+                        </div>
+                        <div class="calc-item">
+                            <span class="calc-label">Layer 2 Weights:</span>
+                            <span class="calc-value">W⁽²⁾ = [[0.6, 0.7]]</span>
+                        </div>
+                        <div class="calc-item">
+                            <span class="calc-label">Layer 2 Bias:</span>
+                            <span class="calc-value">b⁽²⁾ = [0.3]</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Layer 1 Calculation -->
+                <div class="calc-card layer1-card">
+                    <div class="calc-title">⚙️ Layer 1: Hidden Layer</div>
+                    <div class="calc-content">
+                        <div class="calc-step">
+                            <div class="calc-step-title">Step 1: Linear Transformation</div>
+                            <div class="calc-formula">z⁽¹⁾ = W⁽¹⁾x + b⁽¹⁾</div>
+                            <div class="calc-details">
+                                <div>z₁⁽¹⁾ = 0.5(1.0) + 0.3(2.0) + 0.1 = 0.5 + 0.6 + 0.1 = <strong>1.2</strong></div>
+                                <div>z₂⁽¹⁾ = 0.2(1.0) + 0.4(2.0) + 0.2 = 0.2 + 0.8 + 0.2 = <strong>1.2</strong></div>
+                            </div>
+                            <div class="calc-result">z⁽¹⁾ = [1.2, 1.2]ᵀ</div>
+                        </div>
+                        
+                        <div class="calc-arrow">↓</div>
+                        
+                        <div class="calc-step">
+                            <div class="calc-step-title">Step 2: Activation Function</div>
+                            <div class="calc-formula">h⁽¹⁾ = σ(z⁽¹⁾)</div>
+                            <div class="calc-details">
+                                <div>h₁⁽¹⁾ = σ(1.2) = 1/(1+e⁻¹·²) ≈ <strong>0.769</strong></div>
+                                <div>h₂⁽¹⁾ = σ(1.2) = 1/(1+e⁻¹·²) ≈ <strong>0.769</strong></div>
+                            </div>
+                            <div class="calc-result">h⁽¹⁾ = [0.769, 0.769]ᵀ</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Layer 2 Calculation -->
+                <div class="calc-card layer2-card">
+                    <div class="calc-title">🎯 Layer 2: Output Layer</div>
+                    <div class="calc-content">
+                        <div class="calc-step">
+                            <div class="calc-step-title">Step 3: Linear Transformation</div>
+                            <div class="calc-formula">z⁽²⁾ = W⁽²⁾h⁽¹⁾ + b⁽²⁾</div>
+                            <div class="calc-details">
+                                <div>z⁽²⁾ = 0.6(0.769) + 0.7(0.769) + 0.3</div>
+                                <div>z⁽²⁾ = 0.461 + 0.538 + 0.3 = <strong>1.299</strong></div>
+                            </div>
+                            <div class="calc-result">z⁽²⁾ = [1.299]</div>
+                        </div>
+                        
+                        <div class="calc-arrow">↓</div>
+                        
+                        <div class="calc-step">
+                            <div class="calc-step-title">Step 4: Final Activation</div>
+                            <div class="calc-formula">ŷ = h⁽²⁾ = σ(z⁽²⁾)</div>
+                            <div class="calc-details">
+                                <div>ŷ = σ(1.299) = 1/(1+e⁻¹·²⁹⁹) ≈ <strong>0.786</strong></div>
+                            </div>
+                            <div class="calc-result final-output">ŷ = 0.786</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Summary -->
+                <div class="calc-card summary-card">
+                    <div class="calc-title">✅ Summary</div>
+                    <div class="calc-content">
+                        <div class="summary-flow">
+                            <div class="summary-item">
+                                <div class="summary-label">Input</div>
+                                <div class="summary-value">[1.0, 2.0]</div>
+                            </div>
+                            <div class="summary-arrow">→</div>
+                            <div class="summary-item">
+                                <div class="summary-label">Hidden</div>
+                                <div class="summary-value">[0.769, 0.769]</div>
+                            </div>
+                            <div class="summary-arrow">→</div>
+                            <div class="summary-item">
+                                <div class="summary-label">Output</div>
+                                <div class="summary-value highlight">0.786</div>
+                            </div>
+                        </div>
+                        <div class="summary-note">
+                            💡 This output represents the network's prediction for the given input after forward propagation through all layers.
+                        </div>
                     </div>
                 </div>
             </div>

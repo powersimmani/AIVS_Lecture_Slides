@@ -8,12 +8,15 @@
         body {
             margin: 0;
             padding: 0;
+            background: white;
+            font-family: Aptos, 'Segoe UI', sans-serif;
+        }
+        .first-section {
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             background: white;
-            font-family: Aptos, 'Segoe UI', sans-serif;
         }
         .container {
             width: 960px;
@@ -212,104 +215,295 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="title">Multi-class Metrics</div>
-        
-        <div class="averaging-methods">
-            <!-- Macro Average -->
-            <div class="method-card">
-                <div class="method-icon">⚖️</div>
-                <div class="method-name">Macro-Average</div>
-                <div class="method-formula">avg(metric₁, metric₂, ...)</div>
-                <div class="method-description">
-                    Calculate metric for each class, then average. Equal class weight.
+    <!-- First Slide: Original Content -->
+    <div class="first-section">
+        <div class="container">
+            <div class="title">Multi-class Metrics</div>
+            
+            <div class="averaging-methods">
+                <!-- Macro Average -->
+                <div class="method-card">
+                    <div class="method-icon">⚖️</div>
+                    <div class="method-name">Macro-Average</div>
+                    <div class="method-formula">avg(metric₁, metric₂, ...)</div>
+                    <div class="method-description">
+                        Calculate metric for each class, then average. Equal class weight.
+                    </div>
+                </div>
+
+                <!-- Micro Average -->
+                <div class="method-card">
+                    <div class="method-icon">🎯</div>
+                    <div class="method-name">Micro-Average</div>
+                    <div class="method-formula">metric(Σ TP, Σ FP, Σ FN)</div>
+                    <div class="method-description">
+                        Aggregate all classes first, then calculate. Favors majority.
+                    </div>
+                </div>
+
+                <!-- Weighted Average -->
+                <div class="method-card">
+                    <div class="method-icon">📊</div>
+                    <div class="method-name">Weighted-Average</div>
+                    <div class="method-formula">Σ(weight × metric)</div>
+                    <div class="method-description">
+                        Weight by class support. Balances macro & micro.
+                    </div>
                 </div>
             </div>
 
-            <!-- Micro Average -->
-            <div class="method-card">
-                <div class="method-icon">🎯</div>
-                <div class="method-name">Micro-Average</div>
-                <div class="method-formula">metric(Σ TP, Σ FP, Σ FN)</div>
-                <div class="method-description">
-                    Aggregate all classes first, then calculate. Favors majority.
-                </div>
-            </div>
-
-            <!-- Weighted Average -->
-            <div class="method-card">
-                <div class="method-icon">📊</div>
-                <div class="method-name">Weighted-Average</div>
-                <div class="method-formula">Σ(weight × metric)</div>
-                <div class="method-description">
-                    Weight by class support. Balances macro & micro.
-                </div>
-            </div>
-        </div>
-
-        <div class="visual-example">
-            <div class="example-title">Example: F1 Score Calculation</div>
-            <div class="example-grid">
-                <div class="class-data">
-                    <div class="class-row">
-                        <span class="class-name">Class A (100 samples)</span>
-                        <span class="class-value">F1 = 0.90</span>
-                    </div>
-                    <div class="class-row">
-                        <span class="class-name">Class B (50 samples)</span>
-                        <span class="class-value">F1 = 0.70</span>
-                    </div>
-                    <div class="class-row">
-                        <span class="class-name">Class C (50 samples)</span>
-                        <span class="class-value">F1 = 0.60</span>
-                    </div>
-                </div>
-                
-                <div class="averaging-comparison">
-                    <div class="comparison-row">
-                        <div>
-                            <div class="comparison-label">Macro-Average</div>
-                            <div class="comparison-note">(0.90 + 0.70 + 0.60) / 3</div>
+            <div class="visual-example">
+                <div class="example-title">Example: F1 Score Calculation</div>
+                <div class="example-grid">
+                    <div class="class-data">
+                        <div class="class-row">
+                            <span class="class-name">Class A (100 samples)</span>
+                            <span class="class-value">F1 = 0.90</span>
                         </div>
-                        <div class="comparison-value">0.73</div>
+                        <div class="class-row">
+                            <span class="class-name">Class B (50 samples)</span>
+                            <span class="class-value">F1 = 0.70</span>
+                        </div>
+                        <div class="class-row">
+                            <span class="class-name">Class C (50 samples)</span>
+                            <span class="class-value">F1 = 0.60</span>
+                        </div>
                     </div>
                     
-                    <div class="comparison-row">
-                        <div>
-                            <div class="comparison-label">Micro-Average</div>
-                            <div class="comparison-note">Aggregate TP/FP/FN</div>
+                    <div class="averaging-comparison">
+                        <div class="comparison-row">
+                            <div>
+                                <div class="comparison-label">Macro-Average</div>
+                                <div class="comparison-note">(0.90 + 0.70 + 0.60) / 3</div>
+                            </div>
+                            <div class="comparison-value">0.73</div>
                         </div>
-                        <div class="comparison-value">0.82</div>
-                    </div>
-                    
-                    <div class="comparison-row">
-                        <div>
-                            <div class="comparison-label">Weighted-Average</div>
-                            <div class="comparison-note">(100×0.90+50×0.70+50×0.60)/200</div>
+                        
+                        <div class="comparison-row">
+                            <div>
+                                <div class="comparison-label">Micro-Average</div>
+                                <div class="comparison-note">Aggregate TP/FP/FN</div>
+                            </div>
+                            <div class="comparison-value">0.82</div>
                         </div>
-                        <div class="comparison-value">0.78</div>
+                        
+                        <div class="comparison-row">
+                            <div>
+                                <div class="comparison-label">Weighted-Average</div>
+                                <div class="comparison-note">(100×0.90+50×0.70+50×0.60)/200</div>
+                            </div>
+                            <div class="comparison-value">0.78</div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="key-insights">
-            <div class="insights-title">🔑 Key Insights</div>
-            <div class="insights-grid">
-                <div class="insight-item">
-                    <div class="insight-label">Macro</div>
-                    <div>Treats all classes equally, good for balanced view</div>
-                </div>
-                <div class="insight-item">
-                    <div class="insight-label">Micro</div>
-                    <div>Similar to accuracy, biased to majority class</div>
-                </div>
-                <div class="insight-item">
-                    <div class="insight-label">Weighted</div>
-                    <div>Balanced approach considering class sizes</div>
+            <div class="key-insights">
+                <div class="insights-title">🔑 Key Insights</div>
+                <div class="insights-grid">
+                    <div class="insight-item">
+                        <div class="insight-label">Macro</div>
+                        <div>Treats all classes equally, good for balanced view</div>
+                    </div>
+                    <div class="insight-item">
+                        <div class="insight-label">Micro</div>
+                        <div>Similar to accuracy, biased to majority class</div>
+                    </div>
+                    <div class="insight-item">
+                        <div class="insight-label">Weighted</div>
+                        <div>Balanced approach considering class sizes</div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    <!-- End of First Slide -->
+
+
+    <!-- ========================================== -->
+    <!-- Second Section: 5-Class Example BELOW -->
+    <!-- ========================================== -->
+
+    <div style="width: 100%; background: #f8f9fa; padding: 50px 0; font-family: Aptos, 'Segoe UI', sans-serif;">
+        <div style="max-width: 960px; margin: 0 auto; padding: 0 30px;">
+            
+            <h1 style="text-align: center; font-size: 28px; font-weight: 700; color: #1E64C8; margin-bottom: 40px;">
+                5-Class Confusion Matrix: Step-by-Step Calculation
+            </h1>
+            
+            <!-- Two Column Grid -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px;">
+                
+                <!-- Left: Confusion Matrix -->
+                <div style="background: white; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); padding: 30px;">
+                    <div style="font-size: 18px; font-weight: 600; color: #2c3e50; margin-bottom: 20px; text-align: center;">
+                        Confusion Matrix (5 Classes)
+                    </div>
+                    <table style="width: 100%; border-collapse: collapse; background: white;">
+                        <thead>
+                            <tr style="background: #1E64C8; color: white;">
+                                <th style="padding: 10px; font-size: 13px; border: 1px solid #ddd;"></th>
+                                <th style="padding: 10px; font-size: 13px; border: 1px solid #ddd;">C0</th>
+                                <th style="padding: 10px; font-size: 13px; border: 1px solid #ddd;">C1</th>
+                                <th style="padding: 10px; font-size: 13px; border: 1px solid #ddd;">C2</th>
+                                <th style="padding: 10px; font-size: 13px; border: 1px solid #ddd;">C3</th>
+                                <th style="padding: 10px; font-size: 13px; border: 1px solid #ddd;">C4</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 10px; font-weight: 600; background: #e3f2fd; border: 1px solid #ddd; text-align: center;">C0</td>
+                                <td style="padding: 10px; text-align: center; background: #c8e6c9; font-weight: 700; border: 1px solid #ddd;">45</td>
+                                <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">3</td>
+                                <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">2</td>
+                                <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">0</td>
+                                <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">0</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; font-weight: 600; background: #e3f2fd; border: 1px solid #ddd; text-align: center;">C1</td>
+                                <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">2</td>
+                                <td style="padding: 10px; text-align: center; background: #c8e6c9; font-weight: 700; border: 1px solid #ddd;">28</td>
+                                <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">5</td>
+                                <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">0</td>
+                                <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">0</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; font-weight: 600; background: #e3f2fd; border: 1px solid #ddd; text-align: center;">C2</td>
+                                <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">1</td>
+                                <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">4</td>
+                                <td style="padding: 10px; text-align: center; background: #c8e6c9; font-weight: 700; border: 1px solid #ddd;">18</td>
+                                <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">2</td>
+                                <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">0</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; font-weight: 600; background: #e3f2fd; border: 1px solid #ddd; text-align: center;">C3</td>
+                                <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">0</td>
+                                <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">0</td>
+                                <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">3</td>
+                                <td style="padding: 10px; text-align: center; background: #c8e6c9; font-weight: 700; border: 1px solid #ddd;">12</td>
+                                <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">0</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; font-weight: 600; background: #e3f2fd; border: 1px solid #ddd; text-align: center;">C4</td>
+                                <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">0</td>
+                                <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">0</td>
+                                <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">1</td>
+                                <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">1</td>
+                                <td style="padding: 10px; text-align: center; background: #c8e6c9; font-weight: 700; border: 1px solid #ddd;">8</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div style="margin-top: 12px; font-size: 12px; color: #666; text-align: center;">
+                        Rows: Actual | Columns: Predicted | Total: 135 samples
+                    </div>
+                </div>
+
+                <!-- Right: Per-Class Metrics -->
+                <div style="background: white; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); padding: 30px;">
+                    <div style="font-size: 18px; font-weight: 600; color: #2c3e50; margin-bottom: 20px; text-align: center;">
+                        Per-Class Metrics
+                    </div>
+                    <table style="width: 100%; border-collapse: collapse; background: white; font-size: 13px;">
+                        <thead>
+                            <tr style="background: #4A90E2; color: white;">
+                                <th style="padding: 10px; border: 1px solid #ddd;">Class</th>
+                                <th style="padding: 10px; border: 1px solid #ddd;">Support</th>
+                                <th style="padding: 10px; border: 1px solid #ddd;">Precision</th>
+                                <th style="padding: 10px; border: 1px solid #ddd;">Recall</th>
+                                <th style="padding: 10px; border: 1px solid #ddd;">F1</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="background: #e3f2fd;">
+                                <td style="padding: 10px; font-weight: 600; border: 1px solid #ddd; text-align: center;">C0</td>
+                                <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">50</td>
+                                <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">0.938</td>
+                                <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">0.900</td>
+                                <td style="padding: 10px; text-align: center; font-weight: 700; border: 1px solid #ddd;">0.918</td>
+                            </tr>
+                            <tr style="background: #f3e5f5;">
+                                <td style="padding: 10px; font-weight: 600; border: 1px solid #ddd; text-align: center;">C1</td>
+                                <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">35</td>
+                                <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">0.800</td>
+                                <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">0.800</td>
+                                <td style="padding: 10px; text-align: center; font-weight: 700; border: 1px solid #ddd;">0.800</td>
+                            </tr>
+                            <tr style="background: #fff3e0;">
+                                <td style="padding: 10px; font-weight: 600; border: 1px solid #ddd; text-align: center;">C2</td>
+                                <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">25</td>
+                                <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">0.621</td>
+                                <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">0.720</td>
+                                <td style="padding: 10px; text-align: center; font-weight: 700; border: 1px solid #ddd;">0.667</td>
+                            </tr>
+                            <tr style="background: #e8f5e9;">
+                                <td style="padding: 10px; font-weight: 600; border: 1px solid #ddd; text-align: center;">C3</td>
+                                <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">15</td>
+                                <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">0.800</td>
+                                <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">0.800</td>
+                                <td style="padding: 10px; text-align: center; font-weight: 700; border: 1px solid #ddd;">0.800</td>
+                            </tr>
+                            <tr style="background: #fce4ec;">
+                                <td style="padding: 10px; font-weight: 600; border: 1px solid #ddd; text-align: center;">C4</td>
+                                <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">10</td>
+                                <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">1.000</td>
+                                <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">0.800</td>
+                                <td style="padding: 10px; text-align: center; font-weight: 700; border: 1px solid #ddd;">0.889</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div style="margin-top: 20px; padding: 15px; background: #f8f9fb; border-radius: 8px; border-left: 4px solid #1E64C8;">
+                        <div style="font-size: 13px; color: #666; margin-bottom: 10px; font-weight: 600;">
+                            Example Calculation for C0:
+                        </div>
+                        <div style="font-size: 12px; color: #888; line-height: 1.8;">
+                            • TP = 45, FP = 3, FN = 5<br>
+                            • Precision = 45/(45+3) = 0.938<br>
+                            • Recall = 45/(45+5) = 0.900<br>
+                            • F1 = 2×(0.938×0.900)/(0.938+0.900) = 0.918
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Final Metrics Summary -->
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; padding: 30px; color: white; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+                <div style="font-size: 22px; font-weight: 600; margin-bottom: 25px; text-align: center;">
+                    📊 Final Averaged Metrics
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+                    <div style="background: rgba(255,255,255,0.2); padding: 20px; border-radius: 10px; text-align: center;">
+                        <div style="font-size: 15px; margin-bottom: 10px; font-weight: 600;">Macro-Average F1</div>
+                        <div style="font-size: 36px; font-weight: 700; margin-bottom: 8px;">0.815</div>
+                        <div style="font-size: 12px; opacity: 0.9; line-height: 1.5;">
+                            (0.918 + 0.800 + 0.667<br>+ 0.800 + 0.889) / 5
+                        </div>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.2); padding: 20px; border-radius: 10px; text-align: center;">
+                        <div style="font-size: 15px; margin-bottom: 10px; font-weight: 600;">Micro-Average F1</div>
+                        <div style="font-size: 36px; font-weight: 700; margin-bottom: 8px;">0.822</div>
+                        <div style="font-size: 12px; opacity: 0.9; line-height: 1.5;">
+                            ΣTP = 111, ΣFP = 24, ΣFN = 24<br>
+                            F1 = 2×111 / (2×111+24+24)
+                        </div>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.2); padding: 20px; border-radius: 10px; text-align: center;">
+                        <div style="font-size: 15px; margin-bottom: 10px; font-weight: 600;">Weighted-Average F1</div>
+                        <div style="font-size: 36px; font-weight: 700; margin-bottom: 8px;">0.835</div>
+                        <div style="font-size: 12px; opacity: 0.9; line-height: 1.5;">
+                            (50×0.918 + 35×0.800 + 25×0.667<br>
+                            + 15×0.800 + 10×0.889) / 135
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 25px; padding: 18px; background: rgba(255,255,255,0.15); border-radius: 10px; font-size: 14px; text-align: center; line-height: 1.7;">
+                    <strong>💡 Interpretation:</strong> Weighted (0.835) &gt; Micro (0.822) &gt; Macro (0.815) indicates<br>
+                    the model performs better on majority classes (C0, C1) than on minority classes
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
 </body>
 </html>
