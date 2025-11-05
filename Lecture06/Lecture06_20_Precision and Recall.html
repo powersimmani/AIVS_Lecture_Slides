@@ -142,6 +142,157 @@
             color: #ccc;
         }
         
+        /* Confusion Matrix Visualization Section */
+        .matrix-visual-section {
+            background: linear-gradient(135deg, #f8f9fb 0%, #e8eef5 100%);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 2px solid #d0dae8;
+        }
+        .matrix-visual-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .matrix-and-formulas {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 30px;
+            align-items: center;
+        }
+        
+        /* Mini Confusion Matrix */
+        .mini-matrix-container {
+            position: relative;
+        }
+        .mini-matrix-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        .mini-matrix-cell {
+            width: 180px;
+            height: 140px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+            transition: transform 0.2s ease;
+        }
+        .mini-matrix-cell:hover {
+            transform: scale(1.05);
+        }
+        .cell-tp {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            color: white;
+        }
+        .cell-fp {
+            background: linear-gradient(135deg, #e74c3c 0%, #ec7063 100%);
+            color: white;
+        }
+        .cell-fn {
+            background: linear-gradient(135deg, #f39c12 0%, #f8c471 100%);
+            color: white;
+        }
+        .cell-tn {
+            background: linear-gradient(135deg, #3498db 0%, #5dade2 100%);
+            color: white;
+        }
+        .mini-cell-abbrev {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .mini-cell-name {
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            line-height: 1.3;
+        }
+        .matrix-labels {
+            position: relative;
+        }
+        .matrix-label-top {
+            position: absolute;
+            top: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 14px;
+            font-weight: 600;
+            color: #555;
+        }
+        .matrix-label-left {
+            position: absolute;
+            left: -60px;
+            top: 50%;
+            transform: translateY(-50%) rotate(-90deg);
+            font-size: 14px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        /* Visual Formulas */
+        .visual-formulas {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .visual-formula-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            border-left: 6px solid #1E64C8;
+        }
+        .visual-formula-card.recall-highlight {
+            border-left-color: #4A90E2;
+        }
+        .formula-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        .formula-visual {
+            font-family: 'Courier New', monospace;
+            font-size: 22px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        .numerator, .denominator {
+            display: inline-block;
+        }
+        .divider {
+            margin: 0 8px;
+            color: #888;
+        }
+        .highlight-tp {
+            color: #27ae60;
+            font-weight: 700;
+        }
+        .highlight-fp {
+            color: #e74c3c;
+            font-weight: 700;
+        }
+        .highlight-fn {
+            color: #f39c12;
+            font-weight: 700;
+        }
+        .formula-explanation {
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+            font-style: italic;
+        }
+        
         .tradeoff-section {
             background: #fff4e6;
             border-left: 4px solid #f39c12;
@@ -250,6 +401,64 @@
                     <div class="visual-label">Recall Focus</div>
                     <div class="visual-focus">Actual Positives</div>
                     <div class="visual-desc">Among what is actually positive, how many did we catch?</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- NEW: Confusion Matrix Visualization -->
+        <div class="matrix-visual-section">
+            <div class="matrix-visual-title">📊 How They're Calculated from Confusion Matrix</div>
+            <div class="matrix-and-formulas">
+                <!-- Confusion Matrix -->
+                <div class="mini-matrix-container">
+                    <div class="mini-matrix-grid">
+                        <div class="mini-matrix-cell cell-tp">
+                            <div class="mini-cell-abbrev">TP</div>
+                            <div class="mini-cell-name">True<br>Positive</div>
+                        </div>
+                        
+                        <div class="mini-matrix-cell cell-fp">
+                            <div class="mini-cell-abbrev">FP</div>
+                            <div class="mini-cell-name">False<br>Positive</div>
+                        </div>
+                        
+                        <div class="mini-matrix-cell cell-fn">
+                            <div class="mini-cell-abbrev">FN</div>
+                            <div class="mini-cell-name">False<br>Negative</div>
+                        </div>
+                        
+                        <div class="mini-matrix-cell cell-tn">
+                            <div class="mini-cell-abbrev">TN</div>
+                            <div class="mini-cell-name">True<br>Negative</div>
+                        </div>
+                    </div>
+                    <div class="matrix-labels">
+                        <div class="matrix-label-top">Predicted →</div>
+                        <div class="matrix-label-left">Actual →</div>
+                    </div>
+                </div>
+
+                <!-- Visual Formulas -->
+                <div class="visual-formulas">
+                    <div class="visual-formula-card precision-highlight">
+                        <div class="formula-title">Precision</div>
+                        <div class="formula-visual">
+                            <span class="numerator highlight-tp">TP</span>
+                            <span class="divider">/</span>
+                            <span class="denominator">(<span class="highlight-tp">TP</span> + <span class="highlight-fp">FP</span>)</span>
+                        </div>
+                        <div class="formula-explanation">Focuses on predicted positives</div>
+                    </div>
+
+                    <div class="visual-formula-card recall-highlight">
+                        <div class="formula-title">Recall</div>
+                        <div class="formula-visual">
+                            <span class="numerator highlight-tp">TP</span>
+                            <span class="divider">/</span>
+                            <span class="denominator">(<span class="highlight-tp">TP</span> + <span class="highlight-fn">FN</span>)</span>
+                        </div>
+                        <div class="formula-explanation">Focuses on actual positives</div>
+                    </div>
                 </div>
             </div>
         </div>

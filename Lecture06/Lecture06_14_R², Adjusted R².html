@@ -17,7 +17,6 @@
         }
         .container {
             width: 960px;
-            height: 540px;
             position: relative;
             background: white;
             padding: 30px;
@@ -149,6 +148,7 @@
             color: white;
             padding: 18px 25px;
             border-radius: 10px;
+            margin-bottom: 20px;
         }
         .comparison-title {
             font-size: 17px;
@@ -167,6 +167,58 @@
             border-radius: 6px;
             font-size: 15px;
             text-align: center;
+        }
+        
+        .scatter-section {
+            background: #f8f9fb;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+        .scatter-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .scatter-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        .scatter-item {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+        .scatter-header {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .r2-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E64C8;
+        }
+        .r2-label {
+            font-size: 13px;
+            color: #888;
+            margin-top: 3px;
+        }
+        .plot-container {
+            position: relative;
+            width: 100%;
+            height: 180px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
         }
     </style>
 </head>
@@ -278,6 +330,166 @@
                 </div>
             </div>
         </div>
+
+        <div class="scatter-section">
+            <div class="scatter-title">📊 Predicted vs Actual Values</div>
+            <div class="scatter-grid">
+                <div class="scatter-item">
+                    <div class="scatter-header">
+                        <div class="r2-value">R² ≈ 0.95</div>
+                        <div class="r2-label">Strong Fit</div>
+                    </div>
+                    <div class="plot-container">
+                        <canvas id="plot1"></canvas>
+                    </div>
+                </div>
+                <div class="scatter-item">
+                    <div class="scatter-header">
+                        <div class="r2-value">R² ≈ 0.50</div>
+                        <div class="r2-label">Moderate Fit</div>
+                    </div>
+                    <div class="plot-container">
+                        <canvas id="plot2"></canvas>
+                    </div>
+                </div>
+                <div class="scatter-item">
+                    <div class="scatter-header">
+                        <div class="r2-value">R² ≈ 0.10</div>
+                        <div class="r2-label">Weak Fit</div>
+                    </div>
+                    <div class="plot-container">
+                        <canvas id="plot3"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <script>
+        function drawScatterPlot(canvasId, r2Level) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+            
+            // Set canvas size
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * window.devicePixelRatio;
+            canvas.height = rect.height * window.devicePixelRatio;
+            ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+            
+            const width = rect.width;
+            const height = rect.height;
+            const padding = 35;
+            const plotWidth = width - 2 * padding;
+            const plotHeight = height - 2 * padding;
+            
+            // Generate data points
+            const n = 30;
+            const points = [];
+            
+            for (let i = 0; i < n; i++) {
+                const actual = Math.random() * 10;
+                let predicted;
+                
+                if (r2Level === 'high') {
+                    // High R²: predictions very close to actual
+                    predicted = actual + (Math.random() - 0.5) * 1;
+                } else if (r2Level === 'medium') {
+                    // Medium R²: moderate scatter
+                    predicted = actual + (Math.random() - 0.5) * 4;
+                } else {
+                    // Low R²: high scatter
+                    predicted = actual + (Math.random() - 0.5) * 8;
+                }
+                
+                points.push({ actual, predicted });
+            }
+            
+            // Draw axes
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(padding, padding);
+            ctx.lineTo(padding, height - padding);
+            ctx.lineTo(width - padding, height - padding);
+            ctx.stroke();
+            
+            // Draw y=x reference line (perfect prediction)
+            ctx.strokeStyle = '#1E64C8';
+            ctx.lineWidth = 1.5;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.moveTo(padding, height - padding);
+            ctx.lineTo(width - padding, padding);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            // Draw points
+            ctx.fillStyle = '#E74C3C';
+            points.forEach(point => {
+                const x = padding + (point.actual / 10) * plotWidth;
+                const y = height - padding - (point.predicted / 10) * plotHeight;
+                
+                ctx.beginPath();
+                ctx.arc(x, y, 4, 0, 2 * Math.PI);
+                ctx.fill();
+            });
+            
+            // Draw axis labels
+            ctx.fillStyle = '#333';
+            ctx.font = '11px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Actual', width / 2, height - 5);
+            
+            ctx.save();
+            ctx.translate(10, height / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText('Predicted', 0, 0);
+            ctx.restore();
+            
+            // Draw tick marks and values
+            ctx.font = '10px Arial';
+            ctx.fillStyle = '#666';
+            
+            // X-axis ticks
+            for (let i = 0; i <= 10; i += 5) {
+                const x = padding + (i / 10) * plotWidth;
+                ctx.textAlign = 'center';
+                ctx.fillText(i.toFixed(0), x, height - padding + 20);
+                
+                ctx.strokeStyle = '#ddd';
+                ctx.beginPath();
+                ctx.moveTo(x, height - padding);
+                ctx.lineTo(x, height - padding + 5);
+                ctx.stroke();
+            }
+            
+            // Y-axis ticks
+            for (let i = 0; i <= 10; i += 5) {
+                const y = height - padding - (i / 10) * plotHeight;
+                ctx.textAlign = 'right';
+                ctx.fillText(i.toFixed(0), padding - 10, y + 4);
+                
+                ctx.strokeStyle = '#ddd';
+                ctx.beginPath();
+                ctx.moveTo(padding, y);
+                ctx.lineTo(padding - 5, y);
+                ctx.stroke();
+            }
+        }
+        
+        // Draw all plots
+        window.addEventListener('load', () => {
+            drawScatterPlot('plot1', 'high');
+            drawScatterPlot('plot2', 'medium');
+            drawScatterPlot('plot3', 'low');
+        });
+        
+        // Redraw on window resize
+        window.addEventListener('resize', () => {
+            drawScatterPlot('plot1', 'high');
+            drawScatterPlot('plot2', 'medium');
+            drawScatterPlot('plot3', 'low');
+        });
+    </script>
 </body>
 </html>
