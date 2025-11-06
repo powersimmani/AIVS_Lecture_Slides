@@ -23,7 +23,7 @@
         
         .container {
             width: 960px;
-            height: 540px;
+            min-height: 540px;
             position: relative;
             background: white;
             padding: 25px 45px;
@@ -152,6 +152,83 @@
         .limitations .bullet {
             color: #E74C3C;
         }
+        
+        .example-section {
+            margin-top: 30px;
+            border-top: 3px solid #1E64C8;
+            padding-top: 25px;
+        }
+        
+        .example-content {
+            background: #F8F9FA;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 20px 25px;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background: white;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        .data-table th {
+            background: #1E64C8;
+            color: white;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .data-table td {
+            padding: 10px 12px;
+            text-align: center;
+            border-bottom: 1px solid #E0E0E0;
+            font-size: 15px;
+            color: #2C3E50;
+        }
+        
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .data-table tr:nth-child(even) {
+            background: #F8F9FA;
+        }
+        
+        .calculation-box {
+            background: white;
+            border: 2px solid #27AE60;
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-top: 15px;
+        }
+        
+        .calc-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #27AE60;
+            margin-bottom: 10px;
+        }
+        
+        .calc-formula {
+            font-family: 'Courier New', monospace;
+            font-size: 15px;
+            color: #2C3E50;
+            line-height: 1.8;
+            margin: 8px 0;
+        }
+        
+        .calc-result {
+            font-size: 16px;
+            font-weight: 600;
+            color: #27AE60;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -222,6 +299,78 @@
                     <div class="item">
                         <span class="bullet">•</span>
                         <span>Cannot model seasonality</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="example-section">
+            <div class="section-title">Trend Calculation Example</div>
+            <div class="example-content">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Time Period</th>
+                            <th>t=1</th>
+                            <th>t=2</th>
+                            <th>t=3</th>
+                            <th>t=4</th>
+                            <th>t=5</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="font-weight: 600; background: #E8F1FC;">Observed Value (Y<sub>t</sub>)</td>
+                            <td>10</td>
+                            <td>12</td>
+                            <td>15</td>
+                            <td>14</td>
+                            <td>18</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="calculation-box">
+                    <div class="calc-title">📐 3-Period Simple Moving Average</div>
+                    
+                    <div class="calc-formula">
+                        <strong>t=3:</strong> MA₃ = (10 + 12 + 15) / 3 = <span style="color: #27AE60; font-weight: 600;">12.33</span>
+                    </div>
+                    
+                    <div class="calc-formula">
+                        <strong>t=4:</strong> MA₃ = (12 + 15 + 14) / 3 = <span style="color: #27AE60; font-weight: 600;">13.67</span>
+                    </div>
+                    
+                    <div class="calc-formula">
+                        <strong>t=5:</strong> MA₃ = (15 + 14 + 18) / 3 = <span style="color: #27AE60; font-weight: 600;">15.67</span>
+                    </div>
+                    
+                    <div class="calc-result">
+                        ✅ Trend: 12.33 → 13.67 → 15.67 (Upward trend)
+                    </div>
+                </div>
+                
+                <div class="calculation-box" style="border-color: #9B59B6; margin-top: 20px;">
+                    <div class="calc-title" style="color: #9B59B6;">🔮 Forecasting with Moving Average</div>
+                    
+                    <div class="calc-formula">
+                        <strong>Method:</strong> Use the most recent MA value as the forecast for the next period
+                    </div>
+                    
+                    <div class="calc-formula">
+                        <strong>Forecast for t=6:</strong> Ŷ₆ = MA₃ at t=5 = <span style="color: #9B59B6; font-weight: 600;">15.67</span>
+                    </div>
+                    
+                    <div class="calc-formula">
+                        <strong>Alternative (if Y₆ = 20):</strong> MA₃ at t=6 = (14 + 18 + 20) / 3 = <span style="color: #9B59B6; font-weight: 600;">17.33</span>
+                    </div>
+                    
+                    <div class="calc-formula">
+                        <strong>Then forecast for t=7:</strong> Ŷ₇ = <span style="color: #9B59B6; font-weight: 600;">17.33</span>
+                    </div>
+                    
+                    <div class="calc-result" style="color: #9B59B6;">
+                        💡 The MA forecast assumes the trend continues at the current smoothed level
                     </div>
                 </div>
             </div>

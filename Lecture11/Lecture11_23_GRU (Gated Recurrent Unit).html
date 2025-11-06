@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GRU (Gated Recurrent Unit)</title>
+    <title>GRU vs LSTM - Detailed Comparison</title>
     <style>
         * {
             margin: 0;
@@ -13,7 +13,7 @@
         
         body {
             font-family: Aptos, 'Segoe UI', sans-serif;
-            background: white;
+            background: #f0f0f0;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -21,20 +21,41 @@
             padding: 20px;
         }
         
-        .container {
+        .slides-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            max-width: 1000px;
+        }
+        
+        .slide:nth-child(4) {
+            margin-top: 270px;
+        }
+        
+        .slide {
             width: 960px;
             height: 540px;
             position: relative;
             background: white;
             padding: 25px 45px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-radius: 8px;
         }
         
         .title {
             text-align: center;
-            font-size: 24px;
+            font-size: 28px;
             font-weight: 600;
             color: #1E64C8;
             margin-bottom: 25px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 20px;
         }
         
         .intro-box {
@@ -138,67 +159,415 @@
             font-size: 15px;
             color: #2C3E50;
         }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .comparison-card {
+            background: white;
+            border: 3px solid #1E64C8;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        
+        .comparison-card.gru {
+            border-color: #27AE60;
+        }
+        
+        .comparison-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .comparison-title.gru {
+            color: #27AE60;
+        }
+        
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .feature-item {
+            font-size: 15px;
+            color: #2C3E50;
+            padding: 8px 0;
+            border-bottom: 1px solid #E8F1FC;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .feature-item:last-child {
+            border-bottom: none;
+        }
+        
+        .feature-icon {
+            font-size: 18px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .calculation-box {
+            background: #F8F9FA;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .calc-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+        }
+        
+        .formula {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #2C3E50;
+            background: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin: 5px 0;
+            border-left: 3px solid #1E64C8;
+        }
+        
+        .example-box {
+            background: #E8F1FC;
+            border-radius: 6px;
+            padding: 12px;
+            margin-top: 10px;
+        }
+        
+        .example-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .example-text {
+            font-size: 13px;
+            color: #2C3E50;
+            line-height: 1.6;
+        }
+        
+        .highlight {
+            background: #FFF3CD;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+        
+        .vector-display {
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            background: white;
+            padding: 6px 10px;
+            border-radius: 4px;
+            margin: 5px 0;
+        }
+        
+        .slide-number {
+            position: absolute;
+            bottom: 15px;
+            right: 25px;
+            font-size: 14px;
+            color: #7F8C8D;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="title">GRU (Gated Recurrent Unit)</div>
-        
-        <div class="intro-box">
-            <div class="intro-text">
-                Simplified LSTM with fewer parameters
+    <div class="slides-container">
+        <!-- Slide 1: Original GRU Overview -->
+        <div class="slide">
+            <div class="title">GRU (Gated Recurrent Unit)</div>
+            
+            <div class="intro-box">
+                <div class="intro-text">
+                    Simplified LSTM with fewer parameters
+                </div>
             </div>
-        </div>
-        
-        <div class="gates-section">
-            <div class="section-title">Two-Gate Mechanism</div>
-            <div class="gates-grid">
-                <div class="gate-card">
-                    <div class="gate-icon">🔄</div>
-                    <div class="gate-content">
-                        <div class="gate-name">Update Gate</div>
-                        <div class="gate-description">
-                            Combines forget and input gates from LSTM
+            
+            <div class="gates-section">
+                <div class="section-title">Two-Gate Mechanism</div>
+                <div class="gates-grid">
+                    <div class="gate-card">
+                        <div class="gate-icon">🔄</div>
+                        <div class="gate-content">
+                            <div class="gate-name">Update Gate</div>
+                            <div class="gate-description">
+                                Combines forget and input gates from LSTM
+                            </div>
                         </div>
+                    </div>
+                    
+                    <div class="gate-card">
+                        <div class="gate-icon">🔙</div>
+                        <div class="gate-content">
+                            <div class="gate-name">Reset Gate</div>
+                            <div class="gate-description">
+                                Controls past information usage
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="advantages-grid">
+                <div class="advantage-card">
+                    <div class="advantage-icon">⚡</div>
+                    <div class="advantage-title">Faster Training</div>
+                    <div class="advantage-text">
+                        Than LSTM
                     </div>
                 </div>
                 
-                <div class="gate-card">
-                    <div class="gate-icon">🔙</div>
-                    <div class="gate-content">
-                        <div class="gate-name">Reset Gate</div>
-                        <div class="gate-description">
-                            Controls past information usage
+                <div class="advantage-card">
+                    <div class="advantage-icon">🎯</div>
+                    <div class="advantage-title">Similar Performance</div>
+                    <div class="advantage-text">
+                        On many tasks
+                    </div>
+                </div>
+                
+                <div class="advantage-card">
+                    <div class="advantage-icon">🛠️</div>
+                    <div class="advantage-title">Easier to Implement</div>
+                    <div class="advantage-text">
+                        And tune
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">1 / 4</div>
+        </div>
+
+        <!-- Slide 2: LSTM vs GRU Comparison -->
+        <div class="slide">
+            <div class="title">LSTM vs GRU: Key Differences</div>
+            
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <div class="comparison-title">LSTM</div>
+                    <ul class="feature-list">
+                        <li class="feature-item">
+                            <span class="feature-icon">🔢</span>
+                            <span><span class="highlight">3 gates</span>: Forget, Input, Output</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">💾</span>
+                            <span><span class="highlight">2 states</span>: Cell state (C) + Hidden state (h)</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">⚙️</span>
+                            <span>More parameters to learn</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">🎯</span>
+                            <span>Better for complex, long sequences</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">⏱️</span>
+                            <span>Slower training time</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">🔧</span>
+                            <span>More hyperparameters to tune</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="comparison-card gru">
+                    <div class="comparison-title gru">GRU</div>
+                    <ul class="feature-list">
+                        <li class="feature-item">
+                            <span class="feature-icon">🔢</span>
+                            <span><span class="highlight">2 gates</span>: Update, Reset</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">💾</span>
+                            <span><span class="highlight">1 state</span>: Hidden state (h) only</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">⚙️</span>
+                            <span>Fewer parameters (~25-30% less)</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">🎯</span>
+                            <span>Better for smaller datasets</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">⏱️</span>
+                            <span>Faster training time</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">🔧</span>
+                            <span>Simpler to implement and tune</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="slide-number">2 / 4</div>
+        </div>
+
+        <!-- Slide 3: LSTM Calculation Example -->
+        <div class="slide">
+            <div class="subtitle">LSTM Calculation (3D Vector Example)</div>
+            
+            <div class="example-box" style="margin-bottom: 15px;">
+                <div class="example-title">Given Input:</div>
+                <div class="vector-display">x_t = [0.5, -0.3, 0.8]  (current input)</div>
+                <div class="vector-display">h_{t-1} = [0.2, 0.4, -0.1]  (previous hidden state)</div>
+                <div class="vector-display">C_{t-1} = [0.6, -0.2, 0.3]  (previous cell state)</div>
+            </div>
+            
+            <div class="calculation-box">
+                <div class="calc-title">Step 1: Forget Gate (f_t)</div>
+                <div class="formula">f_t = σ(W_f · [h_{t-1}, x_t] + b_f)</div>
+                <div class="example-text">Decides what to forget from cell state</div>
+                <div class="vector-display">Result: f_t = [0.65, 0.42, 0.78]</div>
+            </div>
+            
+            <div class="calculation-box">
+                <div class="calc-title">Step 2: Input Gate (i_t) + Candidate (C̃_t)</div>
+                <div class="formula">i_t = σ(W_i · [h_{t-1}, x_t] + b_i)</div>
+                <div class="formula">C̃_t = tanh(W_C · [h_{t-1}, x_t] + b_C)</div>
+                <div class="example-text">Decides what new information to add</div>
+                <div class="vector-display">Result: i_t = [0.53, 0.71, 0.48],  C̃_t = [0.32, -0.54, 0.67]</div>
+            </div>
+            
+            <div class="calculation-box">
+                <div class="calc-title">Step 3: Update Cell State (C_t)</div>
+                <div class="formula">C_t = f_t ⊙ C_{t-1} + i_t ⊙ C̃_t</div>
+                <div class="vector-display">Result: C_t = [0.56, -0.47, 0.55]</div>
+            </div>
+            
+            <div class="calculation-box">
+                <div class="calc-title">Step 4: Output Gate (o_t) + Hidden State (h_t)</div>
+                <div class="formula">o_t = σ(W_o · [h_{t-1}, x_t] + b_o)</div>
+                <div class="formula">h_t = o_t ⊙ tanh(C_t)</div>
+                <div class="vector-display">Result: h_t = [0.28, -0.31, 0.38]</div>
+            </div>
+            <div class="slide-number">3 / 4</div>
+        </div>
+
+        <!-- Slide 4: GRU Calculation Example -->
+        <div class="slide">
+            <div class="subtitle">GRU Calculation (3D Vector Example)</div>
+            
+            <div class="example-box" style="margin-bottom: 15px;">
+                <div class="example-title">Given Input:</div>
+                <div class="vector-display">x_t = [0.5, -0.3, 0.8]  (current input)</div>
+                <div class="vector-display">h_{t-1} = [0.2, 0.4, -0.1]  (previous hidden state)</div>
+                <div class="example-text" style="margin-top: 8px;">
+                    <span class="highlight">Note:</span> GRU has NO separate cell state - only hidden state!
+                </div>
+            </div>
+            
+            <div class="calculation-box">
+                <div class="calc-title">Step 1: Reset Gate (r_t)</div>
+                <div class="formula">r_t = σ(W_r · [h_{t-1}, x_t] + b_r)</div>
+                <div class="example-text">Controls how much past info to use for candidate</div>
+                <div class="vector-display">Result: r_t = [0.58, 0.73, 0.45]</div>
+            </div>
+            
+            <div class="calculation-box">
+                <div class="calc-title">Step 2: Update Gate (z_t)</div>
+                <div class="formula">z_t = σ(W_z · [h_{t-1}, x_t] + b_z)</div>
+                <div class="example-text">Combines forget & input: decides mix of old vs new</div>
+                <div class="vector-display">Result: z_t = [0.62, 0.48, 0.71]</div>
+            </div>
+            
+            <div class="calculation-box">
+                <div class="calc-title">Step 3: Candidate Hidden State (h̃_t)</div>
+                <div class="formula">h̃_t = tanh(W_h · [r_t ⊙ h_{t-1}, x_t] + b_h)</div>
+                <div class="example-text">New candidate based on reset past info</div>
+                <div class="vector-display">Result: h̃_t = [0.43, -0.52, 0.68]</div>
+            </div>
+            
+            <div class="calculation-box">
+                <div class="calc-title">Step 4: Final Hidden State (h_t)</div>
+                <div class="formula">h_t = (1 - z_t) ⊙ h_{t-1} + z_t ⊙ h̃_t</div>
+                <div class="example-text">Linear interpolation between old and new states</div>
+                <div class="vector-display">Result: h_t = [0.34, -0.04, 0.45]</div>
+            </div>
+            
+            <div class="example-box" style="margin-top: 12px;">
+                <div class="example-text">
+                    <strong>Key Insight:</strong> GRU achieves similar results with fewer operations:
+                    <span class="highlight">3 steps vs LSTM's 4 steps</span>, and 
+                    <span class="highlight">1 state vs LSTM's 2 states</span>
+                </div>
+            </div>
+            <div class="slide-number">4 / 5</div>
+        </div>
+
+        <!-- Slide 5: Practice Materials -->
+        <div class="slide">
+            <div class="title">Practice Materials</div>
+            
+            <div class="intro-box" style="margin-bottom: 40px;">
+                <div class="intro-text">
+                    Interactive RNN Visualization Tool
+                </div>
+            </div>
+            
+            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 320px; gap: 30px;">
+                <div style="text-align: center;">
+                    <div style="font-size: 48px; margin-bottom: 20px;">🔬</div>
+                    <div style="font-size: 20px; font-weight: 600; color: #1E64C8; margin-bottom: 15px;">
+                        RNN Explainer
+                    </div>
+                    <div style="font-size: 16px; color: #2C3E50; line-height: 1.6; max-width: 600px; margin: 0 auto;">
+                        Interactive simulation tool to visually understand<br>
+                        how LSTM and GRU work
+                    </div>
+                </div>
+                
+                <a href="https://damien0x0023.github.io/rnnExplainer/" 
+                   target="_blank"
+                   style="display: inline-block; background: linear-gradient(135deg, #1E64C8 0%, #2874D8 100%); 
+                          color: white; text-decoration: none; padding: 18px 50px; 
+                          border-radius: 8px; font-size: 18px; font-weight: 600;
+                          box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+                          transition: transform 0.2s, box-shadow 0.2s;">
+                    Go to Practice Site →
+                </a>
+                
+                <div class="advantages-grid" style="max-width: 800px;">
+                    <div class="advantage-card" style="min-height: 80px;">
+                        <div class="advantage-icon">👁️</div>
+                        <div class="advantage-text">
+                            Gate Operation Visualization
+                        </div>
+                    </div>
+                    
+                    <div class="advantage-card" style="min-height: 80px;">
+                        <div class="advantage-icon">🎮</div>
+                        <div class="advantage-text">
+                            Interactive Parameter Control
+                        </div>
+                    </div>
+                    
+                    <div class="advantage-card" style="min-height: 80px;">
+                        <div class="advantage-icon">📊</div>
+                        <div class="advantage-text">
+                            Real-time Results
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        
-        <div class="advantages-grid">
-            <div class="advantage-card">
-                <div class="advantage-icon">⚡</div>
-                <div class="advantage-title">Faster Training</div>
-                <div class="advantage-text">
-                    Than LSTM
-                </div>
-            </div>
             
-            <div class="advantage-card">
-                <div class="advantage-icon">🎯</div>
-                <div class="advantage-title">Similar Performance</div>
-                <div class="advantage-text">
-                    On many tasks
-                </div>
-            </div>
-            
-            <div class="advantage-card">
-                <div class="advantage-icon">🛠️</div>
-                <div class="advantage-title">Easier to Implement</div>
-                <div class="advantage-text">
-                    And tune
-                </div>
-            </div>
+            <div class="slide-number">5 / 5</div>
         </div>
     </div>
 </body>

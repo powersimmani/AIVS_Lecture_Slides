@@ -172,6 +172,140 @@
             font-size: 15px;
             color: #2C3E50;
         }
+    
+        
+        .process-section {
+            background: white;
+            border: 2px solid #27AE60;
+            border-radius: 8px;
+            padding: 18px 22px;
+            margin-top: 22px;
+        }
+        
+        .process-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #27AE60;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .steps-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .step {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 10px;
+            background: #F0F9F4;
+            border-radius: 6px;
+        }
+        
+        .step-number {
+            background: #27AE60;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 15px;
+            flex-shrink: 0;
+        }
+        
+        .step-content {
+            flex-grow: 1;
+        }
+        
+        .step-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #27AE60;
+            margin-bottom: 3px;
+        }
+        
+        .step-desc {
+            font-size: 14px;
+            color: #2C3E50;
+            line-height: 1.4;
+        }
+    
+        
+        .example-section {
+            background: white;
+            border: 2px solid #9B59B6;
+            border-radius: 8px;
+            padding: 18px 22px;
+            margin-top: 22px;
+        }
+        
+        .example-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #9B59B6;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .example-content {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        
+        .example-step {
+            background: #F8F5FA;
+            border-left: 4px solid #9B59B6;
+            padding: 12px 16px;
+            border-radius: 4px;
+        }
+        
+        .example-step-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #9B59B6;
+            margin-bottom: 6px;
+        }
+        
+        .example-step-content {
+            font-size: 14px;
+            color: #2C3E50;
+            line-height: 1.5;
+        }
+        
+        .vector {
+            display: inline-block;
+            background: #ECF0F1;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            color: #2C3E50;
+            margin: 0 4px;
+        }
+        
+        .arrow-small {
+            color: #9B59B6;
+            font-weight: 600;
+            margin: 0 6px;
+        }
+        
+        .highlight {
+            background: #FFF3CD;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -254,7 +388,146 @@
                 <div class="challenge-text">
                     Entire input compressed to fixed vector → Attention mechanism addresses this
                 </div>
+            
+        
+        <div class="process-section">
+            <div class="process-title">
+                <span>🔄</span>
+                <span>Step-by-Step Process</span>
             </div>
+            
+            <div class="steps-container">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <div class="step-title">Input Encoding</div>
+                        <div class="step-desc">Encoder RNN processes input sequence token by token, updating hidden state</div>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <div class="step-title">Context Vector</div>
+                        <div class="step-desc">Final encoder hidden state becomes context vector (fixed representation)</div>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <div class="step-title">Decoder Initialization</div>
+                        <div class="step-desc">Context vector initializes decoder RNN's hidden state</div>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <div class="step-title">Sequential Generation</div>
+                        <div class="step-desc">Decoder generates output tokens one at a time, using previous output as next input</div>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <div class="step-title">Termination</div>
+                        <div class="step-desc">Process continues until special end-of-sequence token is generated</div>
+                    </div>
+                </div>
+            </div>
+        
+        
+        <div class="example-section">
+            <div class="example-title">
+                <span>🔢</span>
+                <span>Numerical Example with 3D Vectors</span>
+            </div>
+            
+            <div class="example-content">
+                <div class="example-step">
+                    <div class="example-step-title">Weight Matrices (Encoder)</div>
+                    <div class="example-step-content">
+                        <strong>W</strong> (input weight, 3×3): <span class="vector">[[0.5, 0.2, 0.3], [0.1, 0.6, 0.4], [0.3, 0.2, 0.7]]</span>
+                        <br>
+                        <strong>U</strong> (hidden weight, 3×3): <span class="vector">[[0.4, 0.3, 0.2], [0.2, 0.5, 0.3], [0.3, 0.2, 0.6]]</span>
+                    </div>
+                </div>
+                
+                <div class="example-step">
+                    <div class="example-step-title">Input Sequence</div>
+                    <div class="example-step-content">
+                        x₁ = <span class="vector">[0.5, 0.3, 0.8]</span>
+                        <span class="arrow-small">→</span>
+                        x₂ = <span class="vector">[0.2, 0.7, 0.4]</span>
+                    </div>
+                </div>
+                
+                <div class="example-step">
+                    <div class="example-step-title">Encoder Step 1</div>
+                    <div class="example-step-content">
+                        h₀ = <span class="vector">[0, 0, 0]</span> (initial hidden state)
+                        <br>
+                        <strong>W·x₁</strong> = [[0.5, 0.2, 0.3], [0.1, 0.6, 0.4], [0.3, 0.2, 0.7]] · [0.5, 0.3, 0.8] = <span class="vector">[0.55, 0.47, 0.77]</span>
+                        <br>
+                        <strong>U·h₀</strong> = <span class="vector">[0, 0, 0]</span>
+                        <br>
+                        h₁ = tanh([0.55, 0.47, 0.77]) ≈ <span class="vector">[0.50, 0.44, 0.65]</span>
+                    </div>
+                </div>
+                
+                <div class="example-step">
+                    <div class="example-step-title">Encoder Step 2</div>
+                    <div class="example-step-content">
+                        <strong>W·x₂</strong> = [[0.5, 0.2, 0.3], [0.1, 0.6, 0.4], [0.3, 0.2, 0.7]] · [0.2, 0.7, 0.4] = <span class="vector">[0.38, 0.58, 0.48]</span>
+                        <br>
+                        <strong>U·h₁</strong> = [[0.4, 0.3, 0.2], [0.2, 0.5, 0.3], [0.3, 0.2, 0.6]] · [0.50, 0.44, 0.65] = <span class="vector">[0.46, 0.42, 0.61]</span>
+                        <br>
+                        h₂ = tanh([0.38 + 0.46, 0.58 + 0.42, 0.48 + 0.61]) = tanh([0.84, 1.00, 1.09]) ≈ <span class="vector">[0.69, 0.76, 0.80]</span>
+                        <br>
+                        <span class="highlight">Context Vector c = h₂ = [0.69, 0.76, 0.80]</span>
+                    </div>
+                </div>
+                
+                <div class="example-step">
+                    <div class="example-step-title">Weight Matrices (Decoder)</div>
+                    <div class="example-step-content">
+                        <strong>W'</strong> (input weight, 3×3): <span class="vector">[[0.6, 0.3, 0.2], [0.2, 0.5, 0.4], [0.4, 0.3, 0.5]]</span>
+                        <br>
+                        <strong>U'</strong> (hidden weight, 3×3): <span class="vector">[[0.5, 0.2, 0.3], [0.3, 0.6, 0.2], [0.2, 0.3, 0.7]]</span>
+                        <br>
+                        <strong>V</strong> (output weight, vocab_size×3): maps hidden to output vocabulary
+                    </div>
+                </div>
+                
+                <div class="example-step">
+                    <div class="example-step-title">Decoder Step 1</div>
+                    <div class="example-step-content">
+                        s₀ = <span class="vector">[0.69, 0.76, 0.80]</span> (initialized with context)
+                        <br>
+                        <strong>V·s₀</strong> → softmax → y₁ (output token, e.g., word embedding)
+                        <br>
+                        Assume y₁ = <span class="vector">[1, 0, 0]</span> (one-hot encoded)
+                        <br>
+                        s₁ = tanh(W'·y₁ + U'·s₀) = tanh([0.6, 0.2, 0.4] + [0.82, 0.84, 0.91]) ≈ <span class="vector">[0.77, 0.72, 0.80]</span>
+                    </div>
+                </div>
+                
+                <div class="example-step">
+                    <div class="example-step-title">Decoder Step 2</div>
+                    <div class="example-step-content">
+                        <strong>V·s₁</strong> → softmax → y₂ (next output token)
+                        <br>
+                        s₂ = tanh(W'·y₂ + U'·s₁) → continue...
+                        <br>
+                        Process continues until <span class="highlight">&lt;END&gt;</span> token is generated
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
         </div>
     </div>
 </body>

@@ -23,7 +23,7 @@
         
         .container {
             width: 960px;
-            height: 540px;
+            height: 900px;
             position: relative;
             background: white;
             padding: 25px 45px;
@@ -156,6 +156,56 @@
             color: #E74C3C;
             font-weight: 600;
         }
+        
+        .example-box {
+            background: #F0F8FF;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 18px 25px;
+            margin-top: 22px;
+        }
+        
+        .example-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .example-content {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .example-step {
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #2C3E50;
+            line-height: 1.5;
+        }
+        
+        .example-result {
+            background: #E8F5E9;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .trend-value {
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .input-sequence {
+            color: #E74C3C;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -223,6 +273,58 @@
                 <div class="challenge-item">
                     <span class="challenge-bullet">•</span>
                     <span>Difficult to train for long sequences</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="example-box">
+            <div class="example-title">
+                <span>📊</span>
+                <span>Detailed Trend Calculation Example</span>
+            </div>
+            <div class="example-content">
+                <div class="example-step">
+                    <strong>Setup:</strong> Hidden dim = 2, Input dim = 3
+                </div>
+                <div class="example-step">
+                    W<sub>xh</sub> = [[0.5, 0.3], [0.2, 0.4], [0.1, 0.6]] (3×2), 
+                    W<sub>hh</sub> = [[0.7, 0.2], [0.3, 0.8]] (2×2)
+                </div>
+                <div class="example-step">
+                    <strong>Input sequence:</strong> <span class="input-sequence">x<sub>0</sub> = [1.0, 0.5, 0.8], x<sub>1</sub> = [1.2, 0.6, 0.9]</span>
+                </div>
+                <div class="example-step" style="margin-top: 12px;">
+                    <strong>Step 1 (t=0):</strong>
+                </div>
+                <div class="example-step">
+                    • h<sub>0</sub> = [0, 0] (initial hidden state)
+                </div>
+                <div class="example-step">
+                    • W<sub>hh</sub> × h<sub>0</sub> = [[0.7, 0.2], [0.3, 0.8]] × [0, 0] = <span class="trend-value">[0, 0]</span>
+                </div>
+                <div class="example-step">
+                    • W<sub>xh</sub> × x<sub>0</sub> = [[0.5, 0.3], [0.2, 0.4], [0.1, 0.6]] × [1.0, 0.5, 0.8] = <span class="trend-value">[0.68, 0.88]</span>
+                </div>
+                <div class="example-step">
+                    • h<sub>1</sub> = tanh([0, 0] + [0.68, 0.88]) = tanh([0.68, 0.88]) = <span class="trend-value">[0.59, 0.71]</span>
+                </div>
+                <div class="example-step" style="margin-top: 12px;">
+                    <strong>Step 2 (t=1):</strong>
+                </div>
+                <div class="example-step">
+                    • h<sub>1</sub> = [0.59, 0.71]
+                </div>
+                <div class="example-step">
+                    • W<sub>hh</sub> × h<sub>1</sub> = [[0.7, 0.2], [0.3, 0.8]] × [0.59, 0.71] = <span class="trend-value">[0.55, 0.75]</span>
+                </div>
+                <div class="example-step">
+                    • W<sub>xh</sub> × x<sub>1</sub> = [[0.5, 0.3], [0.2, 0.4], [0.1, 0.6]] × [1.2, 0.6, 0.9] = <span class="trend-value">[0.78, 1.02]</span>
+                </div>
+                <div class="example-step">
+                    • h<sub>2</sub> = tanh([0.55, 0.75] + [0.78, 1.02]) = tanh([1.33, 1.77]) = <span class="trend-value">[0.87, 0.95]</span>
+                </div>
+                <div class="example-result">
+                    <strong>Trend detected:</strong> Hidden states evolve [0, 0] → [0.59, 0.71] → [0.87, 0.95], capturing increasing trend through accumulated memory in both dimensions
                 </div>
             </div>
         </div>

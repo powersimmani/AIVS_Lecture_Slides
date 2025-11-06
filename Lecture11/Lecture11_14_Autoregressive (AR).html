@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Autoregressive (AR)</title>
+    <title>Autoregressive (AR) with Trend Example</title>
     <style>
         * {
             margin: 0;
@@ -15,18 +15,20 @@
             font-family: Aptos, 'Segoe UI', sans-serif;
             background: white;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
             min-height: 100vh;
             padding: 20px;
+            gap: 40px;
         }
         
         .container {
             width: 960px;
-            height: 540px;
+            min-height: 540px;
             position: relative;
             background: white;
             padding: 25px 45px;
+            page-break-after: always;
         }
         
         .title {
@@ -117,9 +119,73 @@
             color: #2C3E50;
             line-height: 1.4;
         }
+        
+        .example-box {
+            background: #F8FAFE;
+            border-left: 4px solid #1E64C8;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        
+        .example-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+        }
+        
+        .data-row {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 10px;
+            margin: 10px 0;
+        }
+        
+        .data-cell {
+            background: white;
+            border: 1px solid #1E64C8;
+            padding: 8px;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 14px;
+        }
+        
+        .data-label {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .calculation-steps {
+            background: white;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 15px;
+        }
+        
+        .step {
+            margin: 8px 0;
+            padding-left: 20px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .step-number {
+            color: #1E64C8;
+            font-weight: 600;
+            margin-right: 5px;
+        }
+        
+        .highlight {
+            background: #FFE082;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
+    <!-- Page 1: AR Model Basics -->
     <div class="container">
         <div class="title">Autoregressive (AR)</div>
         
@@ -160,6 +226,201 @@
                 <div class="property-title">Dependencies</div>
                 <div class="property-text">
                     Good for linear temporal dependencies
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Page 2: Trend Calculation Example -->
+    <div class="container">
+        <div class="title">Trend Calculation Example</div>
+        
+        <div class="example-box">
+            <div class="example-title">📌 Sample Data: Monthly Sales</div>
+            <div class="data-row">
+                <div class="data-cell">
+                    <div class="data-label">t</div>
+                    <div>1</div>
+                </div>
+                <div class="data-cell">
+                    <div class="data-label">t</div>
+                    <div>2</div>
+                </div>
+                <div class="data-cell">
+                    <div class="data-label">t</div>
+                    <div>3</div>
+                </div>
+                <div class="data-cell">
+                    <div class="data-label">t</div>
+                    <div>4</div>
+                </div>
+                <div class="data-cell">
+                    <div class="data-label">t</div>
+                    <div>5</div>
+                </div>
+                <div class="data-cell">
+                    <div class="data-label">t</div>
+                    <div>6</div>
+                </div>
+            </div>
+            <div class="data-row">
+                <div class="data-cell">100</div>
+                <div class="data-cell">110</div>
+                <div class="data-cell">105</div>
+                <div class="data-cell">115</div>
+                <div class="data-cell">120</div>
+                <div class="data-cell">125</div>
+            </div>
+        </div>
+        
+        <div class="example-box">
+            <div class="example-title">📐 Method 1: Trend using Moving Average</div>
+            <div class="calculation-steps">
+                <div class="step">
+                    <span class="step-number">▪</span> 
+                    <strong>3-period Moving Average</strong> calculation: MA<sub>3</sub> = (Y<sub>t-1</sub> + Y<sub>t</sub> + Y<sub>t+1</sub>) / 3
+                </div>
+                <div class="step">
+                    <span class="step-number">▪</span> 
+                    t=2: <span class="highlight">MA = (100+110+105)/3 = 105.0</span>
+                </div>
+                <div class="step">
+                    <span class="step-number">▪</span> 
+                    t=3: MA = (110+105+115)/3 = 110.0
+                </div>
+                <div class="step">
+                    <span class="step-number">▪</span> 
+                    t=4: MA = (105+115+120)/3 = 113.3
+                </div>
+                <div class="step">
+                    <span class="step-number">▪</span> 
+                    t=5: MA = (115+120+125)/3 = 120.0
+                </div>
+            </div>
+        </div>
+        
+        <div class="example-box">
+            <div class="example-title">📐 Method 2: Trend using Linear Regression</div>
+            <div class="calculation-steps">
+                <div class="step">
+                    <span class="step-number">▪</span> 
+                    <strong>Regression equation</strong>: Y<sub>t</sub> = a + b·t
+                </div>
+                <div class="step">
+                    <span class="step-number">▪</span> 
+                    Slope b = Σ[(t - t̄)(Y<sub>t</sub> - Ȳ)] / Σ(t - t̄)²
+                </div>
+                <div class="step">
+                    <span class="step-number">▪</span> 
+                    Calculation: b ≈ 5.14 → <span class="highlight">Average increase of 5.14 per month</span>
+                </div>
+                <div class="step">
+                    <span class="step-number">▪</span> 
+                    Intercept a = Ȳ - b·t̄ ≈ 94.86
+                </div>
+                <div class="step">
+                    <span class="step-number">▪</span> 
+                    Trend equation: <span class="highlight">Y<sub>t</sub> = 94.86 + 5.14·t</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Page 3: Forecasting with Trend -->
+    <div class="container">
+        <div class="title">Forecasting Using Trend</div>
+        
+        <div class="concept-box">
+            <div class="concept-title">Trend-Based Forecasting</div>
+            <div class="concept-text">
+                Use the estimated trend equation to predict future values
+            </div>
+        </div>
+        
+        <div class="example-box">
+            <div class="example-title">📈 Method 1: Forecasting with Moving Average</div>
+            <div class="calculation-steps">
+                <div class="step">
+                    <span class="step-number">▪</span> 
+                    <strong>Last calculated MA</strong> at t=5: MA = 120.0
+                </div>
+                <div class="step">
+                    <span class="step-number">▪</span> 
+                    <strong>Trend rate</strong>: Calculate average change between consecutive MAs
+                </div>
+                <div class="step">
+                    <span class="step-number">▪</span> 
+                    (110.0 - 105.0) + (113.3 - 110.0) + (120.0 - 113.3) = 15.0
+                </div>
+                <div class="step">
+                    <span class="step-number">▪</span> 
+                    Average change ≈ 15.0 / 3 = <span class="highlight">5.0 per period</span>
+                </div>
+                <div class="step">
+                    <span class="step-number">▪</span> 
+                    <strong>Forecast for t=7</strong>: 125 + 5.0 = <span class="highlight">130.0</span>
+                </div>
+                <div class="step">
+                    <span class="step-number">▪</span> 
+                    <strong>Forecast for t=8</strong>: 130.0 + 5.0 = <span class="highlight">135.0</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="example-box">
+            <div class="example-title">📈 Method 2: Forecasting with Linear Regression (Recommended)</div>
+            <div class="calculation-steps">
+                <div class="step">
+                    <span class="step-number">▪</span> 
+                    <strong>Use trend equation</strong>: Y<sub>t</sub> = 94.86 + 5.14·t
+                </div>
+                <div class="step">
+                    <span class="step-number">▪</span> 
+                    <strong>Forecast for t=7</strong>: Y₇ = 94.86 + 5.14 × 7 = <span class="highlight">130.84</span>
+                </div>
+                <div class="step">
+                    <span class="step-number">▪</span> 
+                    <strong>Forecast for t=8</strong>: Y₈ = 94.86 + 5.14 × 8 = <span class="highlight">135.98</span>
+                </div>
+                <div class="step">
+                    <span class="step-number">▪</span> 
+                    <strong>Forecast for t=9</strong>: Y₉ = 94.86 + 5.14 × 9 = <span class="highlight">141.12</span>
+                </div>
+                <div class="step">
+                    <span class="step-number">▪</span> 
+                    <strong>Forecast for t=10</strong>: Y₁₀ = 94.86 + 5.14 × 10 = <span class="highlight">146.26</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="formula-box">
+            <div class="formula-label">Summary: Forecasted Values</div>
+            <div style="margin-top: 15px;">
+                <div class="data-row">
+                    <div class="data-cell">
+                        <div class="data-label">Period</div>
+                    </div>
+                    <div class="data-cell">
+                        <div class="data-label">t=7</div>
+                    </div>
+                    <div class="data-cell">
+                        <div class="data-label">t=8</div>
+                    </div>
+                    <div class="data-cell">
+                        <div class="data-label">t=9</div>
+                    </div>
+                    <div class="data-cell">
+                        <div class="data-label">t=10</div>
+                    </div>
+                </div>
+                <div class="data-row">
+                    <div class="data-cell">
+                        <div class="data-label">Forecast</div>
+                    </div>
+                    <div class="data-cell" style="background: #E3F2FD;">130.84</div>
+                    <div class="data-cell" style="background: #E3F2FD;">135.98</div>
+                    <div class="data-cell" style="background: #E3F2FD;">141.12</div>
+                    <div class="data-cell" style="background: #E3F2FD;">146.26</div>
                 </div>
             </div>
         </div>

@@ -14,19 +14,20 @@
         body {
             font-family: Aptos, 'Segoe UI', sans-serif;
             background: white;
+            padding: 40px 20px;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            min-height: 100vh;
-            padding: 20px;
+            gap: 50px;
         }
         
         .container {
             width: 960px;
-            height: 540px;
-            position: relative;
             background: white;
             padding: 25px 45px;
+            border: 1px solid #E0E0E0;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
         
         .title {
@@ -155,9 +156,212 @@
         .limitations .bullet {
             color: #E74C3C;
         }
+        
+        /* Trend Calculation Example Styles */
+        .example-box {
+            background: linear-gradient(135deg, #16A085 0%, #1ABC9C 100%);
+            color: white;
+            padding: 18px 25px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .example-header {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        
+        .data-sequence {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 12px 16px;
+            border-radius: 6px;
+        }
+        
+        .data-label {
+            font-size: 15px;
+            margin-bottom: 8px;
+            opacity: 0.95;
+        }
+        
+        .data-values {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .value {
+            background: white;
+            color: #16A085;
+            padding: 6px 14px;
+            border-radius: 5px;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        
+        .arrow {
+            font-size: 18px;
+            opacity: 0.8;
+        }
+        
+        .calculation-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .calc-card {
+            background: #F8F9FA;
+            border: 2px solid #16A085;
+            border-radius: 8px;
+            padding: 16px;
+        }
+        
+        .calc-step {
+            font-size: 16px;
+            font-weight: 600;
+            color: #16A085;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .filter-info {
+            font-size: 14px;
+            color: #7F8C8D;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .conv-operation {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .conv-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            padding: 6px;
+            background: white;
+            border-radius: 4px;
+        }
+        
+        .window {
+            color: #3498DB;
+            font-weight: 600;
+        }
+        
+        .operator {
+            color: #7F8C8D;
+            font-weight: bold;
+        }
+        
+        .filter {
+            color: #E67E22;
+            font-weight: 600;
+        }
+        
+        .result {
+            color: #27AE60;
+            font-weight: 700;
+            margin-left: auto;
+        }
+        
+        .activation-result {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 10px;
+        }
+        
+        .result-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 8px;
+            background: white;
+            border-radius: 4px;
+        }
+        
+        .before, .after {
+            font-size: 15px;
+            font-weight: 600;
+            color: #2C3E50;
+        }
+        
+        .arrow-right {
+            color: #7F8C8D;
+            font-size: 18px;
+        }
+        
+        .trend-up {
+            color: #27AE60;
+            font-weight: 700;
+        }
+        
+        .output-section {
+            background: linear-gradient(135deg, #E8F8F5 0%, #D5F4E6 100%);
+            border: 2px solid #16A085;
+            border-radius: 8px;
+            padding: 18px 22px;
+        }
+        
+        .output-label {
+            font-size: 17px;
+            font-weight: 600;
+            color: #16A085;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .output-result {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 14px;
+        }
+        
+        .trend-indicator {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: white;
+            padding: 12px 24px;
+            border-radius: 6px;
+            border: 2px solid #27AE60;
+        }
+        
+        .trend-icon {
+            font-size: 24px;
+        }
+        
+        .trend-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: #27AE60;
+        }
+        
+        .confidence {
+            font-size: 14px;
+            color: #7F8C8D;
+            margin-left: 8px;
+        }
+        
+        .insight {
+            font-size: 14px;
+            color: #16A085;
+            text-align: center;
+            line-height: 1.5;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
+    <!-- Original Content -->
     <div class="container">
         <div class="title">CNN for Sequences</div>
         
@@ -204,7 +408,7 @@
         <div class="bottom-section">
             <div class="applications">
                 <div class="section-header">
-                    <span>✓</span>
+                    <span>✔</span>
                     <span>Applications</span>
                 </div>
                 <div class="item-list">
@@ -238,6 +442,95 @@
                         <span>No explicit memory mechanism</span>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Trend Calculation Example Section -->
+    <div class="container">
+        <div class="title">Trend Calculation Example with CNN</div>
+        
+        <div class="example-box">
+            <div class="example-header">Time Series Data: Stock Price Trend Detection</div>
+            <div class="data-sequence">
+                <div class="data-label">Input Sequence (5-day prices):</div>
+                <div class="data-values">
+                    <span class="value">100</span>
+                    <span class="arrow">→</span>
+                    <span class="value">102</span>
+                    <span class="arrow">→</span>
+                    <span class="value">105</span>
+                    <span class="arrow">→</span>
+                    <span class="value">103</span>
+                    <span class="arrow">→</span>
+                    <span class="value">107</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="calculation-grid">
+            <div class="calc-card">
+                <div class="calc-step">Step 1: 1D Convolution</div>
+                <div class="calc-content">
+                    <div class="filter-info">Filter size: 3, Stride: 1</div>
+                    <div class="conv-operation">
+                        <div class="conv-item">
+                            <span class="window">[100, 102, 105]</span>
+                            <span class="operator">×</span>
+                            <span class="filter">[0.5, 0.3, 0.2]</span>
+                            <span class="result">= 101.1</span>
+                        </div>
+                        <div class="conv-item">
+                            <span class="window">[102, 105, 103]</span>
+                            <span class="operator">×</span>
+                            <span class="filter">[0.5, 0.3, 0.2]</span>
+                            <span class="result">= 103.1</span>
+                        </div>
+                        <div class="conv-item">
+                            <span class="window">[105, 103, 107]</span>
+                            <span class="operator">×</span>
+                            <span class="filter">[0.5, 0.3, 0.2]</span>
+                            <span class="result">= 104.3</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="calc-card">
+                <div class="calc-step">Step 2: Activation Function (ReLU)</div>
+                <div class="calc-content">
+                    <div class="activation-result">
+                        <div class="result-item">
+                            <span class="before">101.1</span>
+                            <span class="arrow-right">→</span>
+                            <span class="after">101.1</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="before">103.1</span>
+                            <span class="arrow-right">→</span>
+                            <span class="after">103.1</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="before">104.3</span>
+                            <span class="arrow-right">→</span>
+                            <span class="after trend-up">104.3 ↗</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="output-section">
+            <div class="output-label">🎯 Trend Analysis Result</div>
+            <div class="output-result">
+                <div class="trend-indicator positive">
+                    <span class="trend-icon">📈</span>
+                    <span class="trend-text">Upward Trend Detected</span>
+                    <span class="confidence">Confidence: 85%</span>
+                </div>
+            </div>
+            <div class="insight">
+                💡 Through consecutive convolutional layers, short-term, mid-term, and long-term trends can be captured simultaneously
             </div>
         </div>
     </div>

@@ -107,19 +107,58 @@
         }
         
         .examples-list {
-            display: flex;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 12px;
         }
         
         .example-tag {
             background: white;
-            color: #1E64C8;
             border: 1.5px solid #1E64C8;
-            padding: 6px 14px;
-            border-radius: 20px;
+            border-radius: 6px;
+            padding: 12px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .example-name {
+            color: #1E64C8;
             font-size: 15px;
-            font-weight: 500;
+            font-weight: 600;
+        }
+        
+        .example-visual {
+            background: #F8FAFE;
+            border-radius: 4px;
+            padding: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #333;
+            text-align: center;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        
+        .example-desc {
+            color: #555;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+        
+        .sequence-arrow {
+            color: #1E64C8;
+            font-weight: bold;
+            margin: 0 4px;
+        }
+        
+        .sequence-item {
+            display: inline-block;
+            background: white;
+            padding: 3px 8px;
+            border-radius: 3px;
+            border: 1px solid #1E64C8;
+            margin: 0 2px;
         }
     </style>
 </head>
@@ -160,10 +199,64 @@
         <div class="examples-section">
             <div class="examples-title">Examples</div>
             <div class="examples-list">
-                <span class="example-tag">Stock Prices</span>
-                <span class="example-tag">DNA Sequences</span>
-                <span class="example-tag">Sentences</span>
-                <span class="example-tag">Video Frames</span>
+                <div class="example-tag">
+                    <div class="example-name">📈 Stock Prices</div>
+                    <div class="example-visual">
+                        <span class="sequence-item">$100</span>
+                        <span class="sequence-arrow">→</span>
+                        <span class="sequence-item">$105</span>
+                        <span class="sequence-arrow">→</span>
+                        <span class="sequence-item">$103</span>
+                        <span class="sequence-arrow">→</span>
+                        <span class="sequence-item">$108</span>
+                        <span class="sequence-arrow">→</span>
+                        <span class="sequence-item">$110</span>
+                    </div>
+                    <div class="example-desc">Time series of financial data with temporal dependencies</div>
+                </div>
+                <div class="example-tag">
+                    <div class="example-name">🧬 DNA Sequences</div>
+                    <div class="example-visual">
+                        <span class="sequence-item">A</span>
+                        <span class="sequence-arrow">→</span>
+                        <span class="sequence-item">T</span>
+                        <span class="sequence-arrow">→</span>
+                        <span class="sequence-item">G</span>
+                        <span class="sequence-arrow">→</span>
+                        <span class="sequence-item">C</span>
+                        <span class="sequence-arrow">→</span>
+                        <span class="sequence-item">T</span>
+                        <span class="sequence-arrow">→</span>
+                        <span class="sequence-item">A</span>
+                    </div>
+                    <div class="example-desc">Nucleotide order determines genetic information</div>
+                </div>
+                <div class="example-tag">
+                    <div class="example-name">💬 Sentences</div>
+                    <div class="example-visual">
+                        <span class="sequence-item">I</span>
+                        <span class="sequence-arrow">→</span>
+                        <span class="sequence-item">love</span>
+                        <span class="sequence-arrow">→</span>
+                        <span class="sequence-item">machine</span>
+                        <span class="sequence-arrow">→</span>
+                        <span class="sequence-item">learning</span>
+                    </div>
+                    <div class="example-desc">Word order conveys meaning and grammar</div>
+                </div>
+                <div class="example-tag">
+                    <div class="example-name">🎬 Video Frames</div>
+                    <div class="example-visual">
+                        <span class="sequence-item">Frame₁</span>
+                        <span class="sequence-arrow">→</span>
+                        <span class="sequence-item">Frame₂</span>
+                        <span class="sequence-arrow">→</span>
+                        <span class="sequence-item">Frame₃</span>
+                        <span class="sequence-arrow">→</span>
+                        <span class="sequence-item">Frame₄</span>
+                    </div>
+                    <div class="example-desc">Sequential visual data capturing motion over time</div>
+                </div>
             </div>
         </div>
     </div>

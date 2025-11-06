@@ -23,7 +23,7 @@
         
         .container {
             width: 960px;
-            height: 540px;
+            min-height: 540px;
             position: relative;
             background: white;
             padding: 20px 40px;
@@ -119,6 +119,81 @@
             font-size: 16px;
             color: #2C3E50;
         }
+        
+        .examples-section {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 3px solid #1E64C8;
+        }
+        
+        .examples-title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 25px;
+        }
+        
+        .example-card {
+            background: #F8FBFF;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .example-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .example-icon {
+            font-size: 26px;
+            margin-right: 12px;
+        }
+        
+        .example-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .example-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .example-before, .example-after {
+            background: white;
+            border: 1px solid #D0E3F5;
+            border-radius: 6px;
+            padding: 15px;
+        }
+        
+        .example-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .example-data {
+            font-size: 14px;
+            color: #2C3E50;
+            line-height: 1.6;
+        }
+        
+        .data-row {
+            padding: 4px 0;
+            border-bottom: 1px solid #E8F1FC;
+        }
+        
+        .data-row:last-child {
+            border-bottom: none;
+        }
     </style>
 </head>
 <body>
@@ -186,6 +261,179 @@
         <div class="output-box">
             <div class="output-title">Engineered Features</div>
             <div class="output-text">Ready for sequence modeling and prediction</div>
+        </div>
+        
+        <!-- Examples Section -->
+        <div class="examples-section">
+            <div class="examples-title">Real-World Application Examples</div>
+            
+            <!-- Windowing Example -->
+            <div class="example-card">
+                <div class="example-header">
+                    <div class="example-icon">🪟</div>
+                    <div class="example-name">Windowing - Stock Price Prediction</div>
+                </div>
+                <div class="example-content">
+                    <div class="example-before">
+                        <div class="example-label">Original Data</div>
+                        <div class="example-data">
+                            <div class="data-row">Day 1: $100</div>
+                            <div class="data-row">Day 2: $102</div>
+                            <div class="data-row">Day 3: $101</div>
+                            <div class="data-row">Day 4: $105</div>
+                            <div class="data-row">Day 5: $107</div>
+                        </div>
+                    </div>
+                    <div class="example-after">
+                        <div class="example-label">3-Day Window Applied</div>
+                        <div class="example-data">
+                            <div class="data-row">Window 1: [100, 102, 101] → 105</div>
+                            <div class="data-row">Window 2: [102, 101, 105] → 107</div>
+                            <div class="data-row" style="color: #7A7A7A;">Predict next day from past 3 days</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Lag Features Example -->
+            <div class="example-card">
+                <div class="example-header">
+                    <div class="example-icon">⏮️</div>
+                    <div class="example-name">Lag Features - Website Traffic</div>
+                </div>
+                <div class="example-content">
+                    <div class="example-before">
+                        <div class="example-label">Hourly Visitors</div>
+                        <div class="example-data">
+                            <div class="data-row">10:00 - 150 visitors</div>
+                            <div class="data-row">11:00 - 180 visitors</div>
+                            <div class="data-row">12:00 - 220 visitors</div>
+                            <div class="data-row">13:00 - 200 visitors</div>
+                        </div>
+                    </div>
+                    <div class="example-after">
+                        <div class="example-label">Lag Features Created</div>
+                        <div class="example-data">
+                            <div class="data-row">Current: 220, 1hr ago: 180</div>
+                            <div class="data-row">Current: 200, 1hr ago: 220</div>
+                            <div class="data-row" style="color: #7A7A7A;">Utilize previous hour information</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Rolling Statistics Example -->
+            <div class="example-card">
+                <div class="example-header">
+                    <div class="example-icon">📊</div>
+                    <div class="example-name">Rolling Statistics - Temperature Data</div>
+                </div>
+                <div class="example-content">
+                    <div class="example-before">
+                        <div class="example-label">Daily High Temperature (°C)</div>
+                        <div class="example-data">
+                            <div class="data-row">Mon: 22°C</div>
+                            <div class="data-row">Tue: 24°C</div>
+                            <div class="data-row">Wed: 23°C</div>
+                            <div class="data-row">Thu: 25°C</div>
+                            <div class="data-row">Fri: 26°C</div>
+                        </div>
+                    </div>
+                    <div class="example-after">
+                        <div class="example-label">3-Day Moving Average</div>
+                        <div class="example-data">
+                            <div class="data-row">Wed: 23.0°C (22+24+23)/3</div>
+                            <div class="data-row">Thu: 24.0°C (24+23+25)/3</div>
+                            <div class="data-row">Fri: 24.7°C (23+25+26)/3</div>
+                            <div class="data-row" style="color: #7A7A7A;">Reduce volatility, identify trends</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Differencing Example -->
+            <div class="example-card">
+                <div class="example-header">
+                    <div class="example-icon">📉</div>
+                    <div class="example-name">Differencing - Sales Data</div>
+                </div>
+                <div class="example-content">
+                    <div class="example-before">
+                        <div class="example-label">Monthly Cumulative Sales ($M)</div>
+                        <div class="example-data">
+                            <div class="data-row">Jan: $100M</div>
+                            <div class="data-row">Feb: $130M</div>
+                            <div class="data-row">Mar: $145M</div>
+                            <div class="data-row">Apr: $170M</div>
+                        </div>
+                    </div>
+                    <div class="example-after">
+                        <div class="example-label">Monthly Growth (Difference)</div>
+                        <div class="example-data">
+                            <div class="data-row">Feb: +$30M</div>
+                            <div class="data-row">Mar: +$15M</div>
+                            <div class="data-row">Apr: +$25M</div>
+                            <div class="data-row" style="color: #7A7A7A;">Remove trend, analyze changes</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Fourier Transform Example -->
+            <div class="example-card">
+                <div class="example-header">
+                    <div class="example-icon">🌊</div>
+                    <div class="example-name">Fourier Transforms - ECG Signal</div>
+                </div>
+                <div class="example-content">
+                    <div class="example-before">
+                        <div class="example-label">Time Domain Signal</div>
+                        <div class="example-data">
+                            <div class="data-row">t=0ms: 0.1V</div>
+                            <div class="data-row">t=10ms: 0.8V</div>
+                            <div class="data-row">t=20ms: 0.2V</div>
+                            <div class="data-row" style="color: #7A7A7A;">Voltage changes over time</div>
+                        </div>
+                    </div>
+                    <div class="example-after">
+                        <div class="example-label">Frequency Domain Features</div>
+                        <div class="example-data">
+                            <div class="data-row">Heart Rate: 75 BPM (1.25Hz)</div>
+                            <div class="data-row">High Frequency: 0.02</div>
+                            <div class="data-row">Low Frequency: 0.15</div>
+                            <div class="data-row" style="color: #7A7A7A;">Extract periodic patterns</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Embeddings Example -->
+            <div class="example-card">
+                <div class="example-header">
+                    <div class="example-icon">🔤</div>
+                    <div class="example-name">Embeddings - User Behavior Sequence</div>
+                </div>
+                <div class="example-content">
+                    <div class="example-before">
+                        <div class="example-label">Click Event Sequence</div>
+                        <div class="example-data">
+                            <div class="data-row">Homepage → Search</div>
+                            <div class="data-row">Product Page → Cart</div>
+                            <div class="data-row">Checkout → Complete</div>
+                            <div class="data-row" style="color: #7A7A7A;">Categorical sequential data</div>
+                        </div>
+                    </div>
+                    <div class="example-after">
+                        <div class="example-label">Embedding Vectors</div>
+                        <div class="example-data">
+                            <div class="data-row">Homepage: [0.2, 0.8, 0.1]</div>
+                            <div class="data-row">Search: [0.3, 0.6, 0.4]</div>
+                            <div class="data-row">Product: [0.7, 0.2, 0.5]</div>
+                            <div class="data-row" style="color: #7A7A7A;">Transform to semantic representation</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </body>

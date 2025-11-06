@@ -15,6 +15,7 @@
             font-family: Aptos, 'Segoe UI', sans-serif;
             background: white;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
@@ -23,10 +24,11 @@
         
         .container {
             width: 960px;
-            height: 540px;
+            min-height: 540px;
             position: relative;
             background: white;
             padding: 25px 45px;
+            margin-bottom: 30px;
         }
         
         .title {
@@ -137,6 +139,144 @@
             font-size: 15px;
             color: #2C3E50;
         }
+
+        /* New Trend Example Styles */
+        .trend-section {
+            width: 960px;
+            background: white;
+            padding: 25px 45px;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 25px;
+        }
+
+        .trend-content {
+            background: #F8FAFE;
+            border: 2.5px solid #1E64C8;
+            border-radius: 8px;
+            padding: 25px;
+        }
+
+        .example-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .example-icon {
+            font-size: 32px;
+        }
+
+        .example-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background: white;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .data-table th {
+            background: #1E64C8;
+            color: white;
+            padding: 12px;
+            text-align: center;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .data-table td {
+            padding: 10px 12px;
+            text-align: center;
+            border-bottom: 1px solid #E0E0E0;
+            font-size: 15px;
+            color: #2C3E50;
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .calculation-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 6px;
+            padding: 18px;
+            margin-bottom: 15px;
+        }
+
+        .calc-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+        }
+
+        .calc-formula {
+            background: #F8FAFE;
+            padding: 12px 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 15px;
+            color: #2C3E50;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .calc-result {
+            font-size: 16px;
+            color: #1E64C8;
+            font-weight: 600;
+            padding: 10px 15px;
+            background: #E8F4FF;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .trend-types {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .trend-type {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 6px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .trend-type-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .trend-type-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+
+        .trend-type-desc {
+            font-size: 14px;
+            color: #2C3E50;
+        }
     </style>
 </head>
 <body>
@@ -192,6 +332,135 @@
                 <div class="info-title">Applications</div>
                 <div class="info-text">
                     Widely used in econometrics & forecasting
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Trend Calculation Section -->
+    <div class="trend-section">
+        <div class="section-title">📊 Trend Calculation Example</div>
+        
+        <div class="trend-content">
+            <div class="example-header">
+                <div class="example-icon">📉</div>
+                <div class="example-title">선형 트렌드 추정 (Linear Trend Estimation)</div>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Time (t)</th>
+                        <th>1</th>
+                        <th>2</th>
+                        <th>3</th>
+                        <th>4</th>
+                        <th>5</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Observed (Y<sub>t</sub>)</strong></td>
+                        <td>10</td>
+                        <td>12</td>
+                        <td>15</td>
+                        <td>17</td>
+                        <td>20</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="calculation-box">
+                <div class="calc-title">1️⃣ Trend Model</div>
+                <div class="calc-formula">
+                    Y<sub>t</sub> = β₀ + β₁·t + ε<sub>t</sub>
+                </div>
+            </div>
+
+            <div class="calculation-box">
+                <div class="calc-title">2️⃣ Coefficient Estimation using OLS</div>
+                <div class="calc-formula">
+                    β₁ = Σ[(t - t̄)(Y<sub>t</sub> - Ȳ)] / Σ(t - t̄)²<br>
+                    β₀ = Ȳ - β₁·t̄
+                </div>
+                <div class="calc-result">
+                    β₁ = 2.5 (Slope) | β₀ = 7.5 (Intercept)
+                </div>
+            </div>
+
+            <div class="calculation-box">
+                <div class="calc-title">3️⃣ Final Trend Equation</div>
+                <div class="calc-result">
+                    Ŷ<sub>t</sub> = 7.5 + 2.5·t
+                </div>
+            </div>
+
+            <div class="trend-types">
+                <div class="trend-type">
+                    <div class="trend-type-icon">📈</div>
+                    <div class="trend-type-name">Linear Trend</div>
+                    <div class="trend-type-desc">Constant rate of increase/decrease</div>
+                </div>
+                
+                <div class="trend-type">
+                    <div class="trend-type-icon">📊</div>
+                    <div class="trend-type-name">Nonlinear Trend</div>
+                    <div class="trend-type-desc">Polynomial of degree 2 or higher</div>
+                </div>
+                
+                <div class="trend-type">
+                    <div class="trend-type-icon">🔄</div>
+                    <div class="trend-type-name">Exponential Trend</div>
+                    <div class="trend-type-desc">Exponential growth/decay</div>
+                </div>
+                
+                <div class="trend-type">
+                    <div class="trend-type-icon">➖</div>
+                    <div class="trend-type-name">Differencing Method</div>
+                    <div class="trend-type-desc">Differencing to remove trend</div>
+                </div>
+            </div>
+
+            <div class="calculation-box" style="margin-top: 25px;">
+                <div class="calc-title">4️⃣ Forecasting with Trend Model</div>
+                <div class="calc-formula">
+                    Using the estimated equation: Ŷ<sub>t</sub> = 7.5 + 2.5·t
+                </div>
+                <div style="background: white; padding: 15px; border-radius: 6px; margin-top: 12px;">
+                    <div style="font-size: 15px; color: #2C3E50; margin-bottom: 10px;">
+                        <strong>Forecast for t = 6:</strong><br>
+                        Ŷ<sub>6</sub> = 7.5 + 2.5 × 6 = <span style="color: #1E64C8; font-weight: 600;">22.5</span>
+                    </div>
+                    <div style="font-size: 15px; color: #2C3E50; margin-bottom: 10px;">
+                        <strong>Forecast for t = 7:</strong><br>
+                        Ŷ<sub>7</sub> = 7.5 + 2.5 × 7 = <span style="color: #1E64C8; font-weight: 600;">25.0</span>
+                    </div>
+                    <div style="font-size: 15px; color: #2C3E50;">
+                        <strong>Forecast for t = 8:</strong><br>
+                        Ŷ<sub>8</sub> = 7.5 + 2.5 × 8 = <span style="color: #1E64C8; font-weight: 600;">27.5</span>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px;">
+                <div style="background: #E8F4FF; border: 2px solid #1E64C8; border-radius: 6px; padding: 15px;">
+                    <div style="font-size: 24px; text-align: center; margin-bottom: 8px;">⚠️</div>
+                    <div style="font-size: 15px; font-weight: 600; color: #1E64C8; text-align: center; margin-bottom: 8px;">
+                        Forecast Limitation
+                    </div>
+                    <div style="font-size: 14px; color: #2C3E50; text-align: center;">
+                        Long-term forecasts become less reliable
+                    </div>
+                </div>
+                
+                <div style="background: #E8F4FF; border: 2px solid #1E64C8; border-radius: 6px; padding: 15px;">
+                    <div style="font-size: 24px; text-align: center; margin-bottom: 8px;">✅</div>
+                    <div style="font-size: 15px; font-weight: 600; color: #1E64C8; text-align: center; margin-bottom: 8px;">
+                        Best Practice
+                    </div>
+                    <div style="font-size: 14px; color: #2C3E50; text-align: center;">
+                        Check model assumptions and residuals
+                    </div>
                 </div>
             </div>
         </div>
