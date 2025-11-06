@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CTC Loss</title>
+    <title>CTC Loss - Enhanced</title>
     <style>
         * {
             margin: 0;
@@ -23,7 +23,6 @@
         
         .container {
             width: 960px;
-            height: 540px;
             position: relative;
             background: white;
             padding: 25px 45px;
@@ -104,6 +103,62 @@
             line-height: 1.4;
         }
         
+        .section-header {
+            background: #1E64C8;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            margin: 25px 0 15px 0;
+            text-align: center;
+        }
+        
+        .method-box {
+            background: #F8FAFE;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 18px 25px;
+            margin-bottom: 18px;
+        }
+        
+        .method-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .method-text {
+            font-size: 15px;
+            color: #2C3E50;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+        
+        .step-box {
+            background: white;
+            border-left: 4px solid #1E64C8;
+            padding: 12px 18px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        
+        .step-number {
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .step-content {
+            font-size: 15px;
+            color: #2C3E50;
+            line-height: 1.5;
+        }
+        
         .training-box {
             background: #F8FAFE;
             border: 2px solid #1E64C8;
@@ -125,11 +180,33 @@
             color: #2C3E50;
         }
         
+        .highlight-box {
+            background: #FFF9E6;
+            border: 2px solid #FFA500;
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin: 15px 0;
+        }
+        
+        .highlight-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #CC8400;
+            margin-bottom: 8px;
+        }
+        
+        .highlight-text {
+            font-size: 15px;
+            color: #2C3E50;
+            line-height: 1.5;
+        }
+        
         .applications-box {
             background: #E8F1FC;
             border: 2px solid #1E64C8;
             border-radius: 8px;
             padding: 16px 25px;
+            margin-top: 20px;
         }
         
         .app-header {
@@ -214,7 +291,237 @@
                 </div>
             </div>
         </div>
+
+        <div class="section-header">🔍 How It Works</div>
         
+        <div class="method-box">
+            <div class="method-title">
+                <span>📊</span>
+                <span>Probability Distribution Generation</span>
+            </div>
+            <div class="method-text">
+                The neural network outputs a probability distribution over all possible characters (alphabet) at each time step, including a special 'blank' token.
+            </div>
+        </div>
+
+        <div class="method-box">
+            <div class="method-title">
+                <span>🔀</span>
+                <span>Alignment Paths</span>
+            </div>
+            <div class="method-text">
+                Multiple alignment paths can produce the same output sequence. For example, "CAT" can be represented as "C-A-T", "CC-AAT", "-C-A-T-", and many other variations.
+            </div>
+            <div class="highlight-box">
+                <div class="highlight-title">💡 Key Idea</div>
+                <div class="highlight-text">
+                    CTC sums the probabilities of all possible alignment paths that can be converted to the target sequence.
+                </div>
+            </div>
+        </div>
+
+        <div class="section-header">⚙️ Computation Methodology</div>
+
+        <div class="step-box">
+            <div class="step-number">Step 1: Forward Algorithm</div>
+            <div class="step-content">
+                Progressing from left to right, at each time step, cumulatively calculate the probabilities of all paths that can reach each position in the target sequence.
+            </div>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">Step 2: Backward Algorithm</div>
+            <div class="step-content">
+                Progressing from right to left, calculate the probabilities of all paths that reach the end of the sequence from each position.
+            </div>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">Step 3: Marginalization</div>
+            <div class="step-content">
+                Combine forward and backward probabilities to calculate the total probability of all possible alignments that generate the target sequence. This is efficiently performed using dynamic programming.
+            </div>
+        </div>
+
+        <div class="method-box">
+            <div class="method-title">
+                <span>📉</span>
+                <span>Loss Function Calculation</span>
+            </div>
+            <div class="method-text">
+                CTC Loss = -log(Sum of probabilities of all correct alignment paths)
+            </div>
+            <div class="method-text" style="margin-top: 10px;">
+                The training objective is to minimize this loss, thereby maximizing the probability of the correct output sequence.
+            </div>
+        </div>
+
+        <div class="section-header">📘 Practical Calculation Example</div>
+
+        <div class="method-box">
+            <div class="method-title">
+                <span>🔢</span>
+                <span>Problem Setup</span>
+            </div>
+            <div class="method-text">
+                <strong>Target Output:</strong> "A" (1D sequence)<br>
+                <strong>Input:</strong> 3 time steps (T=3)<br>
+                <strong>Possible Characters:</strong> {A, blank(-)}
+            </div>
+        </div>
+
+        <div class="method-box" style="background: #FFF9F0;">
+            <div class="method-title" style="color: #C67200;">
+                <span>📊</span>
+                <span>Neural Network Output (Probability Distribution)</span>
+            </div>
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+                    <thead>
+                        <tr style="background: #1E64C8; color: white;">
+                            <th style="padding: 10px; border: 1px solid #ddd;">Time Step</th>
+                            <th style="padding: 10px; border: 1px solid #ddd;">P(A)</th>
+                            <th style="padding: 10px; border: 1px solid #ddd;">P(blank)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="background: white;">
+                            <td style="padding: 10px; border: 1px solid #ddd; text-align: center; font-weight: 600;">t=1</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">0.4</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">0.6</td>
+                        </tr>
+                        <tr style="background: #F8F8F8;">
+                            <td style="padding: 10px; border: 1px solid #ddd; text-align: center; font-weight: 600;">t=2</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">0.7</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">0.3</td>
+                        </tr>
+                        <tr style="background: white;">
+                            <td style="padding: 10px; border: 1px solid #ddd; text-align: center; font-weight: 600;">t=3</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">0.5</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">0.5</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="method-box">
+            <div class="method-title">
+                <span>🛤️</span>
+                <span>All Possible Alignment Paths</span>
+            </div>
+            <div class="method-text" style="margin-bottom: 12px;">
+                Calculate all possible paths and their probabilities that can produce the output "A":
+            </div>
+            
+            <div style="background: white; padding: 15px; border-radius: 6px; margin: 10px 0;">
+                <div style="font-weight: 600; color: #1E64C8; margin-bottom: 8px;">Path 1: A - -</div>
+                <div style="color: #2C3E50; font-size: 14px; line-height: 1.8;">
+                    → P(A at t=1) × P(- at t=2) × P(- at t=3)<br>
+                    → 0.4 × 0.3 × 0.5 = <strong style="color: #C67200;">0.060</strong>
+                </div>
+            </div>
+
+            <div style="background: white; padding: 15px; border-radius: 6px; margin: 10px 0;">
+                <div style="font-weight: 600; color: #1E64C8; margin-bottom: 8px;">Path 2: - A -</div>
+                <div style="color: #2C3E50; font-size: 14px; line-height: 1.8;">
+                    → P(- at t=1) × P(A at t=2) × P(- at t=3)<br>
+                    → 0.6 × 0.7 × 0.5 = <strong style="color: #C67200;">0.210</strong>
+                </div>
+            </div>
+
+            <div style="background: white; padding: 15px; border-radius: 6px; margin: 10px 0;">
+                <div style="font-weight: 600; color: #1E64C8; margin-bottom: 8px;">Path 3: - - A</div>
+                <div style="color: #2C3E50; font-size: 14px; line-height: 1.8;">
+                    → P(- at t=1) × P(- at t=2) × P(A at t=3)<br>
+                    → 0.6 × 0.3 × 0.5 = <strong style="color: #C67200;">0.090</strong>
+                </div>
+            </div>
+
+            <div style="background: white; padding: 15px; border-radius: 6px; margin: 10px 0;">
+                <div style="font-weight: 600; color: #1E64C8; margin-bottom: 8px;">Path 4: A A -</div>
+                <div style="color: #2C3E50; font-size: 14px; line-height: 1.8;">
+                    → P(A at t=1) × P(A at t=2) × P(- at t=3)<br>
+                    → 0.4 × 0.7 × 0.5 = <strong style="color: #C67200;">0.140</strong>
+                </div>
+            </div>
+
+            <div style="background: white; padding: 15px; border-radius: 6px; margin: 10px 0;">
+                <div style="font-weight: 600; color: #1E64C8; margin-bottom: 8px;">Path 5: A - A</div>
+                <div style="color: #2C3E50; font-size: 14px; line-height: 1.8;">
+                    → P(A at t=1) × P(- at t=2) × P(A at t=3)<br>
+                    → 0.4 × 0.3 × 0.5 = <strong style="color: #C67200;">0.060</strong>
+                </div>
+            </div>
+
+            <div style="background: white; padding: 15px; border-radius: 6px; margin: 10px 0;">
+                <div style="font-weight: 600; color: #1E64C8; margin-bottom: 8px;">Path 6: - A A</div>
+                <div style="color: #2C3E50; font-size: 14px; line-height: 1.8;">
+                    → P(- at t=1) × P(A at t=2) × P(A at t=3)<br>
+                    → 0.6 × 0.7 × 0.5 = <strong style="color: #C67200;">0.210</strong>
+                </div>
+            </div>
+
+            <div style="background: white; padding: 15px; border-radius: 6px; margin: 10px 0;">
+                <div style="font-weight: 600; color: #1E64C8; margin-bottom: 8px;">Path 7: A A A</div>
+                <div style="color: #2C3E50; font-size: 14px; line-height: 1.8;">
+                    → P(A at t=1) × P(A at t=2) × P(A at t=3)<br>
+                    → 0.4 × 0.7 × 0.5 = <strong style="color: #C67200;">0.140</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="highlight-box" style="background: #E8F5E9; border-color: #4CAF50;">
+            <div class="highlight-title" style="color: #2E7D32;">
+                ✅ Final CTC Loss Calculation
+            </div>
+            <div class="highlight-text" style="font-size: 16px;">
+                <strong>Step 1:</strong> Sum probabilities of all paths<br>
+                <div style="margin: 10px 0; padding: 10px; background: white; border-radius: 4px;">
+                    P(A) = 0.060 + 0.210 + 0.090 + 0.140 + 0.060 + 0.210 + 0.140 = <strong style="color: #2E7D32; font-size: 18px;">0.910</strong>
+                </div>
+                
+                <strong>Step 2:</strong> Calculate negative log probability<br>
+                <div style="margin: 10px 0; padding: 10px; background: white; border-radius: 4px;">
+                    CTC Loss = -log(0.910) = <strong style="color: #C62828; font-size: 18px;">0.094</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="method-box" style="background: #FFF3E0; border-color: #FF9800;">
+            <div class="method-title" style="color: #E65100;">
+                <span>💡</span>
+                <span>Key Insights</span>
+            </div>
+            <div class="method-text">
+                • High probability paths (0.210, 0.140) significantly influence the overall loss<br>
+                • By considering all possible alignments, explicit alignment information is not required<br>
+                • Through training, the total probability of correct outputs approaches 1 (Loss → 0)
+            </div>
+        </div>
+
+        <div class="section-header">🎯 Decoding Strategies</div>
+
+        <div class="method-box">
+            <div class="method-title">
+                <span>🏃</span>
+                <span>Greedy Decoding</span>
+            </div>
+            <div class="method-text">
+                Select the character with the highest probability at each time step, then remove consecutive duplicate characters and blanks. Fast but not always optimal.
+            </div>
+        </div>
+
+        <div class="method-box">
+            <div class="method-title">
+                <span>🔍</span>
+                <span>Beam Search</span>
+            </div>
+            <div class="method-text">
+                Explore multiple candidate paths simultaneously to find the sequence with the highest overall probability. More accurate but computationally expensive.
+            </div>
+        </div>
+
         <div class="training-box">
             <div class="training-title">🎓 Training Approach</div>
             <div class="training-text">
