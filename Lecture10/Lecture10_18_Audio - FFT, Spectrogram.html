@@ -22,9 +22,10 @@
         
         .container {
             width: 960px;
-            height: 540px;
+            height: 720px;
             position: relative;
             padding: 30px;
+            overflow-y: auto;
         }
         
         .title {
@@ -208,6 +209,121 @@
             font-size: 16px;
             color: #333;
         }
+        
+        .fft-example-section {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 18px 20px;
+            margin-top: 18px;
+        }
+        
+        .decomposition-container {
+            display: grid;
+            grid-template-columns: 1fr auto 2fr;
+            gap: 15px;
+            align-items: center;
+            margin: 15px 0;
+        }
+        
+        .signal-box {
+            background: #F0F6FF;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .signal-box.input-signal {
+            padding: 14px;
+        }
+        
+        .signal-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .wave-svg {
+            width: 100%;
+            height: 80px;
+            margin: 5px 0;
+        }
+        
+        .wave-svg.small {
+            height: 60px;
+        }
+        
+        .signal-desc {
+            font-size: 13px;
+            color: #666;
+            margin-top: 6px;
+        }
+        
+        .fft-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .arrow-symbol {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1E64C8;
+            background: #F0F6FF;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 2px solid #1E64C8;
+        }
+        
+        .frequency-components {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .signal-box.component {
+            padding: 10px;
+        }
+        
+        .plus-symbol {
+            text-align: center;
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E64C8;
+            padding: 5px 0;
+        }
+        
+        .freq-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+            margin-top: 4px;
+            font-family: 'Times New Roman', serif;
+        }
+        
+        .formula-note {
+            background: #F0F6FF;
+            border-left: 4px solid #1E64C8;
+            padding: 12px 15px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .note-icon {
+            font-size: 20px;
+        }
+        
+        .note-text {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.5;
+            font-family: 'Times New Roman', serif;
+        }
     </style>
 </head>
 <body>
@@ -271,6 +387,74 @@
             <div class="tradeoff-content">
                 <div class="tradeoff-label">Trade-off</div>
                 <div class="tradeoff-text">Between time and frequency resolution (determined by window size)</div>
+            </div>
+        </div>
+        
+        <div class="fft-example-section">
+            <div class="section-header">
+                <div class="section-icon">📈</div>
+                <div>
+                    <div class="section-title">Signal Decomposition Example</div>
+                    <div class="section-subtitle">Breaking down complex signals into frequency components</div>
+                </div>
+            </div>
+            
+            <div class="decomposition-container">
+                <div class="signal-box input-signal">
+                    <div class="signal-label">Input Signal (Time Domain)</div>
+                    <svg viewBox="0 0 200 80" class="wave-svg">
+                        <!-- Complex wave (sum of frequencies) -->
+                        <path d="M 0,40 Q 10,20 20,30 T 40,35 T 60,38 T 80,42 T 100,40 T 120,38 T 140,35 T 160,32 T 180,35 T 200,40" 
+                              stroke="#1E64C8" stroke-width="2" fill="none"/>
+                        <line x1="0" y1="40" x2="200" y2="40" stroke="#ccc" stroke-width="1"/>
+                    </svg>
+                    <div class="signal-desc">Mixed Signal</div>
+                </div>
+                
+                <div class="fft-arrow">
+                    <div class="arrow-symbol">FFT →</div>
+                </div>
+                
+                <div class="frequency-components">
+                    <div class="signal-box component">
+                        <div class="signal-label">Low Frequency</div>
+                        <svg viewBox="0 0 200 60" class="wave-svg small">
+                            <path d="M 0,30 Q 50,10 100,30 T 200,30" 
+                                  stroke="#FF6B6B" stroke-width="2" fill="none"/>
+                            <line x1="0" y1="30" x2="200" y2="30" stroke="#ccc" stroke-width="1"/>
+                        </svg>
+                        <div class="freq-label">f₁ = 2 Hz</div>
+                    </div>
+                    
+                    <div class="plus-symbol">+</div>
+                    
+                    <div class="signal-box component">
+                        <div class="signal-label">Medium Frequency</div>
+                        <svg viewBox="0 0 200 60" class="wave-svg small">
+                            <path d="M 0,30 Q 12.5,15 25,30 T 50,30 T 75,30 T 100,30 T 125,30 T 150,30 T 175,30 T 200,30" 
+                                  stroke="#4ECDC4" stroke-width="2" fill="none"/>
+                            <line x1="0" y1="30" x2="200" y2="30" stroke="#ccc" stroke-width="1"/>
+                        </svg>
+                        <div class="freq-label">f₂ = 5 Hz</div>
+                    </div>
+                    
+                    <div class="plus-symbol">+</div>
+                    
+                    <div class="signal-box component">
+                        <div class="signal-label">High Frequency</div>
+                        <svg viewBox="0 0 200 60" class="wave-svg small">
+                            <path d="M 0,30 Q 5,20 10,30 T 20,30 T 30,30 T 40,30 T 50,30 T 60,30 T 70,30 T 80,30 T 90,30 T 100,30 T 110,30 T 120,30 T 130,30 T 140,30 T 150,30 T 160,30 T 170,30 T 180,30 T 190,30 T 200,30" 
+                                  stroke="#95E1D3" stroke-width="2" fill="none"/>
+                            <line x1="0" y1="30" x2="200" y2="30" stroke="#ccc" stroke-width="1"/>
+                        </svg>
+                        <div class="freq-label">f₃ = 10 Hz</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="formula-note">
+                <span class="note-icon">💡</span>
+                <span class="note-text">Any periodic signal can be represented as: x(t) = A₁sin(2πf₁t) + A₂sin(2πf₂t) + A₃sin(2πf₃t) + ...</span>
             </div>
         </div>
     </div>

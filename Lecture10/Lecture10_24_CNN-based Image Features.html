@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CNN-based Image Features</title>
+    <title>CNN-based Image Features - Extended</title>
     <style>
         * {
             margin: 0;
@@ -14,17 +14,17 @@
         body {
             font-family: 'Aptos', 'Segoe UI', sans-serif;
             background: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
+            padding: 40px 20px;
         }
         
-        .container {
+        .slide {
             width: 960px;
-            height: 540px;
-            position: relative;
+            min-height: 540px;
+            margin: 0 auto 40px;
             padding: 30px;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            page-break-after: always;
         }
         
         .title {
@@ -33,6 +33,16 @@
             color: #1E64C8;
             margin-bottom: 20px;
             text-align: center;
+        }
+        
+        .subtitle {
+            font-size: 22px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+            text-align: center;
+            border-bottom: 2px solid #1E64C8;
+            padding-bottom: 10px;
         }
         
         .intro-box {
@@ -179,10 +189,153 @@
             font-size: 16px;
             opacity: 0.95;
         }
+        
+        /* 역사적 맥락 스타일 */
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .timeline-item {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+        
+        .timeline-year {
+            background: #1E64C8;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 18px;
+            min-width: 90px;
+            text-align: center;
+        }
+        
+        .timeline-content {
+            flex: 1;
+            background: #F0F6FF;
+            border-left: 4px solid #1E64C8;
+            padding: 12px 18px;
+            border-radius: 5px;
+        }
+        
+        .timeline-title {
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 5px;
+            font-size: 17px;
+        }
+        
+        .timeline-desc {
+            color: #555;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+        
+        /* CNN 구조 스타일 */
+        .architecture-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .arch-block {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px 16px;
+            text-align: center;
+            min-width: 120px;
+        }
+        
+        .arch-block-title {
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+        
+        .arch-block-desc {
+            font-size: 14px;
+            color: #555;
+        }
+        
+        .arch-arrow {
+            color: #1E64C8;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        /* 연산 설명 스타일 */
+        .operation-section {
+            margin-bottom: 20px;
+        }
+        
+        .operation-header {
+            background: #1E64C8;
+            color: white;
+            padding: 10px 16px;
+            border-radius: 8px 8px 0 0;
+            font-weight: 600;
+            font-size: 17px;
+        }
+        
+        .operation-body {
+            background: #F0F6FF;
+            border: 2px solid #1E64C8;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            padding: 15px 16px;
+        }
+        
+        .operation-item {
+            margin-bottom: 12px;
+        }
+        
+        .operation-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .operation-label {
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+            font-size: 15px;
+        }
+        
+        .operation-text {
+            color: #555;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+        
+        .grid-2col {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        @media print {
+            body {
+                padding: 0;
+            }
+            .slide {
+                box-shadow: none;
+                margin-bottom: 0;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
+    <!-- Slide 1: 기본 개념 -->
+    <div class="slide">
         <div class="title">CNN-based Image Features</div>
         
         <div class="intro-box">
@@ -233,5 +386,325 @@
             </div>
         </div>
     </div>
+
+    <!-- Slide 2: Historical Context -->
+    <div class="slide">
+        <div class="subtitle">Historical Context of CNNs</div>
+        
+        <div class="intro-box">
+            The evolution of Convolutional Neural Networks in computer vision
+        </div>
+        
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-year">1989</div>
+                <div class="timeline-content">
+                    <div class="timeline-title">LeNet (Yann LeCun)</div>
+                    <div class="timeline-desc">First successful CNN, used for handwritten digit recognition. Applied to automatic postal code recognition systems</div>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-year">2012</div>
+                <div class="timeline-content">
+                    <div class="timeline-title">AlexNet (ImageNet Challenge)</div>
+                    <div class="timeline-desc">Marked the resurgence of deep learning. Achieved overwhelming performance through large-scale GPU training</div>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-year">2014</div>
+                <div class="timeline-content">
+                    <div class="timeline-title">VGGNet & GoogLeNet</div>
+                    <div class="timeline-desc">Explored deeper network architectures. VGG featured simple, uniform structure; GoogLeNet introduced Inception modules</div>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-year">2015</div>
+                <div class="timeline-content">
+                    <div class="timeline-title">ResNet (Residual Networks)</div>
+                    <div class="timeline-desc">Enabled training of very deep networks (152 layers) with skip connections. Achieved human-level image recognition performance</div>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-year">2017+</div>
+                <div class="timeline-content">
+                    <div class="timeline-title">Modern Architectures</div>
+                    <div class="timeline-desc">Emergence of modern architectures like EfficientNet and Vision Transformer (ViT) pursuing both efficiency and performance</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 3: CNN Layer Architecture -->
+    <div class="slide">
+        <div class="subtitle">CNN Layer Architecture</div>
+        
+        <div class="intro-box">
+            Typical structure of a Convolutional Neural Network
+        </div>
+        
+        <div class="architecture-flow">
+            <div class="arch-block">
+                <div class="arch-block-title">Input</div>
+                <div class="arch-block-desc">Image<br>(H×W×C)</div>
+            </div>
+            
+            <div class="arch-arrow">→</div>
+            
+            <div class="arch-block">
+                <div class="arch-block-title">Conv Layer</div>
+                <div class="arch-block-desc">Feature<br>Extraction</div>
+            </div>
+            
+            <div class="arch-arrow">→</div>
+            
+            <div class="arch-block">
+                <div class="arch-block-title">Activation</div>
+                <div class="arch-block-desc">ReLU, etc.</div>
+            </div>
+            
+            <div class="arch-arrow">→</div>
+            
+            <div class="arch-block">
+                <div class="arch-block-title">Pooling</div>
+                <div class="arch-block-desc">Down-<br>sampling</div>
+            </div>
+            
+            <div class="arch-arrow">→</div>
+            
+            <div class="arch-block">
+                <div class="arch-block-title">...</div>
+                <div class="arch-block-desc">Repeat</div>
+            </div>
+            
+            <div class="arch-arrow">→</div>
+            
+            <div class="arch-block">
+                <div class="arch-block-title">FC Layer</div>
+                <div class="arch-block-desc">Classification</div>
+            </div>
+            
+            <div class="arch-arrow">→</div>
+            
+            <div class="arch-block">
+                <div class="arch-block-title">Output</div>
+                <div class="arch-block-desc">Prediction</div>
+            </div>
+        </div>
+        
+        <div class="features-grid" style="margin-top: 25px;">
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <div class="feature-text"><strong>Convolutional Layers:</strong> Extract local features from images</div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <div class="feature-text"><strong>Activation Functions:</strong> Add non-linearity (mainly ReLU)</div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <div class="feature-text"><strong>Pooling Layers:</strong> Reduce spatial dimensions and achieve invariance</div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🔗</div>
+                <div class="feature-text"><strong>Fully Connected:</strong> High-level reasoning and classification</div>
+            </div>
+        </div>
+        
+        <div class="intro-box" style="margin-top: 20px;">
+            <strong>Key Principle:</strong> Learn hierarchical features by repeating Conv-Activation-Pooling blocks multiple times
+        </div>
+    </div>
+
+    <!-- Slide 4: Convolution & Pooling Operations -->
+    <div class="slide">
+        <div class="subtitle">Convolution & Pooling Operations</div>
+        
+        <div class="grid-2col">
+            <div class="operation-section">
+                <div class="operation-header">🔍 Convolution Operation</div>
+                <div class="operation-body">
+                    <div class="operation-item">
+                        <div class="operation-label">How it Works</div>
+                        <div class="operation-text">A small filter (kernel) slides over the image, performing element-wise multiplication and summation</div>
+                    </div>
+                    
+                    <div class="operation-item">
+                        <div class="operation-label">Key Parameters</div>
+                        <div class="operation-text">
+                            • <strong>Filter size:</strong> 3×3, 5×5, etc.<br>
+                            • <strong>Stride:</strong> Step size<br>
+                            • <strong>Padding:</strong> Border handling
+                        </div>
+                    </div>
+                    
+                    <div class="operation-item">
+                        <div class="operation-label">Features</div>
+                        <div class="operation-text">
+                            • Detects local patterns<br>
+                            • Parameter efficiency through weight sharing<br>
+                            • Preserves spatial relationships
+                        </div>
+                    </div>
+                    
+                    <div class="operation-item">
+                        <div class="operation-label">Learning</div>
+                        <div class="operation-text">Filter weights are automatically learned from data through backpropagation</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="operation-section">
+                <div class="operation-header">🔄 Pooling Operation</div>
+                <div class="operation-body">
+                    <div class="operation-item">
+                        <div class="operation-label">Purpose</div>
+                        <div class="operation-text">Reduces spatial dimensions of feature maps, decreases computation, and achieves invariance</div>
+                    </div>
+                    
+                    <div class="operation-item">
+                        <div class="operation-label">Max Pooling</div>
+                        <div class="operation-text">Selects maximum value within window. Preserves strongest features. Most widely used</div>
+                    </div>
+                    
+                    <div class="operation-item">
+                        <div class="operation-label">Average Pooling</div>
+                        <div class="operation-text">Computes average value within window. Extracts smoother features</div>
+                    </div>
+                    
+                    <div class="operation-item">
+                        <div class="operation-label">Advantages</div>
+                        <div class="operation-text">
+                            • Invariance to small translations/deformations<br>
+                            • Reduces overfitting<br>
+                            • Improves computational efficiency<br>
+                            • Expands receptive field
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="intro-box" style="margin-top: 20px;">
+            <strong>💡 Together:</strong> Convolution extracts features, and Pooling compresses and makes them more robust
+        </div>
+    </div>
+
+    <!-- Slide 5: Key Concepts -->
+    <div class="slide">
+        <div class="subtitle">Key Concepts in CNN Operations</div>
+        
+        <div class="operation-section" style="margin-bottom: 15px;">
+            <div class="operation-header">📐 Receptive Field</div>
+            <div class="operation-body">
+                <div class="operation-text">
+                    • The region of input image that a single neuron "sees"<br>
+                    • Deeper layers have wider receptive fields<br>
+                    • Enables capturing larger contextual information
+                </div>
+            </div>
+        </div>
+        
+        <div class="operation-section" style="margin-bottom: 15px;">
+            <div class="operation-header">🔢 Output Size Calculation</div>
+            <div class="operation-body">
+                <div class="operation-text">
+                    Output size = ⌊(Input size - Filter size + 2×Padding) / Stride⌋ + 1<br><br>
+                    Example: Input 32×32, Filter 5×5, stride 1, padding 2<br>
+                    → Output: ⌊(32 - 5 + 4) / 1⌋ + 1 = 32 (size preserved)
+                </div>
+            </div>
+        </div>
+        
+        <div class="grid-2col">
+            <div class="operation-section">
+                <div class="operation-header">✨ Why CNNs Work Well</div>
+                <div class="operation-body">
+                    <div class="operation-text">
+                        <strong>1. Translation Invariance:</strong><br>
+                        Can recognize objects even when their position changes<br><br>
+                        <strong>2. Hierarchical Learning:</strong><br>
+                        Simple features → Complex features<br><br>
+                        <strong>3. Parameter Sharing:</strong><br>
+                        Same filter applied across entire image<br><br>
+                        <strong>4. Sparse Connectivity:</strong><br>
+                        Efficient learning through local connections
+                    </div>
+                </div>
+            </div>
+            
+            <div class="operation-section">
+                <div class="operation-header">🎨 Feature Visualization</div>
+                <div class="operation-body">
+                    <div class="operation-text">
+                        <strong>Early layers:</strong><br>
+                        Basic elements like edges, corners, color blobs<br><br>
+                        <strong>Middle layers:</strong><br>
+                        Textures, repetitive patterns, object parts<br><br>
+                        <strong>Deep layers:</strong><br>
+                        Complete objects, scenes, semantic concepts<br><br>
+                        Filters in each layer learn increasingly<br>
+                        complex and abstract features
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 6: Interactive Learning Resource -->
+    <div class="slide">
+        <div class="subtitle">Interactive Learning Resource</div>
+        
+        <div class="intro-box" style="margin-bottom: 25px;">
+            Experience how CNNs work and visually understand the impact of hyperparameters
+        </div>
+        
+        <div style="background: linear-gradient(135deg, #1E64C8 0%, #4A90E2 100%); border-radius: 15px; padding: 40px; text-align: center; color: white; margin-bottom: 25px;">
+            <div style="font-size: 48px; margin-bottom: 20px;">🧪</div>
+            <div style="font-size: 28px; font-weight: 600; margin-bottom: 15px;">CNN Explainer</div>
+            <div style="font-size: 18px; margin-bottom: 25px; opacity: 0.95;">Interactive visualization of Convolutional Neural Networks</div>
+            <a href="https://poloclub.github.io/cnn-explainer/" target="_blank" style="display: inline-block; background: white; color: #1E64C8; padding: 15px 40px; border-radius: 10px; text-decoration: none; font-weight: 600; font-size: 18px; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                🔗 Visit CNN Explainer
+            </a>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🎮</div>
+                <div class="feature-text"><strong>Interactive Demo:</strong> Visualize what happens in each CNN layer in real-time</div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">⚙️</div>
+                <div class="feature-text"><strong>Hyperparameters:</strong> Directly see the effects of kernel size, stride, padding, etc.</div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <div class="feature-text"><strong>Feature Maps:</strong> Observe outputs and activations of each layer in real-time</div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🎓</div>
+                <div class="feature-text"><strong>Educational:</strong> The best tool to intuitively understand how CNNs work</div>
+            </div>
+        </div>
+        
+        <div style="background: #F0F6FF; border-left: 4px solid #1E64C8; padding: 15px 20px; margin-top: 20px; border-radius: 5px;">
+            <div style="font-weight: 600; color: #1E64C8; margin-bottom: 8px; font-size: 16px;">💡 Learning Tips</div>
+            <div style="color: #555; font-size: 15px; line-height: 1.6;">
+                • Start with the "Understanding Hyperparameters" section to learn basic concepts<br>
+                • Change various hyperparameter values and observe how the output changes<br>
+                • Follow step-by-step how CNNs respond to real images
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>

@@ -22,7 +22,7 @@
         
         .container {
             width: 960px;
-            height: 540px;
+            min-height: 540px;
             position: relative;
             padding: 30px;
         }
@@ -151,6 +151,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
+            margin-bottom: 20px;
         }
         
         .tradeoff-icon {
@@ -171,6 +172,82 @@
         .tradeoff-text {
             font-size: 16px;
             color: #333;
+        }
+        
+        .example-section {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 18px 20px;
+            margin-top: 15px;
+        }
+        
+        .example-section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 15px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .process-box {
+            background: #F0F6FF;
+            border-radius: 8px;
+            padding: 12px 15px;
+        }
+        
+        .process-step {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .process-content {
+            font-size: 14px;
+            color: #333;
+            font-family: 'Courier New', monospace;
+            line-height: 1.6;
+            padding-left: 10px;
+        }
+        
+        .arrow {
+            text-align: center;
+            color: #1E64C8;
+            font-size: 20px;
+            margin: 8px 0;
+            font-weight: bold;
+        }
+        
+        .result-box {
+            background: white;
+            border: 2px solid #4CAF50;
+            border-radius: 8px;
+            padding: 10px 12px;
+        }
+        
+        .result-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: #4CAF50;
+            margin-bottom: 6px;
+        }
+        
+        .result-content {
+            font-size: 14px;
+            color: #333;
+            font-family: 'Courier New', monospace;
+            line-height: 1.6;
         }
     </style>
 </head>
@@ -231,6 +308,84 @@
             <div class="tradeoff-content">
                 <div class="tradeoff-label">Trade-off</div>
                 <div class="tradeoff-text">Between context capture and computational complexity (N-grams increase feature space)</div>
+            </div>
+        </div>
+        
+        <!-- Practical Examples Section -->
+        <div class="example-section">
+            <div class="example-section-title">
+                <span>💡</span>
+                <span>Practical Processing Examples</span>
+            </div>
+            
+            <div class="examples-grid">
+                <!-- N-gram Processing Example -->
+                <div>
+                    <div class="process-box">
+                        <div class="process-step">1️⃣ Input Sentence:</div>
+                        <div class="process-content">"I love machine learning"</div>
+                    </div>
+                    
+                    <div class="arrow">↓</div>
+                    
+                    <div class="process-box">
+                        <div class="process-step">2️⃣ N-gram Extraction:</div>
+                        <div class="process-content">
+                            Unigrams (1):<br>
+                            ["I", "love", "machine", "learning"]<br><br>
+                            Bigrams (2):<br>
+                            ["I love", "love machine", "machine learning"]<br><br>
+                            Trigrams (3):<br>
+                            ["I love machine", "love machine learning"]
+                        </div>
+                    </div>
+                    
+                    <div class="arrow">↓</div>
+                    
+                    <div class="result-box">
+                        <div class="result-label">✨ Features Generated:</div>
+                        <div class="result-content">
+                            Feature Vector:<br>
+                            [1, 1, 1, 1, 1, 1, 1, ...]<br>
+                            (Total: 4 unigrams + 3 bigrams + 2 trigrams)
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- POS Tagging Example -->
+                <div>
+                    <div class="process-box">
+                        <div class="process-step">1️⃣ Input Sentence:</div>
+                        <div class="process-content">"The quick brown fox jumps"</div>
+                    </div>
+                    
+                    <div class="arrow">↓</div>
+                    
+                    <div class="process-box">
+                        <div class="process-step">2️⃣ POS Tagging:</div>
+                        <div class="process-content">
+                            The/DET quick/ADJ brown/ADJ<br>
+                            fox/NOUN jumps/VERB<br><br>
+                            Tags Extracted:<br>
+                            • DET: Determiner (1)<br>
+                            • ADJ: Adjective (2)<br>
+                            • NOUN: Noun (1)<br>
+                            • VERB: Verb (1)
+                        </div>
+                    </div>
+                    
+                    <div class="arrow">↓</div>
+                    
+                    <div class="result-box">
+                        <div class="result-label">✨ Features Generated:</div>
+                        <div class="result-content">
+                            POS Pattern:<br>
+                            "DET-ADJ-ADJ-NOUN-VERB"<br><br>
+                            POS Counts:<br>
+                            [DET:1, ADJ:2, NOUN:1, VERB:1]
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

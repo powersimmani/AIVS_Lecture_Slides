@@ -15,16 +15,25 @@
             font-family: 'Aptos', 'Segoe UI', sans-serif;
             background: white;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
             padding: 20px;
+            gap: 30px;
         }
         
         .container {
             width: 960px;
-            height: 540px;
             position: relative;
             padding: 30px;
+        }
+        
+        .slide {
+            min-height: 540px;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 30px;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         
         .title {
@@ -180,67 +189,430 @@
             font-weight: 700;
             margin-right: 8px;
         }
+        
+        /* Example styles */
+        .example-section {
+            margin-top: 25px;
+        }
+        
+        .section-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 20px;
+            text-align: center;
+            padding: 10px;
+            background: #F0F6FF;
+            border-radius: 8px;
+        }
+        
+        .documents-box {
+            background: #FFF9E6;
+            border: 2px solid #FFA000;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .doc-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #F57C00;
+            margin-bottom: 10px;
+        }
+        
+        .document {
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 8px;
+            font-size: 15px;
+            color: #333;
+        }
+        
+        .doc-label {
+            font-weight: 600;
+            color: #F57C00;
+            margin-right: 8px;
+        }
+        
+        .step-container {
+            margin-bottom: 20px;
+        }
+        
+        .step-header {
+            background: #E3F2FD;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-size: 17px;
+            font-weight: 600;
+            color: #1565C0;
+            margin-bottom: 12px;
+        }
+        
+        .vocabulary-box {
+            background: #F3E5F5;
+            border: 2px solid #9C27B0;
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin-bottom: 15px;
+        }
+        
+        .vocab-label {
+            font-weight: 600;
+            color: #7B1FA2;
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+        
+        .vocab-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .vocab-item {
+            background: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 14px;
+            color: #7B1FA2;
+            border: 1px solid #9C27B0;
+        }
+        
+        .matrix-container {
+            overflow-x: auto;
+            margin-bottom: 15px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            font-size: 14px;
+        }
+        
+        th {
+            background: #1E64C8;
+            color: white;
+            padding: 10px 8px;
+            text-align: center;
+            font-weight: 600;
+            border: 1px solid #1565C0;
+        }
+        
+        td {
+            padding: 8px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        
+        .doc-col {
+            background: #E3F2FD;
+            font-weight: 600;
+            color: #1565C0;
+        }
+        
+        .formula-box {
+            background: #FFF3E0;
+            border: 2px solid #FF9800;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .formula-title {
+            font-weight: 600;
+            color: #E65100;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .formula {
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 15px;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .calc-example {
+            background: #E8F5E9;
+            border-left: 4px solid #4CAF50;
+            padding: 10px;
+            margin: 8px 0;
+            font-size: 14px;
+            border-radius: 4px;
+        }
+        
+        .calc-label {
+            font-weight: 600;
+            color: #2E7D32;
+        }
+        
+        .highlight {
+            background: #FFEB3B;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+        
+        .note-box {
+            background: #E1F5FE;
+            border-left: 4px solid #03A9F4;
+            padding: 12px;
+            margin-top: 15px;
+            border-radius: 4px;
+            font-size: 15px;
+            color: #01579B;
+        }
+        
+        .note-icon {
+            font-weight: 700;
+            margin-right: 8px;
+        }
     </style>
 </head>
 <body>
+    <!-- Original Slide -->
     <div class="container">
-        <div class="title">Text Feature Extraction: BoW & TF-IDF</div>
-        
-        <div class="methods-container">
-            <div class="method-box">
-                <div class="method-header">
-                    <div class="method-icon">📊</div>
-                    <div class="method-title">Bag of Words (BoW)</div>
+        <div class="slide">
+            <div class="title">Text Feature Extraction: BoW & TF-IDF</div>
+            
+            <div class="methods-container">
+                <div class="method-box">
+                    <div class="method-header">
+                        <div class="method-icon">📊</div>
+                        <div class="method-title">Bag of Words (BoW)</div>
+                    </div>
+                    <div class="method-definition">
+                        Represents text as word frequency counts
+                    </div>
+                    <ul class="method-features">
+                        <li class="feature-item">Ignores word order and grammar</li>
+                        <li class="feature-item">Only considers word occurrence</li>
+                        <li class="feature-item">Simple frequency-based representation</li>
+                    </ul>
                 </div>
-                <div class="method-definition">
-                    Represents text as word frequency counts
+                
+                <div class="method-box">
+                    <div class="method-header">
+                        <div class="method-icon">⚖️</div>
+                        <div class="method-title">TF-IDF</div>
+                    </div>
+                    <div class="method-definition">
+                        Term Frequency-Inverse Document Frequency weighting
+                    </div>
+                    <ul class="method-features">
+                        <li class="feature-item">Balances local and global importance</li>
+                        <li class="feature-item">Reduces weight of common words</li>
+                        <li class="feature-item">Increases weight of rare words</li>
+                    </ul>
                 </div>
-                <ul class="method-features">
-                    <li class="feature-item">Ignores word order and grammar</li>
-                    <li class="feature-item">Only considers word occurrence</li>
-                    <li class="feature-item">Simple frequency-based representation</li>
-                </ul>
             </div>
             
-            <div class="method-box">
-                <div class="method-header">
-                    <div class="method-icon">⚖️</div>
-                    <div class="method-title">TF-IDF</div>
+            <div class="tfidf-components">
+                <div class="comp-title">TF-IDF Components</div>
+                <div class="comp-grid">
+                    <div class="comp-box">
+                        <div class="comp-label">TF (Term Frequency)</div>
+                        <div class="comp-desc">How often word appears in document (local importance)</div>
+                    </div>
+                    <div class="multiply-sign">×</div>
+                    <div class="comp-box">
+                        <div class="comp-label">IDF (Inverse Document Frequency)</div>
+                        <div class="comp-desc">How rare word is across documents (global importance)</div>
+                    </div>
                 </div>
-                <div class="method-definition">
-                    Term Frequency-Inverse Document Frequency weighting
-                </div>
-                <ul class="method-features">
-                    <li class="feature-item">Balances local and global importance</li>
-                    <li class="feature-item">Reduces weight of common words</li>
-                    <li class="feature-item">Increases weight of rare words</li>
-                </ul>
             </div>
-        </div>
-        
-        <div class="tfidf-components">
-            <div class="comp-title">TF-IDF Components</div>
-            <div class="comp-grid">
-                <div class="comp-box">
-                    <div class="comp-label">TF (Term Frequency)</div>
-                    <div class="comp-desc">How often word appears in document (local importance)</div>
+            
+            <div class="tradeoffs">
+                <div class="tradeoff-box pros">
+                    <span class="label">✓ Advantages:</span>
+                    Simple and interpretable
                 </div>
-                <div class="multiply-sign">×</div>
-                <div class="comp-box">
-                    <div class="comp-label">IDF (Inverse Document Frequency)</div>
-                    <div class="comp-desc">How rare word is across documents (global importance)</div>
+                <div class="tradeoff-box cons">
+                    <span class="label">✗ Limitations:</span>
+                    Loses semantic and syntactic information
                 </div>
             </div>
         </div>
-        
-        <div class="tradeoffs">
-            <div class="tradeoff-box pros">
-                <span class="label">✓ Advantages:</span>
-                Simple and interpretable
+    </div>
+
+    <!-- Example Slide 1: BoW -->
+    <div class="container">
+        <div class="slide">
+            <div class="section-title">📊 Bag of Words (BoW) - Practical Example</div>
+            
+            <div class="documents-box">
+                <div class="doc-title">📄 Example Documents:</div>
+                <div class="document">
+                    <span class="doc-label">Doc 1:</span>"I love machine learning"
+                </div>
+                <div class="document">
+                    <span class="doc-label">Doc 2:</span>"Machine learning is amazing"
+                </div>
+                <div class="document">
+                    <span class="doc-label">Doc 3:</span>"I love deep learning"
+                </div>
             </div>
-            <div class="tradeoff-box cons">
-                <span class="label">✗ Limitations:</span>
-                Loses semantic and syntactic information
+
+            <div class="step-container">
+                <div class="step-header">Step 1: Build Vocabulary</div>
+                <div class="vocabulary-box">
+                    <div class="vocab-label">Unique words across all documents:</div>
+                    <div class="vocab-items">
+                        <span class="vocab-item">I</span>
+                        <span class="vocab-item">love</span>
+                        <span class="vocab-item">machine</span>
+                        <span class="vocab-item">learning</span>
+                        <span class="vocab-item">is</span>
+                        <span class="vocab-item">amazing</span>
+                        <span class="vocab-item">deep</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-container">
+                <div class="step-header">Step 2: Count Word Frequencies</div>
+                <div class="matrix-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Document</th>
+                                <th>I</th>
+                                <th>love</th>
+                                <th>machine</th>
+                                <th>learning</th>
+                                <th>is</th>
+                                <th>amazing</th>
+                                <th>deep</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="doc-col">Doc 1</td>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td class="doc-col">Doc 2</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td class="doc-col">Doc 3</td>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>0</td>
+                                <td>1</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>1</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="note-box">
+                <span class="note-icon">💡</span>
+                <strong>Result Interpretation:</strong> Each document is represented as a 7-dimensional vector. Example: Doc 1 = [1, 1, 1, 1, 0, 0, 0]
+                <br>→ Word order and grammar are ignored; only word occurrence counts are considered.
+            </div>
+        </div>
+    </div>
+
+    <!-- Example Slide 2: TF-IDF -->
+    <div class="container">
+        <div class="slide">
+            <div class="section-title">⚖️ TF-IDF - Practical Example</div>
+            
+            <div class="documents-box">
+                <div class="doc-title">📄 Same Example Documents:</div>
+                <div class="document">
+                    <span class="doc-label">Doc 1:</span>"I love machine learning"
+                </div>
+                <div class="document">
+                    <span class="doc-label">Doc 2:</span>"Machine learning is amazing"
+                </div>
+                <div class="document">
+                    <span class="doc-label">Doc 3:</span>"I love deep learning"
+                </div>
+            </div>
+
+            <div class="formula-box">
+                <div class="formula-title">📐 TF-IDF Formula:</div>
+                <div class="formula">
+                    TF-IDF(word, doc) = TF(word, doc) × IDF(word)
+                </div>
+                <div class="formula">
+                    TF(word, doc) = (word count in doc) / (total words in doc)
+                </div>
+                <div class="formula">
+                    IDF(word) = log(total documents / documents containing word)
+                </div>
+            </div>
+
+            <div class="step-container">
+                <div class="step-header">Example: Calculate TF-IDF for "learning" in Doc 1</div>
+                
+                <div class="calc-example">
+                    <div class="calc-label">Step 1: Calculate TF</div>
+                    TF("learning", Doc 1) = 1 / 4 = <span class="highlight">0.25</span>
+                    <br><small>(appears 1 time / total 4 words)</small>
+                </div>
+
+                <div class="calc-example">
+                    <div class="calc-label">Step 2: Calculate IDF</div>
+                    IDF("learning") = log(3 / 3) = log(1) = <span class="highlight">0</span>
+                    <br><small>(3 documents / 3 documents containing "learning")</small>
+                </div>
+
+                <div class="calc-example">
+                    <div class="calc-label">Step 3: Calculate TF-IDF</div>
+                    TF-IDF("learning", Doc 1) = 0.25 × 0 = <span class="highlight">0</span>
+                    <br><small>→ "learning" appears in all documents, so it has low importance!</small>
+                </div>
+            </div>
+
+            <div class="step-container">
+                <div class="step-header">Example: Calculate TF-IDF for "deep" in Doc 3</div>
+                
+                <div class="calc-example">
+                    <div class="calc-label">Step 1: Calculate TF</div>
+                    TF("deep", Doc 3) = 1 / 4 = <span class="highlight">0.25</span>
+                </div>
+
+                <div class="calc-example">
+                    <div class="calc-label">Step 2: Calculate IDF</div>
+                    IDF("deep") = log(3 / 1) = log(3) ≈ <span class="highlight">1.099</span>
+                    <br><small>("deep" appears in only 1 document → rare word)</small>
+                </div>
+
+                <div class="calc-example">
+                    <div class="calc-label">Step 3: Calculate TF-IDF</div>
+                    TF-IDF("deep", Doc 3) = 0.25 × 1.099 ≈ <span class="highlight">0.275</span>
+                    <br><small>→ "deep" is a rare word, so it has high importance!</small>
+                </div>
+            </div>
+
+            <div class="note-box">
+                <span class="note-icon">💡</span>
+                <strong>Key Point:</strong> TF-IDF reduces the weight of common words (e.g., "learning") 
+                and increases the weight of rare words (e.g., "deep") to better represent document characteristics.
             </div>
         </div>
     </div>

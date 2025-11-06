@@ -22,7 +22,7 @@
         
         .container {
             width: 960px;
-            height: 540px;
+            min-height: 540px;
             position: relative;
             padding: 30px;
         }
@@ -168,6 +168,82 @@
             font-size: 16px;
             color: #333;
         }
+        
+        .example-section {
+            background: #FFF9E6;
+            border: 2px solid #FFA500;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .example-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #FF8C00;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .frame-sequence {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .frame-item {
+            flex: 0 0 auto;
+        }
+        
+        .frame-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 10px 15px;
+            text-align: center;
+            min-width: 80px;
+        }
+        
+        .frame-item.keyframe .frame-box {
+            background: #FFE5B4;
+            border-color: #FFA500;
+            border-width: 3px;
+        }
+        
+        .frame-number {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+        
+        .frame-label {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .arrow {
+            font-size: 20px;
+            color: #1E64C8;
+            font-weight: bold;
+        }
+        
+        .composition-note {
+            background: white;
+            border-radius: 6px;
+            padding: 12px;
+            font-size: 14px;
+            color: #333;
+            text-align: center;
+            line-height: 1.5;
+        }
+        
+        .composition-note strong {
+            color: #FF8C00;
+        }
     </style>
 </head>
 <body>
@@ -223,6 +299,60 @@
             <div class="opt-content">
                 <div class="opt-title">Optimization Strategy</div>
                 <div class="opt-detail">Can be decomposed into keyframes for efficient processing</div>
+            </div>
+        </div>
+        
+        <div class="example-section">
+            <div class="example-title">📹 How Video is Composed</div>
+            
+            <div class="frame-sequence">
+                <div class="frame-item keyframe">
+                    <div class="frame-box">
+                        <div class="frame-number">Frame 1</div>
+                        <div class="frame-label">🔑 Keyframe</div>
+                    </div>
+                </div>
+                
+                <div class="arrow">→</div>
+                
+                <div class="frame-item">
+                    <div class="frame-box">
+                        <div class="frame-number">Frame 2</div>
+                        <div class="frame-label">📊 Delta</div>
+                    </div>
+                </div>
+                
+                <div class="arrow">→</div>
+                
+                <div class="frame-item">
+                    <div class="frame-box">
+                        <div class="frame-number">Frame 3</div>
+                        <div class="frame-label">📊 Delta</div>
+                    </div>
+                </div>
+                
+                <div class="arrow">→</div>
+                
+                <div class="frame-item keyframe">
+                    <div class="frame-box">
+                        <div class="frame-number">Frame 4</div>
+                        <div class="frame-label">🔑 Keyframe</div>
+                    </div>
+                </div>
+                
+                <div class="arrow">→</div>
+                
+                <div class="frame-item">
+                    <div class="frame-box">
+                        <div class="frame-number">...</div>
+                        <div class="frame-label">⏩</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="composition-note">
+                <strong>💡 Key Concept:</strong> Video = Sequence of frames where keyframes store complete information, 
+                and intermediate frames only store changes (deltas) from previous frames
             </div>
         </div>
     </div>

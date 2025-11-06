@@ -16,13 +16,13 @@
             background: white;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             padding: 20px;
+            min-height: 100vh;
         }
         
         .container {
             width: 960px;
-            height: 540px;
             position: relative;
             padding: 30px;
         }
@@ -146,6 +146,7 @@
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 15px;
+            margin-bottom: 20px;
         }
         
         .benefit-card {
@@ -167,6 +168,149 @@
             font-size: 16px;
             color: #333;
             font-weight: 500;
+            line-height: 1.4;
+        }
+        
+        .examples-section {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .examples-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .example-row {
+            margin-bottom: 20px;
+        }
+        
+        .example-row:last-child {
+            margin-bottom: 0;
+        }
+        
+        .example-header {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .comparison-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        
+        .image-box {
+            background: #F0F6FF;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .image-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+        }
+        
+        .visual-demo {
+            width: 100%;
+            height: 140px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .original-image {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+        }
+        
+        .building-shape {
+            width: 80px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.3);
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 4px;
+        }
+        
+        .window {
+            width: 12px;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.6);
+            position: absolute;
+            border-radius: 2px;
+        }
+        
+        .edge-result {
+            background: white;
+            border: 2px solid #ddd;
+        }
+        
+        .edge-lines {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .edge-line {
+            position: absolute;
+            background: #000;
+        }
+        
+        .vertical-line {
+            width: 3px;
+            height: 100px;
+            bottom: 20px;
+        }
+        
+        .horizontal-line {
+            height: 3px;
+            width: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .corner-result {
+            background: white;
+            border: 2px solid #ddd;
+            position: relative;
+        }
+        
+        .corner-point {
+            width: 10px;
+            height: 10px;
+            background: #FF0000;
+            border-radius: 50%;
+            position: absolute;
+            border: 2px solid white;
+        }
+        
+        .description {
+            font-size: 13px;
+            color: #666;
             line-height: 1.4;
         }
     </style>
@@ -227,6 +371,101 @@
             <div class="benefit-card">
                 <div class="benefit-icon">🔄</div>
                 <div class="benefit-text">Resilient to minor transformations</div>
+            </div>
+        </div>
+        
+        <div class="examples-section">
+            <div class="examples-title">🖼️ Visual Examples</div>
+            
+            <div class="example-row">
+                <div class="example-header">
+                    <span>🏢</span>
+                    <span>Edge Detection - Building Example</span>
+                </div>
+                <div class="comparison-container">
+                    <div class="image-box">
+                        <div class="image-label">Original Image</div>
+                        <div class="visual-demo original-image">
+                            <div class="building-shape">
+                                <div class="window" style="top: 15px; left: 15px;"></div>
+                                <div class="window" style="top: 15px; right: 15px;"></div>
+                                <div class="window" style="top: 35px; left: 15px;"></div>
+                                <div class="window" style="top: 35px; right: 15px;"></div>
+                                <div class="window" style="top: 55px; left: 15px;"></div>
+                                <div class="window" style="top: 55px; right: 15px;"></div>
+                            </div>
+                        </div>
+                        <div class="description">Full color building with texture and details</div>
+                    </div>
+                    
+                    <div class="image-box">
+                        <div class="image-label">Sobel/Canny Edge</div>
+                        <div class="visual-demo edge-result">
+                            <div class="edge-lines">
+                                <div class="edge-line vertical-line" style="left: 30%;"></div>
+                                <div class="edge-line vertical-line" style="right: 30%;"></div>
+                                <div class="edge-line horizontal-line" style="top: 20px;"></div>
+                                <div class="edge-line horizontal-line" style="bottom: 20px;"></div>
+                                <div class="edge-line" style="width: 12px; height: 3px; top: 35px; left: 32%;"></div>
+                                <div class="edge-line" style="width: 12px; height: 3px; top: 35px; right: 32%;"></div>
+                                <div class="edge-line" style="width: 12px; height: 3px; top: 55px; left: 32%;"></div>
+                                <div class="edge-line" style="width: 12px; height: 3px; top: 55px; right: 32%;"></div>
+                                <div class="edge-line" style="width: 12px; height: 3px; top: 75px; left: 32%;"></div>
+                                <div class="edge-line" style="width: 12px; height: 3px; top: 75px; right: 32%;"></div>
+                            </div>
+                        </div>
+                        <div class="description">Outlines extracted - object boundaries detected</div>
+                    </div>
+                    
+                    <div class="image-box">
+                        <div class="image-label">Harris Corner</div>
+                        <div class="visual-demo corner-result">
+                            <div class="edge-lines">
+                                <div class="edge-line vertical-line" style="left: 30%; opacity: 0.3;"></div>
+                                <div class="edge-line vertical-line" style="right: 30%; opacity: 0.3;"></div>
+                                <div class="edge-line horizontal-line" style="top: 20px; opacity: 0.3;"></div>
+                                <div class="edge-line horizontal-line" style="bottom: 20px; opacity: 0.3;"></div>
+                            </div>
+                            <div class="corner-point" style="top: 20px; left: 30%;"></div>
+                            <div class="corner-point" style="top: 20px; right: 30%;"></div>
+                            <div class="corner-point" style="bottom: 20px; left: 30%;"></div>
+                            <div class="corner-point" style="bottom: 20px; right: 30%;"></div>
+                        </div>
+                        <div class="description">Key points identified - useful for matching</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="example-row" style="margin-top: 25px;">
+                <div class="example-header">
+                    <span>📱</span>
+                    <span>Use Cases</span>
+                </div>
+                <div class="comparison-container">
+                    <div class="image-box" style="background: #FFF9E6; border-color: #FFB800;">
+                        <div class="image-label" style="color: #FFB800;">Object Recognition</div>
+                        <div style="padding: 15px 10px;">
+                            <div style="font-size: 40px; margin-bottom: 10px;">🎯</div>
+                            <div class="description" style="color: #333;">Edge detection helps identify object boundaries for classification and recognition</div>
+                        </div>
+                    </div>
+                    
+                    <div class="image-box" style="background: #E8F5FF; border-color: #0080FF;">
+                        <div class="image-label" style="color: #0080FF;">Image Matching</div>
+                        <div style="padding: 15px 10px;">
+                            <div style="font-size: 40px; margin-bottom: 10px;">🔗</div>
+                            <div class="description" style="color: #333;">Corner points serve as landmarks for matching images across different views</div>
+                        </div>
+                    </div>
+                    
+                    <div class="image-box" style="background: #F0FFE8; border-color: #00C853;">
+                        <div class="image-label" style="color: #00C853;">Motion Tracking</div>
+                        <div style="padding: 15px 10px;">
+                            <div style="font-size: 40px; margin-bottom: 10px;">📹</div>
+                            <div class="description" style="color: #333;">Corners are stable features that can be tracked across video frames</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

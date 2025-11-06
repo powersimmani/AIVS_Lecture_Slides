@@ -22,7 +22,7 @@
         
         .container {
             width: 960px;
-            height: 540px;
+            min-height: 540px;
             position: relative;
             padding: 30px;
         }
@@ -157,6 +157,58 @@
             line-height: 1.5;
         }
         
+        .history-section {
+            background: #FFF9E6;
+            border: 2px solid #FFA500;
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin-bottom: 15px;
+        }
+        
+        .history-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #CC8400;
+            margin-bottom: 8px;
+        }
+        
+        .history-content {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .structure-section {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin-bottom: 15px;
+        }
+        
+        .structure-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+        }
+        
+        .structure-content {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .math-example {
+            background: #F0F6FF;
+            border-left: 3px solid #1E64C8;
+            padding: 12px 16px;
+            margin-top: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
         .applications-section {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -237,10 +289,62 @@
             </div>
         </div>
         
+        <div class="history-section">
+            <div class="history-title">📚 Historical Context</div>
+            <div class="history-content">
+                <strong>1980s:</strong> Hinton and Rumelhart pioneered dimensionality reduction using backpropagation<br>
+                <strong>2006:</strong> Hinton's Deep Belief Networks marked the dawn of the deep learning era<br>
+                <strong>2013:</strong> Kingma and Welling proposed the Variational Autoencoder (VAE)<br>
+                <strong>Present:</strong> Evolved into a core technology for generative models, anomaly detection, and representation learning
+            </div>
+        </div>
+        
+        <div class="structure-section">
+            <div class="structure-title">🔬 Structural Details</div>
+            <div class="structure-content">
+                <strong>Encoder:</strong> x → z = f_enc(x; θ_enc)<br>
+                • Compresses input dimension n to latent dimension d (d ≪ n)<br>
+                • Composed of multiple neural network layers (e.g., FC layers, CNNs)<br><br>
+                
+                <strong>Decoder:</strong> z → x̂ = f_dec(z; θ_dec)<br>
+                • Reconstructs original input from latent representation z<br>
+                • Can be symmetric or independent from encoder architecture<br><br>
+                
+                <strong>Loss Function:</strong> L = ||x - x̂||² (reconstruction error)
+            </div>
+        </div>
+        
+        <div class="structure-section">
+            <div class="structure-title">🧮 Vector Operation Example</div>
+            <div class="structure-content">
+                <strong>Simple Example:</strong> 784-dimensional MNIST image → 2-dimensional latent space
+            </div>
+            <div class="math-example">
+Input vector: x ∈ ℝ^784 (28×28 image flattened)<br>
+e.g., x = [0.1, 0.0, 0.8, ..., 0.3]<br><br>
+
+Encoder operations:<br>
+  h₁ = ReLU(W₁x + b₁)    # W₁ ∈ ℝ^(128×784)<br>
+  h₂ = ReLU(W₂h₁ + b₂)   # W₂ ∈ ℝ^(64×128)<br>
+  z = W₃h₂ + b₃          # W₃ ∈ ℝ^(2×64), z ∈ ℝ^2<br>
+  → z = [1.2, -0.5]      # 2D latent vector<br><br>
+
+Decoder operations:<br>
+  h₃ = ReLU(W₄z + b₄)    # W₄ ∈ ℝ^(64×2)<br>
+  h₄ = ReLU(W₅h₃ + b₅)   # W₅ ∈ ℝ^(128×64)<br>
+  x̂ = σ(W₆h₄ + b₆)       # W₆ ∈ ℝ^(784×128)<br>
+  → x̂ = [0.09, 0.02, 0.79, ..., 0.31]<br><br>
+
+Loss: MSE = (1/784) Σ(xᵢ - x̂ᵢ)² = 0.003
+            </div>
+        </div>
+        
         <div class="variants-section">
             <div class="variants-title">🎲 Variational Autoencoders (VAE)</div>
             <div class="variants-content">
-                Learn probabilistic latent distributions for generation and sampling
+                Learn probabilistic latent distributions for generation and sampling<br>
+                • Models latent space as probability distribution in the form z ~ N(μ, σ²)<br>
+                • Learns regularized latent space with additional KL divergence
             </div>
         </div>
         

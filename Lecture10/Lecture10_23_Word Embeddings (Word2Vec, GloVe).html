@@ -22,7 +22,7 @@
         
         .container {
             width: 960px;
-            height: 540px;
+            min-height: 540px;
             position: relative;
             padding: 30px;
         }
@@ -187,6 +187,136 @@
             font-size: 20px;
             font-weight: 700;
         }
+        
+        .training-section {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 16px 18px;
+            margin-top: 18px;
+        }
+        
+        .training-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 14px;
+            text-align: center;
+        }
+        
+        .training-examples {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+        
+        .training-example {
+            background: #F0F6FF;
+            border: 1px solid #1E64C8;
+            border-radius: 8px;
+            padding: 14px;
+        }
+        
+        .example-type {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .example-sentence {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 8px 10px;
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: #333;
+            text-align: center;
+            line-height: 1.6;
+        }
+        
+        .word-highlight {
+            background: #FFE066;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+        
+        .context-highlight {
+            background: #B3D9FF;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+        
+        .example-arrow {
+            text-align: center;
+            font-size: 16px;
+            color: #1E64C8;
+            margin: 6px 0 8px 0;
+            font-weight: 600;
+        }
+        
+        .vector-representation {
+            background: white;
+            border: 1px solid #1E64C8;
+            border-radius: 6px;
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            font-size: 12px;
+            color: #333;
+        }
+        
+        .vector-label {
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+            font-size: 12px;
+        }
+        
+        .vector-box {
+            background: #F8F9FA;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 6px 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            margin-top: 4px;
+        }
+        
+        .neural-network {
+            background: white;
+            border: 1px solid #1E64C8;
+            border-radius: 6px;
+            padding: 8px 10px;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .nn-layer {
+            font-size: 11px;
+            color: #666;
+            margin: 3px 0;
+        }
+        
+        .nn-arrow {
+            color: #1E64C8;
+            font-weight: bold;
+            margin: 2px 0;
+        }
+        
+        .example-task {
+            background: #E8F4FF;
+            border: 1px solid #1E64C8;
+            border-radius: 6px;
+            padding: 8px 10px;
+            font-size: 12px;
+            color: #333;
+            line-height: 1.5;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
@@ -214,7 +344,7 @@
             
             <div class="method-card">
                 <div class="method-header">
-                    <div class="method-icon">🌐</div>
+                    <div class="method-icon">🌍</div>
                     <div class="method-name">GloVe</div>
                 </div>
                 <div class="method-description">
@@ -254,6 +384,77 @@
         
         <div class="dimensions-box">
             ⚙️ Typical Dimensions: <span class="dim-highlight">100-300</span> (vs. thousands in vocabulary size)
+        </div>
+        
+        <div class="training-section">
+            <div class="training-title">📚 Word2Vec Training Process (Window Size = 2)</div>
+            <div class="training-examples">
+                <div class="training-example">
+                    <div class="example-type">CBOW (Continuous Bag of Words)</div>
+                    <div class="example-sentence">
+                        "The <span class="context-highlight">quick</span> <span class="context-highlight">brown</span> <span class="word-highlight">fox</span> <span class="context-highlight">jumps</span> <span class="context-highlight">over</span>"
+                    </div>
+                    
+                    <div class="example-arrow">Step 1: One-Hot Encoding ↓</div>
+                    <div class="vector-representation">
+                        <div class="vector-label">Context Words (Input):</div>
+                        <div class="vector-box">quick: [0,1,0,0,0,...] (vocab size)<br>
+                        brown: [0,0,1,0,0,...]<br>
+                        jumps: [0,0,0,1,0,...]<br>
+                        over: [0,0,0,0,1,...]</div>
+                    </div>
+                    
+                    <div class="neural-network">
+                        <div class="nn-layer">Input Layer (One-Hot)</div>
+                        <div class="nn-arrow">↓</div>
+                        <div class="nn-layer">Hidden Layer (Embeddings)</div>
+                        <div class="nn-arrow">↓</div>
+                        <div class="nn-layer">Output Layer (Softmax)</div>
+                    </div>
+                    
+                    <div class="vector-representation">
+                        <div class="vector-label">Target (Output):</div>
+                        <div class="vector-box">fox: [0,0,0,0,0,1,0,...] (one-hot)</div>
+                    </div>
+                    
+                    <div class="example-task">
+                        🎯 Predict center word from averaged context embeddings
+                    </div>
+                </div>
+                
+                <div class="training-example">
+                    <div class="example-type">Skip-gram</div>
+                    <div class="example-sentence">
+                        "The quick brown <span class="word-highlight">fox</span> jumps over"
+                    </div>
+                    
+                    <div class="example-arrow">Step 1: One-Hot Encoding ↓</div>
+                    <div class="vector-representation">
+                        <div class="vector-label">Center Word (Input):</div>
+                        <div class="vector-box">fox: [0,0,0,0,0,1,0,...] (vocab size)</div>
+                    </div>
+                    
+                    <div class="neural-network">
+                        <div class="nn-layer">Input Layer (One-Hot)</div>
+                        <div class="nn-arrow">↓</div>
+                        <div class="nn-layer">Hidden Layer (Embeddings)</div>
+                        <div class="nn-arrow">↓</div>
+                        <div class="nn-layer">Output Layer (Softmax) ×4</div>
+                    </div>
+                    
+                    <div class="vector-representation">
+                        <div class="vector-label">Target (4 Context Words):</div>
+                        <div class="vector-box">quick: [0,1,0,0,0,...]<br>
+                        brown: [0,0,1,0,0,...]<br>
+                        jumps: [0,0,0,1,0,...]<br>
+                        over: [0,0,0,0,1,...]</div>
+                    </div>
+                    
+                    <div class="example-task">
+                        🎯 Predict each context word from center word embedding
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </body>
