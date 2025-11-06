@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Attention Formulas</title>
+    <title>Attention Formulas with Example</title>
     <style>
         * {
             margin: 0;
@@ -13,18 +13,18 @@
         
         body {
             font-family: Aptos, 'Segoe UI', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: #ffffff;
+            background: #f5f5f5;
+            padding: 40px 0;
         }
         
         .container {
             width: 960px;
-            height: 540px;
+            margin: 0 auto;
             padding: 40px;
-            position: relative;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
         }
         
         .main-title {
@@ -39,7 +39,6 @@
             display: flex;
             flex-direction: column;
             gap: 16px;
-            height: calc(100% - 45px);
         }
         
         /* Formula Steps */
@@ -47,7 +46,6 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
-            flex: 1;
         }
         
         .formula-card {
@@ -203,6 +201,177 @@
         .legend-desc {
             color: #856404;
         }
+
+        /* Example Section Styles */
+        .example-section {
+            margin-top: 40px;
+            padding-top: 40px;
+            border-top: 3px solid #1E64C8;
+        }
+
+        .example-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .example-title::before,
+        .example-title::after {
+            content: "";
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #1E64C8);
+        }
+
+        .example-title::after {
+            background: linear-gradient(90deg, #1E64C8, transparent);
+        }
+
+        .calc-step {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 5px solid #28a745;
+        }
+
+        .calc-step-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .calc-step-number {
+            width: 45px;
+            height: 45px;
+            background: #28a745;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .calc-step-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #28a745;
+        }
+
+        .calc-input {
+            background: white;
+            padding: 16px;
+            border-radius: 6px;
+            border: 2px solid #dee2e6;
+            margin-bottom: 16px;
+        }
+
+        .calc-label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+
+        .vector-display {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            color: #1E64C8;
+            margin-top: 8px;
+        }
+
+        .matrix-display {
+            font-family: 'Courier New', monospace;
+            font-size: 15px;
+            color: #1E64C8;
+            margin-top: 8px;
+            line-height: 1.8;
+        }
+
+        .calc-process {
+            background: #fff9e6;
+            padding: 16px;
+            border-radius: 6px;
+            border: 2px solid #ffc107;
+            margin-bottom: 16px;
+        }
+
+        .process-title {
+            font-weight: 600;
+            color: #856404;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+
+        .process-content {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #333;
+            line-height: 1.8;
+            white-space: pre-line;
+        }
+
+        .calc-result {
+            background: #d4edda;
+            padding: 16px;
+            border-radius: 6px;
+            border: 2px solid #28a745;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .result-icon {
+            font-size: 24px;
+            color: #28a745;
+        }
+
+        .result-content {
+            flex: 1;
+        }
+
+        .result-label {
+            font-weight: 600;
+            color: #155724;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+
+        .result-value {
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            color: #28a745;
+            font-weight: 600;
+        }
+
+        .notation-note {
+            background: #e7f3ff;
+            padding: 12px 16px;
+            border-radius: 6px;
+            border-left: 4px solid #0066cc;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #004085;
+        }
+
+        .highlight-number {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -338,6 +507,177 @@
                     <span class="legend-symbol">W<sub>a</sub>:</span>
                     <span class="legend-desc">Alignment weight matrix</span>
                 </div>
+            </div>
+
+            <!-- Example Section -->
+            <div class="example-section">
+                <div class="example-title">🧮 Concrete Example with 3D Vectors</div>
+                
+                <div class="notation-note">
+                    <strong>📝 Setup:</strong> d = 3 (vector dimension), using 2 encoder hidden states (h₁, h₂).
+                </div>
+
+                <!-- Step 1: Given Data -->
+                <div class="calc-step">
+                    <div class="calc-step-header">
+                        <div class="calc-step-number">1</div>
+                        <div class="calc-step-title">Given Input Data</div>
+                    </div>
+                    
+                    <div class="calc-input">
+                        <div class="calc-label">Decoder hidden state (s<sub>t</sub>):</div>
+                        <div class="vector-display">
+                            s<sub>t</sub> = [1, 2, 1]<sup>T</sup>
+                        </div>
+                    </div>
+
+                    <div class="calc-input">
+                        <div class="calc-label">Encoder hidden states:</div>
+                        <div class="vector-display">
+                            h₁ = [2, 0, 1]<sup>T</sup>
+                        </div>
+                        <div class="vector-display">
+                            h₂ = [1, 1, 2]<sup>T</sup>
+                        </div>
+                    </div>
+
+                    <div class="calc-input">
+                        <div class="calc-label">Weight matrix (W<sub>a</sub>) ∈ ℝ³ˣ³:</div>
+                        <div class="matrix-display">
+W<sub>a</sub> = [1  0  0]
+    [0  1  0]
+    [0  0  1]
+                        </div>
+                        <div style="font-size: 13px; color: #666; margin-top: 8px;">
+                            (Using Identity Matrix for simplicity)
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Compute Scores -->
+                <div class="calc-step">
+                    <div class="calc-step-header">
+                        <div class="calc-step-number">2</div>
+                        <div class="calc-step-title">Compute Attention Scores</div>
+                    </div>
+
+                    <div class="calc-process">
+                        <div class="process-title">📐 Formula: e<sub>t,i</sub> = s<sub>t</sub><sup>T</sup> W<sub>a</sub> h<sub>i</sub></div>
+                        <div class="process-content">
+<strong>• Score for h₁:</strong>
+e<sub>t,1</sub> = s<sub>t</sub><sup>T</sup> W<sub>a</sub> h₁ = [1, 2, 1] · [2, 0, 1]<sup>T</sup>
+        = (1×2) + (2×0) + (1×1)
+        = 2 + 0 + 1
+        = <span class="highlight-number">3</span>
+
+<strong>• Score for h₂:</strong>
+e<sub>t,2</sub> = s<sub>t</sub><sup>T</sup> W<sub>a</sub> h₂ = [1, 2, 1] · [1, 1, 2]<sup>T</sup>
+        = (1×1) + (2×1) + (1×2)
+        = 1 + 2 + 2
+        = <span class="highlight-number">5</span>
+                        </div>
+                    </div>
+
+                    <div class="calc-result">
+                        <div class="result-icon">✓</div>
+                        <div class="result-content">
+                            <div class="result-label">Attention Scores:</div>
+                            <div class="result-value">e<sub>t,1</sub> = 3,  e<sub>t,2</sub> = 5</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Compute Attention Weights -->
+                <div class="calc-step">
+                    <div class="calc-step-header">
+                        <div class="calc-step-number">3</div>
+                        <div class="calc-step-title">Compute Attention Weights (Softmax)</div>
+                    </div>
+
+                    <div class="calc-process">
+                        <div class="process-title">📐 Formula: α<sub>t,i</sub> = exp(e<sub>t,i</sub>) / Σ<sub>j</sub> exp(e<sub>t,j</sub>)</div>
+                        <div class="process-content">
+<strong>• Exponential calculation:</strong>
+exp(e<sub>t,1</sub>) = exp(3) ≈ 20.09
+exp(e<sub>t,2</sub>) = exp(5) ≈ 148.41
+
+<strong>• Sum:</strong>
+Σ exp(e<sub>t,j</sub>) = 20.09 + 148.41 = 168.50
+
+<strong>• Attention Weights:</strong>
+α<sub>t,1</sub> = 20.09 / 168.50 ≈ <span class="highlight-number">0.119</span>
+α<sub>t,2</sub> = 148.41 / 168.50 ≈ <span class="highlight-number">0.881</span>
+
+<strong>• Verification:</strong>
+α<sub>t,1</sub> + α<sub>t,2</sub> = 0.119 + 0.881 = 1.000 ✓
+                        </div>
+                    </div>
+
+                    <div class="calc-result">
+                        <div class="result-icon">✓</div>
+                        <div class="result-content">
+                            <div class="result-label">Attention Weights:</div>
+                            <div class="result-value">α<sub>t,1</sub> ≈ 0.119 (11.9%),  α<sub>t,2</sub> ≈ 0.881 (88.1%)</div>
+                        </div>
+                    </div>
+
+                    <div style="background: #fff3cd; padding: 12px; border-radius: 6px; margin-top: 12px; font-size: 14px; color: #856404;">
+                        <strong>💡 Interpretation:</strong> h₂ receives about 88% attention because it's more similar to s<sub>t</sub>!
+                    </div>
+                </div>
+
+                <!-- Step 4: Compute Context Vector -->
+                <div class="calc-step">
+                    <div class="calc-step-header">
+                        <div class="calc-step-number">4</div>
+                        <div class="calc-step-title">Compute Context Vector</div>
+                    </div>
+
+                    <div class="calc-process">
+                        <div class="process-title">📐 Formula: c<sub>t</sub> = Σ<sub>i</sub> α<sub>t,i</sub> × h<sub>i</sub></div>
+                        <div class="process-content">
+<strong>• Weighted sum calculation:</strong>
+c<sub>t</sub> = α<sub>t,1</sub> × h₁ + α<sub>t,2</sub> × h₂
+
+<strong>• First term:</strong>
+α<sub>t,1</sub> × h₁ = 0.119 × [2, 0, 1]<sup>T</sup>
+             = [0.238, 0.000, 0.119]<sup>T</sup>
+
+<strong>• Second term:</strong>
+α<sub>t,2</sub> × h₂ = 0.881 × [1, 1, 2]<sup>T</sup>
+             = [0.881, 0.881, 1.762]<sup>T</sup>
+
+<strong>• Final Context Vector:</strong>
+c<sub>t</sub> = [0.238, 0.000, 0.119]<sup>T</sup> + [0.881, 0.881, 1.762]<sup>T</sup>
+    = <span class="highlight-number">[1.119, 0.881, 1.881]<sup>T</sup></span>
+                        </div>
+                    </div>
+
+                    <div class="calc-result">
+                        <div class="result-icon">🎯</div>
+                        <div class="result-content">
+                            <div class="result-label">Final Context Vector:</div>
+                            <div class="result-value">c<sub>t</sub> = [1.119, 0.881, 1.881]<sup>T</sup></div>
+                        </div>
+                    </div>
+
+                    <div style="background: #d4edda; padding: 12px; border-radius: 6px; margin-top: 12px; font-size: 14px; color: #155724;">
+                        <strong>✨ Result Interpretation:</strong> The context vector is formed closer to h₂ (88.1% weight). 
+                        This means the current decoder state is more relevant to h₂.
+                    </div>
+                </div>
+
+                <!-- Summary -->
+                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 24px; border-radius: 8px; margin-top: 30px;">
+                    <h3 style="margin-bottom: 16px; font-size: 18px;">🎓 Key Takeaways</h3>
+                    <div style="line-height: 1.8; font-size: 14px;">
+                        <strong>1.</strong> Attention Score measures similarity via dot product between two vectors<br/>
+                        <strong>2.</strong> Softmax normalizes scores into probabilities between 0 and 1<br/>
+                        <strong>3.</strong> Context Vector is a weighted average, focusing on important information<br/>
+                        <strong>4.</strong> High similarity → high attention weight → greater influence
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>

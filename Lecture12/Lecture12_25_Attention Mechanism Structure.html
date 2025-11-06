@@ -335,7 +335,7 @@
                                 <div class="encoder-state">h₄</div>
                             </div>
                             <div style="font-size: 20px; color: #999;">+</div>
-                            <div class="decoder-state">s_t</div>
+                            <div class="decoder-state">s<sub>t</sub></div>
                         </div>
                         <div style="text-align: center; font-size: 12px; color: #666;">
                             Encoder states (Keys & Values) + Decoder state (Query)
@@ -354,21 +354,21 @@
                                         <div class="component-main">Q</div>
                                         <div class="component-sub">Query</div>
                                     </div>
-                                    <div class="qkv-label">from s_t</div>
+                                    <div class="qkv-label">from s<sub>t</sub></div>
                                 </div>
                                 <div class="qkv-box">
                                     <div class="qkv-component key-box">
                                         <div class="component-main">K</div>
                                         <div class="component-sub">Keys</div>
                                     </div>
-                                    <div class="qkv-label">from h_i</div>
+                                    <div class="qkv-label">from h<sub>i</sub></div>
                                 </div>
                                 <div class="qkv-box">
                                     <div class="qkv-component value-box">
                                         <div class="component-main">V</div>
                                         <div class="component-sub">Values</div>
                                     </div>
-                                    <div class="qkv-label">from h_i</div>
+                                    <div class="qkv-label">from h<sub>i</sub></div>
                                 </div>
                             </div>
                         </div>
@@ -381,7 +381,7 @@
                         <div class="layer-label">③ Compute Scores</div>
                         <div class="layer-content">
                             <div class="score-box">
-                                <div class="score-formula">score = Q · K^T</div>
+                                <div class="score-formula">score = Q · K<sup>T</sup></div>
                                 <div class="score-label">Similarity between Q and each K</div>
                             </div>
                         </div>
@@ -413,11 +413,11 @@
                         <div class="layer-content">
                             <div class="context-output">
                                 <div class="context-label">Weighted sum</div>
-                                <div class="context-value">c_t</div>
+                                <div class="context-value">c<sub>t</sub></div>
                             </div>
                         </div>
                         <div style="text-align: center; font-size: 12px; color: #666;">
-                            c_t = Σ(α_i × V_i)
+                            c<sub>t</sub> = Σ(α<sub>i</sub> × V<sub>i</sub>)
                         </div>
                     </div>
                 </div>
@@ -435,7 +435,7 @@
                         "What am I looking for?" Derived from current decoder state to find relevant encoder states.
                     </div>
                     <div class="card-formula">
-                        Q = W_Q × s_t
+                        Q = W<sub>Q</sub> × s<sub>t</sub>
                     </div>
                 </div>
                 
@@ -449,7 +449,7 @@
                         "What do I contain?" Encoder states transformed to be compared with query.
                     </div>
                     <div class="card-formula">
-                        K = W_K × h_i
+                        K = W<sub>K</sub> × h<sub>i</sub>
                     </div>
                 </div>
                 
@@ -463,7 +463,7 @@
                         "What information to extract?" Actual content to be aggregated based on attention weights.
                     </div>
                     <div class="card-formula">
-                        V = W_V × h_i
+                        V = W<sub>V</sub> × h<sub>i</sub>
                     </div>
                 </div>
             </div>

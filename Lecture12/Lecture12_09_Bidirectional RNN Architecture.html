@@ -22,8 +22,9 @@
         
         .container {
             width: 960px;
-            height: 540px;
+            min-height: 540px;
             padding: 40px;
+            padding-bottom: 120px;
             position: relative;
         }
         
@@ -31,7 +32,6 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
-            height: 100%;
         }
         
         .layer-label {
@@ -256,33 +256,35 @@
         }
         
         .output-label {
-            font-size: 14px;
+            font-size: 12px;
             opacity: 0.7;
             margin-top: 4px;
         }
         
         .info-box {
             position: absolute;
-            bottom: 20px;
-            right: 40px;
+            bottom: -50px;
+            left: 50%;
+            transform: translateX(-50%);
             background: #f8f9fa;
-            padding: 16px;
+            padding: 12px 24px;
             border-radius: 8px;
             border-left: 4px solid #1E64C8;
-            max-width: 280px;
+            max-width: 700px;
+            text-align: center;
         }
         
         .info-title {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
             color: #1E64C8;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
         
         .info-text {
-            font-size: 14px;
+            font-size: 13px;
             color: #666;
-            line-height: 1.5;
+            line-height: 1.4;
         }
     </style>
 </head>
@@ -324,28 +326,28 @@
                 <div class="rnn-cells">
                     <div class="rnn-cell">
                         <div class="v-connection v-arrow-up"></div>
-                        <div class="cell-label">h⃗₁</div>
+                        <div class="cell-label">h→₁</div>
                         <div class="cell-time">t=1</div>
                         <div class="h-arrow h-arrow-forward"></div>
                         <div class="v-connection v-arrow-down"></div>
                     </div>
                     <div class="rnn-cell">
                         <div class="v-connection v-arrow-up"></div>
-                        <div class="cell-label">h⃗₂</div>
+                        <div class="cell-label">h→₂</div>
                         <div class="cell-time">t=2</div>
                         <div class="h-arrow h-arrow-forward"></div>
                         <div class="v-connection v-arrow-down"></div>
                     </div>
                     <div class="rnn-cell">
                         <div class="v-connection v-arrow-up"></div>
-                        <div class="cell-label">h⃗₃</div>
+                        <div class="cell-label">h→₃</div>
                         <div class="cell-time">t=3</div>
                         <div class="h-arrow h-arrow-forward"></div>
                         <div class="v-connection v-arrow-down"></div>
                     </div>
                     <div class="rnn-cell">
                         <div class="v-connection v-arrow-up"></div>
-                        <div class="cell-label">h⃗₄</div>
+                        <div class="cell-label">h→₄</div>
                         <div class="cell-time">t=4</div>
                         <div class="v-connection v-arrow-down"></div>
                     </div>
@@ -361,28 +363,28 @@
                 <div class="rnn-cells">
                     <div class="rnn-cell rnn-cell-backward">
                         <div class="v-connection v-arrow-up" style="background: #5088d4;"></div>
-                        <div class="cell-label">h⃖₁</div>
+                        <div class="cell-label">h←₁</div>
                         <div class="cell-time">t=1</div>
                         <div class="h-arrow h-arrow-backward"></div>
                         <div class="v-connection v-arrow-down" style="background: #5088d4;"></div>
                     </div>
                     <div class="rnn-cell rnn-cell-backward">
                         <div class="v-connection v-arrow-up" style="background: #5088d4;"></div>
-                        <div class="cell-label">h⃖₂</div>
+                        <div class="cell-label">h←₂</div>
                         <div class="cell-time">t=2</div>
                         <div class="h-arrow h-arrow-backward"></div>
                         <div class="v-connection v-arrow-down" style="background: #5088d4;"></div>
                     </div>
                     <div class="rnn-cell rnn-cell-backward">
                         <div class="v-connection v-arrow-up" style="background: #5088d4;"></div>
-                        <div class="cell-label">h⃖₃</div>
+                        <div class="cell-label">h←₃</div>
                         <div class="cell-time">t=3</div>
                         <div class="h-arrow h-arrow-backward"></div>
                         <div class="v-connection v-arrow-down" style="background: #5088d4;"></div>
                     </div>
                     <div class="rnn-cell rnn-cell-backward">
                         <div class="v-connection v-arrow-up" style="background: #5088d4;"></div>
-                        <div class="cell-label">h⃖₄</div>
+                        <div class="cell-label">h←₄</div>
                         <div class="cell-time">t=4</div>
                         <div class="v-connection v-arrow-down" style="background: #5088d4;"></div>
                     </div>
@@ -398,19 +400,19 @@
                 <div class="output-boxes">
                     <div class="output-box">
                         <div>y₁</div>
-                        <div class="output-label">[h⃗₁; h⃖₁]</div>
+                        <div class="output-label">[h→₁; h←₁]</div>
                     </div>
                     <div class="output-box">
                         <div>y₂</div>
-                        <div class="output-label">[h⃗₂; h⃖₂]</div>
+                        <div class="output-label">[h→₂; h←₂]</div>
                     </div>
                     <div class="output-box">
                         <div>y₃</div>
-                        <div class="output-label">[h⃗₃; h⃖₃]</div>
+                        <div class="output-label">[h→₃; h←₃]</div>
                     </div>
                     <div class="output-box">
                         <div>y₄</div>
-                        <div class="output-label">[h⃗₄; h⃖₄]</div>
+                        <div class="output-label">[h→₄; h←₄]</div>
                     </div>
                 </div>
             </div>
@@ -419,7 +421,7 @@
         <div class="info-box">
             <div class="info-title">Key Feature</div>
             <div class="info-text">
-                BiRNN processes sequences in both directions, concatenating forward (h⃗) and backward (h⃖) hidden states to capture full context at each time step.
+                BiRNN processes sequences in both directions, concatenating forward (h→) and backward (h←) hidden states to capture full context at each time step.
             </div>
         </div>
     </div>

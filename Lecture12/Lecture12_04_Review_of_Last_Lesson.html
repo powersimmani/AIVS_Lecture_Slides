@@ -22,8 +22,8 @@
         
         .container {
             width: 960px;
-            height: 540px;
-            padding: 40px 60px;
+            height: 620px;
+            padding: 40px;
             position: relative;
         }
         
@@ -31,52 +31,184 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 40px;
-            padding-bottom: 20px;
-            border-bottom: 3px solid #1E64C8;
+            margin-bottom: 35px;
         }
         
         .slide-title {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 700;
             color: #333;
         }
         
         .part-label {
-            font-size: 16px;
+            font-size: 14px;
             color: #1E64C8;
+            font-weight: 600;
+            background: #e8f2ff;
+            padding: 6px 16px;
+            border-radius: 20px;
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            height: calc(100% - 110px);
+        }
+        
+        .review-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            border-top: 4px solid #1E64C8;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .review-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(30, 100, 200, 0.15);
+        }
+        
+        .review-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, #1E64C8, #5088d4);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .review-card:hover::before {
+            opacity: 1;
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 6px;
+        }
+        
+        .card-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #1E64C8, #5088d4);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .card-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            line-height: 1.3;
+        }
+        
+        .card-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-left: 48px;
+        }
+        
+        .card-description {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.5;
+        }
+        
+        .highlight {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .card-tags {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+        
+        .tag {
+            background: #e8f2ff;
+            color: #1E64C8;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
             font-weight: 600;
         }
         
-        .content-list {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+        /* Different colors for cards */
+        .card-1 {
+            border-top-color: #1E64C8;
         }
         
-        .content-item {
-            font-size: 22px;
-            color: #333;
-            line-height: 1.5;
-            padding-left: 30px;
-            position: relative;
+        .card-2 {
+            border-top-color: #5088d4;
         }
         
-        .content-item::before {
-            content: '•';
-            position: absolute;
-            left: 0;
-            color: #1E64C8;
-            font-weight: bold;
-            font-size: 28px;
+        .card-3 {
+            border-top-color: #28a745;
+        }
+        
+        .card-4 {
+            border-top-color: #dc3545;
+        }
+        
+        .card-5 {
+            border-top-color: #ffc107;
+        }
+        
+        .card-6 {
+            border-top-color: #6f42c1;
+        }
+        
+        .card-icon-1 {
+            background: linear-gradient(135deg, #1E64C8, #5088d4);
+        }
+        
+        .card-icon-2 {
+            background: linear-gradient(135deg, #5088d4, #7aa3e5);
+        }
+        
+        .card-icon-3 {
+            background: linear-gradient(135deg, #28a745, #34ce57);
+        }
+        
+        .card-icon-4 {
+            background: linear-gradient(135deg, #dc3545, #e74c3c);
+        }
+        
+        .card-icon-5 {
+            background: linear-gradient(135deg, #ffc107, #ffca2c);
+        }
+        
+        .card-icon-6 {
+            background: linear-gradient(135deg, #6f42c1, #8e5dd0);
         }
         
         .footer {
             position: absolute;
-            bottom: 30px;
-            right: 60px;
-            font-size: 14px;
-            color: #666;
+            bottom: 20px;
+            right: 40px;
+            font-size: 13px;
+            color: #999;
+            font-weight: 500;
         }
     </style>
 </head>
@@ -87,13 +219,105 @@
             <div class="part-label">Part 1/7: Introduction & Review</div>
         </div>
         
-        <div class="content-list">
-            <div class="content-item">Recurrent Neural Networks (RNNs) process sequential data</div>
-            <div class="content-item">Hidden states carry information across time steps</div>
-            <div class="content-item">Vanishing/exploding gradients challenge long sequences</div>
-            <div class="content-item">LSTM and GRU architectures mitigate gradient problems</div>
-            <div class="content-item">Gates control information flow: forget, input, output</div>
-            <div class="content-item">RNNs excel at: language modeling, time series, speech</div>
+        <div class="content-grid">
+            <!-- Card 1: RNNs -->
+            <div class="review-card card-1">
+                <div class="card-header">
+                    <div class="card-icon card-icon-1">🔄</div>
+                    <div class="card-title">Recurrent Neural Networks</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-description">
+                        <span class="highlight">RNNs</span> process sequential data by maintaining <span class="highlight">hidden states</span> that carry information across time steps
+                    </div>
+                    <div class="card-tags">
+                        <span class="tag">Sequential</span>
+                        <span class="tag">Time Series</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card 2: Hidden States -->
+            <div class="review-card card-2">
+                <div class="card-header">
+                    <div class="card-icon card-icon-2">💾</div>
+                    <div class="card-title">Hidden States</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-description">
+                        Hidden states act as <span class="highlight">memory</span>, carrying contextual information from previous time steps to future ones
+                    </div>
+                    <div class="card-tags">
+                        <span class="tag">Memory</span>
+                        <span class="tag">Context</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card 3: Gradient Problems -->
+            <div class="review-card card-3">
+                <div class="card-header">
+                    <div class="card-icon card-icon-3">⚠️</div>
+                    <div class="card-title">Gradient Challenges</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-description">
+                        <span class="highlight">Vanishing/exploding gradients</span> make it difficult to learn long-term dependencies in sequences
+                    </div>
+                    <div class="card-tags">
+                        <span class="tag">Long Sequences</span>
+                        <span class="tag">Training Issue</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card 4: LSTM & GRU -->
+            <div class="review-card card-4">
+                <div class="card-header">
+                    <div class="card-icon card-icon-4">🔧</div>
+                    <div class="card-title">LSTM & GRU Solutions</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-description">
+                        <span class="highlight">LSTM and GRU</span> architectures use gates to mitigate gradient problems and capture long-term patterns
+                    </div>
+                    <div class="card-tags">
+                        <span class="tag">Gated Units</span>
+                        <span class="tag">Long-term Memory</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card 5: Gate Mechanisms -->
+            <div class="review-card card-5">
+                <div class="card-header">
+                    <div class="card-icon card-icon-5">🚪</div>
+                    <div class="card-title">Gate Control Flow</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-description">
+                        Gates control information flow: <span class="highlight">forget gate</span> (what to discard), <span class="highlight">input gate</span> (what to add), <span class="highlight">output gate</span> (what to expose)
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card 6: Applications -->
+            <div class="review-card card-6">
+                <div class="card-header">
+                    <div class="card-icon card-icon-6">🎯</div>
+                    <div class="card-title">Key Applications</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-description">
+                        RNNs excel at: <span class="highlight">language modeling</span>, <span class="highlight">time series prediction</span>, and <span class="highlight">speech recognition</span>
+                    </div>
+                    <div class="card-tags">
+                        <span class="tag">NLP</span>
+                        <span class="tag">Speech</span>
+                        <span class="tag">Forecasting</span>
+                    </div>
+                </div>
+            </div>
         </div>
         
         <div class="footer">Ho-min Park 4 / 31</div>
