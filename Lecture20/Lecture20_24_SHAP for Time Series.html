@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SHAP for Time Series</title>
+    <title>TreeSHAP Algorithm</title>
     <style>
         * {
             margin: 0;
@@ -15,16 +15,16 @@
             font-family: 'Aptos', 'Segoe UI', sans-serif;
             background: white;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
             min-height: 100vh;
             padding: 20px;
-            padding-bottom: 300px;
+            gap: 30px;
         }
         
         .container {
             width: 960px;
-            height: 540px;
+            min-height: 540px;
             position: relative;
             background: white;
             padding: 25px;
@@ -45,172 +45,143 @@
             margin-bottom: 18px;
         }
         
-        .main-layout {
+        .content-layout {
             display: grid;
-            grid-template-columns: 1.3fr 1fr;
+            grid-template-columns: 1.2fr 1fr;
             gap: 20px;
             height: calc(100% - 100px);
         }
         
-        .chart-section {
+        .tree-section {
             background: #F8F9FA;
             border: 2px solid #1E64C8;
             border-radius: 10px;
             padding: 15px;
-            display: flex;
-            flex-direction: column;
         }
         
-        .section-title {
+        .section-header {
             font-size: 17px;
             font-weight: 700;
             color: #1E64C8;
-            margin-bottom: 12px;
+            margin-bottom: 15px;
             text-align: center;
         }
         
-        .chart-container {
+        .tree-diagram {
+            position: relative;
+            height: 280px;
+            margin-bottom: 15px;
+        }
+        
+        .tree-node {
+            position: absolute;
             background: white;
+            border: 2px solid #1E64C8;
             border-radius: 8px;
-            padding: 20px;
-            flex: 1;
-            position: relative;
+            padding: 8px 12px;
+            text-align: center;
+            font-size: 14px;
+            min-width: 80px;
+            transition: all 0.3s ease;
         }
         
-        .dual-chart {
-            position: relative;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
+        .tree-node:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.3);
+            z-index: 10;
         }
         
-        .chart-area {
-            flex: 1;
-            position: relative;
-            margin-bottom: 10px;
-        }
-        
-        .chart-title {
-            font-size: 13px;
-            font-weight: 600;
-            color: #666;
-            margin-bottom: 8px;
-        }
-        
-        .time-series-chart {
-            position: absolute;
-            left: 40px;
-            right: 20px;
-            top: 25px;
-            bottom: 25px;
-        }
-        
-        .y-axis {
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            background: #333;
-        }
-        
-        .x-axis {
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            height: 2px;
-            background: #333;
-        }
-        
-        .ts-line {
-            stroke: #1E64C8;
-            stroke-width: 2.5;
-            fill: none;
-        }
-        
-        .shap-line {
-            stroke: #E63946;
-            stroke-width: 2;
-            fill: none;
-        }
-        
-        .shap-area {
-            fill: rgba(230, 57, 70, 0.2);
-        }
-        
-        .axis-label {
-            position: absolute;
-            font-size: 11px;
-            color: #666;
-            font-weight: 600;
-        }
-        
-        .y-label {
-            left: -35px;
-            top: -18px;
-        }
-        
-        .x-label {
-            right: -15px;
-            bottom: -20px;
-        }
-        
-        .time-marker {
-            position: absolute;
-            width: 1px;
-            height: 100%;
-            background: rgba(230, 57, 70, 0.3);
-            top: 0;
-        }
-        
-        .marker-label {
-            position: absolute;
-            top: -20px;
-            font-size: 10px;
-            color: #E63946;
-            font-weight: 600;
+        .root-node {
+            background: #1E64C8;
+            color: white;
+            font-weight: 700;
+            top: 10px;
+            left: 50%;
             transform: translateX(-50%);
         }
         
-        .legend {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 10px;
+        .internal-node {
+            background: #E8F2FF;
+            border-color: #1E64C8;
+            font-weight: 600;
+            color: #1E64C8;
         }
         
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
+        .leaf-node {
+            background: #D4EDDA;
+            border-color: #28A745;
+            color: #155724;
+            font-weight: 600;
+        }
+        
+        .node-label {
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+        
+        .node-value {
             font-size: 13px;
         }
         
-        .legend-line {
-            width: 25px;
-            height: 3px;
-        }
-        
-        .line-price {
+        .tree-line {
+            position: absolute;
             background: #1E64C8;
+            opacity: 0.4;
+            z-index: 0;
         }
         
-        .line-shap {
-            background: #E63946;
+        .line-v { width: 2px; }
+        .line-h { height: 2px; }
+        
+        .algorithm-box {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 12px;
+        }
+        
+        .algo-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .algo-formula {
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            color: #333;
+            background: #F8F9FA;
+            padding: 8px;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .complexity {
+            color: #E63946;
+        }
+        
+        .algo-text {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.4;
         }
         
         .features-section {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 15px;
         }
         
         .feature-card {
             background: white;
             border: 2px solid #E0E0E0;
             border-radius: 10px;
-            padding: 14px;
+            padding: 15px;
+            flex: 1;
         }
         
         .feature-card.highlight {
@@ -231,143 +202,303 @@
         }
         
         .feature-text {
-            font-size: 14px;
+            font-size: 15px;
             color: #333;
             line-height: 1.4;
         }
         
-        .feature-list {
-            font-size: 13px;
-            color: #666;
-            margin-top: 6px;
-            line-height: 1.5;
-        }
-        
-        .feature-list div {
-            margin-bottom: 3px;
-            padding-left: 16px;
-            position: relative;
-        }
-        
-        .feature-list div:before {
-            content: "→";
-            position: absolute;
-            left: 0;
-            color: #1E64C8;
-            font-weight: 700;
-        }
-        
-        .code-box {
-            background: white;
-            border: 2px solid #E0E0E0;
+        .comparison-box {
+            background: #FFF9E6;
+            border: 2px solid #FFC107;
             border-radius: 8px;
             padding: 12px;
         }
         
-        .code-title {
+        .comparison-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #F57C00;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .speed-bars {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .speed-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .bar-label {
+            min-width: 100px;
             font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .bar-container {
+            flex: 1;
+            height: 24px;
+            background: #F0F0F0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .bar-fill {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            color: white;
+        }
+        
+        .bar-treeshap {
+            background: #28A745;
+            width: 15%;
+        }
+        
+        .bar-kernelshap {
+            background: #DC3545;
+            width: 100%;
+        }
+        
+        /* 계산원리 섹션 스타일 */
+        .principle-section {
+            width: 960px;
+            background: white;
+            padding: 25px;
+            margin-top: 10px;
+        }
+        
+        .principle-title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 20px;
+        }
+        
+        .principle-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .principle-card {
+            background: #F8F9FA;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        
+        .principle-card-title {
+            font-size: 18px;
             font-weight: 700;
             color: #1E64C8;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .step-number {
+            background: #1E64C8;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 700;
+        }
+        
+        .principle-text {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .formula-box {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        
+        .formula {
+            font-family: 'Courier New', monospace;
+            font-size: 15px;
+            color: #1E64C8;
+            text-align: center;
+            font-weight: 600;
+            margin: 8px 0;
+        }
+        
+        .formula-desc {
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+            margin-top: 8px;
+        }
+        
+        .key-points {
+            background: #FFF9E6;
+            border-left: 4px solid #FFC107;
+            padding: 12px 15px;
+            margin-top: 10px;
+            border-radius: 4px;
+        }
+        
+        .key-points-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #F57C00;
             margin-bottom: 8px;
         }
         
-        .code-content {
-            font-family: 'Courier New', monospace;
-            font-size: 12px;
+        .key-points ul {
+            margin-left: 20px;
+            font-size: 14px;
             color: #333;
-            background: #F8F9FA;
-            padding: 8px;
-            border-radius: 4px;
+            line-height: 1.6;
+        }
+        
+        .key-points li {
+            margin-bottom: 5px;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .method-card {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        
+        .method-card.treeshap {
+            border-color: #28A745;
+            background: #F1F9F3;
+        }
+        
+        .method-card.kernelshap {
+            border-color: #DC3545;
+            background: #FEF5F6;
+        }
+        
+        .method-name {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .method-card.treeshap .method-name {
+            color: #28A745;
+        }
+        
+        .method-card.kernelshap .method-name {
+            color: #DC3545;
+        }
+        
+        .method-details {
+            font-size: 14px;
+            color: #333;
             line-height: 1.5;
         }
         
-        .keyword {
-            color: #E63946;
-            font-weight: 600;
-        }
-        
-        .comment {
-            color: #28A745;
+        .method-details strong {
+            color: #1E64C8;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="title">SHAP for Time Series: Temporal Dependencies</div>
-        <div class="subtitle">Understanding past values' influence on predictions</div>
+        <div class="title">TreeSHAP: Optimized for Tree-Based Models</div>
+        <div class="subtitle">Polynomial time algorithm with exact Shapley values</div>
         
-        <div class="main-layout">
-            <!-- Chart Section -->
-            <div class="chart-section">
-                <div class="section-title">Stock Price Prediction with Temporal SHAP</div>
+        <div class="content-layout">
+            <!-- Tree Section -->
+            <div class="tree-section">
+                <div class="section-header">Tree Traversal Example</div>
                 
-                <div class="chart-container">
-                    <div class="dual-chart">
-                        <!-- Stock Price Chart -->
-                        <div class="chart-area">
-                            <div class="chart-title">Stock Price ($)</div>
-                            <div class="time-series-chart">
-                                <div class="y-axis">
-                                    <div class="axis-label y-label">Price</div>
-                                </div>
-                                <div class="x-axis">
-                                    <div class="axis-label x-label">Time</div>
-                                </div>
-                                
-                                <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
-                                    <path class="ts-line" d="M 0,70 L 10,65 L 20,60 L 30,55 L 40,50 L 50,45 L 60,50 L 70,55 L 80,50 L 90,45 L 100,40" />
-                                </svg>
-                                
-                                <!-- Time markers for key events -->
-                                <div class="time-marker" style="left: 30%;">
-                                    <div class="marker-label">t-3</div>
-                                </div>
-                                <div class="time-marker" style="left: 60%;">
-                                    <div class="marker-label">t-1</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- SHAP Values Chart -->
-                        <div class="chart-area">
-                            <div class="chart-title">SHAP Values (Feature Contributions)</div>
-                            <div class="time-series-chart">
-                                <div class="y-axis">
-                                    <div class="axis-label y-label">SHAP</div>
-                                </div>
-                                <div class="x-axis">
-                                    <div class="axis-label x-label">Time</div>
-                                </div>
-                                
-                                <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
-                                    <path class="shap-area" d="M 0,50 L 10,52 L 20,55 L 30,62 L 40,60 L 50,58 L 60,68 L 70,65 L 80,60 L 90,58 L 100,55 L 100,50 L 0,50 Z" />
-                                    <path class="shap-line" d="M 0,50 L 10,52 L 20,55 L 30,62 L 40,60 L 50,58 L 60,68 L 70,65 L 80,60 L 90,58 L 100,55" />
-                                </svg>
-                            </div>
-                        </div>
+                <div class="tree-diagram">
+                    <!-- Lines -->
+                    <div class="tree-line line-v" style="left: 50%; top: 45px; height: 50px;"></div>
+                    <div class="tree-line line-h" style="left: 28%; top: 95px; width: 44%;"></div>
+                    <div class="tree-line line-v" style="left: 28%; top: 95px; height: 50px;"></div>
+                    <div class="tree-line line-v" style="left: 72%; top: 95px; height: 50px;"></div>
+                    <div class="tree-line line-h" style="left: 18%; top: 145px; width: 20%;"></div>
+                    <div class="tree-line line-h" style="left: 62%; top: 145px; width: 20%;"></div>
+                    <div class="tree-line line-v" style="left: 18%; top: 145px; height: 50px;"></div>
+                    <div class="tree-line line-v" style="left: 38%; top: 145px; height: 50px;"></div>
+                    <div class="tree-line line-v" style="left: 62%; top: 145px; height: 50px;"></div>
+                    <div class="tree-line line-v" style="left: 82%; top: 145px; height: 50px;"></div>
+                    
+                    <!-- Nodes -->
+                    <div class="tree-node root-node">
+                        <div class="node-label">Root</div>
+                        <div class="node-value">X₁ ≤ 5.0</div>
+                    </div>
+                    
+                    <div class="tree-node internal-node" style="left: 28%; top: 95px; transform: translateX(-50%);">
+                        <div class="node-label">Node 1</div>
+                        <div class="node-value">X₂ ≤ 3.5</div>
+                    </div>
+                    
+                    <div class="tree-node internal-node" style="left: 72%; top: 95px; transform: translateX(-50%);">
+                        <div class="node-label">Node 2</div>
+                        <div class="node-value">X₃ ≤ 2.0</div>
+                    </div>
+                    
+                    <div class="tree-node leaf-node" style="left: 18%; top: 195px; transform: translateX(-50%);">
+                        <div class="node-label">Leaf 1</div>
+                        <div class="node-value">v = 0.8</div>
+                    </div>
+                    
+                    <div class="tree-node leaf-node" style="left: 38%; top: 195px; transform: translateX(-50%);">
+                        <div class="node-label">Leaf 2</div>
+                        <div class="node-value">v = 0.3</div>
+                    </div>
+                    
+                    <div class="tree-node leaf-node" style="left: 62%; top: 195px; transform: translateX(-50%);">
+                        <div class="node-label">Leaf 3</div>
+                        <div class="node-value">v = 0.6</div>
+                    </div>
+                    
+                    <div class="tree-node leaf-node" style="left: 82%; top: 195px; transform: translateX(-50%);">
+                        <div class="node-label">Leaf 4</div>
+                        <div class="node-value">v = 0.2</div>
                     </div>
                 </div>
                 
-                <div class="legend">
-                    <div class="legend-item">
-                        <div class="legend-line line-price"></div>
-                        <span>Stock Price</span>
+                <div class="algorithm-box">
+                    <div class="algo-title">Complexity Analysis</div>
+                    <div class="algo-formula">
+                        O(TLD²) <span style="color: #28A745;">vs</span> O(2<sup>M</sup>)
                     </div>
-                    <div class="legend-item">
-                        <div class="legend-line line-shap"></div>
-                        <span>SHAP Values</span>
-                    </div>
-                </div>
-                
-                <div class="code-box" style="margin-top: 12px;">
-                    <div class="code-title">Implementation Approach</div>
-                    <div class="code-content">
-<span class="comment"># Sliding window for sequential data</span><br>
-explainer = shap.Explainer(model)<br>
-shap_values = explainer(X_window)<br>
-<br>
-<span class="comment"># Visualize temporal patterns</span><br>
-shap.plots.waterfall(shap_values[<span class="keyword">t</span>])
+                    <div class="algo-text">
+                        <span style="font-weight: 600;">T</span>: trees, 
+                        <span style="font-weight: 600;">L</span>: leaves, 
+                        <span style="font-weight: 600;">D</span>: max depth, 
+                        <span style="font-weight: 600;">M</span>: features
                     </div>
                 </div>
             </div>
@@ -375,68 +506,172 @@ shap.plots.waterfall(shap_values[<span class="keyword">t</span>])
             <!-- Features Section -->
             <div class="features-section">
                 <div class="feature-card highlight">
-                    <div class="feature-icon">⏱️</div>
-                    <div class="feature-title">Temporal Dependencies</div>
+                    <div class="feature-icon">⚡</div>
+                    <div class="feature-title">Speed Advantage</div>
                     <div class="feature-text">
-                        Past values influence current predictions
-                    </div>
-                    <div class="feature-list">
-                        <div>Sliding window approach</div>
-                        <div>Lag features analyzed</div>
-                        <div>Sequential patterns</div>
+                        10-100x faster than KernelSHAP for tree models
                     </div>
                 </div>
                 
                 <div class="feature-card">
-                    <div class="feature-icon">📊</div>
-                    <div class="feature-title">Lag Features</div>
+                    <div class="feature-icon">🎯</div>
+                    <div class="feature-title">Exact Values</div>
                     <div class="feature-text">
-                        SHAP values for different time lags
-                    </div>
-                    <div class="feature-list">
-                        <div>t-1: recent impact</div>
-                        <div>t-7: weekly patterns</div>
-                        <div>t-30: monthly trends</div>
+                        Computes exact Shapley values using tree structure
                     </div>
                 </div>
                 
                 <div class="feature-card">
-                    <div class="feature-icon">🔄</div>
-                    <div class="feature-title">Seasonal Patterns</div>
+                    <div class="feature-icon">🌳</div>
+                    <div class="feature-title">Model Support</div>
                     <div class="feature-text">
-                        Identifying periodic contributions
-                    </div>
-                    <div class="feature-list">
-                        <div>Daily cycles</div>
-                        <div>Weekly patterns</div>
-                        <div>Seasonal effects</div>
+                        Random Forest, XGBoost, LightGBM, CatBoost
                     </div>
                 </div>
                 
-                <div class="feature-card">
-                    <div class="feature-icon">🧠</div>
-                    <div class="feature-title">Recurrent Models</div>
-                    <div class="feature-text">
-                        Explaining LSTM/GRU predictions
-                    </div>
-                    <div class="feature-list">
-                        <div>Hidden state analysis</div>
-                        <div>Cell state contributions</div>
-                        <div>Attention mechanisms</div>
+                <div class="comparison-box">
+                    <div class="comparison-title">⏱ Speed Comparison</div>
+                    <div class="speed-bars">
+                        <div class="speed-bar">
+                            <div class="bar-label">TreeSHAP</div>
+                            <div class="bar-container">
+                                <div class="bar-fill bar-treeshap">1x</div>
+                            </div>
+                        </div>
+                        <div class="speed-bar">
+                            <div class="bar-label">KernelSHAP</div>
+                            <div class="bar-container">
+                                <div class="bar-fill bar-kernelshap">100x</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">⚠️</div>
-                    <div class="feature-title">Event Detection</div>
-                    <div class="feature-text">
-                        Which timestamps drive anomalies
+            </div>
+        </div>
+    </div>
+    
+    <!-- TreeSHAP Computation Principles Section -->
+    <div class="principle-section">
+        <div class="principle-title">TreeSHAP Computation Principles</div>
+        
+        <div class="principle-content">
+            <!-- Step 1: Tree Structure Exploitation -->
+            <div class="principle-card">
+                <div class="principle-card-title">
+                    <span class="step-number">1</span>
+                    Tree Structure Exploitation
+                </div>
+                <div class="principle-text">
+                    TreeSHAP efficiently computes Shapley values by leveraging the hierarchical structure of tree-based models. 
+                    It tracks decision paths at each node while reusing computations for feature combinations that share the same subtree.
+                </div>
+                <div class="formula-box">
+                    <div class="formula">
+                        φ<sub>i</sub> = Σ<sub>S⊆M\{i}</sub> |S|!(M-|S|-1)! / M! × [f<sub>S∪{i}</sub>(x<sub>S∪{i}</sub>) - f<sub>S</sub>(x<sub>S</sub>)]
                     </div>
-                    <div class="feature-list">
-                        <div>Spike identification</div>
-                        <div>Anomaly root cause</div>
-                        <div>Critical time points</div>
+                    <div class="formula-desc">Original Shapley value definition</div>
+                </div>
+            </div>
+            
+            <!-- Step 2: Recursive Computation -->
+            <div class="principle-card">
+                <div class="principle-card-title">
+                    <span class="step-number">2</span>
+                    Recursive Computation
+                </div>
+                <div class="principle-text">
+                    The algorithm recursively traverses the tree from root to leaves, tracking two pieces of information at each node:
+                </div>
+                <div class="key-points">
+                    <div class="key-points-title">🔑 Tracked Information</div>
+                    <ul>
+                        <li><strong>Coverage</strong>: The proportion of possible feature combinations passing through the current node</li>
+                        <li><strong>Contribution</strong>: The impact each feature has on the prediction value</li>
+                    </ul>
+                </div>
+                <div class="formula-box">
+                    <div class="formula">
+                        RECURSE(j, m, p<sub>z</sub>, p<sub>o</sub>, v)
                     </div>
+                    <div class="formula-desc">
+                        j: current node, m: unique path, p<sub>z</sub>: zero probability, p<sub>o</sub>: one probability, v: node value
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 3: Path Integration -->
+            <div class="principle-card">
+                <div class="principle-card-title">
+                    <span class="step-number">3</span>
+                    Path Integration
+                </div>
+                <div class="principle-text">
+                    When the same feature is used across multiple paths, the final Shapley value is calculated by taking a weighted average of each path's contribution. 
+                    This process obtains exact values without explicitly enumerating all possible paths in the tree.
+                </div>
+                <div class="formula-box">
+                    <div class="formula">
+                        φ<sub>i</sub> = Σ<sub>paths</sub> w<sub>path</sub> × Δv<sub>i,path</sub>
+                    </div>
+                    <div class="formula-desc">
+                        w<sub>path</sub>: path weight, Δv<sub>i,path</sub>: contribution of feature i along the path
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 4: Ensemble Integration -->
+            <div class="principle-card">
+                <div class="principle-card-title">
+                    <span class="step-number">4</span>
+                    Ensemble Integration
+                </div>
+                <div class="principle-text">
+                    For ensemble models like Random Forest or Gradient Boosting, the Shapley values are computed independently for each tree 
+                    and then averaged to generate the final explanation.
+                </div>
+                <div class="formula-box">
+                    <div class="formula">
+                        φ<sub>i</sub><sup>ensemble</sup> = (1/T) × Σ<sub>t=1</sub><sup>T</sup> φ<sub>i</sub><sup>(t)</sup>
+                    </div>
+                    <div class="formula-desc">T: number of trees, φ<sub>i</sub><sup>(t)</sup>: Shapley value of feature i for the t-th tree</div>
+                </div>
+            </div>
+            
+            <!-- Key Advantages Comparison -->
+            <div class="principle-card" style="background: #FFFBF0; border-color: #FFC107;">
+                <div class="principle-card-title" style="color: #F57C00;">
+                    <span class="step-number" style="background: #F57C00;">✓</span>
+                    TreeSHAP vs KernelSHAP
+                </div>
+                <div class="comparison-grid">
+                    <div class="method-card treeshap">
+                        <div class="method-name">TreeSHAP</div>
+                        <div class="method-details">
+                            <strong>Computation:</strong> Direct use of tree structure<br><br>
+                            <strong>Complexity:</strong> O(TLD²)<br><br>
+                            <strong>Accuracy:</strong> Exact Shapley values<br><br>
+                            <strong>Speed:</strong> Very fast (polynomial time)<br><br>
+                            <strong>Application:</strong> Tree-based models only
+                        </div>
+                    </div>
+                    <div class="method-card kernelshap">
+                        <div class="method-name">KernelSHAP</div>
+                        <div class="method-details">
+                            <strong>Computation:</strong> Sampling-based approximation<br><br>
+                            <strong>Complexity:</strong> O(2<sup>M</sup>)<br><br>
+                            <strong>Accuracy:</strong> Approximate values<br><br>
+                            <strong>Speed:</strong> Slow (exponential time)<br><br>
+                            <strong>Application:</strong> Any model
+                        </div>
+                    </div>
+                </div>
+                <div class="key-points" style="margin-top: 15px; background: #F1F9F3; border-color: #28A745;">
+                    <div class="key-points-title" style="color: #28A745;">💡 Key Insights</div>
+                    <ul>
+                        <li>TreeSHAP reduces exponential complexity to polynomial complexity by efficiently computing conditional expectations in trees</li>
+                        <li>It leverages dynamic programming principles to eliminate redundant computations and maximize memory efficiency</li>
+                        <li>Unlike model-agnostic KernelSHAP, it enables accurate and fast computation by exploiting the model's internal structure</li>
+                    </ul>
                 </div>
             </div>
         </div>

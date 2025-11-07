@@ -55,18 +55,11 @@
             line-height: 1.3;
         }
         
-        /* Primary concepts (ring 1) */
-        .concept-ring-1 {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-        }
-        
+        /* Primary concepts */
         .concept-primary {
             position: absolute;
-            width: 140px;
-            height: 90px;
+            width: 160px;
+            height: 80px;
             background: white;
             border: 3px solid #1E64C8;
             border-radius: 12px;
@@ -93,50 +86,77 @@
             line-height: 1.2;
         }
         
-        /* Positioning primary concepts */
-        .concept-1 { 
-            left: -310px;
-            top: -45px;
+        /* Positioning primary concepts - adjusted to match image */
+        .concept-interpretability { 
+            left: 100px;
+            top: 50%;
+            transform: translateY(-50%);
         }
         
-        .concept-2 { 
-            left: 170px;
-            top: -45px;
+        .concept-explainability { 
+            right: 100px;
+            top: 50%;
+            transform: translateY(-50%);
         }
         
-        .concept-3 { 
-            left: -70px;
-            top: -170px;
+        .concept-transparency { 
+            left: 50%;
+            top: 80px;
+            transform: translateX(-50%);
         }
         
-        /* Secondary concepts (ring 2) */
+        /* Secondary concepts */
         .concept-secondary {
             position: absolute;
             min-width: 120px;
             padding: 10px 16px;
-            background: #F0F7FF;
+            background: #E8F2FF;
             border: 2px solid #B8D4F1;
             border-radius: 8px;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
             color: #333;
             text-align: center;
             box-shadow: 0 2px 8px rgba(30, 100, 200, 0.1);
             transition: all 0.2s;
+            line-height: 1.3;
         }
         
         .concept-secondary:hover {
-            background: #E5F1FF;
+            background: #D0E7FF;
             transform: scale(1.05);
         }
         
-        /* Positioning secondary concepts */
-        .sec-1 { left: 50px; top: 60px; }
-        .sec-2 { left: 220px; top: 120px; }
-        .sec-3 { right: 50px; top: 60px; }
-        .sec-4 { right: 220px; top: 120px; }
-        .sec-5 { left: 100px; bottom: 80px; }
-        .sec-6 { right: 100px; bottom: 80px; }
+        /* Positioning secondary concepts to match the image */
+        .sec-global { 
+            left: 75px; 
+            top: 90px; 
+        }
+        
+        .sec-feature { 
+            left: 285px; 
+            top: 155px; 
+        }
+        
+        .sec-local { 
+            right: 70px; 
+            top: 90px; 
+        }
+        
+        .sec-agnostic { 
+            right: 250px; 
+            top: 155px; 
+        }
+        
+        .sec-internal { 
+            left: 140px; 
+            bottom: 80px; 
+        }
+        
+        .sec-specific { 
+            right: 140px; 
+            bottom: 80px; 
+        }
         
         /* Connection lines */
         .connections {
@@ -151,39 +171,36 @@
         
         .line {
             position: absolute;
-            background: rgba(30, 100, 200, 0.2);
-            transform-origin: left center;
+            background: rgba(30, 100, 200, 0.15);
+            height: 2px;
+            transform-origin: center;
         }
         
         /* Lines from hub to primary concepts */
-        .line-1 { 
-            left: 50%;
+        .line-left { 
+            left: 260px;
             top: 50%;
-            width: 130px;
-            height: 2px;
-            transform: translate(-100%, -50%) rotate(180deg);
+            width: 120px;
         }
         
-        .line-2 { 
-            left: 50%;
+        .line-right { 
+            right: 260px;
             top: 50%;
-            width: 130px;
-            height: 2px;
-            transform: translate(0, -50%);
+            width: 120px;
         }
         
-        .line-3 { 
+        .line-top { 
             left: 50%;
-            top: 50%;
-            width: 130px;
-            height: 2px;
-            transform: translate(-50%, -100%) rotate(90deg);
+            top: 170px;
+            width: 2px;
+            height: 100px;
+            transform: translateX(-50%);
         }
         
         /* Annotation badges */
         .badge {
             position: absolute;
-            padding: 6px 12px;
+            padding: 6px 14px;
             background: #FFF4E6;
             border: 1px solid #FFD699;
             border-radius: 6px;
@@ -192,17 +209,24 @@
             font-weight: 600;
         }
         
-        .badge-1 { right: 60px; bottom: 40px; }
-        .badge-2 { left: 60px; bottom: 40px; }
+        .badge-specific { 
+            left: 100px; 
+            bottom: 35px; 
+        }
+        
+        .badge-overall { 
+            right: 100px; 
+            bottom: 35px; 
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <!-- Connection lines -->
         <div class="connections">
-            <div class="line line-1"></div>
-            <div class="line line-2"></div>
-            <div class="line line-3"></div>
+            <div class="line line-left"></div>
+            <div class="line line-right"></div>
+            <div class="line line-top"></div>
         </div>
         
         <!-- Central hub -->
@@ -210,32 +234,30 @@
             <div class="hub-title">Explainable<br>AI (XAI)</div>
         </div>
         
-        <!-- Primary concepts ring -->
-        <div class="concept-ring-1">
-            <div class="concept-primary concept-1">
-                <div class="concept-primary-title">Interpretability</div>
-            </div>
-            
-            <div class="concept-primary concept-2">
-                <div class="concept-primary-title">Explainability</div>
-            </div>
-            
-            <div class="concept-primary concept-3">
-                <div class="concept-primary-title">Transparency</div>
-            </div>
+        <!-- Primary concepts -->
+        <div class="concept-primary concept-interpretability">
+            <div class="concept-primary-title">Interpretability</div>
+        </div>
+        
+        <div class="concept-primary concept-explainability">
+            <div class="concept-primary-title">Explainability</div>
+        </div>
+        
+        <div class="concept-primary concept-transparency">
+            <div class="concept-primary-title">Transparency</div>
         </div>
         
         <!-- Secondary concepts -->
-        <div class="concept-secondary sec-1">Global<br>Explanations</div>
-        <div class="concept-secondary sec-2">Feature<br>Importance</div>
-        <div class="concept-secondary sec-3">Local<br>Explanations</div>
-        <div class="concept-secondary sec-4">Model-Agnostic<br>Methods</div>
-        <div class="concept-secondary sec-5">Internal<br>Mechanics</div>
-        <div class="concept-secondary sec-6">Model-Specific<br>Methods</div>
+        <div class="concept-secondary sec-global">Global<br>Explanations</div>
+        <div class="concept-secondary sec-feature">Feature<br>Importance</div>
+        <div class="concept-secondary sec-local">Local<br>Explanations</div>
+        <div class="concept-secondary sec-agnostic">Model-Agnostic<br>Methods</div>
+        <div class="concept-secondary sec-internal">Internal<br>Mechanics</div>
+        <div class="concept-secondary sec-specific">Model-Specific<br>Methods</div>
         
         <!-- Annotation badges -->
-        <div class="badge badge-1">Overall Behavior</div>
-        <div class="badge badge-2">Specific Instance</div>
+        <div class="badge badge-specific">Specific Instance</div>
+        <div class="badge badge-overall">Overall Behavior</div>
     </div>
 </body>
 </html>

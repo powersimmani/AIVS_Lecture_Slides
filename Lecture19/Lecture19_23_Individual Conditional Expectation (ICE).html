@@ -23,10 +23,15 @@
         
         .container {
             width: 960px;
-            height: 540px;
             position: relative;
             background: white;
             padding: 25px 35px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .main-content {
             display: flex;
             gap: 25px;
         }
@@ -101,26 +106,26 @@
         /* Individual ICE curves */
         .ice-curve {
             fill: none;
-            stroke-width: 1.5;
-            opacity: 0.4;
-            transition: opacity 0.2s;
+            stroke-width: 2;
+            opacity: 0.5;
+            transition: opacity 0.2s, stroke-width 0.2s;
         }
         
         .ice-curve:hover {
             opacity: 1;
-            stroke-width: 2.5;
+            stroke-width: 3;
         }
         
         /* Different colors for different instances */
-        .ice-1 { stroke: #90CAF9; }
-        .ice-2 { stroke: #64B5F6; }
-        .ice-3 { stroke: #42A5F5; }
-        .ice-4 { stroke: #81C784; }
-        .ice-5 { stroke: #66BB6A; }
+        .ice-1 { stroke: #64B5F6; }
+        .ice-2 { stroke: #42A5F5; }
+        .ice-3 { stroke: #2196F3; }
+        .ice-4 { stroke: #66BB6A; }
+        .ice-5 { stroke: #4CAF50; }
         .ice-6 { stroke: #FFB74D; }
-        .ice-7 { stroke: #FFA726; }
+        .ice-7 { stroke: #FF9800; }
         .ice-8 { stroke: #EF5350; }
-        .ice-9 { stroke: #EC407A; }
+        .ice-9 { stroke: #F44336; }
         .ice-10 { stroke: #AB47BC; }
         
         /* PDP average line */
@@ -154,7 +159,7 @@
         }
         
         .legend-ice {
-            background: #90CAF9;
+            background: #64B5F6;
             opacity: 0.6;
         }
         
@@ -274,156 +279,301 @@
             color: #1E64C8;
             font-weight: 700;
         }
+        
+        /* How it works section */
+        .how-it-works {
+            background: linear-gradient(135deg, #FAFAFA 0%, #F5F5F5 100%);
+            border: 2px solid #E5E7EB;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 10px;
+        }
+        
+        .how-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+        
+        .step-card {
+            background: white;
+            border-radius: 10px;
+            padding: 16px;
+            border: 2px solid #E5E7EB;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .step-card:hover {
+            border-color: #1E64C8;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(30, 100, 200, 0.15);
+        }
+        
+        .step-number {
+            position: absolute;
+            top: -12px;
+            left: 12px;
+            background: #1E64C8;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+        }
+        
+        .step-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            margin-top: 8px;
+        }
+        
+        .step-desc {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.4;
+        }
+        
+        .step-example {
+            margin-top: 8px;
+            padding: 8px;
+            background: #F0F7FF;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #333;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .arrow {
+            position: absolute;
+            right: -18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #1E64C8;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .step-card:last-child .arrow {
+            display: none;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Plot Section -->
-        <div class="plot-section">
-            <div class="title">Individual Conditional Expectation (ICE)</div>
-            <div class="subtitle">Instance-Level Feature Effects</div>
-            
-            <div class="plot-container">
-                <div class="plot-title">ICE Curves: Age vs Loan Approval Prediction</div>
+        <div class="main-content">
+            <!-- Plot Section -->
+            <div class="plot-section">
+                <div class="title">Individual Conditional Expectation (ICE)</div>
+                <div class="subtitle">Instance-Level Feature Effects</div>
                 
-                <div class="plot-canvas">
-                    <svg viewBox="0 0 350 220">
-                        <!-- Axes -->
-                        <line x1="40" y1="190" x2="330" y2="190" class="axis"/>
-                        <line x1="40" y1="20" x2="40" y2="190" class="axis"/>
-                        
-                        <!-- Grid lines -->
-                        <line x1="40" y1="60" x2="330" y2="60" class="grid-line"/>
-                        <line x1="40" y1="105" x2="330" y2="105" class="grid-line"/>
-                        <line x1="40" y1="150" x2="330" y2="150" class="grid-line"/>
-                        
-                        <!-- Individual ICE curves (10 instances) -->
-                        <!-- Instance 1 - steep increase -->
-                        <path d="M 40 180 L 80 165 L 120 140 L 160 110 L 200 75 L 240 50 L 280 35 L 330 28" 
-                              class="ice-curve ice-1"/>
-                        
-                        <!-- Instance 2 - moderate increase -->
-                        <path d="M 40 185 L 80 175 L 120 158 L 160 135 L 200 110 L 240 85 L 280 65 L 330 55" 
-                              class="ice-curve ice-2"/>
-                        
-                        <!-- Instance 3 - slow start then steep -->
-                        <path d="M 40 188 L 80 182 L 120 170 L 160 148 L 200 115 L 240 80 L 280 55 L 330 45" 
-                              class="ice-curve ice-3"/>
-                        
-                        <!-- Instance 4 - gentle curve -->
-                        <path d="M 40 175 L 80 168 L 120 155 L 160 138 L 200 118 L 240 98 L 280 82 L 330 72" 
-                              class="ice-curve ice-4"/>
-                        
-                        <!-- Instance 5 - plateau effect -->
-                        <path d="M 40 170 L 80 160 L 120 145 L 160 125 L 200 105 L 240 90 L 280 85 L 330 82" 
-                              class="ice-curve ice-5"/>
-                        
-                        <!-- Instance 6 - almost flat -->
-                        <path d="M 40 165 L 80 162 L 120 158 L 160 152 L 200 145 L 240 138 L 280 132 L 330 128" 
-                              class="ice-curve ice-6"/>
-                        
-                        <!-- Instance 7 - late bloomer -->
-                        <path d="M 40 178 L 80 175 L 120 168 L 160 155 L 200 135 L 240 105 L 280 70 L 330 50" 
-                              class="ice-curve ice-7"/>
-                        
-                        <!-- Instance 8 - declining -->
-                        <path d="M 40 160 L 80 165 L 120 168 L 160 165 L 200 158 L 240 148 L 280 138 L 330 130" 
-                              class="ice-curve ice-8"/>
-                        
-                        <!-- Instance 9 - variable -->
-                        <path d="M 40 172 L 80 162 L 120 148 L 160 130 L 200 108 L 240 88 L 280 75 L 330 68" 
-                              class="ice-curve ice-9"/>
-                        
-                        <!-- Instance 10 - s-curve -->
-                        <path d="M 40 182 L 80 178 L 120 165 L 160 142 L 200 112 L 240 82 L 280 60 L 330 50" 
-                              class="ice-curve ice-10"/>
-                        
-                        <!-- PDP average line (bold) -->
-                        <path d="M 40 176 Q 120 160 200 120 T 330 75" 
-                              class="pdp-line"/>
-                        
-                        <!-- Axis labels -->
-                        <text x="185" y="210" class="axis-label" text-anchor="middle">Age (years)</text>
-                        <text x="20" y="105" class="axis-label" text-anchor="middle" transform="rotate(-90 20 105)">Prediction</text>
-                        
-                        <!-- Tick labels -->
-                        <text x="40" y="202" class="axis-label" text-anchor="middle" style="font-size: 11px;">20</text>
-                        <text x="185" y="202" class="axis-label" text-anchor="middle" style="font-size: 11px;">45</text>
-                        <text x="330" y="202" class="axis-label" text-anchor="middle" style="font-size: 11px;">70</text>
-                    </svg>
+                <div class="plot-container">
+                    <div class="plot-title">ICE Curves: Age vs Loan Approval Prediction</div>
+                    
+                    <div class="plot-canvas">
+                        <svg viewBox="0 0 350 220">
+                            <!-- Axes -->
+                            <line x1="40" y1="190" x2="330" y2="190" class="axis"/>
+                            <line x1="40" y1="20" x2="40" y2="190" class="axis"/>
+                            
+                            <!-- Grid lines -->
+                            <line x1="40" y1="50" x2="330" y2="50" class="grid-line"/>
+                            <line x1="40" y1="85" x2="330" y2="85" class="grid-line"/>
+                            <line x1="40" y1="120" x2="330" y2="120" class="grid-line"/>
+                            <line x1="40" y1="155" x2="330" y2="155" class="grid-line"/>
+                            
+                            <!-- Individual ICE curves (10 instances with more varied patterns) -->
+                            <!-- Instance 1 - steep early increase -->
+                            <path d="M 40 175 Q 100 145 160 95 T 330 35" 
+                                  class="ice-curve ice-1"/>
+                            
+                            <!-- Instance 2 - moderate steady increase -->
+                            <path d="M 40 180 Q 120 160 200 115 T 330 60" 
+                                  class="ice-curve ice-2"/>
+                            
+                            <!-- Instance 3 - S-curve pattern -->
+                            <path d="M 40 185 Q 80 180 120 165 Q 200 125 280 60 L 330 50" 
+                                  class="ice-curve ice-3"/>
+                            
+                            <!-- Instance 4 - gentle linear -->
+                            <path d="M 40 170 L 100 155 L 160 140 L 220 120 L 280 100 L 330 85" 
+                                  class="ice-curve ice-4"/>
+                            
+                            <!-- Instance 5 - plateau after increase -->
+                            <path d="M 40 165 Q 120 140 180 105 Q 240 90 330 88" 
+                                  class="ice-curve ice-5"/>
+                            
+                            <!-- Instance 6 - almost flat (little effect) -->
+                            <path d="M 40 160 Q 160 155 250 148 L 330 145" 
+                                  class="ice-curve ice-6"/>
+                            
+                            <!-- Instance 7 - late bloomer -->
+                            <path d="M 40 178 L 140 170 Q 220 140 330 55" 
+                                  class="ice-curve ice-7"/>
+                            
+                            <!-- Instance 8 - slight decrease then increase -->
+                            <path d="M 40 155 Q 100 158 160 155 Q 240 135 330 110" 
+                                  class="ice-curve ice-8"/>
+                            
+                            <!-- Instance 9 - strong effect throughout -->
+                            <path d="M 40 172 Q 120 145 200 100 T 330 45" 
+                                  class="ice-curve ice-9"/>
+                            
+                            <!-- Instance 10 - moderate with dip -->
+                            <path d="M 40 168 Q 100 160 160 148 Q 240 115 330 75" 
+                                  class="ice-curve ice-10"/>
+                            
+                            <!-- PDP average line (bold) -->
+                            <path d="M 40 170 Q 140 150 220 115 T 330 75" 
+                                  class="pdp-line"/>
+                            
+                            <!-- Axis labels -->
+                            <text x="185" y="210" class="axis-label" text-anchor="middle">Age (years)</text>
+                            <text x="15" y="105" class="axis-label" text-anchor="middle" transform="rotate(-90 15 105)">Prediction</text>
+                            
+                            <!-- Tick labels -->
+                            <text x="40" y="205" class="axis-label" text-anchor="middle" style="font-size: 11px;">20</text>
+                            <text x="135" y="205" class="axis-label" text-anchor="middle" style="font-size: 11px;">35</text>
+                            <text x="230" y="205" class="axis-label" text-anchor="middle" style="font-size: 11px;">50</text>
+                            <text x="330" y="205" class="axis-label" text-anchor="middle" style="font-size: 11px;">65</text>
+                            
+                            <!-- Y-axis tick labels -->
+                            <text x="30" y="192" class="axis-label" text-anchor="end" style="font-size: 11px;">0.0</text>
+                            <text x="30" y="157" class="axis-label" text-anchor="end" style="font-size: 11px;">0.2</text>
+                            <text x="30" y="122" class="axis-label" text-anchor="end" style="font-size: 11px;">0.4</text>
+                            <text x="30" y="87" class="axis-label" text-anchor="end" style="font-size: 11px;">0.6</text>
+                            <text x="30" y="52" class="axis-label" text-anchor="end" style="font-size: 11px;">0.8</text>
+                        </svg>
+                    </div>
+                    
+                    <!-- Legend -->
+                    <div class="legend">
+                        <div class="legend-item">
+                            <div class="legend-line legend-ice"></div>
+                            <span>Individual ICE Curves</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-line legend-pdp"></div>
+                            <span>PDP (Average)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Info Section -->
+            <div class="info-section">
+                <div class="section-title">Key Concepts</div>
+                
+                <div class="comparison-box">
+                    <div class="comparison-title">ICE vs PDP</div>
+                    <div class="comparison-grid">
+                        <div class="comparison-item">
+                            <div class="comparison-label">ICE</div>
+                            <div class="comparison-desc">Individual instance trajectories</div>
+                        </div>
+                        <div class="comparison-item">
+                            <div class="comparison-label">PDP</div>
+                            <div class="comparison-desc">Average of all ICE curves</div>
+                        </div>
+                    </div>
                 </div>
                 
-                <!-- Legend -->
-                <div class="legend">
-                    <div class="legend-item">
-                        <div class="legend-line legend-ice"></div>
-                        <span>Individual ICE Curves</span>
+                <div class="info-card">
+                    <div class="info-title">Heterogeneity</div>
+                    <div class="info-desc">Reveals variation in feature effects across instances</div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-title">Subgroups</div>
+                    <div class="info-desc">Identifies different feature-outcome relationships</div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-title">Interactions</div>
+                    <div class="info-desc">Detects interactions PDP may hide</div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-title">Non-parallel Lines</div>
+                    <div class="info-desc">Shows unexpected patterns & heterogeneity</div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-title">Centered ICE</div>
+                    <div class="info-desc">Subtract baseline for better comparison</div>
+                </div>
+                
+                <!-- Insights -->
+                <div class="insights-box">
+                    <div class="insights-title">What to Look For</div>
+                    <div class="insight-item">
+                        <span class="insight-icon">•</span>
+                        <span>Parallel lines = homogeneous effect</span>
                     </div>
-                    <div class="legend-item">
-                        <div class="legend-line legend-pdp"></div>
-                        <span>PDP (Average)</span>
+                    <div class="insight-item">
+                        <span class="insight-icon">•</span>
+                        <span>Diverging lines = heterogeneous effect</span>
+                    </div>
+                    <div class="insight-item">
+                        <span class="insight-icon">•</span>
+                        <span>Clusters = distinct subgroups</span>
                     </div>
                 </div>
             </div>
         </div>
         
-        <!-- Info Section -->
-        <div class="info-section">
-            <div class="section-title">Key Concepts</div>
+        <!-- How It Works Section -->
+        <div class="how-it-works">
+            <div class="how-title">How ICE Works: Step-by-Step Process</div>
             
-            <div class="comparison-box">
-                <div class="comparison-title">ICE vs PDP</div>
-                <div class="comparison-grid">
-                    <div class="comparison-item">
-                        <div class="comparison-label">ICE</div>
-                        <div class="comparison-desc">Individual instance trajectories</div>
-                    </div>
-                    <div class="comparison-item">
-                        <div class="comparison-label">PDP</div>
-                        <div class="comparison-desc">Average of all ICE curves</div>
-                    </div>
+            <div class="steps-container">
+                <!-- Step 1 -->
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Select Instance</div>
+                    <div class="step-desc">Choose a single data point from your dataset</div>
+                    <div class="step-example">x₁ = (age=30, income=50k, ...)</div>
+                    <div class="arrow">→</div>
                 </div>
-            </div>
-            
-            <div class="info-card">
-                <div class="info-title">Heterogeneity</div>
-                <div class="info-desc">Reveals variation in feature effects across instances</div>
-            </div>
-            
-            <div class="info-card">
-                <div class="info-title">Subgroups</div>
-                <div class="info-desc">Identifies different feature-outcome relationships</div>
-            </div>
-            
-            <div class="info-card">
-                <div class="info-title">Interactions</div>
-                <div class="info-desc">Detects interactions PDP may hide</div>
-            </div>
-            
-            <div class="info-card">
-                <div class="info-title">Non-parallel Lines</div>
-                <div class="info-desc">Shows unexpected patterns & heterogeneity</div>
-            </div>
-            
-            <div class="info-card">
-                <div class="info-title">Centered ICE</div>
-                <div class="info-desc">Subtract baseline for better comparison</div>
-            </div>
-            
-            <!-- Insights -->
-            <div class="insights-box">
-                <div class="insights-title">What to Look For</div>
-                <div class="insight-item">
-                    <span class="insight-icon">•</span>
-                    <span>Parallel lines = homogeneous effect</span>
+                
+                <!-- Step 2 -->
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Vary Feature</div>
+                    <div class="step-desc">Change target feature across its range, keep others fixed</div>
+                    <div class="step-example">age: 20, 25, 30, ..., 65<br>income=50k (fixed)</div>
+                    <div class="arrow">→</div>
                 </div>
-                <div class="insight-item">
-                    <span class="insight-icon">•</span>
-                    <span>Diverging lines = heterogeneous effect</span>
+                
+                <!-- Step 3 -->
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Get Predictions</div>
+                    <div class="step-desc">Run model for each feature value</div>
+                    <div class="step-example">ŷ(20), ŷ(25), ŷ(30), ..., ŷ(65)</div>
+                    <div class="arrow">→</div>
                 </div>
-                <div class="insight-item">
-                    <span class="insight-icon">•</span>
-                    <span>Clusters = distinct subgroups</span>
+                
+                <!-- Step 4 -->
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <div class="step-title">Plot & Repeat</div>
+                    <div class="step-desc">Draw curve for this instance, repeat for all instances</div>
+                    <div class="step-example">n curves for n instances<br>Average = PDP</div>
                 </div>
             </div>
         </div>

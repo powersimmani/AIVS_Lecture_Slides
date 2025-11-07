@@ -69,7 +69,7 @@
         .waterfall-container {
             background: white;
             border-radius: 8px;
-            padding: 20px;
+            padding: 15px 25px;
             height: calc(100% - 120px);
             position: relative;
         }
@@ -77,27 +77,37 @@
         .waterfall-chart {
             position: relative;
             height: 100%;
-            padding-left: 120px;
-            padding-right: 20px;
+            margin: 0 auto;
+            max-width: 550px;
         }
         
         .bar-item {
             position: absolute;
-            left: 120px;
-            right: 20px;
+            left: 0;
+            right: 0;
             height: 35px;
             display: flex;
             align-items: center;
+            padding-left: 110px;
         }
         
         .bar-label {
             position: absolute;
-            left: -110px;
+            left: 0;
             width: 100px;
             font-size: 14px;
             font-weight: 600;
             color: #333;
             text-align: right;
+        }
+        
+        .bar-visual-container {
+            position: absolute;
+            left: 110px;
+            right: 0;
+            height: 28px;
+            display: flex;
+            align-items: center;
         }
         
         .bar-visual {
@@ -121,17 +131,19 @@
             background: linear-gradient(90deg, #DC3545 0%, #E63946 100%);
             color: white;
             justify-content: flex-end;
+            margin-left: auto;
         }
         
         .bar-negative {
             background: linear-gradient(90deg, #4A90E2 0%, #1E64C8 100%);
             color: white;
             justify-content: flex-start;
+            margin-right: auto;
         }
         
         .base-line {
             position: absolute;
-            left: 50%;
+            left: calc(110px + 50%);
             top: 0;
             bottom: 0;
             width: 2px;
@@ -141,21 +153,22 @@
         
         /* Positioning from bottom to top */
         .item-base {
-            bottom: 10px;
+            bottom: 220px;
             background: #E8F2FF;
             border: 2px solid #1E64C8;
             border-radius: 6px;
             padding: 8px;
             height: auto;
+            padding-left: 0;
         }
         
-        .item-1 { bottom: 55px; }
-        .item-2 { bottom: 100px; }
-        .item-3 { bottom: 145px; }
-        .item-4 { bottom: 190px; }
-        .item-5 { bottom: 235px; }
+        .item-1 { bottom: 270px; }
+        .item-2 { bottom: 315px; }
+        .item-3 { bottom: 360px; }
+        .item-4 { bottom: 405px; }
+        .item-5 { bottom: 450px; }
         .item-prediction {
-            bottom: 280px;
+            bottom: 495px;
             background: #1E64C8;
             border: 2px solid #1E64C8;
             color: white;
@@ -164,6 +177,7 @@
             height: auto;
             font-weight: 700;
             font-size: 16px;
+            padding-left: 0;
         }
         
         .value-text {
@@ -307,44 +321,52 @@
                         
                         <!-- Base value -->
                         <div class="bar-item item-base">
-                            <div class="bar-label">Base Value</div>
                             <div style="text-align: center; width: 100%;">
                                 <span class="value-text">$250K</span>
-                                <div style="font-size: 12px; color: #666; margin-top: 2px;">Average prediction</div>
+                                <div style="font-size: 12px; color: #666; margin-top: 2px;">Base Value (Average prediction)</div>
                             </div>
                         </div>
                         
                         <!-- Feature contributions -->
                         <div class="bar-item item-1">
                             <div class="bar-label">Square Feet</div>
-                            <div class="bar-visual bar-positive" style="width: 70%;">+$80K</div>
+                            <div class="bar-visual-container">
+                                <div class="bar-visual bar-positive" style="width: 70%;">+$80K</div>
+                            </div>
                         </div>
                         
                         <div class="bar-item item-2">
                             <div class="bar-label">Location</div>
-                            <div class="bar-visual bar-positive" style="width: 50%;">+$50K</div>
+                            <div class="bar-visual-container">
+                                <div class="bar-visual bar-positive" style="width: 50%;">+$50K</div>
+                            </div>
                         </div>
                         
                         <div class="bar-item item-3">
                             <div class="bar-label">Bedrooms</div>
-                            <div class="bar-visual bar-positive" style="width: 25%;">+$20K</div>
+                            <div class="bar-visual-container">
+                                <div class="bar-visual bar-positive" style="width: 25%;">+$20K</div>
+                            </div>
                         </div>
                         
                         <div class="bar-item item-4">
                             <div class="bar-label">Age</div>
-                            <div class="bar-visual bar-negative" style="width: 30%;">-$30K</div>
+                            <div class="bar-visual-container">
+                                <div class="bar-visual bar-negative" style="width: 30%;">-$30K</div>
+                            </div>
                         </div>
                         
                         <div class="bar-item item-5">
                             <div class="bar-label">Condition</div>
-                            <div class="bar-visual bar-negative" style="width: 20%;">-$20K</div>
+                            <div class="bar-visual-container">
+                                <div class="bar-visual bar-negative" style="width: 20%;">-$20K</div>
+                            </div>
                         </div>
                         
                         <!-- Final prediction -->
                         <div class="bar-item item-prediction">
-                            <div class="bar-label" style="color: white;">Prediction</div>
                             <div style="text-align: center; width: 100%;">
-                                <span class="value-text final">$350K</span>
+                                <span class="value-text final">Prediction: $350K</span>
                             </div>
                         </div>
                     </div>

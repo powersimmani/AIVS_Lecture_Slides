@@ -15,15 +15,16 @@
             font-family: 'Aptos', 'Segoe UI', sans-serif;
             background: white;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
             min-height: 100vh;
             padding: 20px;
+            gap: 30px;
         }
         
         .container {
             width: 960px;
-            height: 540px;
+            min-height: 540px;
             position: relative;
             background: white;
             padding: 25px;
@@ -268,6 +269,164 @@
             background: #DC3545;
             width: 100%;
         }
+        
+        /* 계산원리 섹션 스타일 */
+        .principle-section {
+            width: 960px;
+            background: white;
+            padding: 25px;
+            margin-top: 10px;
+        }
+        
+        .principle-title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 20px;
+        }
+        
+        .principle-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .principle-card {
+            background: #F8F9FA;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        
+        .principle-card-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .step-number {
+            background: #1E64C8;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 700;
+        }
+        
+        .principle-text {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .formula-box {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        
+        .formula {
+            font-family: 'Courier New', monospace;
+            font-size: 15px;
+            color: #1E64C8;
+            text-align: center;
+            font-weight: 600;
+            margin: 8px 0;
+        }
+        
+        .formula-desc {
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+            margin-top: 8px;
+        }
+        
+        .key-points {
+            background: #FFF9E6;
+            border-left: 4px solid #FFC107;
+            padding: 12px 15px;
+            margin-top: 10px;
+            border-radius: 4px;
+        }
+        
+        .key-points-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #F57C00;
+            margin-bottom: 8px;
+        }
+        
+        .key-points ul {
+            margin-left: 20px;
+            font-size: 14px;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .key-points li {
+            margin-bottom: 5px;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .method-card {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        
+        .method-card.treeshap {
+            border-color: #28A745;
+            background: #F1F9F3;
+        }
+        
+        .method-card.kernelshap {
+            border-color: #DC3545;
+            background: #FEF5F6;
+        }
+        
+        .method-name {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .method-card.treeshap .method-name {
+            color: #28A745;
+        }
+        
+        .method-card.kernelshap .method-name {
+            color: #DC3545;
+        }
+        
+        .method-details {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .method-details strong {
+            color: #1E64C8;
+        }
     </style>
 </head>
 <body>
@@ -386,6 +545,133 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- TreeSHAP Computation Principles Section -->
+    <div class="principle-section">
+        <div class="principle-title">TreeSHAP Computation Principles</div>
+        
+        <div class="principle-content">
+            <!-- Step 1: Tree Structure Exploitation -->
+            <div class="principle-card">
+                <div class="principle-card-title">
+                    <span class="step-number">1</span>
+                    Tree Structure Exploitation
+                </div>
+                <div class="principle-text">
+                    TreeSHAP efficiently computes Shapley values by leveraging the hierarchical structure of tree-based models. 
+                    It tracks decision paths at each node while reusing computations for feature combinations that share the same subtree.
+                </div>
+                <div class="formula-box">
+                    <div class="formula">
+                        φ<sub>i</sub> = Σ<sub>S⊆M\{i}</sub> |S|!(M-|S|-1)! / M! × [f<sub>S∪{i}</sub>(x<sub>S∪{i}</sub>) - f<sub>S</sub>(x<sub>S</sub>)]
+                    </div>
+                    <div class="formula-desc">Original Shapley value definition</div>
+                </div>
+            </div>
+            
+            <!-- Step 2: Recursive Computation -->
+            <div class="principle-card">
+                <div class="principle-card-title">
+                    <span class="step-number">2</span>
+                    Recursive Computation
+                </div>
+                <div class="principle-text">
+                    The algorithm recursively traverses the tree from root to leaves, tracking two pieces of information at each node:
+                </div>
+                <div class="key-points">
+                    <div class="key-points-title">🔑 Tracked Information</div>
+                    <ul>
+                        <li><strong>Coverage</strong>: The proportion of possible feature combinations passing through the current node</li>
+                        <li><strong>Contribution</strong>: The impact each feature has on the prediction value</li>
+                    </ul>
+                </div>
+                <div class="formula-box">
+                    <div class="formula">
+                        RECURSE(j, m, p<sub>z</sub>, p<sub>o</sub>, v)
+                    </div>
+                    <div class="formula-desc">
+                        j: current node, m: unique path, p<sub>z</sub>: zero probability, p<sub>o</sub>: one probability, v: node value
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 3: Path Integration -->
+            <div class="principle-card">
+                <div class="principle-card-title">
+                    <span class="step-number">3</span>
+                    Path Integration
+                </div>
+                <div class="principle-text">
+                    When the same feature is used across multiple paths, the final Shapley value is calculated by taking a weighted average of each path's contribution. 
+                    This process obtains exact values without explicitly enumerating all possible paths in the tree.
+                </div>
+                <div class="formula-box">
+                    <div class="formula">
+                        φ<sub>i</sub> = Σ<sub>paths</sub> w<sub>path</sub> × Δv<sub>i,path</sub>
+                    </div>
+                    <div class="formula-desc">
+                        w<sub>path</sub>: path weight, Δv<sub>i,path</sub>: contribution of feature i along the path
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 4: Ensemble Integration -->
+            <div class="principle-card">
+                <div class="principle-card-title">
+                    <span class="step-number">4</span>
+                    Ensemble Integration
+                </div>
+                <div class="principle-text">
+                    For ensemble models like Random Forest or Gradient Boosting, the Shapley values are computed independently for each tree 
+                    and then averaged to generate the final explanation.
+                </div>
+                <div class="formula-box">
+                    <div class="formula">
+                        φ<sub>i</sub><sup>ensemble</sup> = (1/T) × Σ<sub>t=1</sub><sup>T</sup> φ<sub>i</sub><sup>(t)</sup>
+                    </div>
+                    <div class="formula-desc">T: number of trees, φ<sub>i</sub><sup>(t)</sup>: Shapley value of feature i for the t-th tree</div>
+                </div>
+            </div>
+            
+            <!-- Key Advantages Comparison -->
+            <div class="principle-card" style="background: #FFFBF0; border-color: #FFC107;">
+                <div class="principle-card-title" style="color: #F57C00;">
+                    <span class="step-number" style="background: #F57C00;">✓</span>
+                    TreeSHAP vs KernelSHAP
+                </div>
+                <div class="comparison-grid">
+                    <div class="method-card treeshap">
+                        <div class="method-name">TreeSHAP</div>
+                        <div class="method-details">
+                            <strong>Computation:</strong> Direct use of tree structure<br><br>
+                            <strong>Complexity:</strong> O(TLD²)<br><br>
+                            <strong>Accuracy:</strong> Exact Shapley values<br><br>
+                            <strong>Speed:</strong> Very fast (polynomial time)<br><br>
+                            <strong>Application:</strong> Tree-based models only
+                        </div>
+                    </div>
+                    <div class="method-card kernelshap">
+                        <div class="method-name">KernelSHAP</div>
+                        <div class="method-details">
+                            <strong>Computation:</strong> Sampling-based approximation<br><br>
+                            <strong>Complexity:</strong> O(2<sup>M</sup>)<br><br>
+                            <strong>Accuracy:</strong> Approximate values<br><br>
+                            <strong>Speed:</strong> Slow (exponential time)<br><br>
+                            <strong>Application:</strong> Any model
+                        </div>
+                    </div>
+                </div>
+                <div class="key-points" style="margin-top: 15px; background: #F1F9F3; border-color: #28A745;">
+                    <div class="key-points-title" style="color: #28A745;">💡 Key Insights</div>
+                    <ul>
+                        <li>TreeSHAP reduces exponential complexity to polynomial complexity by efficiently computing conditional expectations in trees</li>
+                        <li>It leverages dynamic programming principles to eliminate redundant computations and maximize memory efficiency</li>
+                        <li>Unlike model-agnostic KernelSHAP, it enables accurate and fast computation by exploiting the model's internal structure</li>
+                    </ul>
                 </div>
             </div>
         </div>

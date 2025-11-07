@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Isolation Forest</title>
+    <title>Isolation Forest - Extended</title>
     <style>
         * {
             margin: 0;
@@ -14,14 +14,10 @@
         body {
             font-family: Aptos, 'Segoe UI', sans-serif;
             background: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
             padding: 20px;
         }
         
-        .container {
+        .slide {
             width: 960px;
             height: 540px;
             background: white;
@@ -29,6 +25,9 @@
             display: flex;
             flex-direction: column;
             gap: 16px;
+            margin: 0 auto 40px auto;
+            border: 1px solid #ddd;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
         
         .title {
@@ -288,10 +287,317 @@
             color: #00897B;
             font-family: 'Courier New', monospace;
         }
+
+        /* New slide 2 styles */
+        .visual-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            flex: 1;
+        }
+        
+        .visual-box {
+            background: linear-gradient(135deg, #e8f5e9 0%, #ffffff 100%);
+            border: 2px solid #4CAF50;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .visual-box.anomaly-visual {
+            background: linear-gradient(135deg, #ffebee 0%, #ffffff 100%);
+            border-color: #e57373;
+        }
+        
+        .visual-header {
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid;
+        }
+        
+        .visual-box .visual-header {
+            color: #388E3C;
+            border-color: #4CAF50;
+        }
+        
+        .visual-box.anomaly-visual .visual-header {
+            color: #d32f2f;
+            border-color: #e57373;
+        }
+        
+        .tree-visualization {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        
+        .data-point {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .point-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-block;
+            border: 2px solid;
+        }
+        
+        .point-icon.blue {
+            background: #2196F3;
+            border-color: #1976D2;
+        }
+        
+        .point-icon.red {
+            background: #f44336;
+            border-color: #d32f2f;
+        }
+        
+        .split-diagram {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            padding: 10px 0;
+        }
+        
+        .split-level {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 5px 0;
+        }
+        
+        .split-line {
+            flex: 1;
+            height: 2px;
+            background: linear-gradient(to right, #4CAF50, transparent);
+            position: relative;
+        }
+        
+        .anomaly-visual .split-line {
+            background: linear-gradient(to right, #e57373, transparent);
+        }
+        
+        .split-label {
+            font-size: 13px;
+            color: #666;
+            white-space: nowrap;
+            min-width: 80px;
+        }
+        
+        .path-count {
+            background: white;
+            border: 2px solid #4CAF50;
+            border-radius: 20px;
+            padding: 8px 16px;
+            text-align: center;
+            margin-top: 10px;
+        }
+        
+        .anomaly-visual .path-count {
+            border-color: #e57373;
+        }
+        
+        .count-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+        
+        .count-value {
+            font-size: 22px;
+            font-weight: 700;
+        }
+        
+        .visual-box .count-value {
+            color: #388E3C;
+        }
+        
+        .visual-box.anomaly-visual .count-value {
+            color: #d32f2f;
+        }
+
+        /* New slide 3 styles - Anomaly Score Formula */
+        .formula-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .formula-section {
+            background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 12px;
+            padding: 20px;
+            flex: 1;
+        }
+        
+        .formula-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .formula-box {
+            background: white;
+            border: 2px solid #64B5F6;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        
+        .formula-main {
+            font-size: 24px;
+            font-family: 'Times New Roman', serif;
+            color: #1E64C8;
+            margin: 10px 0;
+            font-style: italic;
+        }
+        
+        .formula-sub {
+            font-size: 16px;
+            font-family: 'Times New Roman', serif;
+            color: #666;
+            margin: 8px 0;
+        }
+        
+        .variables-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 16px;
+        }
+        
+        .variable-item {
+            background: white;
+            border: 1px solid #64B5F6;
+            border-radius: 8px;
+            padding: 10px;
+        }
+        
+        .variable-symbol {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            margin-bottom: 4px;
+        }
+        
+        .variable-desc {
+            font-size: 13px;
+            color: #555;
+            line-height: 1.3;
+        }
+        
+        .interpretation-section {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffffff 100%);
+            border: 2px solid #FF9800;
+            border-radius: 12px;
+            padding: 20px;
+        }
+        
+        .interpretation-title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+            color: #F57C00;
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #FF9800;
+        }
+        
+        .interpretation-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        
+        .interpretation-card {
+            background: white;
+            border: 2px solid;
+            border-radius: 8px;
+            padding: 14px;
+            text-align: center;
+        }
+        
+        .interpretation-card.outlier {
+            border-color: #e57373;
+        }
+        
+        .interpretation-card.normal-point {
+            border-color: #4CAF50;
+        }
+        
+        .interp-label {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .interpretation-card.outlier .interp-label {
+            color: #d32f2f;
+        }
+        
+        .interpretation-card.normal-point .interp-label {
+            color: #388E3C;
+        }
+        
+        .interp-formula {
+            font-size: 14px;
+            font-family: 'Times New Roman', serif;
+            color: #666;
+            margin: 6px 0;
+        }
+        
+        .interp-result {
+            font-size: 20px;
+            font-weight: 700;
+            margin-top: 8px;
+        }
+        
+        .interpretation-card.outlier .interp-result {
+            color: #d32f2f;
+        }
+        
+        .interpretation-card.normal-point .interp-result {
+            color: #388E3C;
+        }
+        
+        .note-box {
+            background: #fff8e1;
+            border-left: 4px solid #FFC107;
+            padding: 12px;
+            border-radius: 4px;
+            margin-top: 16px;
+        }
+        
+        .note-text {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.5;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
+    <!-- Slide 1: Original Content -->
+    <div class="slide">
         <div class="title">🌲 Isolation Forest</div>
         <div class="subtitle">Tree-based anomaly detection algorithm</div>
         
@@ -374,6 +680,176 @@
                     <div class="complexity-label">Time Complexity</div>
                     <div class="complexity-value">O(n log n)</div>
                     <div class="complexity-label" style="margin-top: 4px; font-size: 13px;">Scales to large datasets</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 2: Isolation Process Visualization -->
+    <div class="slide" style="margin-top: 350px;">
+        <div class="title">🔍 Isolation Process: Path Length Comparison</div>
+        <div class="subtitle">Why anomalies are easier to isolate</div>
+        
+        <div class="visual-grid">
+            <!-- Normal Point Visualization -->
+            <div class="visual-box">
+                <div class="visual-header">🔵 Normal Data Point</div>
+                
+                <div class="tree-visualization">
+                    <div class="data-point">
+                        <span class="point-icon blue"></span>
+                        <div style="font-size: 13px; color: #666; margin-top: 8px;">Dense data around the point</div>
+                    </div>
+                    
+                    <div class="split-diagram">
+                        <div class="split-level">
+                            <span class="split-label">Split 1</span>
+                            <div class="split-line"></div>
+                        </div>
+                        <div class="split-level">
+                            <span class="split-label">Split 2</span>
+                            <div class="split-line"></div>
+                        </div>
+                        <div class="split-level">
+                            <span class="split-label">Split 3</span>
+                            <div class="split-line"></div>
+                        </div>
+                        <div class="split-level">
+                            <span class="split-label">Split 4</span>
+                            <div class="split-line"></div>
+                        </div>
+                        <div class="split-level">
+                            <span class="split-label">Split 5</span>
+                            <div class="split-line"></div>
+                        </div>
+                        <div class="split-level">
+                            <span class="split-label">Split 6</span>
+                            <div class="split-line"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="path-count">
+                        <div class="count-label">Path Length</div>
+                        <div class="count-value">6</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Anomaly Point Visualization -->
+            <div class="visual-box anomaly-visual">
+                <div class="visual-header">🔴 Anomaly Point</div>
+                
+                <div class="tree-visualization">
+                    <div class="data-point">
+                        <span class="point-icon red"></span>
+                        <div style="font-size: 13px; color: #666; margin-top: 8px;">Few data points nearby</div>
+                    </div>
+                    
+                    <div class="split-diagram" style="justify-content: flex-start; gap: 30px;">
+                        <div class="split-level">
+                            <span class="split-label">Split 1</span>
+                            <div class="split-line"></div>
+                        </div>
+                        <div class="split-level">
+                            <span class="split-label">Split 2</span>
+                            <div class="split-line"></div>
+                        </div>
+                        <div style="flex: 1;"></div>
+                    </div>
+                    
+                    <div class="path-count">
+                        <div class="count-label">Path Length</div>
+                        <div class="count-value">2</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div style="background: #e8f5e9; border: 2px solid #4CAF50; border-radius: 10px; padding: 14px; text-align: center; margin-top: 16px;">
+            <div style="font-size: 16px; font-weight: 600; color: #388E3C; margin-bottom: 6px;">
+                ✨ Key Insight
+            </div>
+            <div style="font-size: 15px; color: #333; line-height: 1.5;">
+                Anomalies are isolated with <strong>fewer node splits</strong> → Shorter path length → <strong>Higher anomaly score</strong>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 3: Anomaly Score Formula -->
+    <div class="slide" style="margin-top: 200px;">
+        <div class="title">📐 Anomaly Score Formula</div>
+        <div class="subtitle">Normalizing path length to 0~1 range</div>
+        
+        <div class="formula-container">
+            <div class="formula-section">
+                <div class="formula-title">Formula</div>
+                
+                <div class="formula-box">
+                    <div class="formula-main">
+                        s(x, n) = 2<sup>-E(h(x))/c(n)</sup>
+                    </div>
+                </div>
+                
+                <div class="formula-box" style="border-color: #9C27B0;">
+                    <div class="formula-sub">
+                        c(n) = 2H(n-1) - 2(n-1)/n
+                    </div>
+                    <div class="formula-sub">
+                        H(i) = ln(i) + 0.5772 (Euler's constant)
+                    </div>
+                </div>
+                
+                <div class="variables-grid">
+                    <div class="variable-item">
+                        <div class="variable-symbol">x</div>
+                        <div class="variable-desc">Specific data point</div>
+                    </div>
+                    
+                    <div class="variable-item">
+                        <div class="variable-symbol">n</div>
+                        <div class="variable-desc">Total number of data points</div>
+                    </div>
+                    
+                    <div class="variable-item">
+                        <div class="variable-symbol">h(x)</div>
+                        <div class="variable-desc">Path length of data point x</div>
+                    </div>
+                    
+                    <div class="variable-item">
+                        <div class="variable-symbol">E[h(x)]</div>
+                        <div class="variable-desc">Average of h(x) across all trees</div>
+                    </div>
+                    
+                    <div class="variable-item" style="grid-column: 1 / -1;">
+                        <div class="variable-symbol">c(n)</div>
+                        <div class="variable-desc">Average path length of all data (normalization constant)</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="interpretation-section">
+                <div class="interpretation-title">📊 Score Interpretation</div>
+                
+                <div class="interpretation-grid">
+                    <div class="interpretation-card outlier">
+                        <div class="interp-label">⚠️ Anomaly</div>
+                        <div class="interp-formula">E[h(x)] → 0</div>
+                        <div class="interp-formula">s(x, n) → 2<sup>0</sup></div>
+                        <div class="interp-result">≈ 1.0</div>
+                    </div>
+                    
+                    <div class="interpretation-card normal-point">
+                        <div class="interp-label">✓ Normal Data</div>
+                        <div class="interp-formula">E[h(x)] → n-1</div>
+                        <div class="interp-formula">s(x, n) → 2<sup>-(n-1)</sup></div>
+                        <div class="interp-result">≈ 0.0</div>
+                    </div>
+                </div>
+                
+                <div class="note-box">
+                    <div class="note-text">
+                        <strong>💡 Note:</strong> Score near 0.5 indicates ambiguous cases (E[h(x)] ≈ c(n))
+                    </div>
                 </div>
             </div>
         </div>

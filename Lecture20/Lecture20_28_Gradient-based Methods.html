@@ -13,35 +13,45 @@
         
         body {
             font-family: 'Aptos', 'Segoe UI', sans-serif;
-            background: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background: #f5f5f5;
+            padding: 40px 20px;
             min-height: 100vh;
-            padding: 20px;
         }
         
         .container {
-            width: 960px;
-            height: 540px;
-            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
             background: white;
-            padding: 25px;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         
         .title {
             text-align: center;
-            font-size: 22px;
+            font-size: 28px;
             font-weight: 600;
             color: #1E64C8;
-            margin-bottom: 18px;
+            margin-bottom: 40px;
+        }
+        
+        .section {
+            margin-bottom: 50px;
+        }
+        
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #1E64C8;
         }
         
         .main-layout {
             display: grid;
-            grid-template-rows: auto 1fr;
-            gap: 15px;
-            height: calc(100% - 60px);
+            grid-template-rows: auto auto;
+            gap: 30px;
         }
         
         .methods-grid {
@@ -220,72 +230,73 @@
             background: white;
             border-radius: 8px;
             padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
         
         .code-title {
             font-size: 16px;
             font-weight: 700;
             color: #1E64C8;
-            margin-bottom: 10px;
             text-align: center;
+            margin-bottom: 5px;
         }
         
         .code-box {
-            background: #F8F9FA;
-            border: 1px solid #E0E0E0;
+            background: #1e1e1e;
             border-radius: 6px;
             padding: 10px;
-            margin-bottom: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
         }
         
         .code-label {
-            font-size: 11px;
+            color: #4EC9B0;
             font-weight: 700;
-            color: #666;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
         }
         
         .code-content {
-            font-family: 'Courier New', monospace;
-            font-size: 11px;
-            color: #333;
+            color: #D4D4D4;
             line-height: 1.5;
         }
         
         .keyword {
-            color: #E63946;
-            font-weight: 600;
+            color: #569CD6;
         }
         
         .comment {
-            color: #28A745;
+            color: #6A9955;
         }
         
         .pros-cons {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            margin-top: 10px;
+            gap: 10px;
+            margin-top: 12px;
         }
         
         .pros-box, .cons-box {
             background: white;
             border-radius: 6px;
-            padding: 8px;
+            padding: 10px;
+            border: 2px solid #ddd;
         }
         
         .pros-box {
-            border: 2px solid #28A745;
+            border-color: #28A745;
         }
         
         .cons-box {
-            border: 2px solid #DC3545;
+            border-color: #DC3545;
         }
         
         .box-title {
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 700;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
+            text-align: center;
         }
         
         .pros-title {
@@ -323,193 +334,582 @@
             content: "✗";
             color: #DC3545;
         }
+        
+        /* CAM Visualization Section */
+        .cam-demo-container {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 30px;
+            min-height: 600px;
+        }
+        
+        .cam-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .control-section {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        
+        .control-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 12px;
+        }
+        
+        .sample-images {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+        
+        .sample-img {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.3s;
+            object-fit: cover;
+        }
+        
+        .sample-img:hover {
+            border-color: #1E64C8;
+            transform: scale(1.05);
+        }
+        
+        .sample-img.selected {
+            border-color: #E63946;
+            box-shadow: 0 0 10px rgba(230, 57, 70, 0.5);
+        }
+        
+        .method-selector {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .method-option {
+            padding: 8px;
+            background: #F8F9FA;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .method-option:hover {
+            background: #E8F2FF;
+            border-color: #1E64C8;
+        }
+        
+        .method-option.active {
+            background: #1E64C8;
+            color: white;
+            border-color: #1E64C8;
+        }
+        
+        .slider-control {
+            margin-top: 8px;
+        }
+        
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        
+        .slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #ddd;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #1E64C8;
+            cursor: pointer;
+        }
+        
+        .slider::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #1E64C8;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .cam-visualization {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .viz-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .canvas-container {
+            position: relative;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #F8F9FA;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .canvas-wrapper {
+            position: relative;
+            max-width: 100%;
+            max-height: 100%;
+        }
+        
+        #baseImage, #camOverlay {
+            display: block;
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 6px;
+        }
+        
+        #camOverlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+        
+        .legend {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 12px;
+            font-size: 11px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .legend-color {
+            width: 30px;
+            height: 15px;
+            border-radius: 3px;
+            border: 1px solid #ddd;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="title">Gradient-based Methods: Computing Feature Sensitivity</div>
         
-        <div class="main-layout">
-            <!-- Methods Grid -->
-            <div class="methods-grid">
-                <!-- Vanilla Gradients -->
-                <div class="method-card">
-                    <div class="method-header">
-                        <div class="method-icon">📐</div>
-                        <div class="method-name">Vanilla Gradients</div>
-                    </div>
-                    <div class="method-visual">
-                        <div class="gradient-pattern vanilla">
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
-                            <div class="grad-cell"></div>
+        <!-- Section 1: Methods Overview -->
+        <div class="section">
+            <div class="main-layout">
+                <!-- Methods Grid -->
+                <div class="methods-grid">
+                    <!-- Vanilla Gradients -->
+                    <div class="method-card">
+                        <div class="method-header">
+                            <div class="method-icon">📐</div>
+                            <div class="method-name">Vanilla Gradients</div>
                         </div>
+                        <div class="method-visual">
+                            <div class="gradient-pattern vanilla">
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                                <div class="grad-cell"></div>
+                            </div>
+                        </div>
+                        <div class="method-formula">∂y/∂x</div>
+                        <div class="method-desc">Basic sensitivity, noisy</div>
                     </div>
-                    <div class="method-formula">∂y/∂x</div>
-                    <div class="method-desc">Basic sensitivity, noisy</div>
+                    
+                    <!-- Integrated Gradients -->
+                    <div class="method-card">
+                        <div class="method-header">
+                            <div class="method-icon">∫</div>
+                            <div class="method-name">Integrated Gradients</div>
+                        </div>
+                        <div class="method-visual integrated"></div>
+                        <div class="method-formula">∫₀¹ ∇f(x̄ + α(x-x̄)) dα</div>
+                        <div class="method-desc">Path integral, smooth</div>
+                    </div>
+                    
+                    <!-- SmoothGrad -->
+                    <div class="method-card">
+                        <div class="method-header">
+                            <div class="method-icon">〰️</div>
+                            <div class="method-name">SmoothGrad</div>
+                        </div>
+                        <div class="method-visual smoothgrad"></div>
+                        <div class="method-formula">E[∇f(x + N(0,σ²))]</div>
+                        <div class="method-desc">Averaged over noise</div>
+                    </div>
+                    
+                    <!-- Grad-CAM -->
+                    <div class="method-card">
+                        <div class="method-header">
+                            <div class="method-icon">🔥</div>
+                            <div class="method-name">Grad-CAM</div>
+                        </div>
+                        <div class="method-visual gradcam"></div>
+                        <div class="method-formula">ReLU(Σ αₖ Aₖ)</div>
+                        <div class="method-desc">Class activation map</div>
+                    </div>
                 </div>
                 
-                <!-- Integrated Gradients -->
-                <div class="method-card">
-                    <div class="method-header">
-                        <div class="method-icon">∫</div>
-                        <div class="method-name">Integrated Gradients</div>
-                    </div>
-                    <div class="method-visual integrated"></div>
-                    <div class="method-formula">∫₀¹ ∇f(x̄ + α(x-x̄)) dα</div>
-                    <div class="method-desc">Path integral, smooth</div>
-                </div>
-                
-                <!-- SmoothGrad -->
-                <div class="method-card">
-                    <div class="method-header">
-                        <div class="method-icon">〰️</div>
-                        <div class="method-name">SmoothGrad</div>
-                    </div>
-                    <div class="method-visual smoothgrad"></div>
-                    <div class="method-formula">E[∇f(x + N(0,σ²))]</div>
-                    <div class="method-desc">Averaged over noise</div>
-                </div>
-                
-                <!-- Grad-CAM -->
-                <div class="method-card">
-                    <div class="method-header">
-                        <div class="method-icon">🔥</div>
-                        <div class="method-name">Grad-CAM</div>
-                    </div>
-                    <div class="method-visual gradcam"></div>
-                    <div class="method-formula">ReLU(Σ αₖ Aₖ)</div>
-                    <div class="method-desc">Class activation map</div>
-                </div>
-            </div>
-            
-            <!-- Comparison Section -->
-            <div class="comparison-section">
-                <!-- Comparison Table -->
-                <div class="comparison-table">
-                    <div class="table-title">Method Comparison</div>
-                    <div class="table-content">
-                        <div class="table-row">
-                            <div class="table-label">Vanilla</div>
-                            <div class="table-value">Fast, noisy <span class="cross">✗</span></div>
+                <!-- Comparison Section -->
+                <div class="comparison-section">
+                    <!-- Comparison Table -->
+                    <div class="comparison-table">
+                        <div class="table-title">Method Comparison</div>
+                        <div class="table-content">
+                            <div class="table-row">
+                                <div class="table-label">Vanilla</div>
+                                <div class="table-value">Fast, noisy <span class="cross">✗</span></div>
+                            </div>
+                            <div class="table-row">
+                                <div class="table-label">Integrated</div>
+                                <div class="table-value">Smooth, slow <span class="check">✓</span></div>
+                            </div>
+                            <div class="table-row">
+                                <div class="table-label">SmoothGrad</div>
+                                <div class="table-value">Less noise <span class="check">✓</span></div>
+                            </div>
+                            <div class="table-row">
+                                <div class="table-label">Grad-CAM</div>
+                                <div class="table-value">CNN specific <span class="check">✓</span></div>
+                            </div>
                         </div>
-                        <div class="table-row">
-                            <div class="table-label">Integrated</div>
-                            <div class="table-value">Smooth, slow <span class="check">✓</span></div>
-                        </div>
-                        <div class="table-row">
-                            <div class="table-label">SmoothGrad</div>
-                            <div class="table-value">Less noise <span class="check">✓</span></div>
-                        </div>
-                        <div class="table-row">
-                            <div class="table-label">Grad-CAM</div>
-                            <div class="table-value">CNN specific <span class="check">✓</span></div>
+                        
+                        <div class="pros-cons">
+                            <div class="pros-box">
+                                <div class="box-title pros-title">Strengths</div>
+                                <div class="box-list">
+                                    <div>Model-agnostic</div>
+                                    <div>Fast computation</div>
+                                    <div>Differentiable</div>
+                                </div>
+                            </div>
+                            <div class="cons-box">
+                                <div class="box-title cons-title">Limitations</div>
+                                <div class="box-list">
+                                    <div>Saturation issue</div>
+                                    <div>Noise in vanilla</div>
+                                    <div>Requires gradients</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="pros-cons">
-                        <div class="pros-box">
-                            <div class="box-title pros-title">Strengths</div>
-                            <div class="box-list">
-                                <div>Model-agnostic</div>
-                                <div>Fast computation</div>
-                                <div>Differentiable</div>
-                            </div>
-                        </div>
-                        <div class="cons-box">
-                            <div class="box-title cons-title">Limitations</div>
-                            <div class="box-list">
-                                <div>Saturation issue</div>
-                                <div>Noise in vanilla</div>
-                                <div>Requires gradients</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Code Section -->
-                <div class="code-section">
-                    <div class="code-title">PyTorch Implementation</div>
-                    
-                    <div class="code-box">
-                        <div class="code-label">Vanilla Gradients</div>
-                        <div class="code-content">
+                    <!-- Code Section -->
+                    <div class="code-section">
+                        <div class="code-title">PyTorch Implementation</div>
+                        
+                        <div class="code-box">
+                            <div class="code-label">Vanilla Gradients</div>
+                            <div class="code-content">
 x.<span class="keyword">requires_grad_</span>()<br>
 output = model(x)<br>
 output.backward()<br>
 gradients = x.<span class="keyword">grad</span>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="code-box">
-                        <div class="code-label">Integrated Gradients</div>
-                        <div class="code-content">
+                        
+                        <div class="code-box">
+                            <div class="code-label">Integrated Gradients</div>
+                            <div class="code-content">
 <span class="comment"># Path from baseline to input</span><br>
 alphas = torch.linspace(0, 1, steps=50)<br>
 <span class="keyword">for</span> alpha <span class="keyword">in</span> alphas:<br>
 &nbsp;&nbsp;x_step = baseline + alpha * (x - baseline)<br>
 &nbsp;&nbsp;<span class="comment"># Compute gradients at each step</span>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="code-box">
-                        <div class="code-label">SmoothGrad</div>
-                        <div class="code-content">
+                        
+                        <div class="code-box">
+                            <div class="code-label">SmoothGrad</div>
+                            <div class="code-content">
 <span class="comment"># Average over noisy samples</span><br>
 <span class="keyword">for</span> _ <span class="keyword">in</span> range(n_samples):<br>
 &nbsp;&nbsp;noise = torch.randn_like(x) * sigma<br>
 &nbsp;&nbsp;grads += compute_grad(x + noise)<br>
 smooth_grad = grads / n_samples
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Section 2: CAM Visualization Demo -->
+        <div class="section">
+            <div class="section-title">🔍 Interactive CAM Visualization Demo</div>
+            <div class="cam-demo-container">
+                <!-- Controls -->
+                <div class="cam-controls">
+                    <div class="control-section">
+                        <div class="control-title">📸 Select Image</div>
+                        <div class="sample-images">
+                            <img src="data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100' height='100' fill='%23e8f2ff'/%3E%3Ctext x='50' y='50' font-size='40' text-anchor='middle' dy='.3em'%3E🐕%3C/text%3E%3C/svg%3E" class="sample-img selected" data-type="dog">
+                            <img src="data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100' height='100' fill='%23ffe8f2'/%3E%3Ctext x='50' y='50' font-size='40' text-anchor='middle' dy='.3em'%3E🐱%3C/text%3E%3C/svg%3E" class="sample-img" data-type="cat">
+                            <img src="data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100' height='100' fill='%23f2ffe8'/%3E%3Ctext x='50' y='50' font-size='40' text-anchor='middle' dy='.3em'%3E🚗%3C/text%3E%3C/svg%3E" class="sample-img" data-type="car">
+                        </div>
+                    </div>
+                    
+                    <div class="control-section">
+                        <div class="control-title">🔧 Method Selection</div>
+                        <div class="method-selector">
+                            <div class="method-option active" data-method="gradcam">Grad-CAM</div>
+                            <div class="method-option" data-method="integrated">Integrated Gradients</div>
+                            <div class="method-option" data-method="smoothgrad">SmoothGrad</div>
+                            <div class="method-option" data-method="vanilla">Vanilla Gradients</div>
+                        </div>
+                    </div>
+                    
+                    <div class="control-section">
+                        <div class="control-title">🎨 Heatmap Settings</div>
+                        <div class="slider-control">
+                            <div class="slider-label">
+                                <span>Opacity</span>
+                                <span id="opacityValue">60%</span>
+                            </div>
+                            <input type="range" min="0" max="100" value="60" class="slider" id="opacitySlider">
+                        </div>
+                        <div class="slider-control">
+                            <div class="slider-label">
+                                <span>Focus Intensity</span>
+                                <span id="intensityValue">70%</span>
+                            </div>
+                            <input type="range" min="0" max="100" value="70" class="slider" id="intensitySlider">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Visualization -->
+                <div class="cam-visualization">
+                    <div class="viz-title">CAM Visualization on Image</div>
+                    <div class="canvas-container">
+                        <div class="canvas-wrapper">
+                            <canvas id="baseImage" width="500" height="500"></canvas>
+                            <canvas id="camOverlay" width="500" height="500"></canvas>
+                        </div>
+                    </div>
+                    <div class="legend">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: linear-gradient(to right, rgba(230, 57, 70, 0.9), rgba(244, 162, 97, 0.7), rgba(255, 223, 0, 0.5));"></div>
+                            <span>High → Low Activation</span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    
+    <script>
+        let selectedImage = 'dog';
+        let selectedMethod = 'gradcam';
+        let opacity = 0.6;
+        let intensity = 0.7;
+        
+        const baseCanvas = document.getElementById('baseImage');
+        const overlayCanvas = document.getElementById('camOverlay');
+        const baseCtx = baseCanvas.getContext('2d');
+        const overlayCtx = overlayCanvas.getContext('2d');
+        
+        function drawBaseImage() {
+            baseCtx.clearRect(0, 0, baseCanvas.width, baseCanvas.height);
+            
+            // Draw background
+            const gradient = baseCtx.createLinearGradient(0, 0, baseCanvas.width, baseCanvas.height);
+            if (selectedImage === 'dog') {
+                gradient.addColorStop(0, '#a8dadc');
+                gradient.addColorStop(1, '#457b9d');
+            } else if (selectedImage === 'cat') {
+                gradient.addColorStop(0, '#ffccd5');
+                gradient.addColorStop(1, '#ff8fa3');
+            } else {
+                gradient.addColorStop(0, '#cfe2f3');
+                gradient.addColorStop(1, '#6c9bd1');
+            }
+            baseCtx.fillStyle = gradient;
+            baseCtx.fillRect(0, 0, baseCanvas.width, baseCanvas.height);
+            
+            // Draw emoji
+            baseCtx.font = '240px Arial';
+            baseCtx.textAlign = 'center';
+            baseCtx.textBaseline = 'middle';
+            const emoji = selectedImage === 'dog' ? '🐕' : selectedImage === 'cat' ? '🐱' : '🚗';
+            baseCtx.fillText(emoji, baseCanvas.width / 2, baseCanvas.height / 2);
+        }
+        
+        function drawCAM() {
+            overlayCtx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+            
+            const centerX = overlayCanvas.width / 2;
+            const centerY = overlayCanvas.height / 2;
+            
+            if (selectedMethod === 'gradcam') {
+                // Grad-CAM style heatmap
+                const gradient = overlayCtx.createRadialGradient(centerX, centerY, 0, centerX, centerY, 200 * intensity);
+                gradient.addColorStop(0, `rgba(230, 57, 70, ${opacity})`);
+                gradient.addColorStop(0.4, `rgba(244, 162, 97, ${opacity * 0.7})`);
+                gradient.addColorStop(0.7, `rgba(255, 223, 0, ${opacity * 0.5})`);
+                gradient.addColorStop(1, 'rgba(255, 223, 0, 0)');
+                overlayCtx.fillStyle = gradient;
+                overlayCtx.fillRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+            } else if (selectedMethod === 'integrated') {
+                // Integrated Gradients - smooth focused
+                const gradient = overlayCtx.createRadialGradient(centerX - 50, centerY - 50, 0, centerX, centerY, 180 * intensity);
+                gradient.addColorStop(0, `rgba(230, 57, 70, ${opacity * 0.9})`);
+                gradient.addColorStop(0.3, `rgba(230, 57, 70, ${opacity * 0.6})`);
+                gradient.addColorStop(0.6, `rgba(230, 57, 70, ${opacity * 0.3})`);
+                gradient.addColorStop(1, 'rgba(200, 200, 200, 0)');
+                overlayCtx.fillStyle = gradient;
+                overlayCtx.fillRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+            } else if (selectedMethod === 'smoothgrad') {
+                // SmoothGrad - less noisy
+                const gradient = overlayCtx.createRadialGradient(centerX, centerY, 0, centerX, centerY, 170 * intensity);
+                gradient.addColorStop(0, `rgba(30, 100, 200, ${opacity * 0.7})`);
+                gradient.addColorStop(0.4, `rgba(30, 100, 200, ${opacity * 0.5})`);
+                gradient.addColorStop(0.7, `rgba(30, 100, 200, ${opacity * 0.3})`);
+                gradient.addColorStop(1, 'rgba(200, 200, 200, 0)');
+                overlayCtx.fillStyle = gradient;
+                overlayCtx.fillRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+            } else {
+                // Vanilla - noisy pattern
+                const cellSize = 20;
+                for (let y = 0; y < overlayCanvas.height; y += cellSize) {
+                    for (let x = 0; x < overlayCanvas.width; x += cellSize) {
+                        const dist = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2));
+                        const maxDist = 200 * intensity;
+                        if (dist < maxDist) {
+                            const alpha = (1 - dist / maxDist) * opacity;
+                            const color = Math.random() > 0.5 ? 
+                                `rgba(30, 100, 200, ${alpha})` : 
+                                `rgba(230, 57, 70, ${alpha})`;
+                            overlayCtx.fillStyle = color;
+                            overlayCtx.fillRect(x, y, cellSize - 1, cellSize - 1);
+                        }
+                    }
+                }
+            }
+        }
+        
+        function updateVisualization() {
+            drawBaseImage();
+            drawCAM();
+        }
+        
+        // Event listeners
+        document.querySelectorAll('.sample-img').forEach(img => {
+            img.addEventListener('click', function() {
+                document.querySelectorAll('.sample-img').forEach(i => i.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedImage = this.dataset.type;
+                updateVisualization();
+            });
+        });
+        
+        document.querySelectorAll('.method-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.method-option').forEach(o => o.classList.remove('active'));
+                this.classList.add('active');
+                selectedMethod = this.dataset.method;
+                updateVisualization();
+            });
+        });
+        
+        document.getElementById('opacitySlider').addEventListener('input', function() {
+            opacity = this.value / 100;
+            document.getElementById('opacityValue').textContent = this.value + '%';
+            updateVisualization();
+        });
+        
+        document.getElementById('intensitySlider').addEventListener('input', function() {
+            intensity = this.value / 100;
+            document.getElementById('intensityValue').textContent = this.value + '%';
+            updateVisualization();
+        });
+        
+        // Initial draw
+        updateVisualization();
+    </script>
 </body>
 </html>

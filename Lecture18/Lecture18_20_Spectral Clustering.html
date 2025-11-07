@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spectral Clustering</title>
+    <title>Spectral Clustering - Step-by-Step Example</title>
     <style>
         * {
             margin: 0;
@@ -13,50 +13,50 @@
         
         body {
             font-family: Aptos, 'Segoe UI', sans-serif;
-            background: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            background: #f5f5f5;
             padding: 20px;
         }
         
         .container {
-            width: 960px;
-            height: 540px;
+            max-width: 1400px;
+            margin: 0 auto;
             display: flex;
             flex-direction: column;
-            padding: 25px;
-            gap: 18px;
+            gap: 20px;
         }
         
         .header {
             text-align: center;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         
         .main-title {
-            font-size: 22px;
+            font-size: 32px;
             font-weight: 700;
             color: #1E64C8;
-            margin-bottom: 6px;
+            margin-bottom: 10px;
         }
         
         .subtitle {
-            font-size: 16px;
+            font-size: 18px;
             color: #666;
         }
         
         .pipeline-section {
-            background: #f8f9fa;
+            background: white;
             border-radius: 12px;
-            padding: 18px;
+            padding: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         
         .pipeline-title {
-            font-size: 18px;
+            font-size: 22px;
             font-weight: 600;
             color: #1E64C8;
-            margin-bottom: 14px;
+            margin-bottom: 20px;
             text-align: center;
         }
         
@@ -65,10 +65,12 @@
             align-items: center;
             gap: 10px;
             justify-content: space-between;
+            flex-wrap: wrap;
         }
         
         .pipeline-step {
             flex: 1;
+            min-width: 140px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -79,7 +81,7 @@
             background: white;
             border: 2px solid #1E64C8;
             border-radius: 10px;
-            padding: 14px;
+            padding: 16px;
             width: 100%;
             text-align: center;
             transition: all 0.3s ease;
@@ -93,18 +95,18 @@
         
         .step-icon {
             font-size: 28px;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
         }
         
         .step-title {
-            font-size: 17px;
+            font-size: 16px;
             font-weight: 600;
             color: #1E64C8;
             margin-bottom: 4px;
         }
         
         .step-desc {
-            font-size: 15px;
+            font-size: 14px;
             color: #666;
             line-height: 1.3;
         }
@@ -112,11 +114,11 @@
         .step-formula {
             background: #e8f4ff;
             color: #1E64C8;
-            padding: 4px 8px;
+            padding: 6px 10px;
             border-radius: 6px;
             font-size: 14px;
             font-weight: 700;
-            margin-top: 6px;
+            margin-top: 8px;
             font-family: 'Courier New', monospace;
         }
         
@@ -127,178 +129,241 @@
             flex-shrink: 0;
         }
         
-        .content-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            flex: 1;
-        }
-        
-        .laplacian-section {
+        .example-section {
             background: white;
-            border: 2px solid #ff9800;
             border-radius: 12px;
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         
-        .section-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #ff9800;
-            margin-bottom: 12px;
-            text-align: center;
-        }
-        
-        .laplacian-formula {
-            background: #fff8f0;
-            border-radius: 8px;
-            padding: 16px;
-            text-align: center;
-            margin-bottom: 12px;
-        }
-        
-        .formula-main {
+        .example-title {
             font-size: 24px;
-            font-weight: 700;
-            color: #ff9800;
-            margin-bottom: 8px;
-            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            color: #9C27B0;
+            margin-bottom: 20px;
+            text-align: center;
         }
         
-        .formula-desc {
-            font-size: 16px;
-            color: #555;
-            line-height: 1.4;
+        .calculation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
         }
         
-        .matrix-visual {
+        .calc-card {
             background: #f8f9fa;
-            border-radius: 8px;
-            padding: 12px;
-            flex: 1;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .calc-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(30, 100, 200, 0.15);
+        }
+        
+        .calc-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        
+        .calc-number {
+            background: #1E64C8;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .calc-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .calc-content {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        
+        .data-points {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .point {
+            background: #e8f4ff;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-size: 15px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .matrix {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+        
+        .matrix-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 10px;
+            text-align: center;
         }
         
         .matrix-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            display: inline-block;
+            min-width: 100%;
+        }
+        
+        .matrix-row {
+            display: flex;
+            justify-content: center;
             gap: 4px;
+            margin-bottom: 4px;
         }
         
         .matrix-cell {
-            width: 40px;
+            min-width: 60px;
             height: 40px;
-            background: #e0e0e0;
+            background: #f0f0f0;
+            border: 1px solid #ddd;
             border-radius: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-family: 'Courier New', monospace;
             font-size: 14px;
             font-weight: 600;
-            color: #666;
+            color: #333;
+        }
+        
+        .matrix-highlight {
+            background: #fff3cd;
+            border-color: #ffc107;
         }
         
         .matrix-diagonal {
             background: #ff9800;
             color: white;
+            border-color: #ff9800;
         }
         
-        .properties-section {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        
-        .property-card {
-            background: white;
-            border: 2px solid #1E64C8;
-            border-radius: 10px;
-            padding: 14px 16px;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            transition: all 0.3s ease;
-        }
-        
-        .property-card:hover {
+        .formula-box {
             background: #f0f6ff;
-            transform: translateX(5px);
-            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.2);
+            border-left: 4px solid #1E64C8;
+            padding: 12px 15px;
+            margin: 10px 0;
+            border-radius: 4px;
         }
         
-        .prop-icon {
-            font-size: 28px;
-            flex-shrink: 0;
-        }
-        
-        .prop-content {
-            flex: 1;
-        }
-        
-        .prop-title {
-            font-size: 17px;
-            font-weight: 600;
+        .formula {
+            font-family: 'Courier New', monospace;
+            font-size: 15px;
             color: #1E64C8;
-            margin-bottom: 4px;
+            font-weight: 600;
         }
         
-        .prop-desc {
-            font-size: 16px;
+        .explanation {
+            font-size: 14px;
             color: #555;
-            line-height: 1.3;
+            line-height: 1.6;
+            margin-top: 8px;
         }
         
-        .objective-card {
-            background: #f3e5f5;
-            border-color: #9C27B0;
-        }
-        
-        .objective-card .prop-title {
-            color: #9C27B0;
-        }
-        
-        .advantages-card {
+        .result-highlight {
             background: #e8f5e9;
             border: 2px solid #4CAF50;
-            border-radius: 10px;
-            padding: 14px 16px;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
         }
         
-        .adv-title {
-            font-size: 17px;
+        .result-title {
+            font-size: 16px;
             font-weight: 600;
             color: #4CAF50;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            margin-bottom: 8px;
         }
         
-        .adv-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        
-        .adv-item {
-            background: white;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 16px;
+        .result-content {
+            font-size: 15px;
             color: #333;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            font-family: 'Courier New', monospace;
         }
         
-        .adv-check {
-            color: #4CAF50;
-            font-size: 18px;
-            font-weight: bold;
+        .visual-canvas {
+            width: 100%;
+            height: 300px;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .info-box {
+            background: #fff8f0;
+            border-left: 4px solid #ff9800;
+            padding: 12px 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        
+        .info-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #ff9800;
+            margin-bottom: 6px;
+        }
+        
+        .info-text {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.5;
+        }
+        
+        .eigenvector-box {
+            background: #f3e5f5;
+            border: 2px solid #9C27B0;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        
+        .eigen-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #9C27B0;
+            margin-bottom: 10px;
+        }
+        
+        .eigen-value {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #333;
+            padding: 8px;
+            background: white;
+            border-radius: 4px;
+            margin-bottom: 6px;
         }
     </style>
 </head>
@@ -306,7 +371,7 @@
     <div class="container">
         <div class="header">
             <div class="main-title">Spectral Clustering</div>
-            <div class="subtitle">Graph Clustering using Eigenvector Analysis</div>
+            <div class="subtitle">Step-by-Step Calculation Example</div>
         </div>
         
         <div class="pipeline-section">
@@ -314,9 +379,20 @@
             <div class="pipeline-flow">
                 <div class="pipeline-step">
                     <div class="step-box">
+                        <div class="step-icon">📊</div>
+                        <div class="step-title">1. Input Data</div>
+                        <div class="step-desc">2D coordinate data</div>
+                    </div>
+                </div>
+                
+                <div class="arrow">→</div>
+                
+                <div class="pipeline-step">
+                    <div class="step-box">
                         <div class="step-icon">🕸️</div>
-                        <div class="step-title">Input Graph</div>
-                        <div class="step-desc">Adjacency matrix A</div>
+                        <div class="step-title">2. Similarity Graph</div>
+                        <div class="step-desc">Build adjacency matrix</div>
+                        <div class="step-formula">A[i,j]</div>
                     </div>
                 </div>
                 
@@ -325,7 +401,8 @@
                 <div class="pipeline-step">
                     <div class="step-box">
                         <div class="step-icon">🧮</div>
-                        <div class="step-title">Compute Laplacian</div>
+                        <div class="step-title">3. Laplacian</div>
+                        <div class="step-desc">Compute Laplacian</div>
                         <div class="step-formula">L = D - A</div>
                     </div>
                 </div>
@@ -335,8 +412,9 @@
                 <div class="pipeline-step">
                     <div class="step-box">
                         <div class="step-icon">🔢</div>
-                        <div class="step-title">Eigendecomposition</div>
-                        <div class="step-desc">k smallest eigenvectors</div>
+                        <div class="step-title">4. Eigen</div>
+                        <div class="step-desc">Eigendecomposition</div>
+                        <div class="step-formula">Lv = λv</div>
                     </div>
                 </div>
                 
@@ -344,8 +422,8 @@
                 
                 <div class="pipeline-step">
                     <div class="step-box">
-                        <div class="step-icon">📊</div>
-                        <div class="step-title">Spectral Embedding</div>
+                        <div class="step-icon">📍</div>
+                        <div class="step-title">5. Embedding</div>
                         <div class="step-desc">Low-dimensional space</div>
                     </div>
                 </div>
@@ -355,84 +433,414 @@
                 <div class="pipeline-step">
                     <div class="step-box">
                         <div class="step-icon">🎯</div>
-                        <div class="step-title">K-means</div>
-                        <div class="step-desc">Cluster in embedding</div>
+                        <div class="step-title">6. K-means</div>
+                        <div class="step-desc">Final clustering</div>
                     </div>
                 </div>
             </div>
         </div>
         
-        <div class="content-grid">
-            <div class="laplacian-section">
-                <div class="section-title">Graph Laplacian Matrix</div>
-                
-                <div class="laplacian-formula">
-                    <div class="formula-main">L = D - A</div>
-                    <div class="formula-desc">
-                        D: Degree matrix (diagonal)<br>
-                        A: Adjacency matrix
-                    </div>
-                </div>
-                
-                <div class="matrix-visual">
-                    <div class="matrix-grid">
-                        <div class="matrix-cell matrix-diagonal">3</div>
-                        <div class="matrix-cell">-1</div>
-                        <div class="matrix-cell">-1</div>
-                        <div class="matrix-cell">-1</div>
-                        
-                        <div class="matrix-cell">-1</div>
-                        <div class="matrix-cell matrix-diagonal">2</div>
-                        <div class="matrix-cell">-1</div>
-                        <div class="matrix-cell">0</div>
-                        
-                        <div class="matrix-cell">-1</div>
-                        <div class="matrix-cell">-1</div>
-                        <div class="matrix-cell matrix-diagonal">2</div>
-                        <div class="matrix-cell">0</div>
-                        
-                        <div class="matrix-cell">-1</div>
-                        <div class="matrix-cell">0</div>
-                        <div class="matrix-cell">0</div>
-                        <div class="matrix-cell matrix-diagonal">1</div>
-                    </div>
-                </div>
-            </div>
+        <div class="example-section">
+            <div class="example-title">📐 Step-by-Step Calculation Example</div>
             
-            <div class="properties-section">
-                <div class="property-card">
-                    <div class="prop-icon">🌐</div>
-                    <div class="prop-content">
-                        <div class="prop-title">Global Structure</div>
-                        <div class="prop-desc">Captures overall graph topology</div>
+            <div class="calculation-grid">
+                <!-- Step 1: Input Data -->
+                <div class="calc-card">
+                    <div class="calc-header">
+                        <div class="calc-number">1</div>
+                        <div class="calc-title">Input Data</div>
+                    </div>
+                    <div class="calc-content">
+                        <div class="data-points">
+                            <div class="point">p₁ = (1, 1)</div>
+                            <div class="point">p₂ = (1, 2)</div>
+                            <div class="point">p₃ = (2, 1)</div>
+                            <div class="point">p₄ = (5, 5)</div>
+                            <div class="point">p₅ = (5, 6)</div>
+                            <div class="point">p₆ = (6, 5)</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-title">Data Description</div>
+                            <div class="info-text">
+                                6 points in 2D space<br>
+                                • p₁, p₂, p₃: Lower-left cluster<br>
+                                • p₄, p₅, p₆: Upper-right cluster
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="property-card objective-card">
-                    <div class="prop-icon">🎯</div>
-                    <div class="prop-content">
-                        <div class="prop-title">Normalized Cuts</div>
-                        <div class="prop-desc">Minimize inter-cluster connections</div>
+                <!-- Step 2: Adjacency Matrix -->
+                <div class="calc-card">
+                    <div class="calc-header">
+                        <div class="calc-number">2</div>
+                        <div class="calc-title">Adjacency Matrix</div>
+                    </div>
+                    <div class="calc-content">
+                        <div class="formula-box">
+                            <div class="formula">A[i,j] = exp(-||pᵢ - pⱼ||² / 2σ²)</div>
+                            <div class="explanation">Using σ = 1.0, higher weight for closer points</div>
+                        </div>
+                        
+                        <div class="matrix">
+                            <div class="matrix-title">Matrix A (6×6)</div>
+                            <div class="matrix-grid">
+                                <div class="matrix-row">
+                                    <div class="matrix-cell matrix-diagonal">1.00</div>
+                                    <div class="matrix-cell matrix-highlight">0.61</div>
+                                    <div class="matrix-cell matrix-highlight">0.61</div>
+                                    <div class="matrix-cell">0.00</div>
+                                    <div class="matrix-cell">0.00</div>
+                                    <div class="matrix-cell">0.00</div>
+                                </div>
+                                <div class="matrix-row">
+                                    <div class="matrix-cell matrix-highlight">0.61</div>
+                                    <div class="matrix-cell matrix-diagonal">1.00</div>
+                                    <div class="matrix-cell">0.37</div>
+                                    <div class="matrix-cell">0.00</div>
+                                    <div class="matrix-cell">0.00</div>
+                                    <div class="matrix-cell">0.00</div>
+                                </div>
+                                <div class="matrix-row">
+                                    <div class="matrix-cell matrix-highlight">0.61</div>
+                                    <div class="matrix-cell">0.37</div>
+                                    <div class="matrix-cell matrix-diagonal">1.00</div>
+                                    <div class="matrix-cell">0.00</div>
+                                    <div class="matrix-cell">0.00</div>
+                                    <div class="matrix-cell">0.00</div>
+                                </div>
+                                <div class="matrix-row">
+                                    <div class="matrix-cell">0.00</div>
+                                    <div class="matrix-cell">0.00</div>
+                                    <div class="matrix-cell">0.00</div>
+                                    <div class="matrix-cell matrix-diagonal">1.00</div>
+                                    <div class="matrix-cell matrix-highlight">0.61</div>
+                                    <div class="matrix-cell matrix-highlight">0.61</div>
+                                </div>
+                                <div class="matrix-row">
+                                    <div class="matrix-cell">0.00</div>
+                                    <div class="matrix-cell">0.00</div>
+                                    <div class="matrix-cell">0.00</div>
+                                    <div class="matrix-cell matrix-highlight">0.61</div>
+                                    <div class="matrix-cell matrix-diagonal">1.00</div>
+                                    <div class="matrix-cell">0.37</div>
+                                </div>
+                                <div class="matrix-row">
+                                    <div class="matrix-cell">0.00</div>
+                                    <div class="matrix-cell">0.00</div>
+                                    <div class="matrix-cell">0.00</div>
+                                    <div class="matrix-cell matrix-highlight">0.61</div>
+                                    <div class="matrix-cell">0.37</div>
+                                    <div class="matrix-cell matrix-diagonal">1.00</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="info-box">
+                            <div class="info-text">
+                                Block diagonal structure represents two clusters
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="advantages-card">
-                    <div class="adv-title">
-                        <span>✓</span>
-                        <span>Best For</span>
+                <!-- Step 3: Degree Matrix -->
+                <div class="calc-card">
+                    <div class="calc-header">
+                        <div class="calc-number">3</div>
+                        <div class="calc-title">Degree Matrix</div>
                     </div>
-                    <div class="adv-list">
-                        <div class="adv-item">
-                            <span class="adv-check">✓</span>
-                            <span>Balanced clusters</span>
+                    <div class="calc-content">
+                        <div class="formula-box">
+                            <div class="formula">D[i,i] = Σⱼ A[i,j]</div>
+                            <div class="explanation">Sum of edge weights for each node</div>
                         </div>
-                        <div class="adv-item">
-                            <span class="adv-check">✓</span>
-                            <span>Well-separated communities</span>
+                        
+                        <div class="matrix">
+                            <div class="matrix-title">Matrix D (6×6 diagonal)</div>
+                            <div class="matrix-grid">
+                                <div class="matrix-row">
+                                    <div class="matrix-cell matrix-diagonal">2.22</div>
+                                    <div class="matrix-cell">0</div>
+                                    <div class="matrix-cell">0</div>
+                                    <div class="matrix-cell">0</div>
+                                    <div class="matrix-cell">0</div>
+                                    <div class="matrix-cell">0</div>
+                                </div>
+                                <div class="matrix-row">
+                                    <div class="matrix-cell">0</div>
+                                    <div class="matrix-cell matrix-diagonal">1.98</div>
+                                    <div class="matrix-cell">0</div>
+                                    <div class="matrix-cell">0</div>
+                                    <div class="matrix-cell">0</div>
+                                    <div class="matrix-cell">0</div>
+                                </div>
+                                <div class="matrix-row">
+                                    <div class="matrix-cell">0</div>
+                                    <div class="matrix-cell">0</div>
+                                    <div class="matrix-cell matrix-diagonal">1.98</div>
+                                    <div class="matrix-cell">0</div>
+                                    <div class="matrix-cell">0</div>
+                                    <div class="matrix-cell">0</div>
+                                </div>
+                                <div class="matrix-row">
+                                    <div class="matrix-cell">0</div>
+                                    <div class="matrix-cell">0</div>
+                                    <div class="matrix-cell">0</div>
+                                    <div class="matrix-cell matrix-diagonal">2.22</div>
+                                    <div class="matrix-cell">0</div>
+                                    <div class="matrix-cell">0</div>
+                                </div>
+                                <div class="matrix-row">
+                                    <div class="matrix-cell">0</div>
+                                    <div class="matrix-cell">0</div>
+                                    <div class="matrix-cell">0</div>
+                                    <div class="matrix-cell">0</div>
+                                    <div class="matrix-cell matrix-diagonal">1.98</div>
+                                    <div class="matrix-cell">0</div>
+                                </div>
+                                <div class="matrix-row">
+                                    <div class="matrix-cell">0</div>
+                                    <div class="matrix-cell">0</div>
+                                    <div class="matrix-cell">0</div>
+                                    <div class="matrix-cell">0</div>
+                                    <div class="matrix-cell">0</div>
+                                    <div class="matrix-cell matrix-diagonal">1.98</div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="adv-item">
-                            <span class="adv-check">✓</span>
-                            <span>Non-convex shapes</span>
+                    </div>
+                </div>
+                
+                <!-- Step 4: Laplacian Matrix -->
+                <div class="calc-card">
+                    <div class="calc-header">
+                        <div class="calc-number">4</div>
+                        <div class="calc-title">Laplacian Matrix</div>
+                    </div>
+                    <div class="calc-content">
+                        <div class="formula-box">
+                            <div class="formula">L = D - A</div>
+                            <div class="explanation">Matrix representing graph structure</div>
+                        </div>
+                        
+                        <div class="matrix">
+                            <div class="matrix-title">Matrix L (6×6)</div>
+                            <div class="matrix-grid">
+                                <div class="matrix-row">
+                                    <div class="matrix-cell matrix-diagonal">1.22</div>
+                                    <div class="matrix-cell">-0.61</div>
+                                    <div class="matrix-cell">-0.61</div>
+                                    <div class="matrix-cell">0</div>
+                                    <div class="matrix-cell">0</div>
+                                    <div class="matrix-cell">0</div>
+                                </div>
+                                <div class="matrix-row">
+                                    <div class="matrix-cell">-0.61</div>
+                                    <div class="matrix-cell matrix-diagonal">0.98</div>
+                                    <div class="matrix-cell">-0.37</div>
+                                    <div class="matrix-cell">0</div>
+                                    <div class="matrix-cell">0</div>
+                                    <div class="matrix-cell">0</div>
+                                </div>
+                                <div class="matrix-row">
+                                    <div class="matrix-cell">-0.61</div>
+                                    <div class="matrix-cell">-0.37</div>
+                                    <div class="matrix-cell matrix-diagonal">0.98</div>
+                                    <div class="matrix-cell">0</div>
+                                    <div class="matrix-cell">0</div>
+                                    <div class="matrix-cell">0</div>
+                                </div>
+                                <div class="matrix-row">
+                                    <div class="matrix-cell">0</div>
+                                    <div class="matrix-cell">0</div>
+                                    <div class="matrix-cell">0</div>
+                                    <div class="matrix-cell matrix-diagonal">1.22</div>
+                                    <div class="matrix-cell">-0.61</div>
+                                    <div class="matrix-cell">-0.61</div>
+                                </div>
+                                <div class="matrix-row">
+                                    <div class="matrix-cell">0</div>
+                                    <div class="matrix-cell">0</div>
+                                    <div class="matrix-cell">0</div>
+                                    <div class="matrix-cell">-0.61</div>
+                                    <div class="matrix-cell matrix-diagonal">0.98</div>
+                                    <div class="matrix-cell">-0.37</div>
+                                </div>
+                                <div class="matrix-row">
+                                    <div class="matrix-cell">0</div>
+                                    <div class="matrix-cell">0</div>
+                                    <div class="matrix-cell">0</div>
+                                    <div class="matrix-cell">-0.61</div>
+                                    <div class="matrix-cell">-0.37</div>
+                                    <div class="matrix-cell matrix-diagonal">0.98</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="info-box">
+                            <div class="info-text">
+                                Block diagonal structure = two separated clusters
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Step 5: Eigendecomposition -->
+                <div class="calc-card">
+                    <div class="calc-header">
+                        <div class="calc-number">5</div>
+                        <div class="calc-title">Eigendecomposition</div>
+                    </div>
+                    <div class="calc-content">
+                        <div class="formula-box">
+                            <div class="formula">Lv = λv</div>
+                            <div class="explanation">Select eigenvectors corresponding to k smallest eigenvalues</div>
+                        </div>
+                        
+                        <div class="eigenvector-box">
+                            <div class="eigen-title">Eigenvalues</div>
+                            <div class="eigen-value">λ₁ = 0.00 (first, connected graph)</div>
+                            <div class="eigen-value">λ₂ = 0.00 (second, 2 clusters!)</div>
+                            <div class="eigen-value">λ₃ = 0.61</div>
+                            <div class="eigen-value">λ₄ = 1.59</div>
+                            <div class="eigen-value">λ₅ = 1.59</div>
+                            <div class="eigen-value">λ₆ = 1.83</div>
+                        </div>
+                        
+                        <div class="info-box">
+                            <div class="info-title">⚠️ Key Observation</div>
+                            <div class="info-text">
+                                2 eigenvalues near zero → 2 clusters exist!<br>
+                                Number of eigenvalues = Number of connected components (clusters)
+                            </div>
+                        </div>
+                        
+                        <div class="eigenvector-box">
+                            <div class="eigen-title">Second Eigenvector (v₂)</div>
+                            <div class="eigen-value">v₂ = [0.58, 0.58, 0.58, -0.58, -0.58, -0.58]ᵀ</div>
+                        </div>
+                        
+                        <div class="info-box">
+                            <div class="info-text">
+                                Positive values → Cluster 1 (p₁, p₂, p₃)<br>
+                                Negative values → Cluster 2 (p₄, p₅, p₆)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Step 6: Spectral Embedding -->
+                <div class="calc-card">
+                    <div class="calc-header">
+                        <div class="calc-number">6</div>
+                        <div class="calc-title">Spectral Embedding</div>
+                    </div>
+                    <div class="calc-content">
+                        <div class="formula-box">
+                            <div class="formula">X = [v₂, v₃, ..., vₖ₊₁]</div>
+                            <div class="explanation">For k=2 clusters, use v₂ and v₃</div>
+                        </div>
+                        
+                        <div class="matrix">
+                            <div class="matrix-title">Embedding Coordinates (6×2)</div>
+                            <div class="matrix-grid">
+                                <div class="matrix-row">
+                                    <div class="matrix-cell matrix-highlight">0.58</div>
+                                    <div class="matrix-cell">-0.12</div>
+                                </div>
+                                <div class="matrix-row">
+                                    <div class="matrix-cell matrix-highlight">0.58</div>
+                                    <div class="matrix-cell">0.45</div>
+                                </div>
+                                <div class="matrix-row">
+                                    <div class="matrix-cell matrix-highlight">0.58</div>
+                                    <div class="matrix-cell">-0.33</div>
+                                </div>
+                                <div class="matrix-row">
+                                    <div class="matrix-cell matrix-highlight">-0.58</div>
+                                    <div class="matrix-cell">-0.12</div>
+                                </div>
+                                <div class="matrix-row">
+                                    <div class="matrix-cell matrix-highlight">-0.58</div>
+                                    <div class="matrix-cell">0.45</div>
+                                </div>
+                                <div class="matrix-row">
+                                    <div class="matrix-cell matrix-highlight">-0.58</div>
+                                    <div class="matrix-cell">-0.33</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="info-box">
+                            <div class="info-text">
+                                First column (v₂) clearly separates clusters<br>
+                                Positive (0.58) vs Negative (-0.58)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Step 7: K-means Clustering -->
+                <div class="calc-card">
+                    <div class="calc-header">
+                        <div class="calc-number">7</div>
+                        <div class="calc-title">K-means Clustering</div>
+                    </div>
+                    <div class="calc-content">
+                        <div class="formula-box">
+                            <div class="formula">K-means(X, k=2)</div>
+                            <div class="explanation">Perform K-means in embedding space</div>
+                        </div>
+                        
+                        <div class="result-highlight">
+                            <div class="result-title">✅ Final Cluster Assignment</div>
+                            <div class="result-content">
+                                Cluster 1: {p₁, p₂, p₃}<br>
+                                Cluster 2: {p₄, p₅, p₆}
+                            </div>
+                        </div>
+                        
+                        <div class="info-box">
+                            <div class="info-title">🎯 Why Does This Work?</div>
+                            <div class="info-text">
+                                1. Original space requires non-linear separation<br>
+                                2. Laplacian eigenvectors reflect graph structure<br>
+                                3. Embedding space allows linear separation<br>
+                                4. K-means easily discovers clusters
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Summary -->
+                <div class="calc-card" style="grid-column: 1 / -1;">
+                    <div class="calc-header">
+                        <div class="calc-number">💡</div>
+                        <div class="calc-title">Key Insights</div>
+                    </div>
+                    <div class="calc-content">
+                        <div class="eigenvector-box">
+                            <div class="eigen-title">Advantages of Spectral Clustering</div>
+                            <div class="eigen-value">
+                                ✅ Can find non-convex clusters
+                            </div>
+                            <div class="eigen-value">
+                                ✅ Directly utilizes graph structure
+                            </div>
+                            <div class="eigen-value">
+                                ✅ Can estimate number of clusters from eigenvalues
+                            </div>
+                            <div class="eigen-value">
+                                ✅ Theoretical guarantees (minimizes normalized cut)
+                            </div>
+                        </div>
+                        
+                        <div class="formula-box">
+                            <div class="formula">Complete Process Summary</div>
+                            <div class="explanation">
+                                Data → Similarity Graph → Laplacian → Eigenvectors → Low-dim Embedding → K-means
+                            </div>
                         </div>
                     </div>
                 </div>

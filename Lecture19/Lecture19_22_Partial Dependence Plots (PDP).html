@@ -23,7 +23,8 @@
         
         .container {
             width: 960px;
-            height: 540px;
+            height: auto;
+            min-height: 540px;
             position: relative;
             background: white;
             padding: 25px 35px;
@@ -291,6 +292,201 @@
             color: #F57C00;
             margin-bottom: 4px;
         }
+        
+        /* Calculation Process Section */
+        .calculation-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 3px solid #E5E7EB;
+        }
+        
+        .calc-header {
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        
+        .calc-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 3px;
+        }
+        
+        .calc-subtitle {
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+        }
+        
+        /* Formula section */
+        .formula-section {
+            background: linear-gradient(135deg, #F0F7FF 0%, #E5F1FF 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 12px;
+            padding: 12px 15px;
+            margin-bottom: 12px;
+        }
+        
+        .formula-title-calc {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 6px;
+            text-align: center;
+        }
+        
+        .formula-box {
+            background: white;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            font-size: 15px;
+            color: #333;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 6px;
+        }
+        
+        .formula-explanation {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.4;
+            text-align: center;
+        }
+        
+        /* Steps section */
+        .steps-section {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        
+        .step-card {
+            background: white;
+            border: 2px solid #E5E7EB;
+            border-radius: 10px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s;
+        }
+        
+        .step-card:hover {
+            border-color: #1E64C8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.15);
+        }
+        
+        .step-number {
+            background: #1E64C8;
+            color: white;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+        
+        .step-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 5px;
+        }
+        
+        .step-visual {
+            background: #FAFAFA;
+            border-radius: 6px;
+            padding: 8px;
+            margin-bottom: 6px;
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .step-desc {
+            font-size: 11px;
+            color: #666;
+            line-height: 1.3;
+            flex: 1;
+        }
+        
+        /* Data table styles */
+        .mini-table {
+            width: 100%;
+            font-size: 9px;
+            border-collapse: collapse;
+        }
+        
+        .mini-table th {
+            background: #1E64C8;
+            color: white;
+            padding: 2px;
+            font-size: 8px;
+        }
+        
+        .mini-table td {
+            padding: 2px;
+            text-align: center;
+            border: 1px solid #E5E7EB;
+            font-size: 8px;
+        }
+        
+        .highlight-cell {
+            background: #FFF9C4;
+            font-weight: 700;
+        }
+        
+        .calc-box {
+            font-size: 9px;
+            color: #333;
+            line-height: 1.5;
+            text-align: center;
+        }
+        
+        /* Chart in step 4 */
+        .mini-chart {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .chart-line {
+            stroke: #1E64C8;
+            stroke-width: 2;
+            fill: none;
+        }
+        
+        .chart-point {
+            fill: #1E64C8;
+        }
+        
+        .chart-axis {
+            stroke: #666;
+            stroke-width: 1;
+        }
+        
+        /* Bottom note */
+        .bottom-note {
+            background: #FFF3E0;
+            border-left: 3px solid #FF9800;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 11px;
+            color: #333;
+            line-height: 1.3;
+        }
+        
+        .note-title-calc {
+            font-weight: 700;
+            color: #E65100;
+            margin-bottom: 2px;
+        }
     </style>
 </head>
 <body>
@@ -457,6 +653,160 @@
                         • Average behavior patterns
                     </div>
                 </div>
+            </div>
+        </div>
+        
+        <!-- Calculation Process Section -->
+        <div class="calculation-section">
+            <div class="calc-header">
+                <div class="calc-title">How PDP is Calculated</div>
+                <div class="calc-subtitle">Step-by-Step Mathematical Process</div>
+            </div>
+            
+            <!-- Formula Section -->
+            <div class="formula-section">
+                <div class="formula-title-calc">📐 PDP Formula</div>
+                <div class="formula-box">
+                    PDP<sub>xs</sub>(x<sub>s</sub>) = E<sub>X<sub>c</sub></sub>[f(x<sub>s</sub>, X<sub>c</sub>)] = (1/n) Σ<sub>i=1</sub><sup>n</sup> f(x<sub>s</sub>, x<sub>c</sub><sup>(i)</sup>)
+                </div>
+                <div class="formula-explanation">
+                    <strong>x<sub>s</sub></strong>: Target feature value (fixed) | 
+                    <strong>X<sub>c</sub></strong>: All other features (vary across data) | 
+                    <strong>f</strong>: Model prediction function | 
+                    <strong>n</strong>: Number of data points
+                </div>
+            </div>
+            
+            <!-- Steps Section -->
+            <div class="steps-section">
+                <!-- Step 1 -->
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Original Data</div>
+                    <div class="step-visual">
+                        <table class="mini-table">
+                            <tr>
+                                <th>Age</th>
+                                <th>Inc</th>
+                                <th>ŷ</th>
+                            </tr>
+                            <tr>
+                                <td>25</td>
+                                <td>40K</td>
+                                <td>0.3</td>
+                            </tr>
+                            <tr>
+                                <td>35</td>
+                                <td>60K</td>
+                                <td>0.7</td>
+                            </tr>
+                            <tr>
+                                <td>45</td>
+                                <td>80K</td>
+                                <td>0.9</td>
+                            </tr>
+                            <tr>
+                                <td>55</td>
+                                <td>50K</td>
+                                <td>0.6</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="step-desc">
+                        Start with training dataset containing all features and their predictions
+                    </div>
+                </div>
+                
+                <!-- Step 2 -->
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Fix Target Feature</div>
+                    <div class="step-visual">
+                        <table class="mini-table">
+                            <tr>
+                                <th>Age</th>
+                                <th>Inc</th>
+                                <th>ŷ</th>
+                            </tr>
+                            <tr>
+                                <td class="highlight-cell">30</td>
+                                <td>40K</td>
+                                <td>?</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight-cell">30</td>
+                                <td>60K</td>
+                                <td>?</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight-cell">30</td>
+                                <td>80K</td>
+                                <td>?</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight-cell">30</td>
+                                <td>50K</td>
+                                <td>?</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="step-desc">
+                        Replace target feature (Age) with specific value (e.g., 30) for ALL samples
+                    </div>
+                </div>
+                
+                <!-- Step 3 -->
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Predict & Average</div>
+                    <div class="step-visual">
+                        <div class="calc-box">
+                            f(30, 40K) = 0.45<br>
+                            f(30, 60K) = 0.65<br>
+                            f(30, 80K) = 0.75<br>
+                            f(30, 50K) = 0.55<br>
+                            <div style="margin: 8px 0; border-top: 2px solid #1E64C8;"></div>
+                            <strong style="color: #1E64C8;">PDP(Age=30) = <br>(0.45+0.65+0.75+0.55)/4<br>= 0.60</strong>
+                        </div>
+                    </div>
+                    <div class="step-desc">
+                        Get predictions for all modified samples, then compute their average
+                    </div>
+                </div>
+                
+                <!-- Step 4 -->
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <div class="step-title">Repeat & Plot</div>
+                    <div class="step-visual">
+                        <svg class="mini-chart" viewBox="0 0 100 80">
+                            <!-- Axes -->
+                            <line x1="10" y1="70" x2="90" y2="70" class="chart-axis"/>
+                            <line x1="10" y1="10" x2="10" y2="70" class="chart-axis"/>
+                            
+                            <!-- PDP curve -->
+                            <path d="M 15 65 L 30 55 L 45 40 L 60 28 L 75 20 L 90 18" class="chart-line"/>
+                            
+                            <!-- Points -->
+                            <circle cx="30" cy="55" r="2" class="chart-point"/>
+                            <circle cx="45" cy="40" r="2" class="chart-point"/>
+                            <circle cx="60" cy="28" r="2" class="chart-point"/>
+                            
+                            <!-- Labels -->
+                            <text x="50" y="78" font-size="8" fill="#666" text-anchor="middle">Age</text>
+                            <text x="5" y="40" font-size="8" fill="#666" text-anchor="middle" transform="rotate(-90 5 40)">PDP</text>
+                        </svg>
+                    </div>
+                    <div class="step-desc">
+                        Repeat steps 2-3 for different Age values to create the complete PDP curve
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bottom Note -->
+            <div class="bottom-note">
+                <div class="note-title-calc">💡 Key Insight</div>
+                PDP marginalizes out other features by averaging predictions across their distribution. This shows the <strong>average effect</strong> of the target feature, assuming feature independence.
             </div>
         </div>
     </div>

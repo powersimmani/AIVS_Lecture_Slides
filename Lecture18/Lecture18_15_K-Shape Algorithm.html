@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>K-Shape Algorithm</title>
+    <title>K-Shape Algorithm with Examples</title>
     <style>
         * {
             margin: 0;
@@ -13,25 +13,26 @@
         
         body {
             font-family: Aptos, 'Segoe UI', sans-serif;
-            background: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            background: #f5f5f5;
             padding: 20px;
         }
         
-        .container {
+        .slide {
             width: 960px;
-            height: 540px;
-            display: flex;
-            flex-direction: column;
-            padding: 25px;
-            gap: 20px;
+            min-height: 540px;
+            margin: 0 auto 40px;
+            padding: 0;
+            border: 1px solid #ddd;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            page-break-after: always;
+            background: white;
+            position: relative;
+            overflow: visible;
         }
         
         .header {
             text-align: center;
+            padding: 25px 25px 20px;
         }
         
         .main-title {
@@ -46,11 +47,15 @@
             color: #666;
         }
         
+        .content-wrapper {
+            padding: 0 25px 25px;
+        }
+        
         .content-layout {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 20px;
-            flex: 1;
+            min-height: 420px;
         }
         
         .features-section {
@@ -270,133 +275,640 @@
             font-size: 16px;
             color: #333;
         }
+        
+        /* Example slide styles */
+        .example-content {
+            padding: 0 25px 25px;
+            min-height: calc(540px - 80px);
+            overflow: visible;
+        }
+        
+        .data-box {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .data-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+        }
+        
+        .vector-display {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .vector-item {
+            background: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 2px solid #1E64C8;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .vector-label {
+            color: #1E64C8;
+            margin-right: 5px;
+        }
+        
+        .calc-box {
+            background: #fff8f0;
+            border: 2px solid #ff9800;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .calc-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #ff9800;
+            margin-bottom: 10px;
+        }
+        
+        .calc-step {
+            background: white;
+            padding: 8px 10px;
+            border-radius: 4px;
+            margin-bottom: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
+        
+        .calc-step:last-child {
+            margin-bottom: 0;
+        }
+        
+        .result-highlight {
+            background: #e8f5e9;
+            border: 2px solid #4CAF50;
+            border-radius: 6px;
+            padding: 10px;
+            margin-top: 8px;
+            text-align: center;
+        }
+        
+        .result-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+        
+        .result-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: #4CAF50;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .formula {
+            background: #f8f9fa;
+            border-left: 4px solid #1E64C8;
+            padding: 8px 12px;
+            margin: 8px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
+        
+        .iteration-badge {
+            background: #9C27B0;
+            color: white;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 12px;
+        }
+        
+        .two-col-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .cluster-display {
+            display: flex;
+            gap: 12px;
+            margin-top: 10px;
+        }
+        
+        .cluster-group {
+            flex: 1;
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 10px;
+        }
+        
+        .cluster-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            text-align: center;
+            padding: 4px;
+            border-radius: 4px;
+        }
+        
+        .cluster-members {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .member-item {
+            background: #f0f6ff;
+            padding: 5px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .insight-box {
+            background: #f3e5f5;
+            border: 2px solid #9C27B0;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+        }
+        
+        .insight-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #9C27B0;
+            margin-bottom: 6px;
+        }
+        
+        .insight-text {
+            font-size: 13px;
+            color: #333;
+            line-height: 1.5;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
+    <!-- Slide 1: Overview -->
+    <div class="slide">
         <div class="header">
             <div class="main-title">K-Shape Algorithm</div>
             <div class="subtitle">Shape-based Time Series Clustering</div>
         </div>
         
-        <div class="content-layout">
-            <div class="features-section">
-                <div class="section-title">Key Features</div>
-                
-                <div class="feature-card key-feature">
-                    <div class="feature-icon">📊</div>
-                    <div class="feature-text">
-                        <span class="highlight">Cross-correlation</span> for similarity
+        <div class="content-wrapper">
+            <div class="content-layout">
+                <div class="features-section">
+                    <div class="section-title">Key Features</div>
+                    
+                    <div class="feature-card key-feature">
+                        <div class="feature-icon">📊</div>
+                        <div class="feature-text">
+                            <span class="highlight">Cross-correlation</span> for similarity
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card key-feature">
+                        <div class="feature-icon">⚖️</div>
+                        <div class="feature-text">
+                            <span class="highlight">Scale & shift invariant</span> distance
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">🎯</div>
+                        <div class="feature-text">
+                            Efficient <span class="highlight">shape-based centroid</span>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">🔄</div>
+                        <div class="feature-text">
+                            <span class="highlight">Iterative refinement</span> like K-means
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card advantage-feature">
+                        <div class="feature-icon">⚡</div>
+                        <div class="feature-text">
+                            <span class="highlight">Faster</span> than DTW-based methods
+                        </div>
+                    </div>
+                    
+                    <div class="best-for-box">
+                        <div class="best-title">✓ Best For</div>
+                        <div class="best-text">Normalized time series data</div>
                     </div>
                 </div>
                 
-                <div class="feature-card key-feature">
-                    <div class="feature-icon">⚖️</div>
-                    <div class="feature-text">
-                        <span class="highlight">Scale & shift invariant</span> distance
-                    </div>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">🎯</div>
-                    <div class="feature-text">
-                        Efficient <span class="highlight">shape-based centroid</span>
-                    </div>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">🔄</div>
-                    <div class="feature-text">
-                        <span class="highlight">Iterative refinement</span> like K-means
-                    </div>
-                </div>
-                
-                <div class="feature-card advantage-feature">
-                    <div class="feature-icon">⚡</div>
-                    <div class="feature-text">
-                        <span class="highlight">Faster</span> than DTW-based methods
-                    </div>
-                </div>
-                
-                <div class="best-for-box">
-                    <div class="best-title">✓ Best For</div>
-                    <div class="best-text">Normalized time series data</div>
-                </div>
-            </div>
-            
-            <div class="comparison-section">
-                <div class="comparison-table">
-                    <div class="table-title">Method Comparison</div>
-                    <div class="table-grid">
-                        <div class="table-header">Feature</div>
-                        <div class="table-header">K-Shape</div>
-                        <div class="table-header">DTW</div>
-                        
-                        <div class="table-cell table-label">Speed</div>
-                        <div class="table-cell">
-                            <span class="fast-badge">Fast</span>
-                        </div>
-                        <div class="table-cell">
-                            <span class="slow-badge">Slow</span>
-                        </div>
-                        
-                        <div class="table-cell table-label">Scale Invariant</div>
-                        <div class="table-cell">
-                            <span class="check-icon">✓</span>
-                        </div>
-                        <div class="table-cell">
-                            <span class="cross-icon">✗</span>
-                        </div>
-                        
-                        <div class="table-cell table-label">Shift Invariant</div>
-                        <div class="table-cell">
-                            <span class="check-icon">✓</span>
-                        </div>
-                        <div class="table-cell">
-                            <span class="cross-icon">✗</span>
-                        </div>
-                        
-                        <div class="table-cell table-label">Time Warp</div>
-                        <div class="table-cell">
-                            <span class="cross-icon">✗</span>
-                        </div>
-                        <div class="table-cell">
-                            <span class="check-icon">✓</span>
-                        </div>
-                        
-                        <div class="table-cell table-label">Complexity</div>
-                        <div class="table-cell" style="font-size: 15px; color: #4CAF50; font-weight: 600;">
-                            O(nm)
-                        </div>
-                        <div class="table-cell" style="font-size: 15px; color: #ff9800; font-weight: 600;">
-                            O(n²m²)
+                <div class="comparison-section">
+                    <div class="comparison-table">
+                        <div class="table-title">Method Comparison</div>
+                        <div class="table-grid">
+                            <div class="table-header">Feature</div>
+                            <div class="table-header">K-Shape</div>
+                            <div class="table-header">DTW</div>
+                            
+                            <div class="table-cell table-label">Speed</div>
+                            <div class="table-cell">
+                                <span class="fast-badge">Fast</span>
+                            </div>
+                            <div class="table-cell">
+                                <span class="slow-badge">Slow</span>
+                            </div>
+                            
+                            <div class="table-cell table-label">Scale Invariant</div>
+                            <div class="table-cell">
+                                <span class="check-icon">✓</span>
+                            </div>
+                            <div class="table-cell">
+                                <span class="cross-icon">✗</span>
+                            </div>
+                            
+                            <div class="table-cell table-label">Shift Invariant</div>
+                            <div class="table-cell">
+                                <span class="check-icon">✓</span>
+                            </div>
+                            <div class="table-cell">
+                                <span class="cross-icon">✗</span>
+                            </div>
+                            
+                            <div class="table-cell table-label">Time Warp</div>
+                            <div class="table-cell">
+                                <span class="cross-icon">✗</span>
+                            </div>
+                            <div class="table-cell">
+                                <span class="check-icon">✓</span>
+                            </div>
+                            
+                            <div class="table-cell table-label">Complexity</div>
+                            <div class="table-cell" style="font-size: 15px; color: #4CAF50; font-weight: 600;">
+                                O(nm)
+                            </div>
+                            <div class="table-cell" style="font-size: 15px; color: #ff9800; font-weight: 600;">
+                                O(n²m²)
+                            </div>
                         </div>
                     </div>
-                </div>
-                
-                <div class="algorithm-box">
-                    <div class="algo-title">K-Shape Algorithm Flow</div>
-                    <div class="algo-steps">
-                        <div class="algo-step">
-                            <div class="step-num">1</div>
-                            <div class="step-text">Initialize k cluster centroids</div>
-                        </div>
-                        <div class="algo-step">
-                            <div class="step-num">2</div>
-                            <div class="step-text">Assign series to nearest centroid (cross-correlation)</div>
-                        </div>
-                        <div class="algo-step">
-                            <div class="step-num">3</div>
-                            <div class="step-text">Update centroids (shape extraction)</div>
-                        </div>
-                        <div class="algo-step">
-                            <div class="step-num">4</div>
-                            <div class="step-text">Repeat until convergence</div>
+                    
+                    <div class="algorithm-box">
+                        <div class="algo-title">K-Shape Algorithm Flow</div>
+                        <div class="algo-steps">
+                            <div class="algo-step">
+                                <div class="step-num">1</div>
+                                <div class="step-text">Initialize k cluster centroids</div>
+                            </div>
+                            <div class="algo-step">
+                                <div class="step-num">2</div>
+                                <div class="step-text">Assign series to nearest centroid (cross-correlation)</div>
+                            </div>
+                            <div class="algo-step">
+                                <div class="step-num">3</div>
+                                <div class="step-text">Update centroids (shape extraction)</div>
+                            </div>
+                            <div class="algo-step">
+                                <div class="step-num">4</div>
+                                <div class="step-text">Repeat until convergence</div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Slide 2: Example Data Setup -->
+    <div class="slide">
+        <div class="header">
+            <div class="main-title">K-Shape Algorithm Example</div>
+            <div class="subtitle">Step-by-Step Calculation with 2D Vectors</div>
+        </div>
+        
+        <div class="example-content">
+            <div class="data-box">
+                <div class="data-title">📌 Input Data: 4 Time Series (k=2 clusters)</div>
+                <div class="vector-display">
+                    <div class="vector-item">
+                        <span class="vector-label">x₁ =</span> [1, 2]
+                    </div>
+                    <div class="vector-item">
+                        <span class="vector-label">x₂ =</span> [2, 3]
+                    </div>
+                    <div class="vector-item">
+                        <span class="vector-label">x₃ =</span> [8, 9]
+                    </div>
+                    <div class="vector-item">
+                        <span class="vector-label">x₄ =</span> [9, 10]
+                    </div>
+                </div>
+            </div>
+            
+            <div class="data-box">
+                <div class="data-title">🎯 Step 1: Normalization (z-score)</div>
+                <div class="formula">
+                    z = (x - μ) / σ
+                </div>
+                <div class="vector-display">
+                    <div class="vector-item">
+                        <span class="vector-label">z₁ =</span> [-1.0, 1.0]
+                    </div>
+                    <div class="vector-item">
+                        <span class="vector-label">z₂ =</span> [-1.0, 1.0]
+                    </div>
+                    <div class="vector-item">
+                        <span class="vector-label">z₃ =</span> [-1.0, 1.0]
+                    </div>
+                    <div class="vector-item">
+                        <span class="vector-label">z₄ =</span> [-1.0, 1.0]
+                    </div>
+                </div>
+            </div>
+            
+            <div class="two-col-grid">
+                <div class="calc-box">
+                    <div class="calc-title">💡 Example: Normalize x₁ = [1, 2]</div>
+                    <div class="calc-step">μ = (1 + 2) / 2 = 1.5</div>
+                    <div class="calc-step">σ = √[((1-1.5)² + (2-1.5)²) / 2] = 0.5</div>
+                    <div class="calc-step">z₁[0] = (1 - 1.5) / 0.5 = -1.0</div>
+                    <div class="calc-step">z₁[1] = (2 - 1.5) / 0.5 = 1.0</div>
+                    <div class="result-highlight">
+                        <div class="result-label">Result</div>
+                        <div class="result-value">z₁ = [-1.0, 1.0]</div>
+                    </div>
+                </div>
+                
+                <div class="insight-box">
+                    <div class="insight-title">📝 Key Insight</div>
+                    <div class="insight-text">
+                        All normalized vectors have the same shape pattern [-1.0, 1.0], showing they follow the same increasing trend!
+                        <br><br>
+                        This normalization makes K-Shape <strong>scale-invariant</strong> - it focuses on shape, not magnitude.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 3: Iteration 0 -->
+    <div class="slide">
+        <div class="header">
+            <div class="main-title">K-Shape Algorithm Example</div>
+            <div class="subtitle">Iteration 0: Initial Cluster Assignment</div>
+        </div>
+        
+        <div class="example-content">
+            <div style="text-align: center;">
+                <span class="iteration-badge">Iteration 0</span>
+            </div>
+            
+            <div class="data-box">
+                <div class="data-title">🎲 Step 2: Initialize Centroids (Random)</div>
+                <div class="vector-display">
+                    <div class="vector-item" style="background: #e3f2fd; border-color: #2196F3;">
+                        <span class="vector-label" style="color: #2196F3;">μ₁ =</span> [-1.0, 1.0]
+                    </div>
+                    <div class="vector-item" style="background: #fce4ec; border-color: #E91E63;">
+                        <span class="vector-label" style="color: #E91E63;">μ₂ =</span> [-1.0, 1.0]
+                    </div>
+                </div>
+            </div>
+            
+            <div class="calc-box">
+                <div class="calc-title">🔍 Cross-Correlation Distance (SBD)</div>
+                <div class="formula">
+                    SBD(x, y) = 1 - max(CC(x, y)) / (||x|| × ||y||)
+                    <br>
+                    CC(x, y) = Σ x[i] × y[i]  (Cross-Correlation)
+                </div>
+                
+                <div style="margin-top: 10px; font-size: 14px; font-weight: 600; color: #ff9800;">
+                    Calculate distance for z₁ to μ₁:
+                </div>
+                
+                <div class="calc-step">CC(z₁, μ₁) = (-1.0)×(-1.0) + (1.0)×(1.0) = 2.0</div>
+                <div class="calc-step">||z₁|| = √(1.0² + 1.0²) = 1.414</div>
+                <div class="calc-step">||μ₁|| = 1.414</div>
+                <div class="calc-step">SBD(z₁, μ₁) = 1 - 2.0/(1.414 × 1.414) = 0.0</div>
+                
+                <div class="result-highlight">
+                    <div class="result-label">Distance Result</div>
+                    <div class="result-value">z₁ → Cluster 1 (distance = 0.0)</div>
+                </div>
+            </div>
+            
+            <div class="data-box" style="background: #e8f5e9; border-color: #4CAF50;">
+                <div class="data-title" style="color: #4CAF50;">✅ Initial Cluster Assignment</div>
+                <div class="cluster-display">
+                    <div class="cluster-group">
+                        <div class="cluster-label" style="background: #e3f2fd; color: #2196F3;">
+                            Cluster 1
+                        </div>
+                        <div class="cluster-members">
+                            <div class="member-item">z₁ = [-1.0, 1.0]</div>
+                            <div class="member-item">z₂ = [-1.0, 1.0]</div>
+                        </div>
+                    </div>
+                    <div class="cluster-group">
+                        <div class="cluster-label" style="background: #fce4ec; color: #E91E63;">
+                            Cluster 2
+                        </div>
+                        <div class="cluster-members">
+                            <div class="member-item">z₃ = [-1.0, 1.0]</div>
+                            <div class="member-item">z₄ = [-1.0, 1.0]</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 4: Iteration 1 -->
+    <div class="slide">
+        <div class="header">
+            <div class="main-title">K-Shape Algorithm Example</div>
+            <div class="subtitle">Iteration 1: Update Centroids</div>
+        </div>
+        
+        <div class="example-content">
+            <div style="text-align: center;">
+                <span class="iteration-badge">Iteration 1</span>
+            </div>
+            
+            <div class="two-col-grid">
+                <div class="calc-box">
+                    <div class="calc-title">🔄 Step 3: Update Cluster 1 Centroid</div>
+                    <div class="formula">
+                        μ = argmax Σ CC(x_i, y) / ||y||²
+                        <br>
+                        Simplified: Average of cluster members
+                    </div>
+                    
+                    <div class="calc-step">Members: z₁, z₂ = [-1.0, 1.0]</div>
+                    <div class="calc-step">μ₁[0] = (-1.0 + -1.0) / 2 = -1.0</div>
+                    <div class="calc-step">μ₁[1] = (1.0 + 1.0) / 2 = 1.0</div>
+                    
+                    <div class="result-highlight">
+                        <div class="result-label">Updated Centroid</div>
+                        <div class="result-value">μ₁ = [-1.0, 1.0]</div>
+                    </div>
+                </div>
+                
+                <div class="calc-box">
+                    <div class="calc-title">🔄 Step 3: Update Cluster 2 Centroid</div>
+                    <div class="formula" style="visibility: hidden;">
+                        Spacer
+                    </div>
+                    
+                    <div class="calc-step">Members: z₃, z₄ = [-1.0, 1.0]</div>
+                    <div class="calc-step">μ₂[0] = (-1.0 + -1.0) / 2 = -1.0</div>
+                    <div class="calc-step">μ₂[1] = (1.0 + 1.0) / 2 = 1.0</div>
+                    
+                    <div class="result-highlight">
+                        <div class="result-label">Updated Centroid</div>
+                        <div class="result-value">μ₂ = [-1.0, 1.0]</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="data-box" style="background: #fff3e0; border-color: #FF9800; margin-top: 15px;">
+                <div class="data-title" style="color: #FF9800;">⚠️ Convergence Check</div>
+                <div style="font-size: 15px; color: #333; text-align: center; margin-top: 8px; line-height: 1.8;">
+                    <strong>Centroids unchanged!</strong><br>
+                    μ₁ = μ₂ = [-1.0, 1.0]<br>
+                    <span style="color: #4CAF50; font-weight: 600; font-size: 16px;">✓ Algorithm converged!</span>
+                </div>
+            </div>
+            
+            <div class="insight-box" style="margin-top: 15px;">
+                <div class="insight-title">💡 Why did it converge so quickly?</div>
+                <div class="insight-text">
+                    All normalized vectors have identical shape [-1.0, 1.0], so they all have perfect cross-correlation with any centroid of the same shape. The algorithm converged in just one iteration!
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 5: Final Results -->
+    <div class="slide">
+        <div class="header">
+            <div class="main-title">K-Shape Algorithm Example</div>
+            <div class="subtitle">Final Results & Analysis</div>
+        </div>
+        
+        <div class="example-content">
+            <div class="data-box" style="background: #e8f5e9; border-color: #4CAF50;">
+                <div class="data-title" style="color: #4CAF50;">🎉 Final Cluster Assignment</div>
+                <div class="cluster-display">
+                    <div class="cluster-group">
+                        <div class="cluster-label" style="background: #e3f2fd; color: #2196F3; padding: 6px; font-size: 14px;">
+                            📊 Cluster 1
+                        </div>
+                        <div class="cluster-members">
+                            <div class="member-item" style="padding: 6px; font-size: 13px;">
+                                x₁ = [1, 2]
+                            </div>
+                            <div class="member-item" style="padding: 6px; font-size: 13px;">
+                                x₂ = [2, 3]
+                            </div>
+                        </div>
+                        <div style="margin-top: 8px; text-align: center; font-size: 12px; color: #2196F3; font-weight: 600;">
+                            Centroid: [-1.0, 1.0]
+                        </div>
+                    </div>
+                    <div class="cluster-group">
+                        <div class="cluster-label" style="background: #fce4ec; color: #E91E63; padding: 6px; font-size: 14px;">
+                            📊 Cluster 2
+                        </div>
+                        <div class="cluster-members">
+                            <div class="member-item" style="padding: 6px; font-size: 13px;">
+                                x₃ = [8, 9]
+                            </div>
+                            <div class="member-item" style="padding: 6px; font-size: 13px;">
+                                x₄ = [9, 10]
+                            </div>
+                        </div>
+                        <div style="margin-top: 8px; text-align: center; font-size: 12px; color: #E91E63; font-weight: 600;">
+                            Centroid: [-1.0, 1.0]
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="two-col-grid" style="margin-top: 15px;">
+                <div class="data-box" style="background: #f3e5f5; border-color: #9C27B0;">
+                    <div class="data-title" style="color: #9C27B0;">🔑 Key Observations</div>
+                    <div style="font-size: 13px; color: #333; line-height: 1.7;">
+                        <div style="margin-bottom: 8px;">
+                            <strong>1. Shape-based clustering:</strong><br>
+                            Groups series by pattern, not absolute values
+                        </div>
+                        <div style="margin-bottom: 8px;">
+                            <strong>2. Same normalized shape:</strong><br>
+                            All series show increasing trend [-1, 1]
+                        </div>
+                        <div>
+                            <strong>3. Scale invariance:</strong><br>
+                            [1,2] and [8,9] treated similarly
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="data-box" style="background: #e3f2fd; border-color: #2196F3;">
+                    <div class="data-title" style="color: #2196F3;">💡 Algorithm Insights</div>
+                    <div style="font-size: 13px; color: #333; line-height: 1.7;">
+                        <div style="margin-bottom: 8px;">
+                            <strong>✓ Fast convergence:</strong><br>
+                            Converged in 1 iteration
+                        </div>
+                        <div style="margin-bottom: 8px;">
+                            <strong>✓ Cross-correlation:</strong><br>
+                            Measures shape similarity efficiently
+                        </div>
+                        <div>
+                            <strong>✓ Normalization effect:</strong><br>
+                            All vectors → same pattern
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="data-box" style="background: #fff8f0; border-color: #ff9800; margin-top: 15px;">
+                <div class="data-title" style="color: #ff9800;">📊 Complexity Analysis</div>
+                <div style="text-align: center;">
+                    <div style="font-size: 14px; color: #333; margin-bottom: 8px;">
+                        <strong>For n=4 series, m=2 dimensions, k=2 clusters:</strong>
+                    </div>
+                    <div style="display: flex; gap: 15px; justify-content: center; margin-top: 10px;">
+                        <div style="background: white; padding: 10px 16px; border-radius: 6px; border: 2px solid #4CAF50;">
+                            <div style="font-size: 12px; color: #666;">K-Shape</div>
+                            <div style="font-size: 18px; font-weight: 700; color: #4CAF50; margin-top: 4px;">
+                                O(4×2) = O(8)
+                            </div>
+                        </div>
+                        <div style="background: white; padding: 10px 16px; border-radius: 6px; border: 2px solid #ff9800;">
+                            <div style="font-size: 12px; color: #666;">DTW</div>
+                            <div style="font-size: 18px; font-weight: 700; color: #ff9800; margin-top: 4px;">
+                                O(16×4) = O(64)
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 10px; font-size: 14px; color: #4CAF50; font-weight: 600;">
+                        K-Shape is 8× faster! ⚡
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>

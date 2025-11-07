@@ -23,10 +23,11 @@
         
         .container {
             width: 960px;
-            height: 540px;
+            height: 720px;
             position: relative;
             background: white;
             padding: 25px;
+            overflow-y: auto;
         }
         
         .title {
@@ -48,7 +49,6 @@
             display: grid;
             grid-template-columns: 1.2fr 1fr;
             gap: 20px;
-            height: calc(100% - 100px);
         }
         
         .visualization-section {
@@ -119,25 +119,6 @@
             left: -15px;
         }
         
-        .concept-vector {
-            position: absolute;
-            width: 3px;
-            background: #1E64C8;
-            transform-origin: bottom left;
-            opacity: 0.7;
-        }
-        
-        .vector-arrow {
-            position: absolute;
-            top: -6px;
-            left: 50%;
-            transform: translateX(-50%) rotate(45deg);
-            width: 10px;
-            height: 10px;
-            border-top: 3px solid #1E64C8;
-            border-right: 3px solid #1E64C8;
-        }
-        
         .concept-point {
             position: absolute;
             width: 14px;
@@ -201,6 +182,7 @@
             border: 2px solid #E0E0E0;
             border-radius: 8px;
             padding: 12px;
+            margin-bottom: 10px;
         }
         
         .example-title {
@@ -239,7 +221,6 @@
             border: 2px solid #E0E0E0;
             border-radius: 10px;
             padding: 15px;
-            flex: 1;
         }
         
         .method-card.highlight {
@@ -330,10 +311,46 @@
                         <strong>Model Sensitivity:</strong> How much does prediction change when moving in the direction of the striped concept?
                     </div>
                     <div class="example-formula">
-                        S_C = ∇_C f(x) · v_C
+                        S<sub>C</sub> = ∇<sub>C</sub> f(x) · v<sub>C</sub>
                     </div>
                     <div style="text-align: center; font-size: 13px; color: #666; margin-top: 6px;">
                         Directional derivative along concept vector
+                    </div>
+                </div>
+                
+                <!-- Additional Theory Section -->
+                <div class="example-box">
+                    <div class="example-title">📚 Theoretical Foundation</div>
+                    <div class="example-content">
+                        <strong>TCAV Score:</strong><br>
+                        TCAV<sub>C,k,l</sub>(x) = 1 if S<sub>C</sub><sup>k,l</sup>(x) > 0, else 0
+                    </div>
+                    <div style="font-size: 13px; color: #666; margin-top: 8px; line-height: 1.6;">
+                        • <strong>k</strong>: target class<br>
+                        • <strong>l</strong>: layer of interest<br>
+                        • <strong>Interpretation:</strong> Fraction of inputs where concept C positively influences class k prediction
+                    </div>
+                </div>
+                
+                <div class="example-box">
+                    <div class="example-title">💡 Practical Example</div>
+                    <div class="example-content" style="font-size: 13px; line-height: 1.6;">
+                        <strong>Question:</strong> Does "striped" concept influence zebra classification?<br><br>
+                        <strong>Process:</strong><br>
+                        1. Collect striped images (positive) vs random (negative)<br>
+                        2. Train linear classifier on layer activations → get v<sub>C</sub><br>
+                        3. Compute ∇<sub>C</sub>f for test images<br>
+                        4. TCAV score = % of zebra images with positive sensitivity
+                    </div>
+                </div>
+                
+                <div class="example-box">
+                    <div class="example-title">🔑 Key Advantages</div>
+                    <div class="method-list">
+                        <div><strong>Human-interpretable:</strong> Uses concepts people understand</div>
+                        <div><strong>Post-hoc:</strong> No model retraining needed</div>
+                        <div><strong>Quantitative:</strong> Provides statistical significance</div>
+                        <div><strong>Global:</strong> Analyzes model behavior across dataset</div>
                     </div>
                 </div>
             </div>
@@ -379,6 +396,35 @@
                         <div>Prediction = f(concepts)</div>
                         <div>Intervene on concepts</div>
                         <div>Inherently interpretable</div>
+                    </div>
+                </div>
+                
+                <div class="method-card" style="border-color: #28A745; background: #E8F5E9;">
+                    <div class="method-icon">📊</div>
+                    <div class="method-title">Comparison Table</div>
+                    <div style="font-size: 13px; line-height: 1.6; margin-top: 8px;">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <tr style="background: #F8F9FA;">
+                                <th style="padding: 6px; text-align: left; border: 1px solid #ddd;">Method</th>
+                                <th style="padding: 6px; text-align: left; border: 1px solid #ddd;">Manual?</th>
+                                <th style="padding: 6px; text-align: left; border: 1px solid #ddd;">Retrain?</th>
+                            </tr>
+                            <tr>
+                                <td style="padding: 6px; border: 1px solid #ddd;"><strong>TCAV</strong></td>
+                                <td style="padding: 6px; border: 1px solid #ddd;">Yes</td>
+                                <td style="padding: 6px; border: 1px solid #ddd;">No</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 6px; border: 1px solid #ddd;"><strong>ACE</strong></td>
+                                <td style="padding: 6px; border: 1px solid #ddd;">No</td>
+                                <td style="padding: 6px; border: 1px solid #ddd;">No</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 6px; border: 1px solid #ddd;"><strong>CBM</strong></td>
+                                <td style="padding: 6px; border: 1px solid #ddd;">Yes</td>
+                                <td style="padding: 6px; border: 1px solid #ddd;">Yes</td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
             </div>

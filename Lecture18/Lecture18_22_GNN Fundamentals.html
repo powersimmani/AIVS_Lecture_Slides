@@ -23,7 +23,7 @@
         
         .container {
             width: 960px;
-            height: 540px;
+            min-height: 540px;
             display: flex;
             flex-direction: column;
             padding: 25px;
@@ -337,6 +337,132 @@
             color: #333;
             line-height: 1.4;
         }
+        
+        /* New section styles */
+        .conv-input-section {
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 3px solid #e0e0e0;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .example-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .example-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 18px;
+            border: 2px solid #1E64C8;
+        }
+        
+        .example-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .graph-example {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 12px;
+            min-height: 150px;
+            position: relative;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .small-node {
+            position: absolute;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 14px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+        
+        .matrices-display {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .matrix-box {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+            border: 2px solid #4CAF50;
+        }
+        
+        .matrix-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #4CAF50;
+            margin-bottom: 8px;
+        }
+        
+        .matrix-content {
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #333;
+            background: #f5f5f5;
+            padding: 8px;
+            border-radius: 4px;
+            white-space: pre;
+        }
+        
+        .formula-box {
+            background: #fff3e0;
+            border: 2px solid #ff9800;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+        }
+        
+        .formula-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ff9800;
+            margin-bottom: 6px;
+        }
+        
+        .formula-content {
+            font-size: 15px;
+            color: #333;
+            text-align: center;
+            font-style: italic;
+        }
+        
+        .step-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .step-arrow {
+            font-size: 24px;
+            color: #1E64C8;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -371,22 +497,29 @@
                         <div class="node-label">u₄</div>
                     </div>
                     
-                    <!-- Message arrows -->
-                    <div class="arrow-line" style="top: 25%; left: 35%; width: 80px; transform: rotate(30deg);"></div>
-                    <div class="arrow-head" style="top: 38%; left: 44%; transform: rotate(30deg);"></div>
-                    <div class="message-label" style="top: 22%; left: 42%;">m₁</div>
+                    <!-- Message arrows: neighbors → central node -->
+                    <!-- Arrow from u1 to v -->
+                    <svg style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;">
+                        <defs>
+                            <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                <polygon points="0 0, 10 3, 0 6" fill="#ff9800" />
+                            </marker>
+                        </defs>
+                        <!-- u1 to v -->
+                        <line x1="37%" y1="17%" x2="47%" y2="43%" stroke="#ff9800" stroke-width="3" marker-end="url(#arrowhead)" />
+                        <!-- u2 to v -->
+                        <line x1="63%" y1="17%" x2="53%" y2="43%" stroke="#ff9800" stroke-width="3" marker-end="url(#arrowhead)" />
+                        <!-- u3 to v -->
+                        <line x1="33%" y1="83%" x2="47%" y2="57%" stroke="#ff9800" stroke-width="3" marker-end="url(#arrowhead)" />
+                        <!-- u4 to v -->
+                        <line x1="67%" y1="83%" x2="53%" y2="57%" stroke="#ff9800" stroke-width="3" marker-end="url(#arrowhead)" />
+                    </svg>
                     
-                    <div class="arrow-line" style="top: 25%; right: 35%; width: 80px; transform: rotate(-30deg);"></div>
-                    <div class="arrow-head" style="top: 38%; right: 44%; transform: rotate(-30deg);"></div>
-                    <div class="message-label" style="top: 22%; right: 42%;">m₂</div>
-                    
-                    <div class="arrow-line" style="bottom: 25%; left: 33%; width: 90px; transform: rotate(-35deg);"></div>
-                    <div class="arrow-head" style="bottom: 38%; left: 45%; transform: rotate(-35deg);"></div>
-                    <div class="message-label" style="bottom: 22%; left: 38%;">m₃</div>
-                    
-                    <div class="arrow-line" style="bottom: 25%; right: 33%; width: 90px; transform: rotate(35deg);"></div>
-                    <div class="arrow-head" style="bottom: 38%; right: 45%; transform: rotate(35deg);"></div>
-                    <div class="message-label" style="bottom: 22%; right: 38%;">m₄</div>
+                    <!-- Message labels -->
+                    <div class="message-label" style="top: 24%; left: 36%;">m₁</div>
+                    <div class="message-label" style="top: 24%; right: 36%;">m₂</div>
+                    <div class="message-label" style="bottom: 24%; left: 34%;">m₃</div>
+                    <div class="message-label" style="bottom: 24%; right: 34%;">m₄</div>
                 </div>
                 
                 <div class="operations-section">
@@ -443,7 +576,7 @@
                             <span>Learn node embeddings</span>
                         </div>
                         <div class="prop-item">
-                            <span class="prop-icon">🏗️</span>
+                            <span class="prop-icon">🗺️</span>
                             <span>Preserve graph structure</span>
                         </div>
                     </div>
@@ -454,6 +587,119 @@
                     <div class="foundation-text">
                         Basis for modern graph machine learning methods
                     </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- New Section: Graph to Conv Input -->
+        <div class="conv-input-section">
+            <div class="section-title">How to Convert Graph to Convolution Input</div>
+            
+            <div class="example-grid">
+                <!-- Example 1: Simple Graph -->
+                <div class="example-card">
+                    <div class="example-title">📊 Example: Simple Graph</div>
+                    
+                    <div class="graph-example">
+                        <svg style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+                            <line x1="25%" y1="30%" x2="50%" y2="30%" stroke="#666" stroke-width="2" />
+                            <line x1="50%" y1="30%" x2="75%" y2="30%" stroke="#666" stroke-width="2" />
+                            <line x1="25%" y1="30%" x2="50%" y2="70%" stroke="#666" stroke-width="2" />
+                            <line x1="50%" y1="70%" x2="75%" y2="30%" stroke="#666" stroke-width="2" />
+                        </svg>
+                        <div class="small-node" style="background: #4CAF50; top: 20%; left: 18%;">
+                            v₁
+                        </div>
+                        <div class="small-node" style="background: #2196F3; top: 20%; left: 43%;">
+                            v₂
+                        </div>
+                        <div class="small-node" style="background: #FF9800; top: 20%; left: 68%;">
+                            v₃
+                        </div>
+                        <div class="small-node" style="background: #9C27B0; top: 60%; left: 43%;">
+                            v₄
+                        </div>
+                    </div>
+                    
+                    <div class="matrices-display">
+                        <div class="matrix-box">
+                            <div class="matrix-label">Adjacency Matrix (A)</div>
+                            <div class="matrix-content">⎡0 1 0 1⎤
+⎢1 0 1 0⎥
+⎢0 1 0 1⎥
+⎣1 0 1 0⎦</div>
+                        </div>
+                        
+                        <div class="matrix-box">
+                            <div class="matrix-label">Feature Matrix (X)</div>
+                            <div class="matrix-content">⎡x₁₁ x₁₂ ... x₁ₐ⎤
+⎢x₂₁ x₂₂ ... x₂ₐ⎥
+⎢x₃₁ x₃₂ ... x₃ₐ⎥
+⎣x₄₁ x₄₂ ... x₄ₐ⎦</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Example 2: Conv Operation -->
+                <div class="example-card">
+                    <div class="example-title">⚙️ Graph Convolution Operation</div>
+                    
+                    <div class="matrices-display" style="margin-top: 0;">
+                        <div class="matrix-box">
+                            <div class="matrix-label">Step 1: Normalize Adjacency</div>
+                            <div class="matrix-content" style="font-size: 12px;">Ã = D⁻½ A D⁻½
+(Add self-loops & normalize)</div>
+                        </div>
+                        
+                        <div class="step-indicator">
+                            <div class="step-arrow">↓</div>
+                        </div>
+                        
+                        <div class="matrix-box">
+                            <div class="matrix-label">Step 2: Aggregate Features</div>
+                            <div class="matrix-content" style="font-size: 12px;">H̃ = Ã X
+(Weighted sum of neighbors)</div>
+                        </div>
+                        
+                        <div class="step-indicator">
+                            <div class="step-arrow">↓</div>
+                        </div>
+                        
+                        <div class="matrix-box">
+                            <div class="matrix-label">Step 3: Apply Weights</div>
+                            <div class="matrix-content" style="font-size: 12px;">H' = H̃ W
+(Linear transformation)</div>
+                        </div>
+                        
+                        <div class="step-indicator">
+                            <div class="step-arrow">↓</div>
+                        </div>
+                        
+                        <div class="matrix-box">
+                            <div class="matrix-label">Step 4: Non-linearity</div>
+                            <div class="matrix-content" style="font-size: 12px;">H⁽ˡ⁺¹⁾ = σ(H')
+(Apply activation function)</div>
+                        </div>
+                    </div>
+                    
+                    <div class="formula-box">
+                        <div class="formula-title">Complete Formula</div>
+                        <div class="formula-content">H⁽ˡ⁺¹⁾ = σ(D̃⁻½ÃD̃⁻½ H⁽ˡ⁾ W⁽ˡ⁾)</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Additional explanation -->
+            <div style="margin-top: 20px; background: #e3f2fd; border-radius: 10px; padding: 15px; border: 2px solid #2196F3;">
+                <div style="font-size: 16px; font-weight: 600; color: #1976D2; margin-bottom: 8px;">
+                    💡 Key Points
+                </div>
+                <div style="font-size: 14px; color: #333; line-height: 1.6;">
+                    • <strong>Adjacency Matrix (A):</strong> Encodes graph structure (who connects to whom)<br>
+                    • <strong>Feature Matrix (X):</strong> Node features (d-dimensional vectors for each node)<br>
+                    • <strong>Degree Matrix (D):</strong> Diagonal matrix with node degrees for normalization<br>
+                    • <strong>Weight Matrix (W):</strong> Learnable parameters (like CNN filters)<br>
+                    • <strong>Output (H):</strong> New node representations that incorporate neighborhood information
                 </div>
             </div>
         </div>
