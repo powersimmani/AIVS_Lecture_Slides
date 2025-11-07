@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UMAP</title>
+    <title>UMAP - Complete Guide</title>
     <style>
         * {
             margin: 0;
@@ -21,7 +21,12 @@
             padding: 20px;
         }
         
-        .container {
+        .main-container {
+            width: 960px;
+            position: relative;
+        }
+        
+        .slide {
             width: 960px;
             height: 540px;
             background: white;
@@ -29,6 +34,16 @@
             display: flex;
             flex-direction: column;
             gap: 18px;
+        }
+        
+        .computation-slide {
+            width: 960px;
+            background: white;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            margin-top: 150px;
         }
         
         .header {
@@ -237,29 +252,171 @@
             line-height: 1.3;
         }
         
-        .sota-badge {
-            background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%);
-            border: 3px solid #2E7D32;
-            border-radius: 12px;
-            padding: 14px;
+        /* New styles for computation principles slide */
+        .computation-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #1E64C8;
             text-align: center;
-            color: white;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #1E64C8;
         }
         
-        .badge-icon {
-            font-size: 28px;
+        .steps-container {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        
+        .step-card {
+            background: linear-gradient(135deg, #e3f2fd 0%, #ffffff 100%);
+            border-left: 5px solid #1E64C8;
+            border-radius: 8px;
+            padding: 14px;
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+            transition: all 0.3s;
+        }
+        
+        .step-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.2);
+        }
+        
+        .step-number {
+            background: #1E64C8;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .step-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1565C0;
             margin-bottom: 6px;
         }
         
-        .badge-text {
-            font-size: 17px;
-            font-weight: 600;
+        .step-description {
+            font-size: 14px;
+            color: #333;
             line-height: 1.4;
+        }
+        
+        .formula-box {
+            background: #f5f5f5;
+            border: 2px solid #1E64C8;
+            border-radius: 6px;
+            padding: 8px;
+            margin-top: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #0D47A1;
+            text-align: center;
+        }
+        
+        .algorithm-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+        
+        .algorithm-box {
+            background: white;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            padding: 14px;
+        }
+        
+        .algorithm-icon {
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+        
+        .algorithm-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #388E3C;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+        
+        .algorithm-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .algorithm-list li {
+            font-size: 13px;
+            color: #333;
+            padding-left: 18px;
+            position: relative;
+            line-height: 1.3;
+        }
+        
+        .algorithm-list li:before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: #4CAF50;
+            font-size: 16px;
+        }
+        
+        .practice-section {
+            margin-top: 20px;
+            background: linear-gradient(135deg, #e8f5e9 0%, #ffffff 100%);
+            border: 3px solid #4CAF50;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .practice-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2E7D32;
+            margin-bottom: 12px;
+        }
+        
+        .practice-link {
+            display: inline-block;
+            background: #4CAF50;
+            color: white;
+            text-decoration: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+        }
+        
+        .practice-link:hover {
+            background: #388E3C;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.5);
         }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="main-container">
+        <!-- Slide 1: Overview -->
+        <div class="slide">
         <div class="header">
             <div class="title">UMAP</div>
             <div class="full-name">Uniform Manifold Approximation and Projection</div>
@@ -341,6 +498,80 @@
                     <div class="param-desc">Controls embedding tightness</div>
                 </div>
             </div>
+        </div>
+
+        <!-- Slide 2: Computation Principles -->
+        <div class="computation-slide">
+        <div class="computation-title">🔬 UMAP Computation Principles</div>
+        
+        <div class="steps-container">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <div class="step-title">High-dimensional Graph Construction</div>
+                    <div class="step-description">
+                        Find k-nearest neighbors (k-NN) to create a weighted graph. Calculate distances from each data point to its neighbors to determine probabilistic connection strengths.
+                    </div>
+                    <div class="formula-box">
+                        w(i,j) = exp(-(d(i,j) - ρᵢ) / σᵢ)
+                    </div>
+                </div>
+            </div>
+            
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <div class="step-title">Fuzzy Simplicial Complex</div>
+                    <div class="step-description">
+                        Transform the weighted graph into a fuzzy topological structure. This is a mathematical representation that preserves the topological properties of the data.
+                    </div>
+                    <div class="formula-box">
+                        P(i↔j) = w(i,j) + w(j,i) - w(i,j) × w(j,i)
+                    </div>
+                </div>
+            </div>
+            
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <div class="step-title">Low-dimensional Optimization</div>
+                    <div class="step-description">
+                        Optimize the low-dimensional embedding using Stochastic Gradient Descent (SGD). Minimize cross-entropy to reduce the difference between high-dimensional and low-dimensional structures.
+                    </div>
+                    <div class="formula-box">
+                        Loss = Σ P(i,j) log(P(i,j)/Q(i,j)) + (1-P(i,j)) log((1-P(i,j))/(1-Q(i,j)))
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="algorithm-grid">
+            <div class="algorithm-box">
+                <div class="algorithm-icon">🔍</div>
+                <div class="algorithm-title">High-dimensional Space</div>
+                <ul class="algorithm-list">
+                    <li>Local metric estimation</li>
+                    <li>k-NN graph construction</li>
+                    <li>Topological structure representation</li>
+                </ul>
+            </div>
+            
+            <div class="algorithm-box">
+                <div class="algorithm-icon">📐</div>
+                <div class="algorithm-title">Low-dimensional Space</div>
+                <ul class="algorithm-list">
+                    <li>Initial embedding generation</li>
+                    <li>Iterative optimization</li>
+                    <li>Structure preservation verification</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="practice-section">
+            <div class="practice-title">🎮 Interactive UMAP Explorer</div>
+            <a href="https://grantcuster.github.io/umap-explorer/" target="_blank" class="practice-link">
+                Try UMAP Explorer →
+            </a>
         </div>
     </div>
 </body>

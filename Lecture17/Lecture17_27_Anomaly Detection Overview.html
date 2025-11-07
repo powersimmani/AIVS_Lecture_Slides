@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anomaly Detection Overview</title>
+    <title>Anomaly Detection - Extended</title>
     <style>
         * {
             margin: 0;
@@ -13,7 +13,7 @@
         
         body {
             font-family: Aptos, 'Segoe UI', sans-serif;
-            background: white;
+            background: #f5f5f5;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -21,14 +21,23 @@
             padding: 20px;
         }
         
-        .container {
+        .slides-container {
             width: 960px;
-            height: 540px;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+        
+        .slide {
+            width: 960px;
+            min-height: 540px;
             background: white;
             padding: 30px;
             display: flex;
             flex-direction: column;
             gap: 16px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-radius: 8px;
         }
         
         .title {
@@ -248,99 +257,523 @@
             color: #9C27B0;
             font-weight: 600;
         }
+        
+        /* 새로운 알고리즘 슬라이드 스타일 */
+        .algo-category {
+            background: linear-gradient(135deg, #e3f2fd 0%, #ffffff 100%);
+            border: 2px solid #2196F3;
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 12px;
+        }
+        
+        .algo-category-header {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1976D2;
+            margin-bottom: 10px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #2196F3;
+        }
+        
+        .algo-item {
+            background: white;
+            border: 1px solid #2196F3;
+            border-radius: 6px;
+            padding: 8px 10px;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        
+        .algo-bullet {
+            color: #2196F3;
+            font-weight: bold;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        
+        .algo-content {
+            flex: 1;
+        }
+        
+        .algo-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1976D2;
+            margin-bottom: 2px;
+        }
+        
+        .algo-desc {
+            font-size: 12px;
+            color: #555;
+            line-height: 1.4;
+        }
+        
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+        
+        .full-width-box {
+            background: linear-gradient(135deg, #fff9c4 0%, #ffffff 100%);
+            border: 2px solid #FBC02D;
+            border-radius: 12px;
+            padding: 14px;
+        }
+        
+        .full-width-box .box-header {
+            color: #F57F17;
+            border-color: #FBC02D;
+        }
+        
+        .learning-types {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .learning-card {
+            background: white;
+            border: 2px solid #FBC02D;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .learning-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #F57F17;
+            margin-bottom: 6px;
+        }
+        
+        .learning-desc {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.4;
+        }
+        
+        .learning-examples {
+            font-size: 11px;
+            color: #888;
+            margin-top: 4px;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="title">Anomaly Detection Overview</div>
-        <div class="subtitle">Identify rare items/events that differ from normal patterns</div>
-        
-        <div class="main-grid">
-            <div class="left-section">
-                <div class="types-box">
-                    <div class="box-header">🎯 Types of Anomalies</div>
-                    
-                    <div class="type-item">
-                        <div class="type-icon">•</div>
-                        <div class="type-content">
-                            <div class="type-name">Point Anomalies</div>
-                            <div class="type-desc">Individual data points that deviate</div>
+    <div class="slides-container">
+        <!-- Slide 1: Overview -->
+        <div class="slide">
+            <div class="title">Anomaly Detection Overview</div>
+            <div class="subtitle">Identify rare items/events that differ from normal patterns</div>
+            
+            <div class="main-grid">
+                <div class="left-section">
+                    <div class="types-box">
+                        <div class="box-header">🎯 Types of Anomalies</div>
+                        
+                        <div class="type-item">
+                            <div class="type-icon">•</div>
+                            <div class="type-content">
+                                <div class="type-name">Point Anomalies</div>
+                                <div class="type-desc">Individual data points that deviate</div>
+                            </div>
+                        </div>
+                        
+                        <div class="type-item">
+                            <div class="type-icon">📍</div>
+                            <div class="type-content">
+                                <div class="type-name">Contextual Anomalies</div>
+                                <div class="type-desc">Abnormal in specific context</div>
+                            </div>
+                        </div>
+                        
+                        <div class="type-item">
+                            <div class="type-icon">📊</div>
+                            <div class="type-content">
+                                <div class="type-name">Collective Anomalies</div>
+                                <div class="type-desc">Group behavior is anomalous</div>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="type-item">
-                        <div class="type-icon">📍</div>
-                        <div class="type-content">
-                            <div class="type-name">Contextual Anomalies</div>
-                            <div class="type-desc">Abnormal in specific context</div>
-                        </div>
-                    </div>
-                    
-                    <div class="type-item">
-                        <div class="type-icon">📊</div>
-                        <div class="type-content">
-                            <div class="type-name">Collective Anomalies</div>
-                            <div class="type-desc">Group behavior is anomalous</div>
-                        </div>
+                    <div class="challenges-box">
+                        <div class="box-header">⚠️ Key Challenges</div>
+                        <ul class="challenge-list">
+                            <li>Imbalanced data distribution</li>
+                            <li>Defining 'normal' behavior</li>
+                            <li>Lack of labeled anomalies</li>
+                            <li>Evolving patterns over time</li>
+                        </ul>
                     </div>
                 </div>
                 
-                <div class="challenges-box">
-                    <div class="box-header">⚠️ Key Challenges</div>
-                    <ul class="challenge-list">
-                        <li>Imbalanced data distribution</li>
-                        <li>Defining 'normal' behavior</li>
-                        <li>Lack of labeled anomalies</li>
-                        <li>Evolving patterns over time</li>
-                    </ul>
+                <div class="right-section">
+                    <div class="approaches-box">
+                        <div class="box-header">🔧 Detection Approaches</div>
+                        <div class="approach-grid">
+                            <div class="approach-tag">Statistical</div>
+                            <div class="approach-tag">Distance-based</div>
+                            <div class="approach-tag">Density-based</div>
+                            <div class="approach-tag">Isolation-based</div>
+                        </div>
+                        <div style="margin-top: 10px; text-align: center; font-size: 14px; color: #666;">
+                            Often unsupervised due to lack of labels
+                        </div>
+                    </div>
+                    
+                    <div class="applications-box">
+                        <div class="box-header">🎯 Applications</div>
+                        <div class="app-grid">
+                            <div class="app-item">
+                                <div class="app-icon">💳</div>
+                                <div class="app-text">Fraud detection</div>
+                            </div>
+                            
+                            <div class="app-item">
+                                <div class="app-icon">🔒</div>
+                                <div class="app-text">Network security</div>
+                            </div>
+                            
+                            <div class="app-item">
+                                <div class="app-icon">⚙️</div>
+                                <div class="app-text">Quality control</div>
+                            </div>
+                            
+                            <div class="app-item">
+                                <div class="app-icon">🏥</div>
+                                <div class="app-text">Medical diagnosis</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="evaluation-box">
+                        <div class="box-header">📊 Evaluation Metrics</div>
+                        <div class="metric-tags">
+                            <div class="metric-tag">Precision</div>
+                            <div class="metric-tag">Recall</div>
+                            <div class="metric-tag">F1-Score</div>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
+
+        <!-- Slide 2: Popular Algorithms -->
+        <div class="slide">
+            <div class="title">🤖 Popular Anomaly Detection Algorithms</div>
+            <div class="subtitle">Key methods for identifying outliers and anomalies</div>
             
-            <div class="right-section">
-                <div class="approaches-box">
-                    <div class="box-header">🔧 Detection Approaches</div>
-                    <div class="approach-grid">
-                        <div class="approach-tag">Statistical</div>
-                        <div class="approach-tag">Distance-based</div>
-                        <div class="approach-tag">Density-based</div>
-                        <div class="approach-tag">Isolation-based</div>
+            <div class="two-column">
+                <div>
+                    <div class="algo-category">
+                        <div class="algo-category-header">📊 Statistical Methods</div>
+                        
+                        <div class="algo-item">
+                            <div class="algo-bullet">•</div>
+                            <div class="algo-content">
+                                <div class="algo-name">Z-Score</div>
+                                <div class="algo-desc">Measures standard deviations from mean. Points beyond 3σ are anomalies.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="algo-item">
+                            <div class="algo-bullet">•</div>
+                            <div class="algo-content">
+                                <div class="algo-name">IQR (Interquartile Range)</div>
+                                <div class="algo-desc">Uses quartiles Q1 and Q3. Outliers beyond Q1-1.5×IQR or Q3+1.5×IQR.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="algo-item">
+                            <div class="algo-bullet">•</div>
+                            <div class="algo-content">
+                                <div class="algo-name">Gaussian Distribution</div>
+                                <div class="algo-desc">Models normal data, identifies points in low-probability regions.</div>
+                            </div>
+                        </div>
                     </div>
-                    <div style="margin-top: 10px; text-align: center; font-size: 14px; color: #666;">
-                        Often unsupervised due to lack of labels
+                    
+                    <div class="algo-category">
+                        <div class="algo-category-header">📏 Distance-based Methods</div>
+                        
+                        <div class="algo-item">
+                            <div class="algo-bullet">•</div>
+                            <div class="algo-content">
+                                <div class="algo-name">K-Nearest Neighbors (KNN)</div>
+                                <div class="algo-desc">Detects anomalies based on distance to k-nearest neighbors.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="algo-item">
+                            <div class="algo-bullet">•</div>
+                            <div class="algo-content">
+                                <div class="algo-name">Mahalanobis Distance</div>
+                                <div class="algo-desc">Accounts for correlation between features in multivariate data.</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="applications-box">
-                    <div class="box-header">🎯 Applications</div>
-                    <div class="app-grid">
-                        <div class="app-item">
-                            <div class="app-icon">💳</div>
-                            <div class="app-text">Fraud detection</div>
+                <div>
+                    <div class="algo-category">
+                        <div class="algo-category-header">🎯 Density-based Methods</div>
+                        
+                        <div class="algo-item">
+                            <div class="algo-bullet">•</div>
+                            <div class="algo-content">
+                                <div class="algo-name">LOF (Local Outlier Factor)</div>
+                                <div class="algo-desc">Measures local density deviation. Fast training, effective for local anomalies.</div>
+                            </div>
                         </div>
                         
-                        <div class="app-item">
-                            <div class="app-icon">🔒</div>
-                            <div class="app-text">Network security</div>
+                        <div class="algo-item">
+                            <div class="algo-bullet">•</div>
+                            <div class="algo-content">
+                                <div class="algo-name">DBSCAN</div>
+                                <div class="algo-desc">Clustering algorithm that identifies points not belonging to any cluster.</div>
+                            </div>
                         </div>
                         
-                        <div class="app-item">
-                            <div class="app-icon">⚙️</div>
-                            <div class="app-text">Quality control</div>
+                        <div class="algo-item">
+                            <div class="algo-bullet">•</div>
+                            <div class="algo-content">
+                                <div class="algo-name">K-Means Clustering</div>
+                                <div class="algo-desc">Points far from cluster centers are considered anomalies.</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="algo-category">
+                        <div class="algo-category-header">🌲 Ensemble Methods</div>
+                        
+                        <div class="algo-item">
+                            <div class="algo-bullet">•</div>
+                            <div class="algo-content">
+                                <div class="algo-name">Isolation Forest</div>
+                                <div class="algo-desc">Isolates anomalies using decision trees. Works well on most datasets.</div>
+                            </div>
                         </div>
                         
-                        <div class="app-item">
-                            <div class="app-icon">🏥</div>
-                            <div class="app-text">Medical diagnosis</div>
+                        <div class="algo-item">
+                            <div class="algo-bullet">•</div>
+                            <div class="algo-content">
+                                <div class="algo-name">Random Forest</div>
+                                <div class="algo-desc">Can be adapted for anomaly detection in classification tasks.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Advanced Methods & Learning Types -->
+        <div class="slide">
+            <div class="title">🚀 Advanced Methods & Learning Approaches</div>
+            <div class="subtitle">Modern techniques and learning paradigms for anomaly detection</div>
+            
+            <div style="display: flex; flex-direction: column; gap: 14px; flex: 1;">
+                <div class="two-column">
+                    <div class="algo-category">
+                        <div class="algo-category-header">🧠 Machine Learning Methods</div>
+                        
+                        <div class="algo-item">
+                            <div class="algo-bullet">•</div>
+                            <div class="algo-content">
+                                <div class="algo-name">One-Class SVM</div>
+                                <div class="algo-desc">Creates hypersphere around normal data, separating anomalies.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="algo-item">
+                            <div class="algo-bullet">•</div>
+                            <div class="algo-content">
+                                <div class="algo-name">Autoencoders</div>
+                                <div class="algo-desc">Neural networks that reconstruct data. High reconstruction error indicates anomalies.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="algo-item">
+                            <div class="algo-bullet">•</div>
+                            <div class="algo-content">
+                                <div class="algo-name">LSTM Networks</div>
+                                <div class="algo-desc">Captures temporal patterns in time-series data for sequence anomaly detection.</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="algo-category">
+                        <div class="algo-category-header">📐 Dimensionality Reduction</div>
+                        
+                        <div class="algo-item">
+                            <div class="algo-bullet">•</div>
+                            <div class="algo-content">
+                                <div class="algo-name">PCA (Principal Component Analysis)</div>
+                                <div class="algo-desc">Reduces dimensions, highlights influential features and outliers.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="algo-item">
+                            <div class="algo-bullet">•</div>
+                            <div class="algo-content">
+                                <div class="algo-name">t-SNE</div>
+                                <div class="algo-desc">Non-linear technique for visualizing high-dimensional data and clusters.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="algo-item">
+                            <div class="algo-bullet">•</div>
+                            <div class="algo-content">
+                                <div class="algo-name">UMAP</div>
+                                <div class="algo-desc">Fast dimensionality reduction preserving global structure.</div>
+                            </div>
                         </div>
                     </div>
                 </div>
                 
-                <div class="evaluation-box">
-                    <div class="box-header">📊 Evaluation Metrics</div>
-                    <div class="metric-tags">
-                        <div class="metric-tag">Precision</div>
-                        <div class="metric-tag">Recall</div>
-                        <div class="metric-tag">F1-Score</div>
+                <div class="full-width-box">
+                    <div class="box-header">🎓 Learning Paradigms</div>
+                    
+                    <div class="learning-types">
+                        <div class="learning-card">
+                            <div class="learning-title">Supervised</div>
+                            <div class="learning-desc">Requires labeled data with normal and anomalous examples</div>
+                            <div class="learning-examples">SVM, Neural Networks, Random Forest</div>
+                        </div>
+                        
+                        <div class="learning-card">
+                            <div class="learning-title">Unsupervised</div>
+                            <div class="learning-desc">No labels needed. Most common approach in practice</div>
+                            <div class="learning-examples">Isolation Forest, LOF, K-Means, Autoencoders</div>
+                        </div>
+                        
+                        <div class="learning-card">
+                            <div class="learning-title">Semi-supervised</div>
+                            <div class="learning-desc">Trained on normal data only, detects deviations</div>
+                            <div class="learning-examples">One-Class SVM, Novelty Detection</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, #e1f5fe 0%, #ffffff 100%); border: 2px solid #0288D1; border-radius: 12px; padding: 12px; text-align: center;">
+                    <div style="font-size: 15px; font-weight: 600; color: #01579B; margin-bottom: 6px;">💡 Key Insight</div>
+                    <div style="font-size: 13px; color: #555; line-height: 1.4;">
+                        Algorithm choice depends on data characteristics, computational resources, and whether labels are available. 
+                        Isolation Forest and LOF are popular starting points due to their effectiveness and ease of use.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Implementation & Tools -->
+        <div class="slide">
+            <div class="title">🛠️ Implementation & Popular Tools</div>
+            <div class="subtitle">Python libraries and practical considerations</div>
+            
+            <div style="display: flex; flex-direction: column; gap: 14px; flex: 1;">
+                <div class="two-column">
+                    <div style="background: linear-gradient(135deg, #f3e5f5 0%, #ffffff 100%); border: 2px solid #8E24AA; border-radius: 12px; padding: 14px;">
+                        <div style="font-size: 16px; font-weight: 600; color: #6A1B9A; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 2px solid #8E24AA;">
+                            📚 Python Libraries
+                        </div>
+                        
+                        <div style="background: white; border: 1px solid #8E24AA; border-radius: 6px; padding: 10px; margin-bottom: 8px;">
+                            <div style="font-weight: 600; color: #6A1B9A; font-size: 14px; margin-bottom: 4px;">Scikit-learn</div>
+                            <div style="font-size: 12px; color: #666;">Isolation Forest, One-Class SVM, LOF, DBSCAN</div>
+                        </div>
+                        
+                        <div style="background: white; border: 1px solid #8E24AA; border-radius: 6px; padding: 10px; margin-bottom: 8px;">
+                            <div style="font-weight: 600; color: #6A1B9A; font-size: 14px; margin-bottom: 4px;">PyOD</div>
+                            <div style="font-size: 12px; color: #666;">Python Outlier Detection - 40+ algorithms specialized for anomaly detection</div>
+                        </div>
+                        
+                        <div style="background: white; border: 1px solid #8E24AA; border-radius: 6px; padding: 10px; margin-bottom: 8px;">
+                            <div style="font-weight: 600; color: #6A1B9A; font-size: 14px; margin-bottom: 4px;">TensorFlow/PyTorch</div>
+                            <div style="font-size: 12px; color: #666;">Deep learning models: Autoencoders, LSTM, Variational Autoencoders</div>
+                        </div>
+                        
+                        <div style="background: white; border: 1px solid #8E24AA; border-radius: 6px; padding: 10px;">
+                            <div style="font-weight: 600; color: #6A1B9A; font-size: 14px; margin-bottom: 4px;">PyCaret</div>
+                            <div style="font-size: 12px; color: #666;">Low-code ML library with built-in anomaly detection module</div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, #fce4ec 0%, #ffffff 100%); border: 2px solid #C2185B; border-radius: 12px; padding: 14px;">
+                        <div style="font-size: 16px; font-weight: 600; color: #880E4F; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 2px solid #C2185B;">
+                            ⚡ Implementation Tips
+                        </div>
+                        
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <div style="background: white; border-left: 4px solid #C2185B; padding: 8px; border-radius: 4px;">
+                                <div style="font-size: 13px; font-weight: 600; color: #880E4F; margin-bottom: 2px;">Data Preprocessing</div>
+                                <div style="font-size: 12px; color: #666;">Normalize/standardize features for distance-based methods</div>
+                            </div>
+                            
+                            <div style="background: white; border-left: 4px solid #C2185B; padding: 8px; border-radius: 4px;">
+                                <div style="font-size: 13px; font-weight: 600; color: #880E4F; margin-bottom: 2px;">Feature Engineering</div>
+                                <div style="font-size: 12px; color: #666;">Create relevant features that capture domain knowledge</div>
+                            </div>
+                            
+                            <div style="background: white; border-left: 4px solid #C2185B; padding: 8px; border-radius: 4px;">
+                                <div style="font-size: 13px; font-weight: 600; color: #880E4F; margin-bottom: 2px;">Threshold Tuning</div>
+                                <div style="font-size: 12px; color: #666;">Adjust contamination rate based on expected anomaly percentage</div>
+                            </div>
+                            
+                            <div style="background: white; border-left: 4px solid #C2185B; padding: 8px; border-radius: 4px;">
+                                <div style="font-size: 13px; font-weight: 600; color: #880E4F; margin-bottom: 2px;">Model Comparison</div>
+                                <div style="font-size: 12px; color: #666;">Test multiple algorithms to find best fit for your data</div>
+                            </div>
+                            
+                            <div style="background: white; border-left: 4px solid #C2185B; padding: 8px; border-radius: 4px;">
+                                <div style="font-size: 13px; font-weight: 600; color: #880E4F; margin-bottom: 2px;">Interpretability</div>
+                                <div style="font-size: 12px; color: #666;">Use explainable methods when stakeholder understanding is critical</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, #e8eaf6 0%, #ffffff 100%); border: 2px solid #5C6BC0; border-radius: 12px; padding: 14px;">
+                    <div style="font-size: 16px; font-weight: 600; color: #3F51B5; margin-bottom: 10px; text-align: center; padding-bottom: 6px; border-bottom: 2px solid #5C6BC0;">
+                        📊 Performance Considerations
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+                        <div style="background: white; border: 2px solid #5C6BC0; border-radius: 6px; padding: 10px; text-align: center;">
+                            <div style="font-size: 20px; margin-bottom: 4px;">⚡</div>
+                            <div style="font-size: 13px; font-weight: 600; color: #3F51B5; margin-bottom: 2px;">Speed</div>
+                            <div style="font-size: 11px; color: #666;">LOF: Fast training<br>Isolation Forest: Moderate</div>
+                        </div>
+                        
+                        <div style="background: white; border: 2px solid #5C6BC0; border-radius: 6px; padding: 10px; text-align: center;">
+                            <div style="font-size: 20px; margin-bottom: 4px;">🎯</div>
+                            <div style="font-size: 13px; font-weight: 600; color: #3F51B5; margin-bottom: 2px;">Accuracy</div>
+                            <div style="font-size: 11px; color: #666;">Depends on data characteristics & tuning</div>
+                        </div>
+                        
+                        <div style="background: white; border: 2px solid #5C6BC0; border-radius: 6px; padding: 10px; text-align: center;">
+                            <div style="font-size: 20px; margin-bottom: 4px;">💾</div>
+                            <div style="font-size: 13px; font-weight: 600; color: #3F51B5; margin-bottom: 2px;">Scalability</div>
+                            <div style="font-size: 11px; color: #666;">Consider distributed algorithms for big data</div>
+                        </div>
+                        
+                        <div style="background: white; border: 2px solid #5C6BC0; border-radius: 6px; padding: 10px; text-align: center;">
+                            <div style="font-size: 20px; margin-bottom: 4px;">🔄</div>
+                            <div style="font-size: 13px; font-weight: 600; color: #3F51B5; margin-bottom: 2px;">Adaptability</div>
+                            <div style="font-size: 11px; color: #666;">Retrain models for evolving patterns</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, #fff8e1 0%, #ffffff 100%); border: 2px solid #FFB300; border-radius: 12px; padding: 12px; text-align: center;">
+                    <div style="font-size: 14px; font-weight: 600; color: #FF8F00; margin-bottom: 4px;">💡 Best Practice</div>
+                    <div style="font-size: 12px; color: #555; line-height: 1.4;">
+                        Start with simple statistical methods (Z-score, IQR) for baseline performance, then progress to more sophisticated algorithms 
+                        (Isolation Forest, One-Class SVM) if needed. Always validate results with domain experts.
                     </div>
                 </div>
             </div>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>t-SNE Algorithm</title>
+    <title>t-SNE Algorithm with Examples</title>
     <style>
         * {
             margin: 0;
@@ -13,22 +13,29 @@
         
         body {
             font-family: Aptos, 'Segoe UI', sans-serif;
-            background: white;
+            background: #f5f5f5;
+            padding: 40px 20px;
+        }
+        
+        .page-container {
+            max-width: 1200px;
+            margin: 0 auto;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
+            flex-direction: column;
+            gap: 40px;
         }
         
         .container {
-            width: 960px;
-            height: 540px;
+            width: 100%;
+            max-width: 960px;
             background: white;
             padding: 30px;
             display: flex;
             flex-direction: column;
             gap: 18px;
+            margin: 0 auto;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         
         .header {
@@ -57,7 +64,6 @@
             display: grid;
             grid-template-columns: 1.2fr 1fr;
             gap: 18px;
-            flex: 1;
         }
         
         .left-section {
@@ -269,93 +275,774 @@
         }
         
         .limitation-list li:before {
-            content: "⚠";
+            content: "⚠ ";
             position: absolute;
             left: 0;
             color: #e57373;
             font-size: 18px;
         }
+
+        /* Example Section Styles */
+        .example-container {
+            width: 100%;
+            max-width: 1200px;
+            background: white;
+            padding: 40px;
+            margin: 0 auto;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .example-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .example-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+        }
+
+        .example-subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+
+        .example-step {
+            margin-bottom: 40px;
+            padding: 25px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border: 2px solid #e0e0e0;
+        }
+
+        .example-step-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #1E64C8;
+        }
+
+        .example-step-number {
+            min-width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #1E64C8 0%, #1976D2 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 600;
+            box-shadow: 0 2px 6px rgba(30, 100, 200, 0.3);
+        }
+
+        .example-step-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+
+        .example-step-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            align-items: start;
+        }
+
+        .example-description {
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        .example-description h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .example-description p {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .formula-box {
+            background: #f0f7ff;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #1E64C8;
+            margin: 10px 0;
+            border-left: 4px solid #1E64C8;
+        }
+
+        .visual-output {
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            border: 2px solid #1E64C8;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 250px;
+        }
+
+        .visual-output h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 15px;
+        }
+
+        .visual-canvas {
+            width: 100%;
+            max-width: 400px;
+            height: 250px;
+            background: #fafafa;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 13px;
+        }
+
+        .data-table th {
+            background: #1E64C8;
+            color: white;
+            padding: 8px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .data-table td {
+            padding: 8px;
+            border: 1px solid #ddd;
+            background: white;
+        }
+
+        .data-table tr:nth-child(even) td {
+            background: #f8f9fa;
+        }
+
+        .highlight-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 12px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .highlight-box strong {
+            color: #f57c00;
+        }
+
+        .arrow-down {
+            text-align: center;
+            color: #1E64C8;
+            font-size: 40px;
+            margin: 20px 0;
+        }
+
+        /* SVG styles for visualizations */
+        .point {
+            transition: all 0.3s ease;
+        }
+
+        .point:hover {
+            r: 7;
+            opacity: 0.8;
+        }
+
+        .cluster-label {
+            font-size: 12px;
+            font-weight: 600;
+            fill: #333;
+        }
+
+        @media (max-width: 768px) {
+            .main-grid, .example-step-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .container, .example-container {
+                padding: 20px;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="title">t-SNE Algorithm</div>
-            <div class="full-name">t-Distributed Stochastic Neighbor Embedding</div>
-            <div class="subtitle">Non-linear dimensionality reduction for visualization</div>
-        </div>
-        
-        <div class="main-grid">
-            <div class="left-section">
-                <div class="process-box">
-                    <div class="box-header">🔄 Two-Step Process</div>
-                    <div class="step-flow">
-                        <div class="step-item">
-                            <div class="step-number">1</div>
-                            <div class="step-text">Compute pairwise similarities in high-dimensional space</div>
+    <div class="page-container">
+        <!-- Original Algorithm Overview -->
+        <div class="container">
+            <div class="header">
+                <div class="title">t-SNE Algorithm</div>
+                <div class="full-name">t-Distributed Stochastic Neighbor Embedding</div>
+                <div class="subtitle">Non-linear dimensionality reduction for visualization</div>
+            </div>
+            
+            <div class="main-grid">
+                <div class="left-section">
+                    <div class="process-box">
+                        <div class="box-header">🔄 Two-Step Process</div>
+                        <div class="step-flow">
+                            <div class="step-item">
+                                <div class="step-number">1</div>
+                                <div class="step-text">Compute pairwise similarities in high-dimensional space</div>
+                            </div>
+                            
+                            <div class="step-arrow">↓</div>
+                            
+                            <div class="step-item">
+                                <div class="step-number">2</div>
+                                <div class="step-text">Optimize low-dimensional embedding to match similarities</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="key-feature-box">
+                        <div class="box-header">✨ Key Features</div>
+                        
+                        <div class="feature-item">
+                            <div class="feature-icon">🎯</div>
+                            <div class="feature-text"><strong>Preserves local structure:</strong> Similar points stay close</div>
                         </div>
                         
-                        <div class="step-arrow">↓</div>
+                        <div class="feature-item">
+                            <div class="feature-icon">📊</div>
+                            <div class="feature-text"><strong>Student t-distribution:</strong> Avoids crowding problem</div>
+                        </div>
                         
-                        <div class="step-item">
-                            <div class="step-number">2</div>
-                            <div class="step-text">Optimize low-dimensional embedding to match similarities</div>
+                        <div class="feature-item">
+                            <div class="feature-icon">🎲</div>
+                            <div class="feature-text"><strong>Stochastic:</strong> Different runs produce different results</div>
                         </div>
                     </div>
                 </div>
                 
-                <div class="key-feature-box">
-                    <div class="box-header">✨ Key Features</div>
-                    
-                    <div class="feature-item">
-                        <div class="feature-icon">🎯</div>
-                        <div class="feature-text"><strong>Preserves local structure:</strong> Similar points stay close</div>
+                <div class="right-section">
+                    <div class="parameter-box">
+                        <div class="box-header">⚙️ Key Parameter</div>
+                        <div class="param-content">
+                            <div class="param-name">Perplexity</div>
+                            <div class="param-range">Range: 5 - 50</div>
+                            <div class="param-desc">Balances local vs global structure</div>
+                        </div>
                     </div>
                     
-                    <div class="feature-item">
-                        <div class="feature-icon">📊</div>
-                        <div class="feature-text"><strong>Student t-distribution:</strong> Avoids crowding problem</div>
+                    <div class="usage-box">
+                        <div class="box-header">🎯 Primary Use</div>
+                        
+                        <div class="usage-item">
+                            <div class="usage-icon">📊</div>
+                            <div class="usage-text">2D/3D visualization</div>
+                        </div>
+                        
+                        <div class="usage-item">
+                            <div class="usage-icon">❌</div>
+                            <div class="usage-text">NOT for general dim reduction</div>
+                        </div>
                     </div>
                     
-                    <div class="feature-item">
-                        <div class="feature-icon">🎲</div>
-                        <div class="feature-text"><strong>Stochastic:</strong> Different runs produce different results</div>
+                    <div class="limitations-box">
+                        <div class="box-header">⚠️ Limitations</div>
+                        <ul class="limitation-list">
+                            <li>Computationally expensive: O(n²)</li>
+                            <li>Best with <10k samples</li>
+                            <li>Non-deterministic results</li>
+                            <li>Sensitive to hyperparameters</li>
+                        </ul>
                     </div>
                 </div>
             </div>
-            
-            <div class="right-section">
-                <div class="parameter-box">
-                    <div class="box-header">⚙️ Key Parameter</div>
-                    <div class="param-content">
-                        <div class="param-name">Perplexity</div>
-                        <div class="param-range">Range: 5 - 50</div>
-                        <div class="param-desc">Balances local vs global structure</div>
+        </div>
+
+        <!-- New Step-by-Step Example Section -->
+        <div class="example-container">
+            <div class="example-header">
+                <div class="example-title">📚 Step-by-Step Example: MNIST Digits</div>
+                <div class="example-subtitle">3D → 2D Visualization Process</div>
+            </div>
+
+            <!-- Step 1: Input Data -->
+            <div class="example-step">
+                <div class="example-step-header">
+                    <div class="example-step-number">1</div>
+                    <div class="example-step-title">Input: High-Dimensional Data</div>
+                </div>
+                <div class="example-step-content">
+                    <div class="example-description">
+                        <h4>Data Preparation</h4>
+                        <p>MNIST handwritten digit data (simplified example)</p>
+                        <p><strong>Original dimensions:</strong> 784D (28×28 pixels) → simplified to 3D</p>
+                        <p><strong>Number of samples:</strong> 12 (4 samples each for digits 0, 1, 2)</p>
+                        
+                        <div class="formula-box">
+X = [x₁, x₂, ..., x₁₂]<br>
+xᵢ ∈ ℝ³
+                        </div>
+
+                        <table class="data-table">
+                            <tr>
+                                <th>Sample</th>
+                                <th>Label</th>
+                                <th>x₁</th>
+                                <th>x₂</th>
+                                <th>x₃</th>
+                            </tr>
+                            <tr><td>1</td><td>0</td><td>2.1</td><td>3.4</td><td>1.2</td></tr>
+                            <tr><td>2</td><td>0</td><td>2.3</td><td>3.1</td><td>1.5</td></tr>
+                            <tr><td>3</td><td>0</td><td>1.9</td><td>3.6</td><td>1.0</td></tr>
+                            <tr><td>4</td><td>0</td><td>2.4</td><td>3.3</td><td>1.3</td></tr>
+                            <tr><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td></tr>
+                        </table>
+                    </div>
+                    <div class="visual-output">
+                        <h4>3D Space Visualization</h4>
+                        <svg class="visual-canvas" viewBox="0 0 400 250">
+                            <!-- 3D-like visualization -->
+                            <text x="200" y="30" text-anchor="middle" fill="#999" font-size="12">High-Dimensional Space (3D)</text>
+                            
+                            <!-- Cluster 0 (Blue) -->
+                            <circle cx="100" cy="80" r="5" fill="#2196F3" class="point"/>
+                            <circle cx="110" cy="75" r="5" fill="#2196F3" class="point"/>
+                            <circle cx="95" cy="90" r="5" fill="#2196F3" class="point"/>
+                            <circle cx="105" cy="85" r="5" fill="#2196F3" class="point"/>
+                            
+                            <!-- Cluster 1 (Green) -->
+                            <circle cx="200" cy="120" r="5" fill="#4CAF50" class="point"/>
+                            <circle cx="210" cy="115" r="5" fill="#4CAF50" class="point"/>
+                            <circle cx="195" cy="130" r="5" fill="#4CAF50" class="point"/>
+                            <circle cx="205" cy="125" r="5" fill="#4CAF50" class="point"/>
+                            
+                            <!-- Cluster 2 (Red) -->
+                            <circle cx="300" cy="160" r="5" fill="#F44336" class="point"/>
+                            <circle cx="310" cy="155" r="5" fill="#F44336" class="point"/>
+                            <circle cx="295" cy="170" r="5" fill="#F44336" class="point"/>
+                            <circle cx="305" cy="165" r="5" fill="#F44336" class="point"/>
+                            
+                            <!-- Labels -->
+                            <text x="100" y="110" text-anchor="middle" class="cluster-label">Digit 0</text>
+                            <text x="200" y="150" text-anchor="middle" class="cluster-label">Digit 1</text>
+                            <text x="300" y="190" text-anchor="middle" class="cluster-label">Digit 2</text>
+                            
+                            <!-- Axes -->
+                            <line x1="20" y1="230" x2="380" y2="230" stroke="#ccc" stroke-width="1"/>
+                            <line x1="20" y1="50" x2="20" y2="230" stroke="#ccc" stroke-width="1"/>
+                            <text x="390" y="235" fill="#999" font-size="11">x₁</text>
+                            <text x="15" y="45" fill="#999" font-size="11">x₂</text>
+                        </svg>
                     </div>
                 </div>
-                
-                <div class="usage-box">
-                    <div class="box-header">🎯 Primary Use</div>
-                    
-                    <div class="usage-item">
-                        <div class="usage-icon">📊</div>
-                        <div class="usage-text">2D/3D visualization</div>
+            </div>
+
+            <div class="arrow-down">↓</div>
+
+            <!-- Step 2: Compute Similarities -->
+            <div class="example-step">
+                <div class="example-step-header">
+                    <div class="example-step-number">2</div>
+                    <div class="example-step-title">Compute High-Dimensional Similarities</div>
+                </div>
+                <div class="example-step-content">
+                    <div class="example-description">
+                        <h4>Similarity Calculation (Gaussian Distribution)</h4>
+                        <p>Compute conditional probabilities between each pair of points</p>
+                        
+                        <div class="formula-box">
+p(j|i) = exp(-||xᵢ - xⱼ||² / 2σᵢ²) / Σₖ exp(-||xᵢ - xₖ||² / 2σᵢ²)<br><br>
+pᵢⱼ = (p(j|i) + p(i|j)) / 2n
+                        </div>
+
+                        <p><strong>Perplexity = 5</strong> (determines number of neighbors)</p>
+                        
+                        <div class="highlight-box">
+                            <strong>Intermediate result:</strong> 12×12 similarity matrix P generated<br>
+                            - Same class: pᵢⱼ ≈ 0.08~0.12<br>
+                            - Different class: pᵢⱼ ≈ 0.001~0.005
+                        </div>
+
+                        <table class="data-table" style="font-size: 11px;">
+                            <tr>
+                                <th></th>
+                                <th>S1</th>
+                                <th>S2</th>
+                                <th>S5</th>
+                                <th>S9</th>
+                            </tr>
+                            <tr>
+                                <td><strong>S1(0)</strong></td>
+                                <td>-</td>
+                                <td>0.095</td>
+                                <td>0.003</td>
+                                <td>0.001</td>
+                            </tr>
+                            <tr>
+                                <td><strong>S2(0)</strong></td>
+                                <td>0.095</td>
+                                <td>-</td>
+                                <td>0.002</td>
+                                <td>0.001</td>
+                            </tr>
+                            <tr>
+                                <td><strong>S5(1)</strong></td>
+                                <td>0.003</td>
+                                <td>0.002</td>
+                                <td>-</td>
+                                <td>0.089</td>
+                            </tr>
+                            <tr>
+                                <td><strong>S9(2)</strong></td>
+                                <td>0.001</td>
+                                <td>0.001</td>
+                                <td>0.089</td>
+                                <td>-</td>
+                            </tr>
+                        </table>
                     </div>
-                    
-                    <div class="usage-item">
-                        <div class="usage-icon">❌</div>
-                        <div class="usage-text">NOT for general dim reduction</div>
+                    <div class="visual-output">
+                        <h4>Similarity Matrix Heatmap</h4>
+                        <svg class="visual-canvas" viewBox="0 0 400 250">
+                            <text x="200" y="25" text-anchor="middle" fill="#666" font-size="12">Pairwise Similarity Matrix</text>
+                            
+                            <!-- Heatmap grid -->
+                            <g transform="translate(80, 50)">
+                                <!-- High similarity blocks (same class) -->
+                                <rect x="0" y="0" width="60" height="60" fill="#1E64C8" opacity="0.8"/>
+                                <rect x="60" y="60" width="60" height="60" fill="#4CAF50" opacity="0.8"/>
+                                <rect x="120" y="120" width="60" height="60" fill="#F44336" opacity="0.8"/>
+                                
+                                <!-- Low similarity (different classes) -->
+                                <rect x="0" y="60" width="60" height="60" fill="#ddd" opacity="0.3"/>
+                                <rect x="0" y="120" width="60" height="60" fill="#ddd" opacity="0.3"/>
+                                <rect x="60" y="0" width="60" height="60" fill="#ddd" opacity="0.3"/>
+                                <rect x="60" y="120" width="60" height="60" fill="#ddd" opacity="0.3"/>
+                                <rect x="120" y="0" width="60" height="60" fill="#ddd" opacity="0.3"/>
+                                <rect x="120" y="60" width="60" height="60" fill="#ddd" opacity="0.3"/>
+                                
+                                <!-- Grid lines -->
+                                <line x1="0" y1="60" x2="180" y2="60" stroke="white" stroke-width="2"/>
+                                <line x1="0" y1="120" x2="180" y2="120" stroke="white" stroke-width="2"/>
+                                <line x1="60" y1="0" x2="60" y2="180" stroke="white" stroke-width="2"/>
+                                <line x1="120" y1="0" x2="120" y2="180" stroke="white" stroke-width="2"/>
+                                
+                                <!-- Labels -->
+                                <text x="30" y="-5" text-anchor="middle" font-size="10" fill="#666">0</text>
+                                <text x="90" y="-5" text-anchor="middle" font-size="10" fill="#666">1</text>
+                                <text x="150" y="-5" text-anchor="middle" font-size="10" fill="#666">2</text>
+                                <text x="-5" y="35" text-anchor="end" font-size="10" fill="#666">0</text>
+                                <text x="-5" y="95" text-anchor="end" font-size="10" fill="#666">1</text>
+                                <text x="-5" y="155" text-anchor="end" font-size="10" fill="#666">2</text>
+                            </g>
+                            
+                            <!-- Legend -->
+                            <text x="280" y="120" font-size="10" fill="#666">High</text>
+                            <rect x="280" y="130" width="30" height="15" fill="#1E64C8" opacity="0.8"/>
+                            <text x="280" y="160" font-size="10" fill="#666">Low</text>
+                            <rect x="280" y="165" width="30" height="15" fill="#ddd" opacity="0.3"/>
+                        </svg>
                     </div>
                 </div>
-                
-                <div class="limitations-box">
-                    <div class="box-header">⚠️ Limitations</div>
-                    <ul class="limitation-list">
-                        <li>Computationally expensive: O(n²)</li>
-                        <li>Best with <10k samples</li>
-                        <li>Non-deterministic results</li>
-                        <li>Sensitive to hyperparameters</li>
-                    </ul>
+            </div>
+
+            <div class="arrow-down">↓</div>
+
+            <!-- Step 3: Initialize Low-Dimensional -->
+            <div class="example-step">
+                <div class="example-step-header">
+                    <div class="example-step-number">3</div>
+                    <div class="example-step-title">Initialize Low-Dimensional Embedding</div>
+                </div>
+                <div class="example-step-content">
+                    <div class="example-description">
+                        <h4>Random Initialization in 2D Space</h4>
+                        <p>Randomly place points in the target dimension (2D)</p>
+                        
+                        <div class="formula-box">
+Y⁽⁰⁾ = [y₁⁽⁰⁾, y₂⁽⁰⁾, ..., y₁₂⁽⁰⁾]<br>
+yᵢ⁽⁰⁾ ~ N(0, 0.0001·I)
+                        </div>
+
+                        <p><strong>Initial state:</strong></p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>All points clustered near the origin</li>
+                            <li>No class structure</li>
+                            <li>No meaningful patterns yet</li>
+                        </ul>
+
+                        <div class="highlight-box">
+                            <strong>Iteration 0:</strong> Completely random placement<br>
+                            Cost = Very high (≈ 8.5)
+                        </div>
+                    </div>
+                    <div class="visual-output">
+                        <h4>Initial Random Embedding</h4>
+                        <svg class="visual-canvas" viewBox="0 0 400 250">
+                            <text x="200" y="25" text-anchor="middle" fill="#666" font-size="12">Iteration 0: Random Initialization</text>
+                            
+                            <!-- All points clustered near origin -->
+                            <circle cx="195" cy="120" r="4" fill="#2196F3" opacity="0.7"/>
+                            <circle cx="202" cy="118" r="4" fill="#2196F3" opacity="0.7"/>
+                            <circle cx="198" cy="125" r="4" fill="#2196F3" opacity="0.7"/>
+                            <circle cx="205" cy="122" r="4" fill="#2196F3" opacity="0.7"/>
+                            
+                            <circle cx="200" cy="115" r="4" fill="#4CAF50" opacity="0.7"/>
+                            <circle cx="192" cy="123" r="4" fill="#4CAF50" opacity="0.7"/>
+                            <circle cx="208" cy="120" r="4" fill="#4CAF50" opacity="0.7"/>
+                            <circle cx="197" cy="118" r="4" fill="#4CAF50" opacity="0.7"/>
+                            
+                            <circle cx="203" cy="125" r="4" fill="#F44336" opacity="0.7"/>
+                            <circle cx="196" cy="122" r="4" fill="#F44336" opacity="0.7"/>
+                            <circle cx="201" cy="117" r="4" fill="#F44336" opacity="0.7"/>
+                            <circle cx="199" cy="120" r="4" fill="#F44336" opacity="0.7"/>
+                            
+                            <!-- Axes -->
+                            <line x1="50" y1="200" x2="350" y2="200" stroke="#ccc" stroke-width="1"/>
+                            <line x1="200" y1="50" x2="200" y2="200" stroke="#ccc" stroke-width="1"/>
+                            <text x="360" y="205" fill="#999" font-size="11">y₁</text>
+                            <text x="205" y="45" fill="#999" font-size="11">y₂</text>
+                            
+                            <text x="200" y="230" text-anchor="middle" fill="#999" font-size="11">No structure visible</text>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="arrow-down">↓</div>
+
+            <!-- Step 4: Gradient Descent -->
+            <div class="example-step">
+                <div class="example-step-header">
+                    <div class="example-step-number">4</div>
+                    <div class="example-step-title">Iterative Optimization (Gradient Descent)</div>
+                </div>
+                <div class="example-step-content">
+                    <div class="example-description">
+                        <h4>Matching Similarities in Low-Dimensional Space</h4>
+                        <p>Compute low-dimensional similarities using Student t-distribution</p>
+                        
+                        <div class="formula-box">
+qᵢⱼ = (1 + ||yᵢ - yⱼ||²)⁻¹ / Σₖₗ(1 + ||yₖ - yₗ||²)⁻¹<br><br>
+Cost = KL(P||Q) = Σᵢⱼ pᵢⱼ log(pᵢⱼ/qᵢⱼ)
+                        </div>
+
+                        <p><strong>Gradient:</strong></p>
+                        <div class="formula-box">
+∂C/∂yᵢ = 4Σⱼ (pᵢⱼ - qᵢⱼ)(yᵢ - yⱼ)(1 + ||yᵢ - yⱼ||²)⁻¹
+                        </div>
+
+                        <p><strong>Progress:</strong></p>
+                        <table class="data-table" style="font-size: 11px;">
+                            <tr>
+                                <th>Iteration</th>
+                                <th>Cost (KL)</th>
+                                <th>Status</th>
+                            </tr>
+                            <tr><td>0</td><td>8.523</td><td>Random</td></tr>
+                            <tr><td>100</td><td>3.214</td><td>Clusters forming</td></tr>
+                            <tr><td>500</td><td>0.892</td><td>Well separated</td></tr>
+                            <tr><td>1000</td><td>0.435</td><td>Converged</td></tr>
+                        </table>
+
+                        <div class="highlight-box">
+                            <strong>Learning rate:</strong> Early exaggeration (η=200) → Fine-tuning (η=50)
+                        </div>
+                    </div>
+                    <div class="visual-output">
+                        <h4>Optimization Progress</h4>
+                        <svg class="visual-canvas" viewBox="0 0 400 250">
+                            <text x="200" y="25" text-anchor="middle" fill="#666" font-size="12">Iterations: 0 → 100 → 500 → 1000</text>
+                            
+                            <!-- Progress visualization -->
+                            <g transform="translate(50, 50)">
+                                <!-- Iter 0: clustered -->
+                                <g opacity="0.3">
+                                    <text x="0" y="-5" font-size="10" fill="#666">Iter 0</text>
+                                    <circle cx="10" cy="10" r="3" fill="#2196F3"/>
+                                    <circle cx="15" cy="12" r="3" fill="#4CAF50"/>
+                                    <circle cx="8" cy="15" r="3" fill="#F44336"/>
+                                </g>
+                                
+                                <!-- Iter 100: starting to separate -->
+                                <g transform="translate(80, 0)" opacity="0.5">
+                                    <text x="0" y="-5" font-size="10" fill="#666">Iter 100</text>
+                                    <circle cx="5" cy="10" r="3" fill="#2196F3"/>
+                                    <circle cx="20" cy="15" r="3" fill="#4CAF50"/>
+                                    <circle cx="15" cy="25" r="3" fill="#F44336"/>
+                                </g>
+                                
+                                <!-- Iter 500: better separation -->
+                                <g transform="translate(160, 0)" opacity="0.7">
+                                    <text x="0" y="-5" font-size="10" fill="#666">Iter 500</text>
+                                    <circle cx="0" cy="10" r="3" fill="#2196F3"/>
+                                    <circle cx="25" cy="20" r="3" fill="#4CAF50"/>
+                                    <circle cx="20" cy="35" r="3" fill="#F44336"/>
+                                </g>
+                                
+                                <!-- Iter 1000: well separated -->
+                                <g transform="translate(240, 0)">
+                                    <text x="0" y="-5" font-size="10" fill="#666">Iter 1000</text>
+                                    <circle cx="-5" cy="10" r="3" fill="#2196F3"/>
+                                    <circle cx="30" cy="25" r="3" fill="#4CAF50"/>
+                                    <circle cx="25" cy="45" r="3" fill="#F44336"/>
+                                </g>
+                            </g>
+                            
+                            <!-- Cost curve -->
+                            <g transform="translate(50, 130)">
+                                <text x="100" y="-10" font-size="11" fill="#666">Cost (KL Divergence)</text>
+                                <line x1="0" y1="0" x2="0" y2="80" stroke="#999" stroke-width="1"/>
+                                <line x1="0" y1="80" x2="300" y2="80" stroke="#999" stroke-width="1"/>
+                                
+                                <!-- Cost curve -->
+                                <polyline points="0,10 75,35 150,60 225,70 300,75" 
+                                          fill="none" stroke="#F57C00" stroke-width="2"/>
+                                
+                                <text x="310" y="85" font-size="10" fill="#666">Iterations</text>
+                                <text x="-35" y="5" font-size="10" fill="#666">High</text>
+                                <text x="-30" y="80" font-size="10" fill="#666">Low</text>
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="arrow-down">↓</div>
+
+            <!-- Step 5: Final Result -->
+            <div class="example-step">
+                <div class="example-step-header">
+                    <div class="example-step-number">5</div>
+                    <div class="example-step-title">Final 2D Embedding</div>
+                </div>
+                <div class="example-step-content">
+                    <div class="example-description">
+                        <h4>Final Visualization Result</h4>
+                        <p>Low-dimensional embedding after convergence</p>
+                        
+                        <div class="highlight-box">
+                            <strong>Result Analysis:</strong><br>
+                            ✓ Same classes clustered together<br>
+                            ✓ Different classes clearly separated<br>
+                            ✓ Local structure preserved<br>
+                            ✓ Visually interpretable
+                        </div>
+
+                        <p><strong>Performance Metrics:</strong></p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>Final Cost: 0.435</li>
+                            <li>Convergence time: ~15s</li>
+                            <li>Total Iterations: 1000</li>
+                        </ul>
+
+                        <p style="margin-top: 15px;"><strong>Key Characteristics:</strong></p>
+                        <ul style="margin-left: 20px; margin-top: 5px; font-size: 13px;">
+                            <li>Inter-cluster distances are meaningless</li>
+                            <li>Cluster sizes are also meaningless</li>
+                            <li>Only local structure is reliable</li>
+                            <li>Different results on re-runs possible</li>
+                        </ul>
+                    </div>
+                    <div class="visual-output">
+                        <h4>Final t-SNE Visualization</h4>
+                        <svg class="visual-canvas" viewBox="0 0 400 250">
+                            <text x="200" y="25" text-anchor="middle" fill="#666" font-size="12" font-weight="600">Converged 2D Embedding</text>
+                            
+                            <!-- Well-separated clusters -->
+                            <!-- Cluster 0 (Blue) - Top Left -->
+                            <circle cx="80" cy="70" r="6" fill="#2196F3" class="point"/>
+                            <circle cx="90" cy="65" r="6" fill="#2196F3" class="point"/>
+                            <circle cx="75" cy="80" r="6" fill="#2196F3" class="point"/>
+                            <circle cx="85" cy="75" r="6" fill="#2196F3" class="point"/>
+                            
+                            <!-- Cluster 1 (Green) - Middle Right -->
+                            <circle cx="280" cy="120" r="6" fill="#4CAF50" class="point"/>
+                            <circle cx="290" cy="115" r="6" fill="#4CAF50" class="point"/>
+                            <circle cx="275" cy="130" r="6" fill="#4CAF50" class="point"/>
+                            <circle cx="285" cy="125" r="6" fill="#4CAF50" class="point"/>
+                            
+                            <!-- Cluster 2 (Red) - Bottom Center -->
+                            <circle cx="180" cy="180" r="6" fill="#F44336" class="point"/>
+                            <circle cx="190" cy="175" r="6" fill="#F44336" class="point"/>
+                            <circle cx="175" cy="190" r="6" fill="#F44336" class="point"/>
+                            <circle cx="185" cy="185" r="6" fill="#F44336" class="point"/>
+                            
+                            <!-- Cluster labels with backgrounds -->
+                            <rect x="60" y="95" width="50" height="20" fill="white" opacity="0.8" rx="4"/>
+                            <text x="85" y="109" text-anchor="middle" class="cluster-label" fill="#2196F3" font-weight="600">Digit 0</text>
+                            
+                            <rect x="255" y="145" width="50" height="20" fill="white" opacity="0.8" rx="4"/>
+                            <text x="280" y="159" text-anchor="middle" class="cluster-label" fill="#4CAF50" font-weight="600">Digit 1</text>
+                            
+                            <rect x="155" y="205" width="50" height="20" fill="white" opacity="0.8" rx="4"/>
+                            <text x="180" y="219" text-anchor="middle" class="cluster-label" fill="#F44336" font-weight="600">Digit 2</text>
+                            
+                            <!-- Axes -->
+                            <line x1="30" y1="230" x2="370" y2="230" stroke="#ccc" stroke-width="1"/>
+                            <line x1="30" y1="50" x2="30" y2="230" stroke="#ccc" stroke-width="1"/>
+                            <text x="380" y="235" fill="#999" font-size="11">t-SNE-1</text>
+                            <text x="25" y="45" fill="#999" font-size="11" text-anchor="end">t-SNE-2</text>
+                            
+                            <!-- Success indicator -->
+                            <text x="200" y="245" text-anchor="middle" fill="#4CAF50" font-size="12" font-weight="600">✓ Clusters Well Separated</text>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Summary Box -->
+            <div class="example-step" style="background: linear-gradient(135deg, #e3f2fd 0%, #ffffff 100%); border-color: #1E64C8;">
+                <div class="example-step-header">
+                    <div class="example-step-number">💡</div>
+                    <div class="example-step-title">Key Takeaways</div>
+                </div>
+                <div style="padding: 20px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div>
+                            <h4 style="color: #1E64C8; margin-bottom: 10px;">✅ What t-SNE Preserves</h4>
+                            <ul style="margin-left: 20px; line-height: 1.8;">
+                                <li>Close neighbor relationships</li>
+                                <li>Local cluster structure</li>
+                                <li>Density within same class</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 style="color: #d32f2f; margin-bottom: 10px;">❌ What t-SNE Does NOT Preserve</h4>
+                            <ul style="margin-left: 20px; line-height: 1.8;">
+                                <li>Absolute distances</li>
+                                <li>Relative distances between clusters</li>
+                                <li>Cluster sizes/densities</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 20px; padding: 15px; background: #fff3cd; border-radius: 8px; border-left: 4px solid #ffc107;">
+                        <strong style="color: #f57c00;">⚡ Practical Tips:</strong>
+                        <ul style="margin-left: 20px; margin-top: 8px; line-height: 1.6;">
+                            <li>Adjust Perplexity: Small values (5-10) emphasize local structure, large values (30-50) consider global structure</li>
+                            <li>Run multiple times to verify stable patterns</li>
+                            <li>For >10,000 samples, first reduce to 50D with PCA, then apply t-SNE</li>
+                            <li>Use only for visualization purposes, not suitable for classification/regression preprocessing</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
