@@ -22,7 +22,6 @@
         
         .container {
             width: 960px;
-            height: 540px;
             padding: 30px;
             background: white;
             display: flex;
@@ -241,6 +240,138 @@
             font-weight: 600;
             color: #d97700;
         }
+        
+        .calculation-section {
+            margin-top: 20px;
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        
+        .calc-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        
+        .calc-content {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .formula-box {
+            background: #f0f7ff;
+            border: 1px solid #1E64C8;
+            border-radius: 6px;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .formula-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .formula {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.8;
+        }
+        
+        .example-grid {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            justify-content: center;
+        }
+        
+        .example-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .example-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+        }
+        
+        .matrix-container {
+            width: 100%;
+        }
+        
+        .matrix-label {
+            font-size: 13px;
+            color: #666;
+            text-align: center;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+        
+        .value-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            background: white;
+            border: 1px solid #d0d0d0;
+        }
+        
+        .value-table td {
+            padding: 4px 6px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .value-table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        
+        .pe-table {
+            background: #f0f7ff;
+        }
+        
+        .final-table {
+            background: #fff9f0;
+        }
+        
+        .plus-sign, .equals-sign {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1E64C8;
+            flex-shrink: 0;
+        }
+        
+        .insight-box {
+            background: #fff9f0;
+            border: 2px solid #f59e0b;
+            border-radius: 6px;
+            padding: 12px 16px;
+            display: flex;
+            gap: 12px;
+            align-items: start;
+        }
+        
+        .insight-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        
+        .insight-text {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.5;
+        }
     </style>
 </head>
 <body>
@@ -341,6 +472,86 @@
             <div class="addition-text">
                 <span class="addition-highlight">Element-wise addition</span> to token embeddings | 
                 Preserves both semantic and positional information
+            </div>
+        </div>
+        
+        <div class="calculation-section">
+            <div class="calc-title">📊 Calculation Example (d_model=4, max_len=8)</div>
+            
+            <div class="calc-content">
+                <div class="formula-box">
+                    <div class="formula-title">Formula</div>
+                    <div class="formula">
+                        PE<sub>(pos,2i)</sub> = sin(pos / 10000<sup>2i/d_model</sup>)<br>
+                        PE<sub>(pos,2i+1)</sub> = cos(pos / 10000<sup>2i/d_model</sup>)
+                    </div>
+                </div>
+                
+                <div class="example-grid">
+                    <div class="example-column">
+                        <div class="example-title">🔤 Token Embeddings</div>
+                        <div class="matrix-container">
+                            <div class="matrix-label">X (8×4)</div>
+                            <table class="value-table">
+                                <tr><td>0.5</td><td>-0.3</td><td>0.8</td><td>-0.2</td></tr>
+                                <tr><td>-0.1</td><td>0.7</td><td>0.2</td><td>0.4</td></tr>
+                                <tr><td>0.9</td><td>-0.5</td><td>-0.3</td><td>0.6</td></tr>
+                                <tr><td>0.3</td><td>0.4</td><td>-0.7</td><td>0.1</td></tr>
+                                <tr><td>-0.6</td><td>0.2</td><td>0.5</td><td>-0.4</td></tr>
+                                <tr><td>0.7</td><td>-0.8</td><td>0.1</td><td>0.3</td></tr>
+                                <tr><td>-0.2</td><td>0.6</td><td>-0.4</td><td>0.8</td></tr>
+                                <tr><td>0.4</td><td>-0.1</td><td>0.9</td><td>-0.5</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="plus-sign">+</div>
+                    
+                    <div class="example-column">
+                        <div class="example-title">📍 Positional Encoding</div>
+                        <div class="matrix-container">
+                            <div class="matrix-label">PE (8×4)</div>
+                            <table class="value-table pe-table">
+                                <tr><td>0.00</td><td>1.00</td><td>0.00</td><td>1.00</td></tr>
+                                <tr><td>0.84</td><td>0.54</td><td>0.01</td><td>1.00</td></tr>
+                                <tr><td>0.91</td><td>-0.42</td><td>0.02</td><td>1.00</td></tr>
+                                <tr><td>0.14</td><td>-0.99</td><td>0.03</td><td>1.00</td></tr>
+                                <tr><td>-0.76</td><td>-0.66</td><td>0.04</td><td>1.00</td></tr>
+                                <tr><td>-0.96</td><td>0.28</td><td>0.05</td><td>1.00</td></tr>
+                                <tr><td>-0.28</td><td>0.96</td><td>0.06</td><td>1.00</td></tr>
+                                <tr><td>0.66</td><td>0.75</td><td>0.07</td><td>0.99</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="equals-sign">=</div>
+                    
+                    <div class="example-column">
+                        <div class="example-title">✨ Final Input</div>
+                        <div class="matrix-container">
+                            <div class="matrix-label">X + PE (8×4)</div>
+                            <table class="value-table final-table">
+                                <tr><td>0.50</td><td>0.70</td><td>0.80</td><td>0.80</td></tr>
+                                <tr><td>0.74</td><td>1.24</td><td>0.21</td><td>1.40</td></tr>
+                                <tr><td>1.81</td><td>-0.92</td><td>-0.28</td><td>1.60</td></tr>
+                                <tr><td>0.44</td><td>-0.59</td><td>-0.67</td><td>1.10</td></tr>
+                                <tr><td>-1.36</td><td>-0.46</td><td>0.54</td><td>0.60</td></tr>
+                                <tr><td>-0.26</td><td>-0.52</td><td>0.15</td><td>1.30</td></tr>
+                                <tr><td>-0.48</td><td>1.56</td><td>-0.34</td><td>1.80</td></tr>
+                                <tr><td>1.06</td><td>0.65</td><td>0.97</td><td>0.49</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="insight-box">
+                    <div class="insight-icon">💡</div>
+                    <div class="insight-text">
+                        <strong>Key Insight:</strong> Each position gets a unique sinusoidal pattern. 
+                        Lower dimensions (0,1) use <span class="highlight">high frequency</span> for fine-grained position, 
+                        while higher dimensions (2,3) use <span class="highlight">low frequency</span> for global position.
+                    </div>
+                </div>
             </div>
         </div>
     </div>

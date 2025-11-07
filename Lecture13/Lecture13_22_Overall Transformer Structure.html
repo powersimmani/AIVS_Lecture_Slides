@@ -14,10 +14,7 @@
         body {
             font-family: Aptos, 'Segoe UI', sans-serif;
             background: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            padding: 40px 0;
         }
         
         .container {
@@ -28,6 +25,7 @@
             display: flex;
             flex-direction: column;
             gap: 14px;
+            margin: 0 auto;
         }
         
         .title {
@@ -302,6 +300,222 @@
                 <div class="key-point-text">
                     Decoder uses<br><span class="highlight">masking</span> for causality
                 </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container" style="margin-top: 400px; height: auto; padding-bottom: 40px;">
+        <div class="title" style="color: #16a34a;">Detailed Computation Example</div>
+        <div class="subtitle">Step-by-step process with actual dimensions (d_model = 4, sequence length = 8)</div>
+        
+        <div style="margin-top: 20px;">
+            <div style="background: #f0f7ff; border: 2px solid #1E64C8; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+                <div style="font-size: 18px; font-weight: 600; color: #1E64C8; margin-bottom: 12px;">
+                    📥 Step 1: Input Embedding
+                </div>
+                <div style="font-size: 15px; color: #333; line-height: 1.6;">
+                    <strong>Source (English):</strong> "I love deep learning very much !"<br>
+                    <strong>Tokenization:</strong> [I, love, deep, learning, very, much, !, &lt;PAD&gt;] → 8 tokens<br><br>
+                    
+                    <strong>Embedding Matrix:</strong> Vocabulary × d_model → Each token → 4D vector<br>
+                    <div style="background: white; padding: 12px; border-radius: 4px; margin-top: 8px; font-family: monospace; font-size: 13px;">
+                        X_embedded (8 × 4) = <br>
+                        [[0.2, 0.5, -0.3, 0.8],&nbsp;&nbsp;# I<br>
+                        &nbsp;[0.1, -0.4, 0.6, 0.3],&nbsp;&nbsp;# love<br>
+                        &nbsp;[-0.5, 0.2, 0.4, -0.1],&nbsp;# deep<br>
+                        &nbsp;[0.3, 0.7, -0.2, 0.5],&nbsp;&nbsp;# learning<br>
+                        &nbsp;[0.4, -0.3, 0.1, 0.6],&nbsp;&nbsp;# very<br>
+                        &nbsp;[-0.2, 0.5, 0.3, -0.4],&nbsp;# much<br>
+                        &nbsp;[0.6, 0.1, -0.5, 0.2],&nbsp;&nbsp;# !<br>
+                        &nbsp;[0.0, 0.0, 0.0, 0.0]]&nbsp;&nbsp;&nbsp;# &lt;PAD&gt;
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background: #f0f7ff; border: 2px solid #1E64C8; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+                <div style="font-size: 18px; font-weight: 600; color: #1E64C8; margin-bottom: 12px;">
+                    📍 Step 2: Positional Encoding
+                </div>
+                <div style="font-size: 15px; color: #333; line-height: 1.6;">
+                    <strong>Add position information using sin/cos functions:</strong><br>
+                    PE(pos, 2i) = sin(pos / 10000^(2i/d_model))<br>
+                    PE(pos, 2i+1) = cos(pos / 10000^(2i/d_model))<br><br>
+                    
+                    <div style="background: white; padding: 12px; border-radius: 4px; margin-top: 8px; font-family: monospace; font-size: 13px;">
+                        PE (8 × 4) = <br>
+                        [[0.00, 1.00, 0.00, 1.00],&nbsp;&nbsp;# pos 0<br>
+                        &nbsp;[0.84, 0.54, 0.01, 1.00],&nbsp;&nbsp;# pos 1<br>
+                        &nbsp;[0.91, -0.42, 0.02, 1.00],&nbsp;# pos 2<br>
+                        &nbsp;[0.14, -0.99, 0.03, 1.00],&nbsp;# pos 3<br>
+                        &nbsp;[-0.76, -0.65, 0.04, 1.00],&nbsp;# pos 4<br>
+                        &nbsp;[-0.96, 0.28, 0.05, 1.00],&nbsp;&nbsp;# pos 5<br>
+                        &nbsp;[-0.28, 0.96, 0.06, 1.00],&nbsp;&nbsp;# pos 6<br>
+                        &nbsp;[0.66, 0.75, 0.07, 0.99]]&nbsp;&nbsp;&nbsp;# pos 7<br><br>
+                        
+                        <strong>X_input (8 × 4) = X_embedded + PE</strong><br>
+                        [[0.20, 1.50, -0.30, 1.80],<br>
+                        &nbsp;[0.94, 0.14, 0.61, 1.30],<br>
+                        &nbsp;[0.41, -0.22, 0.42, 0.90],<br>
+                        &nbsp;[0.44, -0.29, -0.17, 1.50],<br>
+                        &nbsp;[-0.36, -0.95, 0.14, 1.60],<br>
+                        &nbsp;[-1.16, 0.78, 0.35, 0.60],<br>
+                        &nbsp;[0.32, 1.06, -0.44, 1.20],<br>
+                        &nbsp;[0.66, 0.75, 0.07, 0.99]]
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background: #f0f7ff; border: 2px solid #1E64C8; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+                <div style="font-size: 18px; font-weight: 600; color: #1E64C8; margin-bottom: 12px;">
+                    🔷 Step 3: Encoder Self-Attention (Layer 1)
+                </div>
+                <div style="font-size: 15px; color: #333; line-height: 1.6;">
+                    <strong>Multi-Head Attention computation:</strong><br><br>
+                    
+                    <strong>1) Linear projections (d_k = d_model / num_heads = 4 / 2 = 2 per head):</strong><br>
+                    <div style="background: white; padding: 12px; border-radius: 4px; margin-top: 8px; font-family: monospace; font-size: 13px;">
+                        W_Q (4 × 4), W_K (4 × 4), W_V (4 × 4)<br>
+                        Q = X_input @ W_Q → (8 × 4)<br>
+                        K = X_input @ W_K → (8 × 4)<br>
+                        V = X_input @ W_V → (8 × 4)
+                    </div><br>
+                    
+                    <strong>2) Attention scores:</strong><br>
+                    <div style="background: white; padding: 12px; border-radius: 4px; margin-top: 8px; font-family: monospace; font-size: 13px;">
+                        Scores = Q @ K^T / √d_k → (8 × 8)<br>
+                        <span style="color: #666;">// Example scores (showing first 4×4 block):</span><br>
+                        [[2.3, 0.8, 1.2, 1.5, ...],<br>
+                        &nbsp;[0.8, 2.1, 0.9, 1.3, ...],<br>
+                        &nbsp;[1.2, 0.9, 2.5, 1.1, ...],<br>
+                        &nbsp;[1.5, 1.3, 1.1, 2.2, ...]]<br><br>
+                        
+                        Attention = softmax(Scores) → (8 × 8)<br>
+                        <span style="color: #666;">// Softmax normalizes each row to sum to 1</span><br>
+                        [[0.35, 0.08, 0.12, 0.15, ...],&nbsp;# I attends to all<br>
+                        &nbsp;[0.10, 0.31, 0.11, 0.16, ...],&nbsp;# love attends to all<br>
+                        &nbsp;[0.13, 0.09, 0.41, 0.12, ...],&nbsp;# deep attends to all<br>
+                        &nbsp;...]
+                    </div><br>
+                    
+                    <strong>3) Apply attention to values:</strong><br>
+                    <div style="background: white; padding: 12px; border-radius: 4px; margin-top: 8px; font-family: monospace; font-size: 13px;">
+                        Output = Attention @ V → (8 × 4)<br>
+                        <span style="color: #666;">// Each token representation is now context-aware</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background: #f0f7ff; border: 2px solid #1E64C8; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+                <div style="font-size: 18px; font-weight: 600; color: #1E64C8; margin-bottom: 12px;">
+                    🔄 Step 4: Add & Norm + Feed-Forward
+                </div>
+                <div style="font-size: 15px; color: #333; line-height: 1.6;">
+                    <strong>1) Residual connection and Layer Normalization:</strong><br>
+                    <div style="background: white; padding: 12px; border-radius: 4px; margin-top: 8px; font-family: monospace; font-size: 13px;">
+                        X1 = LayerNorm(X_input + Attention_output) → (8 × 4)
+                    </div><br>
+                    
+                    <strong>2) Feed-Forward Network (expand to d_ff = 16, then back to 4):</strong><br>
+                    <div style="background: white; padding: 12px; border-radius: 4px; margin-top: 8px; font-family: monospace; font-size: 13px;">
+                        FFN(x) = W_2 @ ReLU(W_1 @ x + b_1) + b_2<br>
+                        W_1: (4 × 16), W_2: (16 × 4)<br><br>
+                        
+                        FFN_output = FFN(X1) → (8 × 4)<br>
+                        X_encoder1 = LayerNorm(X1 + FFN_output) → (8 × 4)
+                    </div><br>
+                    
+                    <strong>→ Repeat this process for 6 encoder layers</strong><br>
+                    <strong>→ Final encoder output: (8 × 4)</strong>
+                </div>
+            </div>
+            
+            <div style="background: #f0fdf4; border: 2px solid #16a34a; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+                <div style="font-size: 18px; font-weight: 600; color: #16a34a; margin-bottom: 12px;">
+                    🔶 Step 5: Decoder Input & Masked Self-Attention
+                </div>
+                <div style="font-size: 15px; color: #333; line-height: 1.6;">
+                    <strong>Target (French):</strong> "&lt;BOS&gt; J' aime l' apprentissage profond &lt;PAD&gt;"<br>
+                    <strong>Shifted right:</strong> [&lt;BOS&gt;, J', aime, l', apprentissage, profond, &lt;PAD&gt;, &lt;PAD&gt;]<br><br>
+                    
+                    <strong>After embedding + positional encoding:</strong> Y_input (8 × 4)<br><br>
+                    
+                    <strong>Masked Self-Attention:</strong><br>
+                    <div style="background: white; padding: 12px; border-radius: 4px; margin-top: 8px; font-family: monospace; font-size: 13px;">
+                        Mask prevents attending to future tokens:<br>
+                        [[1, 0, 0, 0, 0, 0, 0, 0],&nbsp;&nbsp;# &lt;BOS&gt; only sees itself<br>
+                        &nbsp;[1, 1, 0, 0, 0, 0, 0, 0],&nbsp;&nbsp;# J' sees &lt;BOS&gt;, J'<br>
+                        &nbsp;[1, 1, 1, 0, 0, 0, 0, 0],&nbsp;&nbsp;# aime sees up to aime<br>
+                        &nbsp;[1, 1, 1, 1, 0, 0, 0, 0],&nbsp;&nbsp;# l' sees up to l'<br>
+                        &nbsp;[1, 1, 1, 1, 1, 0, 0, 0],&nbsp;&nbsp;# apprentissage<br>
+                        &nbsp;[1, 1, 1, 1, 1, 1, 0, 0],&nbsp;&nbsp;# profond<br>
+                        &nbsp;[1, 1, 1, 1, 1, 1, 1, 0],&nbsp;&nbsp;# &lt;PAD&gt;<br>
+                        &nbsp;[1, 1, 1, 1, 1, 1, 1, 1]]&nbsp;&nbsp;# &lt;PAD&gt;<br><br>
+                        
+                        Masked_Attention_output → (8 × 4)
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background: #fef3c7; border: 2px solid #f59e0b; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+                <div style="font-size: 18px; font-weight: 600; color: #d97700; margin-bottom: 12px;">
+                    🔗 Step 6: Encoder-Decoder Cross-Attention
+                </div>
+                <div style="font-size: 15px; color: #333; line-height: 1.6;">
+                    <strong>Query from decoder, Key & Value from encoder:</strong><br>
+                    <div style="background: white; padding: 12px; border-radius: 4px; margin-top: 8px; font-family: monospace; font-size: 13px;">
+                        Q = Decoder_output @ W_Q → (8 × 4)&nbsp;&nbsp;<span style="color: #16a34a;"># from decoder</span><br>
+                        K = Encoder_output @ W_K → (8 × 4)&nbsp;&nbsp;<span style="color: #1E64C8;"># from encoder</span><br>
+                        V = Encoder_output @ W_V → (8 × 4)&nbsp;&nbsp;<span style="color: #1E64C8;"># from encoder</span><br><br>
+                        
+                        Cross_Attention = softmax(Q @ K^T / √d_k) @ V<br>
+                        <span style="color: #666;">// Decoder attends to ALL encoder positions</span><br>
+                        <span style="color: #666;">// This allows decoder to "look at" the source sentence</span><br><br>
+                        
+                        Cross_Attention_output → (8 × 4)
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background: #fff9f0; border: 2px solid #f59e0b; border-radius: 8px; padding: 20px;">
+                <div style="font-size: 18px; font-weight: 600; color: #d97700; margin-bottom: 12px;">
+                    📤 Step 7: Final Output & Prediction
+                </div>
+                <div style="font-size: 15px; color: #333; line-height: 1.6;">
+                    <strong>After 6 decoder layers:</strong><br>
+                    <div style="background: white; padding: 12px; border-radius: 4px; margin-top: 8px; font-family: monospace; font-size: 13px;">
+                        Decoder_final_output → (8 × 4)
+                    </div><br>
+                    
+                    <strong>Linear projection to vocabulary size (e.g., 10,000):</strong><br>
+                    <div style="background: white; padding: 12px; border-radius: 4px; margin-top: 8px; font-family: monospace; font-size: 13px;">
+                        Logits = Decoder_output @ W_output → (8 × 10000)<br>
+                        Probabilities = softmax(Logits) → (8 × 10000)
+                    </div><br>
+                    
+                    <strong>For each position, pick highest probability token:</strong><br>
+                    <div style="background: white; padding: 12px; border-radius: 4px; margin-top: 8px; font-family: monospace; font-size: 13px;">
+                        Position 0: P("J'") = 0.92 → output "J'"<br>
+                        Position 1: P("aime") = 0.87 → output "aime"<br>
+                        Position 2: P("l'") = 0.91 → output "l'"<br>
+                        Position 3: P("apprentissage") = 0.84 → output "apprentissage"<br>
+                        Position 4: P("profond") = 0.89 → output "profond"<br>
+                        Position 5: P("&lt;EOS&gt;") = 0.95 → output "&lt;EOS&gt;" (stop)<br><br>
+                        
+                        <strong style="color: #16a34a;">Final Translation: "J' aime l' apprentissage profond"</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px; padding: 20px; margin-top: 20px; color: white;">
+            <div style="font-size: 18px; font-weight: 600; margin-bottom: 10px; text-align: center;">
+                🎯 Key Dimensional Flow Summary
+            </div>
+            <div style="font-size: 14px; line-height: 1.8; font-family: monospace;">
+                Input tokens (8) → Embedding (8×4) → +PE (8×4) →<br>
+                Encoder layers (8×4 maintained) → Encoder output (8×4) →<br>
+                Decoder input (8×4) → Decoder layers (8×4 maintained) →<br>
+                Linear projection (8×4 → 8×10000) → Softmax → Predictions (8×10000)
             </div>
         </div>
     </div>
