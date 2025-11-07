@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DBSCAN - Density-Based</title>
+    <title>DBSCAN - Density-Based with Example</title>
     <style>
         * {
             margin: 0;
@@ -13,19 +13,20 @@
         
         body {
             font-family: Aptos, 'Segoe UI', sans-serif;
-            background: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            background: #f5f5f5;
             padding: 20px;
         }
         
-        .container {
+        .page {
             width: 960px;
-            height: 540px;
+            margin: 0 auto 30px;
             background: white;
             padding: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            page-break-after: always;
+        }
+        
+        .container {
             display: flex;
             flex-direction: column;
             gap: 16px;
@@ -33,6 +34,7 @@
         
         .header {
             text-align: center;
+            margin-bottom: 10px;
         }
         
         .title {
@@ -51,7 +53,6 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 18px;
-            flex: 1;
         }
         
         .left-section {
@@ -267,82 +268,742 @@
             font-weight: 600;
             color: #9C27B0;
         }
+
+        /* New styles for example section */
+        .example-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .example-title {
+            font-size: 26px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+
+        .example-subtitle {
+            font-size: 16px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .example-params {
+            background: linear-gradient(135deg, #e3f2fd 0%, #ffffff 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+        }
+
+        .param-display {
+            text-align: center;
+        }
+
+        .param-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+        .param-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1E64C8;
+        }
+
+        .steps-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .step-card {
+            background: white;
+            border: 3px solid #1E64C8;
+            border-radius: 12px;
+            padding: 20px;
+            position: relative;
+        }
+
+        .step-number {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: #1E64C8;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .step-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 15px;
+            padding-top: 10px;
+        }
+
+        .step-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .visual-area {
+            position: relative;
+            background: #f8f9fa;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            min-height: 280px;
+        }
+
+        .coordinate-system {
+            position: relative;
+            width: 100%;
+            height: 250px;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .data-area {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .data-table th {
+            background: #1E64C8;
+            color: white;
+            padding: 10px 8px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .data-table td {
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table tr:hover {
+            background: #f5f5f5;
+        }
+
+        .point-label {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .type-core {
+            color: #388E3C;
+            font-weight: 600;
+        }
+
+        .type-border {
+            color: #F57C00;
+            font-weight: 600;
+        }
+
+        .type-noise {
+            color: #d32f2f;
+            font-weight: 600;
+        }
+
+        .calculation-box {
+            background: #fff3e0;
+            border-left: 4px solid #FFA726;
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-top: 10px;
+        }
+
+        .formula {
+            font-family: 'Courier New', monospace;
+            background: white;
+            padding: 8px;
+            border-radius: 4px;
+            margin: 8px 0;
+            font-size: 13px;
+        }
+
+        .result-highlight {
+            background: #e8f5e9;
+            border-left: 4px solid #4CAF50;
+            padding: 12px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #2e7d32;
+        }
+
+        .cluster-summary {
+            background: linear-gradient(135deg, #e8f5e9 0%, #ffffff 100%);
+            border: 2px solid #4CAF50;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .cluster-summary-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #388E3C;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .cluster-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .cluster-item {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            border: 2px solid #4CAF50;
+        }
+
+        .cluster-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .cluster-value {
+            font-size: 22px;
+            font-weight: 700;
+            color: #388E3C;
+        }
+
+        .cluster-points {
+            font-size: 13px;
+            color: #555;
+            margin-top: 8px;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .page {
+                box-shadow: none;
+                margin: 0;
+                page-break-after: always;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="title">DBSCAN - Density-Based Clustering</div>
-            <div class="full-name">Density-Based Spatial Clustering of Applications with Noise</div>
-        </div>
-        
-        <div class="main-content">
-            <div class="left-section">
-                <div class="parameters-box">
-                    <div class="box-title">Parameters</div>
-                    <div class="param-item">
-                        <div class="param-name">ε (epsilon)</div>
-                        <div class="param-desc">Neighborhood radius</div>
-                    </div>
-                    <div class="param-item">
-                        <div class="param-name">minPts</div>
-                        <div class="param-desc">Minimum density threshold</div>
-                    </div>
-                </div>
-                
-                <div class="point-types">
-                    <div class="point-card core">
-                        <div class="point-icon">🟢</div>
-                        <div class="point-content">
-                            <div class="point-name">Core Points</div>
-                            <div class="point-definition">≥ minPts neighbors within ε</div>
-                        </div>
-                    </div>
-                    
-                    <div class="point-card border">
-                        <div class="point-icon">🟠</div>
-                        <div class="point-content">
-                            <div class="point-name">Border Points</div>
-                            <div class="point-definition">In neighborhood of core, but not core</div>
-                        </div>
-                    </div>
-                    
-                    <div class="point-card noise">
-                        <div class="point-icon">🔴</div>
-                        <div class="point-content">
-                            <div class="point-name">Noise Points</div>
-                            <div class="point-definition">Neither core nor border (outliers)</div>
-                        </div>
-                    </div>
-                </div>
+    <!-- Page 1: Original Content -->
+    <div class="page">
+        <div class="container">
+            <div class="header">
+                <div class="title">DBSCAN - Density-Based Clustering</div>
+                <div class="full-name">Density-Based Spatial Clustering of Applications with Noise</div>
             </div>
             
-            <div class="right-section">
-                <div class="feature-highlight">
-                    <div class="highlight-icon">🎯</div>
-                    <div class="highlight-text">Discovers clusters of arbitrary shape</div>
+            <div class="main-content">
+                <div class="left-section">
+                    <div class="parameters-box">
+                        <div class="box-title">Parameters</div>
+                        <div class="param-item">
+                            <div class="param-name">ε (epsilon)</div>
+                            <div class="param-desc">Neighborhood radius</div>
+                        </div>
+                        <div class="param-item">
+                            <div class="param-name">minPts</div>
+                            <div class="param-desc">Minimum density threshold</div>
+                        </div>
+                    </div>
+                    
+                    <div class="point-types">
+                        <div class="point-card core">
+                            <div class="point-icon">🟢</div>
+                            <div class="point-content">
+                                <div class="point-name">Core Points</div>
+                                <div class="point-definition">≥ minPts neighbors within ε</div>
+                            </div>
+                        </div>
+                        
+                        <div class="point-card border">
+                            <div class="point-icon">🟠</div>
+                            <div class="point-content">
+                                <div class="point-name">Border Points</div>
+                                <div class="point-definition">In neighborhood of core, but not core</div>
+                            </div>
+                        </div>
+                        
+                        <div class="point-card noise">
+                            <div class="point-icon">🔴</div>
+                            <div class="point-content">
+                                <div class="point-name">Noise Points</div>
+                                <div class="point-definition">Neither core nor border (outliers)</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 
-                <div class="advantages-box">
-                    <div class="box-title">💪 Advantages</div>
-                    <ul class="advantage-list">
-                        <li>Finds outliers automatically</li>
-                        <li>No need to specify k</li>
-                        <li>Handles arbitrary shapes</li>
-                        <li>Works with non-spherical clusters</li>
-                    </ul>
-                </div>
-                
-                <div class="challenges-box">
-                    <div class="box-title">⚠️ Challenges</div>
-                    <ul class="challenge-list">
-                        <li>Sensitive to parameters (ε, minPts)</li>
-                        <li>Struggles with varying densities</li>
-                        <li>Difficulty in high dimensions</li>
-                    </ul>
+                <div class="right-section">
+                    <div class="feature-highlight">
+                        <div class="highlight-icon">🎯</div>
+                        <div class="highlight-text">Discovers clusters of arbitrary shape</div>
+                    </div>
+                    
+                    <div class="advantages-box">
+                        <div class="box-title">💪 Advantages</div>
+                        <ul class="advantage-list">
+                            <li>Finds outliers automatically</li>
+                            <li>No need to specify k</li>
+                            <li>Handles arbitrary shapes</li>
+                            <li>Works with non-spherical clusters</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="challenges-box">
+                        <div class="box-title">⚠️ Challenges</div>
+                        <ul class="challenge-list">
+                            <li>Sensitive to parameters (ε, minPts)</li>
+                            <li>Struggles with varying densities</li>
+                            <li>Difficulty in high dimensions</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Page 2: Step-by-Step Example -->
+    <div class="page">
+        <div class="example-header">
+            <div class="example-title">📊 DBSCAN Step-by-Step Calculation Example</div>
+            <div class="example-subtitle">Detailed Process Using 2D Coordinate Data</div>
+        </div>
+
+        <div class="example-params">
+            <div class="param-display">
+                <div class="param-label">Radius (Epsilon)</div>
+                <div class="param-value">ε = 1.5</div>
+            </div>
+            <div class="param-display">
+                <div class="param-label">Minimum Points</div>
+                <div class="param-value">minPts = 3</div>
+            </div>
+        </div>
+
+        <div class="steps-container">
+            <!-- Step 1 -->
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <div class="step-title">Dataset Definition</div>
+                <div class="step-content">
+                    <div class="visual-area">
+                        <svg class="coordinate-system" viewBox="0 0 400 250">
+                            <!-- Grid -->
+                            <defs>
+                                <pattern id="grid" width="40" height="25" patternUnits="userSpaceOnUse">
+                                    <path d="M 40 0 L 0 0 0 25" fill="none" stroke="#e0e0e0" stroke-width="0.5"/>
+                                </pattern>
+                            </defs>
+                            <rect width="400" height="250" fill="url(#grid)" />
+                            
+                            <!-- Axes -->
+                            <line x1="30" y1="220" x2="370" y2="220" stroke="#333" stroke-width="2"/>
+                            <line x1="30" y1="220" x2="30" y2="20" stroke="#333" stroke-width="2"/>
+                            
+                            <!-- Points -->
+                            <circle cx="80" cy="80" r="6" fill="#666" stroke="white" stroke-width="2"/>
+                            <circle cx="100" cy="90" r="6" fill="#666" stroke="white" stroke-width="2"/>
+                            <circle cx="120" cy="85" r="6" fill="#666" stroke="white" stroke-width="2"/>
+                            <circle cx="110" cy="110" r="6" fill="#666" stroke="white" stroke-width="2"/>
+                            
+                            <circle cx="250" cy="100" r="6" fill="#666" stroke="white" stroke-width="2"/>
+                            <circle cx="270" cy="110" r="6" fill="#666" stroke="white" stroke-width="2"/>
+                            <circle cx="260" cy="130" r="6" fill="#666" stroke="white" stroke-width="2"/>
+                            
+                            <circle cx="180" cy="180" r="6" fill="#666" stroke="white" stroke-width="2"/>
+                            
+                            <!-- Labels -->
+                            <text x="75" y="70" font-size="11" fill="#333" font-weight="600">A</text>
+                            <text x="95" y="80" font-size="11" fill="#333" font-weight="600">B</text>
+                            <text x="115" y="75" font-size="11" fill="#333" font-weight="600">C</text>
+                            <text x="105" y="100" font-size="11" fill="#333" font-weight="600">D</text>
+                            <text x="245" y="90" font-size="11" fill="#333" font-weight="600">E</text>
+                            <text x="265" y="100" font-size="11" fill="#333" font-weight="600">F</text>
+                            <text x="255" y="120" font-size="11" fill="#333" font-weight="600">G</text>
+                            <text x="175" y="170" font-size="11" fill="#333" font-weight="600">H</text>
+                            
+                            <!-- Axis labels -->
+                            <text x="360" y="240" font-size="12" fill="#333" font-weight="600">x</text>
+                            <text x="15" y="30" font-size="12" fill="#333" font-weight="600">y</text>
+                        </svg>
+                    </div>
+                    <div class="data-area">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Point</th>
+                                    <th>x coord</th>
+                                    <th>y coord</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="point-label">A</td>
+                                    <td>2.0</td>
+                                    <td>3.0</td>
+                                </tr>
+                                <tr>
+                                    <td class="point-label">B</td>
+                                    <td>2.5</td>
+                                    <td>2.5</td>
+                                </tr>
+                                <tr>
+                                    <td class="point-label">C</td>
+                                    <td>3.0</td>
+                                    <td>2.7</td>
+                                </tr>
+                                <tr>
+                                    <td class="point-label">D</td>
+                                    <td>2.8</td>
+                                    <td>1.8</td>
+                                </tr>
+                                <tr>
+                                    <td class="point-label">E</td>
+                                    <td>6.5</td>
+                                    <td>2.5</td>
+                                </tr>
+                                <tr>
+                                    <td class="point-label">F</td>
+                                    <td>7.0</td>
+                                    <td>2.0</td>
+                                </tr>
+                                <tr>
+                                    <td class="point-label">G</td>
+                                    <td>6.8</td>
+                                    <td>1.5</td>
+                                </tr>
+                                <tr>
+                                    <td class="point-label">H</td>
+                                    <td>5.0</td>
+                                    <td>0.5</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div style="font-size: 13px; color: #666; line-height: 1.5; margin-top: 10px;">
+                            <strong>Total 8 points</strong><br>
+                            Data distributed on 2D plane
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <div class="step-title">Distance Calculation - Euclidean Distance</div>
+                <div class="step-content">
+                    <div class="data-area" style="grid-column: 1 / -1;">
+                        <div class="calculation-box">
+                            <strong>Finding neighbors of Point A (2.0, 3.0)</strong>
+                            <div class="formula">
+                                d(A,B) = √[(2.5-2.0)² + (2.5-3.0)²] = √[0.25 + 0.25] = 0.71 < 1.5 ✓
+                            </div>
+                            <div class="formula">
+                                d(A,C) = √[(3.0-2.0)² + (2.7-3.0)²] = √[1.0 + 0.09] = 1.04 < 1.5 ✓
+                            </div>
+                            <div class="formula">
+                                d(A,D) = √[(2.8-2.0)² + (1.8-3.0)²] = √[0.64 + 1.44] = 1.44 < 1.5 ✓
+                            </div>
+                            <div class="formula">
+                                d(A,E) = √[(6.5-2.0)² + (2.5-3.0)²] = √[20.25 + 0.25] = 4.53 > 1.5 ✗
+                            </div>
+                            <div class="result-highlight">
+                                Neighbors of A: {B, C, D} → 3 points ≥ minPts(3) → <span class="type-core">Core Point</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 3: Continued Steps -->
+    <div class="page">
+        <div class="steps-container">
+            <!-- Step 3 -->
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <div class="step-title">Finding Neighbors for All Points</div>
+                <div class="step-content" style="grid-template-columns: 1fr;">
+                    <div class="data-area">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Point</th>
+                                    <th>Neighbors (within ε=1.5)</th>
+                                    <th># Neighbors</th>
+                                    <th>Type</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="point-label">A</td>
+                                    <td>{B, C, D}</td>
+                                    <td>3</td>
+                                    <td class="type-core">Core</td>
+                                </tr>
+                                <tr>
+                                    <td class="point-label">B</td>
+                                    <td>{A, C, D}</td>
+                                    <td>3</td>
+                                    <td class="type-core">Core</td>
+                                </tr>
+                                <tr>
+                                    <td class="point-label">C</td>
+                                    <td>{A, B, D}</td>
+                                    <td>3</td>
+                                    <td class="type-core">Core</td>
+                                </tr>
+                                <tr>
+                                    <td class="point-label">D</td>
+                                    <td>{A, B, C}</td>
+                                    <td>3</td>
+                                    <td class="type-core">Core</td>
+                                </tr>
+                                <tr>
+                                    <td class="point-label">E</td>
+                                    <td>{F, G}</td>
+                                    <td>2</td>
+                                    <td class="type-border">Non-Core</td>
+                                </tr>
+                                <tr>
+                                    <td class="point-label">F</td>
+                                    <td>{E, G}</td>
+                                    <td>2</td>
+                                    <td class="type-border">Non-Core</td>
+                                </tr>
+                                <tr>
+                                    <td class="point-label">G</td>
+                                    <td>{E, F}</td>
+                                    <td>2</td>
+                                    <td class="type-border">Non-Core</td>
+                                </tr>
+                                <tr>
+                                    <td class="point-label">H</td>
+                                    <td>{}</td>
+                                    <td>0</td>
+                                    <td class="type-noise">Noise</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="calculation-box" style="margin-top: 15px;">
+                            <strong>Core Points:</strong> A, B, C, D<br>
+                            <strong>Non-Core Points:</strong> E, F, G (neighbors < minPts)<br>
+                            <strong>Isolated Point:</strong> H (no neighbors)
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <div class="step-title">Cluster Formation - Connectivity Check</div>
+                <div class="step-content">
+                    <div class="visual-area">
+                        <svg class="coordinate-system" viewBox="0 0 400 250">
+                            <rect width="400" height="250" fill="url(#grid)" />
+                            
+                            <!-- Cluster 1 boundary -->
+                            <ellipse cx="100" cy="91" rx="65" ry="50" fill="rgba(76, 175, 80, 0.1)" stroke="#4CAF50" stroke-width="2" stroke-dasharray="5,5"/>
+                            
+                            <!-- Cluster 2 boundary -->
+                            <ellipse cx="260" cy="113" rx="30" ry="35" fill="rgba(33, 150, 243, 0.1)" stroke="#2196F3" stroke-width="2" stroke-dasharray="5,5"/>
+                            
+                            <!-- Axes -->
+                            <line x1="30" y1="220" x2="370" y2="220" stroke="#333" stroke-width="2"/>
+                            <line x1="30" y1="220" x2="30" y2="20" stroke="#333" stroke-width="2"/>
+                            
+                            <!-- Core points (green) -->
+                            <circle cx="80" cy="80" r="8" fill="#4CAF50" stroke="white" stroke-width="2"/>
+                            <circle cx="100" cy="90" r="8" fill="#4CAF50" stroke="white" stroke-width="2"/>
+                            <circle cx="120" cy="85" r="8" fill="#4CAF50" stroke="white" stroke-width="2"/>
+                            <circle cx="110" cy="110" r="8" fill="#4CAF50" stroke="white" stroke-width="2"/>
+                            
+                            <!-- Border points (orange) -->
+                            <circle cx="250" cy="100" r="8" fill="#FFA726" stroke="white" stroke-width="2"/>
+                            <circle cx="270" cy="110" r="8" fill="#FFA726" stroke="white" stroke-width="2"/>
+                            <circle cx="260" cy="130" r="8" fill="#FFA726" stroke="white" stroke-width="2"/>
+                            
+                            <!-- Noise point (red) -->
+                            <circle cx="180" cy="180" r="8" fill="#e57373" stroke="white" stroke-width="2"/>
+                            
+                            <!-- Labels -->
+                            <text x="75" y="70" font-size="11" fill="white" font-weight="700">A</text>
+                            <text x="95" y="80" font-size="11" fill="white" font-weight="700">B</text>
+                            <text x="115" y="75" font-size="11" fill="white" font-weight="700">C</text>
+                            <text x="105" y="100" font-size="11" fill="white" font-weight="700">D</text>
+                            <text x="245" y="90" font-size="11" fill="white" font-weight="700">E</text>
+                            <text x="265" y="100" font-size="11" fill="white" font-weight="700">F</text>
+                            <text x="255" y="120" font-size="11" fill="white" font-weight="700">G</text>
+                            <text x="175" y="170" font-size="11" fill="white" font-weight="700">H</text>
+                            
+                            <!-- Cluster labels -->
+                            <text x="50" y="140" font-size="14" fill="#4CAF50" font-weight="700">Cluster 1</text>
+                            <text x="220" y="160" font-size="14" fill="#2196F3" font-weight="700">Cluster 2</text>
+                            <text x="160" y="200" font-size="14" fill="#e57373" font-weight="700">Noise</text>
+                        </svg>
+                    </div>
+                    <div class="data-area">
+                        <div class="calculation-box">
+                            <strong>Cluster 1 Formation:</strong>
+                            <div style="margin: 8px 0; line-height: 1.6;">
+                                • A is Core Point (starting point)<br>
+                                • Add neighbors B, C, D of A<br>
+                                • B, C, D are all Core Points<br>
+                                • Connected together to form one cluster
+                            </div>
+                        </div>
+                        <div class="calculation-box" style="background: #e3f2fd; border-left-color: #2196F3;">
+                            <strong>Cluster 2 Check:</strong>
+                            <div style="margin: 8px 0; line-height: 1.6;">
+                                • E, F, G are Non-Core Points<br>
+                                • Neighbors of each other but < minPts<br>
+                                • E, F, G are connected but<br>
+                                • No Core Point, needs special handling
+                            </div>
+                        </div>
+                        <div class="result-highlight" style="background: #ffebee; border-left-color: #e57373; color: #c62828;">
+                            H is not a neighbor of any Core Point → Noise
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 5 -->
+            <div class="step-card">
+                <div class="step-number">5</div>
+                <div class="step-title">Final Classification Results</div>
+                <div class="step-content" style="grid-template-columns: 1fr;">
+                    <div class="data-area">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Point</th>
+                                    <th>Final Classification</th>
+                                    <th>Cluster</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="point-label">A</td>
+                                    <td class="type-core">Core Point</td>
+                                    <td>Cluster 1</td>
+                                    <td>Meets density condition, cluster center</td>
+                                </tr>
+                                <tr>
+                                    <td class="point-label">B</td>
+                                    <td class="type-core">Core Point</td>
+                                    <td>Cluster 1</td>
+                                    <td>Meets density condition, cluster center</td>
+                                </tr>
+                                <tr>
+                                    <td class="point-label">C</td>
+                                    <td class="type-core">Core Point</td>
+                                    <td>Cluster 1</td>
+                                    <td>Meets density condition, cluster center</td>
+                                </tr>
+                                <tr>
+                                    <td class="point-label">D</td>
+                                    <td class="type-core">Core Point</td>
+                                    <td>Cluster 1</td>
+                                    <td>Meets density condition, cluster center</td>
+                                </tr>
+                                <tr>
+                                    <td class="point-label">E</td>
+                                    <td class="type-border">Border Point</td>
+                                    <td>Cluster 2</td>
+                                    <td>Insufficient neighbors, connected to other Borders</td>
+                                </tr>
+                                <tr>
+                                    <td class="point-label">F</td>
+                                    <td class="type-border">Border Point</td>
+                                    <td>Cluster 2</td>
+                                    <td>Insufficient neighbors, connected to other Borders</td>
+                                </tr>
+                                <tr>
+                                    <td class="point-label">G</td>
+                                    <td class="type-border">Border Point</td>
+                                    <td>Cluster 2</td>
+                                    <td>Insufficient neighbors, connected to other Borders</td>
+                                </tr>
+                                <tr>
+                                    <td class="point-label">H</td>
+                                    <td class="type-noise">Noise Point</td>
+                                    <td>-</td>
+                                    <td>Isolated outlier</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div class="cluster-summary">
+                            <div class="cluster-summary-title">🎯 Clustering Results Summary</div>
+                            <div class="cluster-grid">
+                                <div class="cluster-item">
+                                    <div class="cluster-label">Cluster 1</div>
+                                    <div class="cluster-value">4 points</div>
+                                    <div class="cluster-points">A, B, C, D<br>(All Core)</div>
+                                </div>
+                                <div class="cluster-item" style="border-color: #2196F3;">
+                                    <div class="cluster-label">Cluster 2</div>
+                                    <div class="cluster-value" style="color: #1976D2;">3 points</div>
+                                    <div class="cluster-points">E, F, G<br>(All Border)</div>
+                                </div>
+                                <div class="cluster-item" style="border-color: #e57373;">
+                                    <div class="cluster-label">Noise</div>
+                                    <div class="cluster-value" style="color: #d32f2f;">1 point</div>
+                                    <div class="cluster-points">H<br>(Outlier)</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
