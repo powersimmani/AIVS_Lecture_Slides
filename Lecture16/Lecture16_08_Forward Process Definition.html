@@ -63,7 +63,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             position: relative;
         }
         
@@ -116,23 +116,23 @@
             background: #f8f9fa;
             border-left: 5px solid #1E64C8;
             border-radius: 8px;
-            padding: 15px 20px;
-            margin-bottom: 20px;
+            padding: 12px 20px;
+            margin-bottom: 12px;
         }
         
         .formula-title {
-            font-size: 17px;
+            font-size: 15px;
             font-weight: 700;
             color: #1E64C8;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
         
         .formula-content {
-            font-size: 18px;
+            font-size: 17px;
             color: #333;
             font-family: 'Courier New', monospace;
             background: white;
-            padding: 10px 15px;
+            padding: 8px 15px;
             border-radius: 6px;
             text-align: center;
         }
@@ -140,14 +140,14 @@
         .properties-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
+            gap: 12px;
         }
         
         .property-card {
             background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
             border: 2px solid #e0e0e0;
             border-radius: 8px;
-            padding: 12px 15px;
+            padding: 10px 12px;
             transition: all 0.3s ease;
         }
         
@@ -157,14 +157,14 @@
         }
         
         .property-label {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 700;
             color: #1E64C8;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
         }
         
         .property-value {
-            font-size: 16px;
+            font-size: 14px;
             color: #555;
         }
         
@@ -196,7 +196,7 @@
         </div>
         
         <div class="process-flow">
-            <div class="markov-badge">🔗 Markov Chain: q(x_t | x_{t-1})</div>
+            <div class="markov-badge">🔗 Markov Chain: q(xₜ | xₜ₋₁)</div>
             
             <div class="data-box">
                 <div class="data-label">x₀</div>
@@ -209,27 +209,34 @@
             </div>
             
             <div class="data-box" style="border-color: #E74C3C;">
-                <div class="data-label" style="color: #E74C3C;">x_T</div>
+                <div class="data-label" style="color: #E74C3C;">xₜ</div>
                 <div class="data-desc">~ N(0, I)</div>
             </div>
         </div>
         
         <div class="formula-box">
-            <div class="formula-title">Gaussian Transition Formula</div>
+            <div class="formula-title">📐 Gaussian Transition (Distribution Form)</div>
             <div class="formula-content">
-                x_t = √(1-β_t) · x_{t-1} + √β_t · ε
+                q(xₜ | xₜ₋₁) = N(xₜ; √αₜ · xₜ₋₁, (1-αₜ)I)  where αₜ = 1 - βₜ
+            </div>
+        </div>
+        
+        <div class="formula-box">
+            <div class="formula-title">🎲 Sampling Form (Reparameterization)</div>
+            <div class="formula-content">
+                xₜ = √αₜ · xₜ₋₁ + √(1-αₜ) · ε,  where ε ~ N(0, I)
             </div>
         </div>
         
         <div class="properties-grid">
             <div class="property-card">
-                <div class="property-label">⚙️ Noise Schedule (β_t)</div>
+                <div class="property-label">⚙️ Noise Schedule (βₜ)</div>
                 <div class="property-value">Controls amount of noise at step t</div>
             </div>
             
             <div class="property-card">
                 <div class="property-label">📈 Fixed Schedule</div>
-                <div class="property-value">β_t increases from 0.0001 to 0.02</div>
+                <div class="property-value">βₜ increases from 0.0001 to 0.02</div>
             </div>
             
             <div class="property-card">
@@ -239,7 +246,7 @@
             
             <div class="property-card">
                 <div class="property-label">✨ End Result</div>
-                <div class="property-value">x_T ~ N(0, I) is pure Gaussian noise</div>
+                <div class="property-value">xₜ ~ N(0, I) is pure Gaussian noise</div>
             </div>
         </div>
     </div>

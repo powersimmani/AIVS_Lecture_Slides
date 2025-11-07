@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gradient Flow</title>
+    <title>Gradient Flow - Enhanced with Examples</title>
     <style>
         * {
             margin: 0;
@@ -13,20 +13,16 @@
         
         body {
             font-family: Aptos, 'Segoe UI', sans-serif;
-            background: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            background: #f8f9fa;
             padding: 20px;
         }
         
-        .container {
+        .page {
             width: 960px;
-            height: 540px;
+            margin: 0 auto 30px auto;
             background: white;
-            position: relative;
             padding: 25px 40px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         
         .header {
@@ -270,10 +266,184 @@
             color: #333;
             line-height: 1.4;
         }
+
+        /* New styles for the example section */
+        .example-section {
+            margin-top: 30px;
+            border-top: 3px solid #1E64C8;
+            padding-top: 25px;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .visualization-container {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .canvas-wrapper {
+            flex: 1;
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+        .canvas-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        canvas {
+            display: block;
+            margin: 0 auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .control-label {
+            font-size: 13px;
+            color: #666;
+            font-weight: 600;
+        }
+
+        button {
+            padding: 8px 16px;
+            background: #1E64C8;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #155099;
+        }
+
+        button.danger {
+            background: #FF6B6B;
+        }
+
+        button.danger:hover {
+            background: #ff5252;
+        }
+
+        button.success {
+            background: #4CAF50;
+        }
+
+        button.success:hover {
+            background: #45a049;
+        }
+
+        .computation-example {
+            background: #F5F9FF;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .example-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 15px;
+        }
+
+        .computation-step {
+            background: white;
+            border-left: 4px solid #4CAF50;
+            padding: 12px 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+
+        .step-number {
+            font-weight: 700;
+            color: #4CAF50;
+            margin-bottom: 5px;
+        }
+
+        .math-formula {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #333;
+            margin: 5px 0;
+            padding: 8px;
+            background: #f8f9fa;
+            border-radius: 3px;
+            overflow-x: auto;
+        }
+
+        .result-highlight {
+            background: #E8F5E9;
+            border: 2px solid #4CAF50;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+
+        .gradient-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .info-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 12px;
+        }
+
+        .info-card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+
+        .info-card-value {
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #333;
+            line-height: 1.6;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
+    <!-- Original Page -->
+    <div class="page">
         <div class="header">
             <div class="part-label">Part 3/6: Training Algorithm</div>
             <div class="title">Gradient Flow</div>
@@ -395,5 +565,457 @@
             </div>
         </div>
     </div>
+
+    <!-- New Example Section -->
+    <div class="page">
+        <div class="example-section">
+            <div class="section-title">Interactive Gradient Flow Visualization</div>
+            
+            <div class="visualization-container">
+                <div class="canvas-wrapper">
+                    <div class="canvas-title">Loss Landscape</div>
+                    <canvas id="lossCanvas" width="400" height="400"></canvas>
+                </div>
+                
+                <div class="canvas-wrapper">
+                    <div class="canvas-title">Gradient Field</div>
+                    <canvas id="gradientCanvas" width="400" height="400"></canvas>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button onclick="resetVisualization()">Reset</button>
+                <button onclick="addRandomPoint()" class="success">Add Sample Point</button>
+                <button onclick="clearPoints()" class="danger">Clear Points</button>
+                <div class="control-group">
+                    <label class="control-label">Gradient Scale</label>
+                    <select id="scaleSelect" onchange="updateVisualization()">
+                        <option value="0.3">Small (Vanishing)</option>
+                        <option value="1.0" selected>Normal</option>
+                        <option value="3.0">Large (Exploding)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="computation-example">
+                <div class="example-title">Numerical Example: 2D Gradient Computation</div>
+                
+                <div class="computation-step">
+                    <div class="step-number">Step 1: Define Loss Function</div>
+                    <div class="math-formula">
+                        L(x, y) = (x - 1)² + (y + 0.5)² + 0.5·x·y
+                    </div>
+                    <div style="margin-top: 8px; font-size: 13px; color: #666;">
+                        This represents a simplified discriminator loss in 2D parameter space
+                    </div>
+                </div>
+
+                <div class="computation-step">
+                    <div class="step-number">Step 2: Compute Partial Derivatives</div>
+                    <div class="math-formula">
+                        ∂L/∂x = 2(x - 1) + 0.5·y<br>
+                        ∂L/∂y = 2(y + 0.5) + 0.5·x
+                    </div>
+                </div>
+
+                <div class="computation-step">
+                    <div class="step-number">Step 3: Example at Point (0.5, -0.3)</div>
+                    <div class="math-formula">
+                        x = 0.5, y = -0.3<br><br>
+                        ∂L/∂x = 2(0.5 - 1) + 0.5·(-0.3) = -1.0 - 0.15 = -1.15<br>
+                        ∂L/∂y = 2(-0.3 + 0.5) + 0.5·(0.5) = 0.4 + 0.25 = 0.65
+                    </div>
+                    <div class="result-highlight">
+                        Gradient Vector: ∇L = (-1.15, 0.65)<br>
+                        Magnitude: ||∇L|| = √(1.15² + 0.65²) ≈ 1.32
+                    </div>
+                </div>
+
+                <div class="computation-step">
+                    <div class="step-number">Step 4: Parameter Update (Gradient Descent)</div>
+                    <div class="math-formula">
+                        Learning rate: α = 0.1<br><br>
+                        x_new = x - α·(∂L/∂x) = 0.5 - 0.1·(-1.15) = 0.615<br>
+                        y_new = y - α·(∂L/∂y) = -0.3 - 0.1·(0.65) = -0.365
+                    </div>
+                    <div class="result-highlight">
+                        Updated Position: (0.615, -0.365)<br>
+                        Movement towards minimum: Point moves closer to (1, -0.5)
+                    </div>
+                </div>
+            </div>
+
+            <div class="gradient-info">
+                <div class="info-card">
+                    <div class="info-card-title">Gradient Magnitude Impact</div>
+                    <div class="info-card-value">
+                        • ||∇L|| < 0.01: Vanishing<br>
+                        • 0.01 ≤ ||∇L|| ≤ 10: Normal<br>
+                        • ||∇L|| > 10: Exploding<br>
+                        • Affects learning speed
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-card-title">Backprop Through Generator</div>
+                    <div class="info-card-value">
+                        ∂L/∂θ_g = ∂L/∂x · ∂x/∂θ_g<br>
+                        Chain rule multiplies gradients<br>
+                        Deep networks: many multiplications<br>
+                        Can cause vanishing/exploding
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-card-title">Critical Insights</div>
+                    <div class="info-card-value">
+                        • Gradient direction: steepest ascent<br>
+                        • Negative gradient: descent<br>
+                        • Zero gradient: local min/max<br>
+                        • Balance is crucial for GANs
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-card-title">Real GAN Scenario</div>
+                    <div class="info-card-value">
+                        If D too good: ∂L/∂D → 0<br>
+                        Then: ∂L/∂G → 0 (vanishing)<br>
+                        G cannot learn effectively<br>
+                        Needs balanced training
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Canvas setup
+        const lossCanvas = document.getElementById('lossCanvas');
+        const gradCanvas = document.getElementById('gradientCanvas');
+        const lossCtx = lossCanvas.getContext('2d');
+        const gradCtx = gradCanvas.getContext('2d');
+
+        let points = [];
+        let gradientScale = 1.0;
+
+        // Loss function: (x-1)^2 + (y+0.5)^2 + 0.5*x*y
+        function loss(x, y) {
+            return Math.pow(x - 1, 2) + Math.pow(y + 0.5, 2) + 0.5 * x * y;
+        }
+
+        // Gradient computation
+        function gradient(x, y) {
+            const dx = 2 * (x - 1) + 0.5 * y;
+            const dy = 2 * (y + 0.5) + 0.5 * x;
+            return { dx, dy };
+        }
+
+        // Convert canvas coordinates to mathematical coordinates
+        function canvasToMath(cx, cy) {
+            const x = (cx / lossCanvas.width) * 4 - 2;  // Range: [-2, 2]
+            const y = -(cy / lossCanvas.height) * 4 + 2; // Range: [-2, 2]
+            return { x, y };
+        }
+
+        // Convert mathematical coordinates to canvas coordinates
+        function mathToCanvas(x, y) {
+            const cx = (x + 2) * lossCanvas.width / 4;
+            const cy = (2 - y) * lossCanvas.height / 4;
+            return { cx, cy };
+        }
+
+        // Draw loss landscape
+        function drawLossLandscape() {
+            const ctx = lossCtx;
+            const width = lossCanvas.width;
+            const height = lossCanvas.height;
+
+            // Clear canvas
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, width, height);
+
+            // Draw contour map
+            const resolution = 2;
+            let minLoss = Infinity;
+            let maxLoss = -Infinity;
+
+            // Find min/max for normalization
+            for (let cx = 0; cx < width; cx += resolution) {
+                for (let cy = 0; cy < height; cy += resolution) {
+                    const { x, y } = canvasToMath(cx, cy);
+                    const l = loss(x, y);
+                    minLoss = Math.min(minLoss, l);
+                    maxLoss = Math.max(maxLoss, l);
+                }
+            }
+
+            // Draw colored contours
+            for (let cx = 0; cx < width; cx += resolution) {
+                for (let cy = 0; cy < height; cy += resolution) {
+                    const { x, y } = canvasToMath(cx, cy);
+                    const l = loss(x, y);
+                    const normalized = (l - minLoss) / (maxLoss - minLoss);
+                    
+                    // Color gradient from blue (low) to red (high)
+                    const r = Math.floor(255 * normalized);
+                    const b = Math.floor(255 * (1 - normalized));
+                    ctx.fillStyle = `rgb(${r}, 100, ${b})`;
+                    ctx.fillRect(cx, cy, resolution, resolution);
+                }
+            }
+
+            // Draw grid
+            ctx.strokeStyle = '#ccc';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 4; i++) {
+                const pos = i * width / 4;
+                ctx.beginPath();
+                ctx.moveTo(pos, 0);
+                ctx.lineTo(pos, height);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(0, pos);
+                ctx.lineTo(width, pos);
+                ctx.stroke();
+            }
+
+            // Draw axes
+            const { cx: cx0, cy: cy0 } = mathToCanvas(0, 0);
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(cx0, 0);
+            ctx.lineTo(cx0, height);
+            ctx.moveTo(0, cy0);
+            ctx.lineTo(width, cy0);
+            ctx.stroke();
+
+            // Draw minimum point
+            const { cx: cxMin, cy: cyMin } = mathToCanvas(1, -0.5);
+            ctx.fillStyle = '#4CAF50';
+            ctx.beginPath();
+            ctx.arc(cxMin, cyMin, 6, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Draw sample points
+            points.forEach(point => {
+                const { cx, cy } = mathToCanvas(point.x, point.y);
+                ctx.fillStyle = '#FF6B6B';
+                ctx.beginPath();
+                ctx.arc(cx, cy, 5, 0, 2 * Math.PI);
+                ctx.fill();
+                ctx.strokeStyle = 'white';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            });
+
+            // Labels
+            ctx.fillStyle = '#333';
+            ctx.font = 'bold 12px Arial';
+            ctx.fillText('Loss Landscape', 10, 20);
+            ctx.fillText('Low', 10, height - 10);
+            ctx.fillText('High', width - 40, 20);
+        }
+
+        // Draw gradient field
+        function drawGradientField() {
+            const ctx = gradCtx;
+            const width = gradCanvas.width;
+            const height = gradCanvas.height;
+
+            // Clear canvas
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, width, height);
+
+            // Draw gradient vectors
+            const step = 30;
+            const arrowScale = 20 * gradientScale;
+
+            for (let cx = step; cx < width; cx += step) {
+                for (let cy = step; cy < height; cy += step) {
+                    const { x, y } = canvasToMath(cx, cy);
+                    const grad = gradient(x, y);
+                    const magnitude = Math.sqrt(grad.dx * grad.dx + grad.dy * grad.dy);
+                    
+                    // Normalize and scale
+                    const scale = arrowScale / (1 + magnitude);
+                    const endX = cx - grad.dx * scale;
+                    const endY = cy + grad.dy * scale; // Flip y for canvas coordinates
+
+                    // Color based on magnitude
+                    const colorIntensity = Math.min(255, magnitude * 50);
+                    ctx.strokeStyle = `rgb(${colorIntensity}, ${100}, ${255 - colorIntensity})`;
+                    ctx.fillStyle = ctx.strokeStyle;
+                    ctx.lineWidth = 2;
+
+                    // Draw arrow
+                    ctx.beginPath();
+                    ctx.moveTo(cx, cy);
+                    ctx.lineTo(endX, endY);
+                    ctx.stroke();
+
+                    // Draw arrowhead
+                    const angle = Math.atan2(endY - cy, endX - cx);
+                    const headlen = 8;
+                    ctx.beginPath();
+                    ctx.moveTo(endX, endY);
+                    ctx.lineTo(
+                        endX - headlen * Math.cos(angle - Math.PI / 6),
+                        endY - headlen * Math.sin(angle - Math.PI / 6)
+                    );
+                    ctx.lineTo(
+                        endX - headlen * Math.cos(angle + Math.PI / 6),
+                        endY - headlen * Math.sin(angle + Math.PI / 6)
+                    );
+                    ctx.closePath();
+                    ctx.fill();
+                }
+            }
+
+            // Draw grid
+            ctx.strokeStyle = '#ccc';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 4; i++) {
+                const pos = i * width / 4;
+                ctx.beginPath();
+                ctx.moveTo(pos, 0);
+                ctx.lineTo(pos, height);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(0, pos);
+                ctx.lineTo(width, pos);
+                ctx.stroke();
+            }
+
+            // Draw axes
+            const { cx: cx0, cy: cy0 } = mathToCanvas(0, 0);
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(cx0, 0);
+            ctx.lineTo(cx0, height);
+            ctx.moveTo(0, cy0);
+            ctx.lineTo(width, cy0);
+            ctx.stroke();
+
+            // Draw sample points and their gradients
+            points.forEach(point => {
+                const { cx, cy } = mathToCanvas(point.x, point.y);
+                const grad = gradient(point.x, point.y);
+                const magnitude = Math.sqrt(grad.dx * grad.dx + grad.dy * grad.dy);
+                
+                // Draw point
+                ctx.fillStyle = '#FF6B6B';
+                ctx.beginPath();
+                ctx.arc(cx, cy, 6, 0, 2 * Math.PI);
+                ctx.fill();
+
+                // Draw gradient arrow from point
+                const scale = 40;
+                const endX = cx - grad.dx * scale;
+                const endY = cy + grad.dy * scale;
+
+                ctx.strokeStyle = '#4CAF50';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(cx, cy);
+                ctx.lineTo(endX, endY);
+                ctx.stroke();
+
+                // Arrowhead
+                const angle = Math.atan2(endY - cy, endX - cx);
+                const headlen = 12;
+                ctx.fillStyle = '#4CAF50';
+                ctx.beginPath();
+                ctx.moveTo(endX, endY);
+                ctx.lineTo(
+                    endX - headlen * Math.cos(angle - Math.PI / 6),
+                    endY - headlen * Math.sin(angle - Math.PI / 6)
+                );
+                ctx.lineTo(
+                    endX - headlen * Math.cos(angle + Math.PI / 6),
+                    endY - headlen * Math.sin(angle + Math.PI / 6)
+                );
+                ctx.closePath();
+                ctx.fill();
+
+                // Draw magnitude label
+                ctx.fillStyle = '#333';
+                ctx.font = '11px Arial';
+                ctx.fillText(`||∇L|| = ${magnitude.toFixed(2)}`, cx + 10, cy - 10);
+            });
+
+            // Labels
+            ctx.fillStyle = '#333';
+            ctx.font = 'bold 12px Arial';
+            ctx.fillText('Gradient Vectors', 10, 20);
+            ctx.fillText('(showing -∇L direction)', 10, 35);
+        }
+
+        // Add random sample point
+        function addRandomPoint() {
+            const x = (Math.random() * 3) - 1; // Range: [-1, 2]
+            const y = (Math.random() * 3) - 1; // Range: [-1, 2]
+            points.push({ x, y });
+            updateVisualization();
+        }
+
+        // Clear all points
+        function clearPoints() {
+            points = [];
+            updateVisualization();
+        }
+
+        // Reset visualization
+        function resetVisualization() {
+            points = [];
+            gradientScale = 1.0;
+            document.getElementById('scaleSelect').value = '1.0';
+            updateVisualization();
+        }
+
+        // Update visualization
+        function updateVisualization() {
+            gradientScale = parseFloat(document.getElementById('scaleSelect').value);
+            drawLossLandscape();
+            drawGradientField();
+        }
+
+        // Click to add points
+        lossCanvas.addEventListener('click', (e) => {
+            const rect = lossCanvas.getBoundingClientRect();
+            const cx = e.clientX - rect.left;
+            const cy = e.clientY - rect.top;
+            const { x, y } = canvasToMath(cx, cy);
+            points.push({ x, y });
+            updateVisualization();
+        });
+
+        gradCanvas.addEventListener('click', (e) => {
+            const rect = gradCanvas.getBoundingClientRect();
+            const cx = e.clientX - rect.left;
+            const cy = e.clientY - rect.top;
+            const { x, y } = canvasToMath(cx, cy);
+            points.push({ x, y });
+            updateVisualization();
+        });
+
+        // Initial draw
+        updateVisualization();
+
+        // Add some initial sample points
+        setTimeout(() => {
+            points = [
+                { x: 0.5, y: -0.3 },
+                { x: -0.5, y: 0.8 },
+                { x: 1.5, y: 0.2 }
+            ];
+            updateVisualization();
+        }, 100);
+    </script>
 </body>
 </html>

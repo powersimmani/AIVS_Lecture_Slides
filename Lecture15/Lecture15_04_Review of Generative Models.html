@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,10 +14,6 @@
         body {
             font-family: Aptos, 'Segoe UI', sans-serif;
             background: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
             padding: 20px;
         }
         
@@ -26,6 +22,7 @@
             height: 540px;
             background: white;
             position: relative;
+            margin: 0 auto;
         }
         
         .title {
@@ -156,6 +153,120 @@
             font-weight: 500;
             color: #1E64C8;
         }
+        
+        /* Detailed explanation section styles */
+        .details-section {
+            max-width: 960px;
+            margin: 80px auto 40px;
+            padding: 0 20px;
+        }
+        
+        .model-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 12px;
+            padding: 28px 32px;
+            margin-bottom: 35px;
+            box-shadow: 0 2px 8px rgba(30, 100, 200, 0.1);
+        }
+        
+        .model-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 18px;
+            border-bottom: 2px solid #E8F1FC;
+            padding-bottom: 10px;
+        }
+        
+        .model-subtitle {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-top: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .model-content {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #444;
+            margin-bottom: 14px;
+        }
+        
+        .model-content strong {
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .use-cases {
+            background: #F5F9FF;
+            border-left: 4px solid #1E64C8;
+            padding: 16px 20px;
+            margin: 14px 0;
+            border-radius: 4px;
+        }
+        
+        .use-cases ul {
+            margin-left: 20px;
+            margin-top: 8px;
+        }
+        
+        .use-cases li {
+            margin: 7px 0;
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        .formula {
+            background: #F8FBFF;
+            border: 1px solid #D0E3F7;
+            padding: 14px 18px;
+            margin: 14px 0;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 15px;
+            color: #333;
+            text-align: center;
+            overflow-x: auto;
+        }
+        
+        .highlight-box {
+            background: #FFF9E6;
+            border-left: 4px solid #FFC107;
+            padding: 16px 20px;
+            margin: 14px 0;
+            border-radius: 4px;
+            font-size: 15px;
+            line-height: 1.7;
+            color: #555;
+        }
+        
+        .architecture-box {
+            background: #F0F8FF;
+            border: 2px solid #4A90E2;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 14px 0;
+        }
+        
+        .architecture-box .subtitle {
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .architecture-box ul {
+            margin-left: 20px;
+            margin-top: 8px;
+        }
+        
+        .architecture-box li {
+            margin: 6px 0;
+            color: #444;
+            line-height: 1.6;
+        }
     </style>
 </head>
 <body>
@@ -212,6 +323,392 @@
                 <span class="comparison-value">GAN ↑</span>
             </div>
         </div>
+    </div>
+    
+    <!-- Detailed Explanations Section -->
+    <div class="details-section">
+        
+        <!-- GMM -->
+        <div class="model-card">
+            <div class="model-title">1. GMM (Gaussian Mixture Model)</div>
+            
+            <div class="model-subtitle">📌 Basic Principle</div>
+            <div class="model-content">
+                GMM is a probabilistic model that assumes data is generated from a <strong>mixture of multiple Gaussian distributions (normal distributions)</strong>. Each Gaussian component represents a specific cluster in the data, and the model calculates the probability that each data point was generated from which component.
+            </div>
+            
+            <div class="formula">
+                p(x) = Σ πₖ · N(x | μₖ, Σₖ)
+            </div>
+            
+            <div class="model-content">
+                Here, <strong>πₖ</strong> is the mixing coefficient of the k-th component, <strong>μₖ</strong> is the mean, and <strong>Σₖ</strong> is the covariance matrix. Parameters are learned using the EM (Expectation-Maximization) algorithm.
+            </div>
+            
+            <div class="model-subtitle">🎯 Main Applications</div>
+            <div class="use-cases">
+                <ul>
+                    <li><strong>Clustering:</strong> Modeling more flexible cluster shapes than K-means</li>
+                    <li><strong>Image Segmentation:</strong> Segmenting images into multiple regions</li>
+                    <li><strong>Anomaly Detection:</strong> Detecting data that deviates from normal data distribution</li>
+                    <li><strong>Speech Recognition:</strong> Phoneme modeling</li>
+                    <li><strong>Density Estimation:</strong> Approximating complex data distributions</li>
+                </ul>
+            </div>
+            
+            <div class="highlight-box">
+                <strong>💡 Advantages:</strong> Soft clustering (probabilistic assignment), capable of modeling elliptical clusters<br>
+                <strong>⚠️ Disadvantages:</strong> Number of components must be specified in advance, performance degrades in high-dimensional data
+            </div>
+        </div>
+        
+        <!-- HMM -->
+        <div class="model-card">
+            <div class="model-title">2. HMM (Hidden Markov Model)</div>
+            
+            <div class="model-subtitle">📌 Basic Principle</div>
+            <div class="model-content">
+                HMM is a probabilistic model for <strong>time series data</strong>, assuming that observable events are generated by hidden states. The system transitions between invisible states and generates observations from each state.
+            </div>
+            
+            <div class="architecture-box">
+                <div class="subtitle">Core Components:</div>
+                <ul>
+                    <li><strong>Transition Probability (A):</strong> Probability of moving from one state to another</li>
+                    <li><strong>Emission Probability (B):</strong> Probability of an observation occurring in a specific state</li>
+                    <li><strong>Initial State Probability (π):</strong> Probability of each state at the start</li>
+                </ul>
+            </div>
+            
+            <div class="formula">
+                P(O|λ) = Σ P(O|Q, λ) · P(Q|λ)
+            </div>
+            
+            <div class="model-content">
+                Uses <strong>Forward-Backward algorithm</strong> (inference), <strong>Viterbi algorithm</strong> (optimal path search), and <strong>Baum-Welch algorithm</strong> (learning).
+            </div>
+            
+            <div class="model-subtitle">🎯 Main Applications</div>
+            <div class="use-cases">
+                <ul>
+                    <li><strong>Speech Recognition:</strong> Recognizing words from phoneme sequences</li>
+                    <li><strong>Natural Language Processing:</strong> Part-of-speech (POS) tagging</li>
+                    <li><strong>Bioinformatics:</strong> Gene sequence analysis, DNA pattern recognition</li>
+                    <li><strong>Gesture Recognition:</strong> Recognizing motion patterns in video</li>
+                    <li><strong>Financial Time Series:</strong> Stock pattern and market state analysis</li>
+                </ul>
+            </div>
+            
+            <div class="highlight-box">
+                <strong>💡 Advantages:</strong> Models temporal dependencies, can handle incomplete observation data<br>
+                <strong>⚠️ Disadvantages:</strong> Markov assumption (present depends only on previous state), difficulty in choosing number of states
+            </div>
+        </div>
+        
+        <!-- Naive Bayes -->
+        <div class="model-card">
+            <div class="model-title">3. Naive Bayes</div>
+            
+            <div class="model-subtitle">📌 Basic Principle</div>
+            <div class="model-content">
+                Based on Bayes' theorem, it makes the "naive" assumption that all features are <strong>conditionally independent</strong>. While this assumption is unrealistic, it works surprisingly well in practice.
+            </div>
+            
+            <div class="formula">
+                P(y|x₁,...,xₙ) = P(y) · ∏ P(xᵢ|y) / P(x₁,...,xₙ)
+            </div>
+            
+            <div class="model-content">
+                Given class y, it assumes each feature xᵢ is independent. This allows decomposing high-dimensional joint probabilities into simple products of conditional probabilities, making computation very efficient.
+            </div>
+            
+            <div class="architecture-box">
+                <div class="subtitle">Main Variants:</div>
+                <ul>
+                    <li><strong>Gaussian NB:</strong> For continuous data, features follow normal distribution</li>
+                    <li><strong>Multinomial NB:</strong> For text classification, based on word frequency</li>
+                    <li><strong>Bernoulli NB:</strong> For binary features, word presence/absence</li>
+                </ul>
+            </div>
+            
+            <div class="model-subtitle">🎯 Main Applications</div>
+            <div class="use-cases">
+                <ul>
+                    <li><strong>Text Classification:</strong> Spam filtering, sentiment analysis, news categorization</li>
+                    <li><strong>Document Classification:</strong> Email classification, document categorization</li>
+                    <li><strong>Recommendation Systems:</strong> Predicting user preferences</li>
+                    <li><strong>Medical Diagnosis:</strong> Calculating disease probability based on symptoms</li>
+                    <li><strong>Real-time Prediction:</strong> Classification tasks requiring fast speed</li>
+                </ul>
+            </div>
+            
+            <div class="highlight-box">
+                <strong>💡 Advantages:</strong> Very fast and efficient, can learn with small data, easy to interpret<br>
+                <strong>⚠️ Disadvantages:</strong> Feature independence assumption is unrealistic, ignores correlations between features
+            </div>
+        </div>
+        
+        <!-- VAE -->
+        <div class="model-card">
+            <div class="model-title">4. VAE (Variational Autoencoder)</div>
+            
+            <div class="model-subtitle">📌 Basic Principle</div>
+            <div class="model-content">
+                VAE is a deep learning generative model that combines an <strong>autoencoder architecture</strong> with <strong>variational inference</strong>. It encodes data into a low-dimensional latent space and reconstructs data from this latent representation.
+            </div>
+            
+            <div class="architecture-box">
+                <div class="subtitle">Core Architecture:</div>
+                <ul>
+                    <li><strong>Encoder (q<sub>φ</sub>(z|x)):</strong> Maps input data x to probability distribution of latent variable z (mean μ, variance σ²)</li>
+                    <li><strong>Reparameterization Trick:</strong> Samples z = μ + σ ⊙ ε (ε ~ N(0,1)) to enable backpropagation</li>
+                    <li><strong>Decoder (p<sub>θ</sub>(x|z)):</strong> Reconstructs original data from latent variable z</li>
+                </ul>
+            </div>
+            
+            <div class="model-subtitle">📊 Loss Function (ELBO)</div>
+            <div class="model-content">
+                VAE is trained by maximizing the Evidence Lower Bound (ELBO), which balances two terms:
+            </div>
+            
+            <div class="formula">
+                L = E[log p<sub>θ</sub>(x|z)] - KL(q<sub>φ</sub>(z|x) || p(z))
+            </div>
+            
+            <div class="model-content">
+                <strong>First term (Reconstruction Loss):</strong> How well the decoder reconstructs the original data<br>
+                <strong>Second term (KL Divergence):</strong> Difference between the learned distribution and prior distribution (usually N(0,1))
+            </div>
+            
+            <div class="highlight-box">
+                <strong>🔑 Key Insight:</strong> The KL term regularizes the latent space to make it smooth and continuous, enabling meaningful interpolation when generating new samples.
+            </div>
+            
+            <div class="model-subtitle">🎨 Properties of Latent Space</div>
+            <div class="model-content">
+                VAE's latent space has the following important properties:
+            </div>
+            <div class="use-cases">
+                <ul>
+                    <li><strong>Continuity:</strong> Similar data points are located close in latent space</li>
+                    <li><strong>Interpolability:</strong> Smooth movement between two points generates meaningful intermediate samples</li>
+                    <li><strong>Structured:</strong> Specific dimensions control specific attributes (e.g., facial expression, angle)</li>
+                    <li><strong>Regularity:</strong> Regularization to prior distribution reduces empty spaces</li>
+                </ul>
+            </div>
+            
+            <div class="model-subtitle">🎯 Main Applications</div>
+            <div class="use-cases">
+                <ul>
+                    <li><strong>Image Generation:</strong> Generating new faces, landscapes, artworks</li>
+                    <li><strong>Data Augmentation:</strong> Generating transformed images to expand training data</li>
+                    <li><strong>Anomaly Detection:</strong> Identifying samples with high reconstruction error as anomalies</li>
+                    <li><strong>Dimensionality Reduction:</strong> Capturing non-linear relationships better than t-SNE, PCA</li>
+                    <li><strong>Image Editing:</strong> Changing specific attributes by manipulating latent vectors</li>
+                    <li><strong>Semi-supervised Learning:</strong> Learning representations with limited labels</li>
+                    <li><strong>Drug Design:</strong> Exploring latent space of molecular structures</li>
+                </ul>
+            </div>
+            
+            <div class="model-subtitle">⚖️ Detailed VAE vs GAN Comparison</div>
+            <div class="architecture-box">
+                <div class="subtitle">VAE Strengths:</div>
+                <ul>
+                    <li><strong>Stable Training:</strong> Single objective function, no mode collapse</li>
+                    <li><strong>Complete Probabilistic Model:</strong> Explicit probability density estimation</li>
+                    <li><strong>Interpretable Latent Space:</strong> Learning structured and meaningful representations</li>
+                    <li><strong>Mode Coverage:</strong> Better capturing diverse data distributions</li>
+                </ul>
+            </div>
+            
+            <div class="architecture-box">
+                <div class="subtitle">VAE Weaknesses:</div>
+                <ul>
+                    <li><strong>Blurry Output:</strong> Reconstruction loss (MSE) generates averaged images</li>
+                    <li><strong>Lower Sample Quality:</strong> Generated images are less sharp than GAN's</li>
+                    <li><strong>Prior Distribution Assumption:</strong> Usually assumes Gaussian, which may differ from actual distribution</li>
+                </ul>
+            </div>
+            
+            <div class="highlight-box">
+                <strong>💡 Practical Tip:</strong> Use β-VAE (weight β on KL term) to adjust balance between reconstruction and regularization. β > 1 learns more disentangled representations but may reduce reconstruction quality.
+            </div>
+            
+            <div class="model-subtitle">🔬 Main Variants</div>
+            <div class="use-cases">
+                <ul>
+                    <li><strong>β-VAE:</strong> KL weight adjustment for disentangled representation learning</li>
+                    <li><strong>Conditional VAE (CVAE):</strong> Adding label information for conditional generation</li>
+                    <li><strong>VQ-VAE:</strong> Using discrete latent space, high-quality image/audio generation</li>
+                    <li><strong>Hierarchical VAE:</strong> Modeling complex structures with multi-level latent variables</li>
+                </ul>
+            </div>
+            
+            <div class="model-subtitle">📐 Input/Output Calculation Example</div>
+            <div class="model-content">
+                Let's examine a VAE that encodes MNIST handwritten digit images (28×28) into a 2-dimensional latent space.
+            </div>
+            
+            <div class="architecture-box">
+                <div class="subtitle">Network Structure:</div>
+                <ul>
+                    <li><strong>Input:</strong> 28×28 = 784-dimensional image vector</li>
+                    <li><strong>Encoder:</strong> 784 → 400 → (μ: 2-dim, log σ²: 2-dim)</li>
+                    <li><strong>Latent space:</strong> 2-dimensional (good for visualization)</li>
+                    <li><strong>Decoder:</strong> 2 → 400 → 784</li>
+                    <li><strong>Output:</strong> 28×28 reconstructed image</li>
+                </ul>
+            </div>
+            
+            <div class="model-subtitle">🔄 Forward Pass Calculation Process</div>
+            
+            <div class="model-content">
+                <strong>Step 1: Input Image</strong>
+            </div>
+            <div class="formula">
+                x ∈ ℝ^(784) = [0.1, 0.9, 0.8, ..., 0.0]  (normalized pixel values)
+            </div>
+            
+            <div class="model-content">
+                <strong>Step 2: Encoder - Hidden Layer</strong>
+            </div>
+            <div class="formula">
+                h = ReLU(W₁·x + b₁) ∈ ℝ^(400)
+            </div>
+            <div class="model-content">
+                Example: Using W₁ ∈ ℝ^(400×784), b₁ ∈ ℝ^(400) to compress 784 dimensions to 400 dimensions
+            </div>
+            
+            <div class="model-content">
+                <strong>Step 3: Encoder - Computing Mean and Variance</strong>
+            </div>
+            <div class="formula">
+                μ = W_μ·h + b_μ ∈ ℝ² = [1.2, -0.8]<br>
+                log σ² = W_σ·h + b_σ ∈ ℝ² = [-0.5, -1.2]
+            </div>
+            <div class="model-content">
+                We predict log σ² for numerical stability.<br>
+                Actual standard deviation: σ = exp(0.5 · log σ²) = [0.78, 0.55]
+            </div>
+            
+            <div class="model-content">
+                <strong>Step 4: Reparameterization Trick</strong>
+            </div>
+            <div class="formula">
+                ε ~ N(0, I) ∈ ℝ² = [0.3, -0.7]  (random sampling)<br>
+                z = μ + σ ⊙ ε = [1.2, -0.8] + [0.78, 0.55] ⊙ [0.3, -0.7]<br>
+                z = [1.2 + 0.234, -0.8 - 0.385] = [1.434, -1.185]
+            </div>
+            <div class="highlight-box">
+                <strong>💡 Key Point:</strong> By sampling ε, backpropagation becomes possible. We can calculate gradients with respect to μ and σ.
+            </div>
+            
+            <div class="model-content">
+                <strong>Step 5: Decoder - Hidden Layer</strong>
+            </div>
+            <div class="formula">
+                h' = ReLU(W₂·z + b₂) ∈ ℝ^(400)
+            </div>
+            <div class="model-content">
+                Example: Using W₂ ∈ ℝ^(400×2), b₂ ∈ ℝ^(400) to expand 2 dimensions to 400 dimensions
+            </div>
+            
+            <div class="model-content">
+                <strong>Step 6: Decoder - Output (Reconstruction)</strong>
+            </div>
+            <div class="formula">
+                x̂ = σ(W₃·h' + b₃) ∈ ℝ^(784)
+            </div>
+            <div class="model-content">
+                σ is the sigmoid function that constrains output to [0, 1] range.<br>
+                x̂ = [0.09, 0.88, 0.82, ..., 0.01] (reconstructed image)
+            </div>
+            
+            <div class="model-subtitle">📊 Loss Calculation</div>
+            
+            <div class="model-content">
+                <strong>Reconstruction Loss:</strong>
+            </div>
+            <div class="formula">
+                L_recon = -Σᵢ [xᵢ·log(x̂ᵢ) + (1-xᵢ)·log(1-x̂ᵢ)]  (Binary Cross-Entropy)
+            </div>
+            <div class="model-content">
+                Or MSE can be used:
+            </div>
+            <div class="formula">
+                L_recon = Σᵢ (xᵢ - x̂ᵢ)² / 784
+            </div>
+            <div class="model-content">
+                Example: L_recon = 0.025 (average error per pixel)
+            </div>
+            
+            <div class="model-content">
+                <strong>KL Divergence:</strong>
+            </div>
+            <div class="formula">
+                KL = -0.5 · Σⱼ [1 + log σⱼ² - μⱼ² - σⱼ²]
+            </div>
+            <div class="model-content">
+                Calculating per dimension:
+            </div>
+            <div class="formula">
+                j=1: -0.5 · [1 + (-0.5) - 1.2² - e^(-0.5)] = -0.5 · [0.5 - 1.44 - 0.61] = 0.775<br>
+                j=2: -0.5 · [1 + (-1.2) - 0.8² - e^(-1.2)] = -0.5 · [-0.2 - 0.64 - 0.30] = 0.570<br>
+                KL_total = 0.775 + 0.570 = 1.345
+            </div>
+            
+            <div class="model-content">
+                <strong>Total Loss:</strong>
+            </div>
+            <div class="formula">
+                L_total = L_recon + KL = 0.025 + 1.345 = 1.370
+            </div>
+            
+            <div class="highlight-box">
+                <strong>🎯 Interpretation:</strong> 
+                <ul style="margin-top: 8px; margin-left: 20px;">
+                    <li>Low reconstruction loss (0.025) → Good reconstruction of image</li>
+                    <li>High KL (1.345) → Learned distribution deviates significantly from standard normal</li>
+                    <li>As training progresses, both losses will balance out</li>
+                </ul>
+            </div>
+            
+            <div class="model-subtitle">🎨 Generating New Images</div>
+            <div class="model-content">
+                After training is complete, to generate new images:
+            </div>
+            
+            <div class="formula">
+                1. Sample from standard normal: z_new ~ N(0, I) = [-0.5, 1.2]<br>
+                2. Use decoder only: x_new = Decoder(z_new)<br>
+                3. Generate new handwritten digit image!
+            </div>
+            
+            <div class="model-content">
+                Interpolation in latent space is also possible:
+            </div>
+            <div class="formula">
+                z_interpolate = α·z₁ + (1-α)·z₂, α ∈ [0, 1]<br>
+                Example: When α=0.5, z = 0.5·[1.4, -1.2] + 0.5·[-0.8, 0.9] = [0.3, -0.15]
+            </div>
+            
+            <div class="use-cases">
+                <strong>Practical Examples:</strong>
+                <ul>
+                    <li>Generate from z = [2.0, 0.0] → Image of '1' with thick lines</li>
+                    <li>Generate from z = [0.0, 2.0] → Round '0' image</li>
+                    <li>Generate from z = [1.0, 1.0] → Intermediate form mixing both styles</li>
+                </ul>
+            </div>
+            
+            <div class="highlight-box">
+                <strong>💡 Parameter Count Calculation:</strong><br>
+                • Encoder: 784×400 + 400 + 400×2 + 2 + 400×2 + 2 = 315,604<br>
+                • Decoder: 2×400 + 400 + 400×784 + 784 = 315,184<br>
+                • Total parameters: ~630K (relatively small model)
+            </div>
+        </div>
+        
     </div>
 </body>
 </html>
