@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mean Shift</title>
+    <title>Mean Shift - Detailed Explanation</title>
     <style>
         * {
             margin: 0;
@@ -15,7 +15,7 @@
             font-family: Aptos, 'Segoe UI', sans-serif;
             background: white;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
             min-height: 100vh;
             padding: 20px;
@@ -23,7 +23,6 @@
         
         .container {
             width: 960px;
-            height: 540px;
             background: white;
             padding: 30px;
             display: flex;
@@ -240,6 +239,180 @@
             color: #555;
             margin-top: 4px;
         }
+        
+        /* Calculation section styles */
+        .calculation-container {
+            width: 960px;
+            background: white;
+            padding: 30px;
+            margin-top: 40px;
+        }
+        
+        .calc-title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #1E64C8;
+        }
+        
+        .example-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .data-point {
+            background: white;
+            border: 2px solid #4CAF50;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .point-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #388E3C;
+            margin-bottom: 4px;
+        }
+        
+        .point-coords {
+            font-size: 15px;
+            color: #333;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .step-calc {
+            background: white;
+            border-left: 4px solid #FF9800;
+            padding: 16px;
+            margin-bottom: 16px;
+            border-radius: 4px;
+        }
+        
+        .step-calc-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #F57C00;
+            margin-bottom: 12px;
+        }
+        
+        .formula {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #333;
+            overflow-x: auto;
+        }
+        
+        .calculation-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin: 10px 0;
+        }
+        
+        .calc-step {
+            padding: 10px;
+            background: #fafafa;
+            border-left: 3px solid #9C27B0;
+            border-radius: 4px;
+        }
+        
+        .calc-step-label {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+        
+        .calc-step-value {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #333;
+        }
+        
+        .highlight-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 14px;
+            margin: 12px 0;
+        }
+        
+        .highlight-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #856404;
+            margin-bottom: 8px;
+        }
+        
+        .highlight-content {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .iteration-box {
+            background: linear-gradient(135deg, #e3f2fd 0%, #ffffff 100%);
+            border: 2px solid #2196F3;
+            border-radius: 12px;
+            padding: 18px;
+            margin: 16px 0;
+        }
+        
+        .iteration-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1976D2;
+            margin-bottom: 12px;
+        }
+        
+        .convergence-note {
+            background: #e8f5e9;
+            border-left: 4px solid #4CAF50;
+            padding: 12px;
+            margin-top: 16px;
+            border-radius: 4px;
+        }
+        
+        .convergence-note-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2E7D32;
+            margin-bottom: 6px;
+        }
+        
+        .convergence-note-text {
+            font-size: 13px;
+            color: #333;
+            line-height: 1.4;
+        }
     </style>
 </head>
 <body>
@@ -320,6 +493,227 @@
                             <div class="app-text">Computer vision tasks</div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Detailed Calculation Example Section -->
+    <div class="calculation-container">
+        <div class="calc-title">📊 Detailed Calculation Example (2D Data)</div>
+        
+        <div class="example-section">
+            <div class="section-title">📍 Input Data Points</div>
+            <div class="data-grid">
+                <div class="data-point">
+                    <div class="point-label">x₁</div>
+                    <div class="point-coords">(1, 2)</div>
+                </div>
+                <div class="data-point">
+                    <div class="point-label">x₂</div>
+                    <div class="point-coords">(2, 3)</div>
+                </div>
+                <div class="data-point">
+                    <div class="point-label">x₃</div>
+                    <div class="point-coords">(2, 2)</div>
+                </div>
+                <div class="data-point">
+                    <div class="point-label">x₄</div>
+                    <div class="point-coords">(8, 7)</div>
+                </div>
+                <div class="data-point">
+                    <div class="point-label">x₅</div>
+                    <div class="point-coords">(9, 8)</div>
+                </div>
+            </div>
+            
+            <div class="highlight-box">
+                <div class="highlight-title">🎯 Goal</div>
+                <div class="highlight-content">
+                    Starting from point x₁ = (1, 2), we'll calculate its mean shift and update its position iteratively until convergence.
+                    We'll use Gaussian kernel with bandwidth h = 3.
+                </div>
+            </div>
+        </div>
+        
+        <div class="example-section">
+            <div class="section-title">🔢 Step 1: Estimate Density using Gaussian Kernel</div>
+            
+            <div class="step-calc">
+                <div class="step-calc-title">Gaussian Kernel Formula</div>
+                <div class="formula">
+                    K(x) = (1 / (2πh²)) · exp(-||x||² / (2h²))
+                </div>
+                <div class="formula">
+                    For h = 3: K(x) = (1 / 56.55) · exp(-||x||² / 18)
+                </div>
+            </div>
+            
+            <div class="step-calc">
+                <div class="step-calc-title">Calculate distances from x₁ = (1, 2) to all points</div>
+                <div class="calculation-steps">
+                    <div class="calc-step">
+                        <div class="calc-step-label">Distance to x₁:</div>
+                        <div class="calc-step-value">d₁ = ||(1,2) - (1,2)|| = 0</div>
+                    </div>
+                    <div class="calc-step">
+                        <div class="calc-step-label">Distance to x₂:</div>
+                        <div class="calc-step-value">d₂ = ||(1,2) - (2,3)|| = √((1-2)² + (2-3)²) = √2 ≈ 1.414</div>
+                    </div>
+                    <div class="calc-step">
+                        <div class="calc-step-label">Distance to x₃:</div>
+                        <div class="calc-step-value">d₃ = ||(1,2) - (2,2)|| = √((1-2)² + (2-2)²) = 1</div>
+                    </div>
+                    <div class="calc-step">
+                        <div class="calc-step-label">Distance to x₄:</div>
+                        <div class="calc-step-value">d₄ = ||(1,2) - (8,7)|| = √((1-8)² + (2-7)²) = √74 ≈ 8.602</div>
+                    </div>
+                    <div class="calc-step">
+                        <div class="calc-step-label">Distance to x₅:</div>
+                        <div class="calc-step-value">d₅ = ||(1,2) - (9,8)|| = √((1-9)² + (2-8)²) = √100 = 10</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="example-section">
+            <div class="section-title">🔢 Step 2: Calculate Kernel Weights</div>
+            
+            <div class="step-calc">
+                <div class="step-calc-title">Apply Gaussian kernel to each distance</div>
+                <div class="calculation-steps">
+                    <div class="calc-step">
+                        <div class="calc-step-label">K(d₁):</div>
+                        <div class="calc-step-value">K(0) = exp(-0²/18) = 1.000</div>
+                    </div>
+                    <div class="calc-step">
+                        <div class="calc-step-label">K(d₂):</div>
+                        <div class="calc-step-value">K(1.414) = exp(-2/18) ≈ 0.895</div>
+                    </div>
+                    <div class="calc-step">
+                        <div class="calc-step-label">K(d₃):</div>
+                        <div class="calc-step-value">K(1) = exp(-1/18) ≈ 0.946</div>
+                    </div>
+                    <div class="calc-step">
+                        <div class="calc-step-label">K(d₄):</div>
+                        <div class="calc-step-value">K(8.602) = exp(-74/18) ≈ 0.015</div>
+                    </div>
+                    <div class="calc-step">
+                        <div class="calc-step-label">K(d₅):</div>
+                        <div class="calc-step-value">K(10) = exp(-100/18) ≈ 0.004</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="highlight-box">
+                <div class="highlight-title">💡 Observation</div>
+                <div class="highlight-content">
+                    Notice that points x₁, x₂, x₃ (which are close) have high weights (≈ 0.9-1.0),
+                    while distant points x₄, x₅ have very low weights (< 0.02). This ensures local density estimation.
+                </div>
+            </div>
+        </div>
+        
+        <div class="example-section">
+            <div class="section-title">🔢 Step 3: Compute Mean Shift Vector</div>
+            
+            <div class="step-calc">
+                <div class="step-calc-title">Mean Shift Formula</div>
+                <div class="formula">
+                    m(x) = [Σᵢ xᵢ · K(||xᵢ - x||)] / [Σᵢ K(||xᵢ - x||)] - x
+                </div>
+            </div>
+            
+            <div class="step-calc">
+                <div class="step-calc-title">Calculate weighted sum of points</div>
+                <div class="calculation-steps">
+                    <div class="calc-step">
+                        <div class="calc-step-label">Numerator (weighted sum):</div>
+                        <div class="calc-step-value">
+                            Σᵢ xᵢ · K(dᵢ) = (1,2)·1.000 + (2,3)·0.895 + (2,2)·0.946 + (8,7)·0.015 + (9,8)·0.004<br>
+                            = (1.000, 2.000) + (1.790, 2.685) + (1.892, 1.892) + (0.120, 0.105) + (0.036, 0.032)<br>
+                            = (4.838, 6.714)
+                        </div>
+                    </div>
+                    <div class="calc-step">
+                        <div class="calc-step-label">Denominator (sum of weights):</div>
+                        <div class="calc-step-value">
+                            Σᵢ K(dᵢ) = 1.000 + 0.895 + 0.946 + 0.015 + 0.004 = 2.860
+                        </div>
+                    </div>
+                    <div class="calc-step">
+                        <div class="calc-step-label">Weighted mean:</div>
+                        <div class="calc-step-value">
+                            x̄ = (4.838, 6.714) / 2.860 = (1.691, 2.347)
+                        </div>
+                    </div>
+                    <div class="calc-step">
+                        <div class="calc-step-label">Mean shift vector:</div>
+                        <div class="calc-step-value">
+                            m(x₁) = (1.691, 2.347) - (1, 2) = (0.691, 0.347)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="example-section">
+            <div class="section-title">🔢 Step 4: Update Position</div>
+            
+            <div class="step-calc">
+                <div class="step-calc-title">Iteration 1 Update</div>
+                <div class="calculation-steps">
+                    <div class="calc-step">
+                        <div class="calc-step-label">New position:</div>
+                        <div class="calc-step-value">
+                            x₁⁽¹⁾ = x₁⁽⁰⁾ + m(x₁⁽⁰⁾) = (1, 2) + (0.691, 0.347) = (1.691, 2.347)
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="iteration-box">
+                <div class="iteration-title">🔄 Iteration 2</div>
+                <div class="calc-step">
+                    <div class="calc-step-label">Starting from x₁⁽¹⁾ = (1.691, 2.347):</div>
+                    <div class="calc-step-value">
+                        • Recalculate distances to all points<br>
+                        • Compute new kernel weights<br>
+                        • Calculate new mean shift vector<br>
+                        • Update position: x₁⁽²⁾ ≈ (1.85, 2.50)
+                    </div>
+                </div>
+            </div>
+            
+            <div class="iteration-box">
+                <div class="iteration-title">🔄 Iteration 3 and beyond</div>
+                <div class="calc-step">
+                    <div class="calc-step-value">
+                        Continue iterations until ||m(x)|| < ε (convergence threshold)<br>
+                        Typically converges to a local mode around (1.9, 2.5) after 5-10 iterations
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="example-section">
+            <div class="section-title">🔢 Step 5: Cluster Assignment</div>
+            
+            <div class="highlight-box">
+                <div class="highlight-title">🎯 Final Result</div>
+                <div class="highlight-content">
+                    After running mean shift for all points:<br><br>
+                    • Points x₁, x₂, x₃ converge to mode ≈ (1.9, 2.5) → <strong>Cluster 1</strong><br>
+                    • Points x₄, x₅ converge to mode ≈ (8.5, 7.5) → <strong>Cluster 2</strong><br><br>
+                    Points that converge to the same mode are assigned to the same cluster.
+                </div>
+            </div>
+            
+            <div class="convergence-note">
+                <div class="convergence-note-title">✅ Convergence Criterion</div>
+                <div class="convergence-note-text">
+                    The algorithm stops when the mean shift vector magnitude falls below a threshold:<br>
+                    ||m(x)|| < ε, where ε is typically set to 0.01 or 0.001
                 </div>
             </div>
         </div>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>K-Means vs K-Means++ Initialization</title>
+    <title>Hierarchical Clustering</title>
     <style>
         * {
             margin: 0;
@@ -28,336 +28,629 @@
             padding: 30px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 18px;
         }
         
         .title {
             text-align: center;
-            font-size: 26px;
+            font-size: 24px;
             font-weight: 600;
             color: #1E64C8;
         }
         
         .subtitle {
             text-align: center;
-            font-size: 15px;
+            font-size: 16px;
             color: #666;
-            margin-top: -12px;
+            margin-top: -10px;
         }
         
-        .comparison-grid {
+        .approaches-section {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 25px;
+            gap: 18px;
+        }
+        
+        .approach-card {
+            background: white;
+            border: 2px solid;
+            border-radius: 12px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            transition: all 0.3s;
+        }
+        
+        .approach-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .approach-card.agglomerative {
+            border-color: #1E64C8;
+            background: linear-gradient(135deg, #e3f2fd 0%, #ffffff 100%);
+        }
+        
+        .approach-card.divisive {
+            border-color: #9C27B0;
+            background: linear-gradient(135deg, #f3e5f5 0%, #ffffff 100%);
+        }
+        
+        .approach-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid;
+        }
+        
+        .approach-card.agglomerative .approach-header {
+            border-color: #1E64C8;
+        }
+        
+        .approach-card.divisive .approach-header {
+            border-color: #9C27B0;
+        }
+        
+        .approach-icon {
+            font-size: 36px;
+        }
+        
+        .approach-title {
             flex: 1;
         }
         
-        .method-card {
-            border: 3px solid;
-            border-radius: 15px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
+        .approach-name {
+            font-size: 19px;
+            font-weight: 600;
+            color: #1E64C8;
         }
         
-        .method-card.random {
-            border-color: #E57373;
-            background: linear-gradient(135deg, #ffebee 0%, #ffffff 100%);
+        .approach-card.divisive .approach-name {
+            color: #9C27B0;
         }
         
-        .method-card.plus {
+        .approach-type {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .approach-desc {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.4;
+            text-align: center;
+            padding: 8px;
+            background: white;
+            border-radius: 6px;
+        }
+        
+        .linkage-section {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffffff 100%);
+            border: 2px solid #FF9800;
+            border-radius: 12px;
+            padding: 16px;
+        }
+        
+        .linkage-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #F57C00;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        
+        .linkage-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        
+        .linkage-box {
+            background: white;
+            border: 1px solid #FF9800;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .linkage-box:hover {
+            transform: scale(1.05);
+            box-shadow: 0 3px 10px rgba(255, 152, 0, 0.2);
+        }
+        
+        .linkage-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #F57C00;
+            margin-bottom: 4px;
+        }
+        
+        .linkage-desc {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.3;
+        }
+        
+        .linkage-box.ward {
             border-color: #4CAF50;
             background: linear-gradient(135deg, #e8f5e9 0%, #ffffff 100%);
         }
         
-        .method-header {
-            text-align: center;
-            padding-bottom: 12px;
-            border-bottom: 3px solid;
+        .linkage-box.ward .linkage-name {
+            color: #388E3C;
         }
         
-        .method-card.random .method-header {
-            border-color: #E57373;
-        }
-        
-        .method-card.plus .method-header {
-            border-color: #4CAF50;
-        }
-        
-        .method-name {
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-        
-        .method-card.random .method-name {
-            color: #C62828;
-        }
-        
-        .method-card.plus .method-name {
-            color: #2E7D32;
-        }
-        
-        .method-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 12px;
+        .linkage-box.ward .linkage-desc {
             font-weight: 600;
-            color: white;
+            color: #388E3C;
         }
         
-        .method-card.random .method-badge {
-            background: #E57373;
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
         }
         
-        .method-card.plus .method-badge {
-            background: #4CAF50;
-        }
-        
-        .strategy-box {
+        .feature-card {
             background: white;
             border: 2px solid;
             border-radius: 10px;
             padding: 14px;
-        }
-        
-        .method-card.random .strategy-box {
-            border-color: #E57373;
-        }
-        
-        .method-card.plus .strategy-box {
-            border-color: #4CAF50;
-        }
-        
-        .strategy-label {
-            font-size: 13px;
-            font-weight: 600;
-            color: #666;
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        .strategy-text {
-            font-size: 15px;
-            color: #333;
-            line-height: 1.5;
-        }
-        
-        .characteristics-list {
             display: flex;
             flex-direction: column;
+            align-items: center;
             gap: 8px;
-        }
-        
-        .char-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            background: white;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid;
-        }
-        
-        .method-card.random .char-item {
-            border-color: #FFCDD2;
-        }
-        
-        .method-card.plus .char-item {
-            border-color: #C8E6C9;
-        }
-        
-        .char-icon {
-            font-size: 18px;
-            flex-shrink: 0;
-            margin-top: 2px;
-        }
-        
-        .char-text {
-            font-size: 14px;
-            color: #444;
-            line-height: 1.4;
-        }
-        
-        .result-section {
-            background: white;
-            border: 2px dashed;
-            border-radius: 10px;
-            padding: 12px;
             text-align: center;
+            transition: all 0.3s;
         }
         
-        .method-card.random .result-section {
-            border-color: #E57373;
+        .feature-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
         
-        .method-card.plus .result-section {
+        .feature-card.advantage {
             border-color: #4CAF50;
+            background: linear-gradient(135deg, #e8f5e9 0%, #ffffff 100%);
         }
         
-        .result-label {
-            font-size: 12px;
-            font-weight: 600;
-            color: #666;
-            margin-bottom: 4px;
-            text-transform: uppercase;
+        .feature-card.disadvantage {
+            border-color: #e57373;
+            background: linear-gradient(135deg, #ffebee 0%, #ffffff 100%);
         }
         
-        .result-value {
+        .feature-card.use {
+            border-color: #00897B;
+            background: linear-gradient(135deg, #e0f2f1 0%, #ffffff 100%);
+        }
+        
+        .feature-icon {
+            font-size: 28px;
+        }
+        
+        .feature-title {
             font-size: 16px;
-            font-weight: 700;
+            font-weight: 600;
         }
         
-        .method-card.random .result-value {
-            color: #C62828;
+        .feature-card.advantage .feature-title {
+            color: #388E3C;
         }
         
-        .method-card.plus .result-value {
-            color: #2E7D32;
+        .feature-card.disadvantage .feature-title {
+            color: #d32f2f;
         }
         
-        .bottom-comparison {
-            background: linear-gradient(135deg, #E3F2FD 0%, #ffffff 100%);
-            border: 3px solid #1E64C8;
+        .feature-card.use .feature-title {
+            color: #00897B;
+        }
+        
+        .feature-text {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.3;
+        }
+        
+        .algorithm-section {
+            background: linear-gradient(135deg, #e8eaf6 0%, #ffffff 100%);
+            border: 2px solid #5E35B1;
             border-radius: 12px;
-            padding: 16px;
+            padding: 18px;
+            margin-top: 18px;
+        }
+        
+        .algorithm-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #5E35B1;
+            text-align: center;
+            margin-bottom: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 15px;
+            gap: 10px;
         }
         
-        .comparison-icon {
-            font-size: 36px;
+        .steps-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
         
-        .comparison-content {
+        .step-box {
+            background: white;
+            border: 2px solid #7E57C2;
+            border-radius: 8px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s;
+        }
+        
+        .step-box:hover {
+            transform: translateX(5px);
+            box-shadow: 0 3px 10px rgba(94, 53, 177, 0.2);
+        }
+        
+        .step-number {
+            background: #5E35B1;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        
+        .step-content {
             flex: 1;
-            max-width: 700px;
         }
         
-        .comparison-main {
-            font-size: 18px;
-            font-weight: 700;
-            color: #1565C0;
-            margin-bottom: 4px;
+        .step-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #5E35B1;
+            margin-bottom: 3px;
         }
         
-        .comparison-detail {
+        .step-desc {
             font-size: 14px;
-            color: #555;
+            color: #666;
+            line-height: 1.3;
+        }
+        
+        .page-2 {
+            margin-top: 40px;
+            page-break-before: always;
+        }
+        
+        .dendrogram-section {
+            background: linear-gradient(135deg, #fff8e1 0%, #ffffff 100%);
+            border: 2px solid #FFA726;
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 18px;
+        }
+        
+        .dendrogram-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #F57C00;
+            text-align: center;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .dendrogram-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        
+        .dendrogram-visual {
+            background: white;
+            border: 2px solid #FFA726;
+            border-radius: 8px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .dendrogram-example {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #F57C00;
+            white-space: pre;
+            text-align: center;
+            line-height: 1.6;
+        }
+        
+        .dendrogram-explanation {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .explanation-box {
+            background: white;
+            border: 1px solid #FFA726;
+            border-radius: 8px;
+            padding: 10px;
+        }
+        
+        .explanation-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #F57C00;
+            margin-bottom: 5px;
+        }
+        
+        .explanation-text {
+            font-size: 13px;
+            color: #666;
             line-height: 1.4;
         }
         
-        .highlight {
+        .key-points {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        
+        .key-point-card {
+            background: white;
+            border: 2px solid #42A5F5;
+            border-radius: 10px;
+            padding: 14px;
+            display: flex;
+            align-items: start;
+            gap: 10px;
+            transition: all 0.3s;
+        }
+        
+        .key-point-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(66, 165, 245, 0.2);
+        }
+        
+        .key-point-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        
+        .key-point-content {
+            flex: 1;
+        }
+        
+        .key-point-title {
+            font-size: 15px;
             font-weight: 600;
-            color: #1E64C8;
+            color: #1976D2;
+            margin-bottom: 4px;
+        }
+        
+        .key-point-text {
+            font-size: 13px;
+            color: #555;
+            line-height: 1.3;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="title">Initialization Strategy Comparison</div>
-        <div class="subtitle">Random Initialization vs K-Means++</div>
+        <div class="title">Hierarchical Clustering</div>
+        <div class="subtitle">Builds hierarchy of clusters (dendrogram)</div>
         
-        <div class="comparison-grid">
-            <!-- Random K-Means -->
-            <div class="method-card random">
-                <div class="method-header">
-                    <div class="method-name">🎲 Random K-Means</div>
-                    <span class="method-badge">Basic Method</span>
-                </div>
-                
-                <div class="strategy-box">
-                    <div class="strategy-label">📋 Strategy</div>
-                    <div class="strategy-text">
-                        Select <strong>k</strong> initial centroids uniformly at random from data points
+        <div class="approaches-section">
+            <div class="approach-card agglomerative">
+                <div class="approach-header">
+                    <div class="approach-icon">⬆️</div>
+                    <div class="approach-title">
+                        <div class="approach-name">Agglomerative</div>
+                        <div class="approach-type">Bottom-Up</div>
                     </div>
                 </div>
-                
-                <div class="characteristics-list">
-                    <div class="char-item">
-                        <div class="char-icon">⚠️</div>
-                        <div class="char-text">
-                            <strong>May cluster nearby:</strong> Centroids can be close together
-                        </div>
-                    </div>
-                    
-                    <div class="char-item">
-                        <div class="char-icon">🔄</div>
-                        <div class="char-text">
-                            <strong>More iterations:</strong> Often needs many iterations to converge
-                        </div>
-                    </div>
-                    
-                    <div class="char-item">
-                        <div class="char-icon">📊</div>
-                        <div class="char-text">
-                            <strong>Inconsistent results:</strong> High variance across different runs
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="result-section">
-                    <div class="result-label">Typical Outcome</div>
-                    <div class="result-value">Suboptimal clustering ⬇️</div>
-                </div>
+                <div class="approach-desc">Start with n clusters (each point)<br>Merge iteratively</div>
             </div>
             
-            <!-- K-Means++ -->
-            <div class="method-card plus">
-                <div class="method-header">
-                    <div class="method-name">✨ K-Means++</div>
-                    <span class="method-badge">Improved Method</span>
-                </div>
-                
-                <div class="strategy-box">
-                    <div class="strategy-label">📋 Strategy</div>
-                    <div class="strategy-text">
-                        Choose centroids <strong>proportional to squared distance</strong> from existing centroids
+            <div class="approach-card divisive">
+                <div class="approach-header">
+                    <div class="approach-icon">⬇️</div>
+                    <div class="approach-title">
+                        <div class="approach-name">Divisive</div>
+                        <div class="approach-type">Top-Down</div>
                     </div>
                 </div>
-                
-                <div class="characteristics-list">
-                    <div class="char-item">
-                        <div class="char-icon">✅</div>
-                        <div class="char-text">
-                            <strong>Well-separated:</strong> Spreads centroids far apart in space
-                        </div>
-                    </div>
-                    
-                    <div class="char-item">
-                        <div class="char-icon">⚡</div>
-                        <div class="char-text">
-                            <strong>Faster convergence:</strong> Significantly fewer iterations needed
-                        </div>
-                    </div>
-                    
-                    <div class="char-item">
-                        <div class="char-icon">🎯</div>
-                        <div class="char-text">
-                            <strong>Stable quality:</strong> Consistent results with O(log k) guarantee
-                        </div>
-                    </div>
+                <div class="approach-desc">Start with 1 cluster (all points)<br>Split iteratively</div>
+            </div>
+        </div>
+        
+        <div class="linkage-section">
+            <div class="linkage-title">Linkage Criteria</div>
+            <div class="linkage-grid">
+                <div class="linkage-box">
+                    <div class="linkage-name">Single</div>
+                    <div class="linkage-desc">Minimum distance</div>
                 </div>
                 
-                <div class="result-section">
-                    <div class="result-label">Typical Outcome</div>
-                    <div class="result-value">Superior clustering ⬆️</div>
+                <div class="linkage-box">
+                    <div class="linkage-name">Complete</div>
+                    <div class="linkage-desc">Maximum distance</div>
+                </div>
+                
+                <div class="linkage-box">
+                    <div class="linkage-name">Average</div>
+                    <div class="linkage-desc">Mean distance</div>
+                </div>
+                
+                <div class="linkage-box ward">
+                    <div class="linkage-name">Ward ⭐</div>
+                    <div class="linkage-desc">Minimizes variance</div>
                 </div>
             </div>
         </div>
         
-        <div class="bottom-comparison">
-            <div class="comparison-icon">💡</div>
-            <div class="comparison-content">
-                <div class="comparison-main">Key Insight: Smart initialization matters!</div>
-                <div class="comparison-detail">
-                    K-Means++ achieves <span class="highlight">better quality</span> and <span class="highlight">faster convergence</span> with minimal overhead. 
-                    This is why it's the <span class="highlight">default in modern implementations</span>.
+        <div class="features-grid">
+            <div class="feature-card advantage">
+                <div class="feature-icon">✓</div>
+                <div class="feature-title">No k Required</div>
+                <div class="feature-text">Cut dendrogram at desired level</div>
+            </div>
+            
+            <div class="feature-card disadvantage">
+                <div class="feature-icon">⚠️</div>
+                <div class="feature-title">O(n³) Complexity</div>
+                <div class="feature-text">Not scalable to large datasets</div>
+            </div>
+            
+            <div class="feature-card use">
+                <div class="feature-icon">🔍</div>
+                <div class="feature-title">Exploratory Analysis</div>
+                <div class="feature-text">Understanding data structure</div>
+            </div>
+        </div>
+        
+        <div class="algorithm-section">
+            <div class="algorithm-title">
+                <span>⚙️</span>
+                <span>Agglomerative Clustering Algorithm</span>
+            </div>
+            <div class="steps-container">
+                <div class="step-box">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <div class="step-title">Initialize</div>
+                        <div class="step-desc">Start with n clusters (each data point as individual cluster)</div>
+                    </div>
+                </div>
+                
+                <div class="step-box">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <div class="step-title">Compute Distance Matrix</div>
+                        <div class="step-desc">Calculate distances between all pairs of clusters to create distance matrix</div>
+                    </div>
+                </div>
+                
+                <div class="step-box">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <div class="step-title">Find Closest Pair</div>
+                        <div class="step-desc">Find the two closest clusters from the distance matrix</div>
+                    </div>
+                </div>
+                
+                <div class="step-box">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <div class="step-title">Merge Clusters</div>
+                        <div class="step-desc">Merge the two closest clusters into one and record the merge distance</div>
+                    </div>
+                </div>
+                
+                <div class="step-box">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <div class="step-title">Update Distance Matrix</div>
+                        <div class="step-desc">Recalculate distances between the newly formed cluster and other clusters</div>
+                    </div>
+                </div>
+                
+                <div class="step-box">
+                    <div class="step-number">6</div>
+                    <div class="step-content">
+                        <div class="step-title">Repeat</div>
+                        <div class="step-desc">Repeat steps 3-5 until all points form a single cluster</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="dendrogram-section">
+            <div class="dendrogram-title">
+                <span>🌳</span>
+                <span>Dendrogram Structure</span>
+            </div>
+            <div class="dendrogram-content">
+                <div class="dendrogram-visual">
+                    <div class="dendrogram-example">      ┌─────┐
+      │     │ height=8
+  ┌───┴───┐ │
+  │       │ │ height=5
+┌─┴─┐   ┌─┴─┴─┐
+│   │   │     │ height=2
+A   B   C   ┌─┴─┐
+            D   E</div>
+                    <div class="explanation-text" style="text-align: center; padding-top: 10px;">Visualizes the height (distance) at which merges occur</div>
+                </div>
+                
+                <div class="dendrogram-explanation">
+                    <div class="explanation-box">
+                        <div class="explanation-title">📏 Y-axis (Height)</div>
+                        <div class="explanation-text">Represents the distance at which clusters merge. Higher values indicate merging of more dissimilar clusters</div>
+                    </div>
+                    
+                    <div class="explanation-box">
+                        <div class="explanation-title">🔗 Horizontal Lines</div>
+                        <div class="explanation-text">Represent the merging of two clusters. The height of the line indicates the distance at merge</div>
+                    </div>
+                    
+                    <div class="explanation-box">
+                        <div class="explanation-title">✂️ Cutting Dendrogram</div>
+                        <div class="explanation-text">Cutting horizontally at a desired height determines the number of clusters at that level</div>
+                    </div>
+                    
+                    <div class="explanation-box">
+                        <div class="explanation-title">🎯 Optimal Cut Point</div>
+                        <div class="explanation-text">Cutting where there are large height differences reveals natural cluster boundaries</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="key-points">
+            <div class="key-point-card">
+                <div class="key-point-icon">🧬</div>
+                <div class="key-point-content">
+                    <div class="key-point-title">Phylogenetics</div>
+                    <div class="key-point-text">Essential for constructing phylogenetic trees representing evolutionary relationships among species</div>
+                </div>
+            </div>
+            
+            <div class="key-point-card">
+                <div class="key-point-icon">📊</div>
+                <div class="key-point-content">
+                    <div class="key-point-title">Data Exploration</div>
+                    <div class="key-point-text">Visually understand natural groupings and hierarchical structure of data through dendrograms</div>
+                </div>
+            </div>
+            
+            <div class="key-point-card">
+                <div class="key-point-icon">💡</div>
+                <div class="key-point-content">
+                    <div class="key-point-title">Intuitive Interpretation</div>
+                    <div class="key-point-text">Easy to understand cluster similarity by viewing merge order and distances at a glance</div>
+                </div>
+            </div>
+            
+            <div class="key-point-card">
+                <div class="key-point-icon">🔄</div>
+                <div class="key-point-content">
+                    <div class="key-point-title">Flexible Clustering</div>
+                    <div class="key-point-text">More flexible than k-means as you can choose the desired number of clusters after analysis</div>
                 </div>
             </div>
         </div>
