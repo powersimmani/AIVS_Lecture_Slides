@@ -13,20 +13,23 @@
         
         body {
             font-family: Aptos, 'Segoe UI', sans-serif;
-            background: #ffffff;
+            background: #f5f5f5;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            padding: 20px;
+            padding: 30px 20px;
+            gap: 30px;
         }
         
         .container {
             width: 960px;
-            height: 540px;
+            min-height: 540px;
             position: relative;
             background: #ffffff;
             padding: 25px 40px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         
         .title {
@@ -48,7 +51,7 @@
             display: grid;
             grid-template-columns: 1fr 1.1fr;
             gap: 25px;
-            height: 410px;
+            min-height: 410px;
         }
         
         /* Architecture Section */
@@ -224,15 +227,157 @@
             color: #1E64C8;
         }
         
-        .release-info {
-            font-size: 16px;
-            color: #666666;
+        /* Process Section Styles */
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 20px;
             text-align: center;
-            margin-top: 5px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #1E64C8;
+        }
+        
+        .process-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .process-step {
+            background: #ffffff;
+            border: 2px solid #1E64C8;
+            border-radius: 12px;
+            padding: 20px;
+            position: relative;
+        }
+        
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .step-number {
+            background: #1E64C8;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .step-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .step-content {
+            padding-left: 55px;
+        }
+        
+        .step-description {
+            font-size: 16px;
+            color: #333333;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+        
+        .example-box {
+            background: #F8F9FA;
+            border-left: 4px solid #FFA726;
+            border-radius: 6px;
+            padding: 12px 15px;
+            margin-top: 10px;
+        }
+        
+        .example-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #F57C00;
+            margin-bottom: 6px;
+        }
+        
+        .example-text {
+            font-size: 15px;
+            color: #555555;
+            font-family: 'Courier New', monospace;
+            line-height: 1.5;
+        }
+        
+        .masked-token {
+            background: #FFE0B2;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #E65100;
+        }
+        
+        .arrow-down {
+            text-align: center;
+            font-size: 32px;
+            color: #1E64C8;
+            margin: 10px 0;
+        }
+        
+        .task-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .task-card {
+            background: #E8F4F8;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        
+        .task-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .task-description {
+            font-size: 14px;
+            color: #555555;
+            line-height: 1.4;
+        }
+        
+        .result-box {
+            background: #C8E6C9;
+            border: 2px solid #4CAF50;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+        
+        .result-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2E7D32;
+            margin-bottom: 8px;
+        }
+        
+        .result-text {
+            font-size: 15px;
+            color: #1B5E20;
+            line-height: 1.5;
         }
     </style>
 </head>
 <body>
+    <!-- Original Overview Section -->
     <div class="container">
         <div class="title">BERT: Bidirectional Encoder Representations from Transformers</div>
         <div class="subtitle">Google, 2018 - Revolutionary NLP Model</div>
@@ -296,7 +441,7 @@
                 </div>
                 
                 <div class="feature-card">
-                    <div class="feature-icon">🏗️</div>
+                    <div class="feature-icon">🗂️</div>
                     <div class="feature-content">
                         <div class="feature-title">Transformer Encoder</div>
                         <div class="feature-text">
@@ -335,6 +480,253 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- Training Process Section -->
+    <div class="container">
+        <div class="section-title">🎓 BERT Pre-Training Process</div>
+        
+        <div class="process-container">
+            <!-- Step 1 -->
+            <div class="process-step">
+                <div class="step-header">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Input Preparation</div>
+                </div>
+                <div class="step-content">
+                    <div class="step-description">
+                        Tokenize the input text and add special tokens. [CLS] marks the start of the sentence, and [SEP] marks the end.
+                    </div>
+                    <div class="example-box">
+                        <div class="example-label">📝 Example Input:</div>
+                        <div class="example-text">
+                            "The cat sat on the mat"<br>
+                            → [CLS] The cat sat on the mat [SEP]
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="process-step">
+                <div class="step-header">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Masked Language Modeling (MLM)</div>
+                </div>
+                <div class="step-content">
+                    <div class="step-description">
+                        Randomly mask 15% of input tokens. The model learns to predict masked words using bidirectional context.
+                    </div>
+                    <div class="example-box">
+                        <div class="example-label">🎭 Masking Example:</div>
+                        <div class="example-text">
+                            Input: [CLS] The cat sat on the mat [SEP]<br>
+                            Masked: [CLS] The <span class="masked-token">[MASK]</span> sat on the mat [SEP]<br>
+                            Target: Predict "cat"
+                        </div>
+                    </div>
+                    <div class="result-box">
+                        <div class="result-title">💡 Key Points</div>
+                        <div class="result-text">
+                            • 80% replaced with [MASK]<br>
+                            • 10% replaced with random word<br>
+                            • 10% keep original word
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="process-step">
+                <div class="step-header">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Next Sentence Prediction (NSP)</div>
+                </div>
+                <div class="step-content">
+                    <div class="step-description">
+                        Learn to determine whether two sentences are consecutive. This improves the ability to understand relationships between sentences.
+                    </div>
+                    <div class="example-box">
+                        <div class="example-label">🔗 NSP Example:</div>
+                        <div class="example-text">
+                            <strong>Case 1 (IsNext):</strong><br>
+                            [CLS] The cat sat on the mat [SEP] It was sleeping [SEP]<br>
+                            Label: IsNext ✓<br><br>
+                            <strong>Case 2 (NotNext):</strong><br>
+                            [CLS] The cat sat on the mat [SEP] Paris is beautiful [SEP]<br>
+                            Label: NotNext ✗
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="process-step">
+                <div class="step-header">
+                    <div class="step-number">4</div>
+                    <div class="step-title">Training Objective</div>
+                </div>
+                <div class="step-content">
+                    <div class="step-description">
+                        Train the model by simultaneously optimizing both MLM and NSP losses.
+                    </div>
+                    <div class="task-grid">
+                        <div class="task-card">
+                            <div class="task-title">MLM Loss</div>
+                            <div class="task-description">
+                                Cross-Entropy Loss aiming for accurate prediction of masked tokens
+                            </div>
+                        </div>
+                        <div class="task-card">
+                            <div class="task-title">NSP Loss</div>
+                            <div class="task-description">
+                                Binary Classification Loss for correctly judging sentence pair continuity
+                            </div>
+                        </div>
+                    </div>
+                    <div class="result-box">
+                        <div class="result-title">🎯 Total Loss</div>
+                        <div class="result-text">
+                            Loss = MLM Loss + NSP Loss
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fine-tuning Process Section -->
+    <div class="container">
+        <div class="section-title">🎯 BERT Fine-tuning Process</div>
+        
+        <div class="process-container">
+            <!-- Step 1 -->
+            <div class="process-step">
+                <div class="step-header">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Load Pre-trained Model</div>
+                </div>
+                <div class="step-content">
+                    <div class="step-description">
+                        Load the pre-trained BERT model. It has already learned general patterns of language.
+                    </div>
+                    <div class="result-box">
+                        <div class="result-title">✨ Pre-trained Knowledge</div>
+                        <div class="result-text">
+                            • Understanding grammatical structure<br>
+                            • Capturing semantic relationships<br>
+                            • Bidirectional context comprehension
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="process-step">
+                <div class="step-header">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Add Task-Specific Layer</div>
+                </div>
+                <div class="step-content">
+                    <div class="step-description">
+                        Add an output layer specific to the task. Different structures are used depending on the task.
+                    </div>
+                    <div class="task-grid">
+                        <div class="task-card">
+                            <div class="task-title">📊 Classification</div>
+                            <div class="task-description">
+                                [CLS] token output + Softmax Layer<br>
+                                (Sentiment analysis, topic classification, etc.)
+                            </div>
+                        </div>
+                        <div class="task-card">
+                            <div class="task-title">🏷️ Token Classification</div>
+                            <div class="task-description">
+                                Each token output + Classification Layer<br>
+                                (Named entity recognition, POS tagging, etc.)
+                            </div>
+                        </div>
+                        <div class="task-card">
+                            <div class="task-title">❓ Question Answering</div>
+                            <div class="task-description">
+                                Start/End Position Prediction Layers<br>
+                                (SQuAD, reading comprehension, etc.)
+                            </div>
+                        </div>
+                        <div class="task-card">
+                            <div class="task-title">🔄 Sequence Pairing</div>
+                            <div class="task-description">
+                                [CLS] token + Binary Classifier<br>
+                                (Natural language inference, sentence similarity, etc.)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="process-step">
+                <div class="step-header">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Fine-tune on Task Data</div>
+                </div>
+                <div class="step-content">
+                    <div class="step-description">
+                        Fine-tune the entire model with task-specific training data. Typically, 2-4 epochs are sufficient.
+                    </div>
+                    <div class="example-box">
+                        <div class="example-label">📝 Sentiment Analysis Example:</div>
+                        <div class="example-text">
+                            Input: [CLS] This movie is amazing [SEP]<br>
+                            → BERT Encoding →<br>
+                            → Classification Layer →<br>
+                            Output: Positive (95% confidence)
+                        </div>
+                    </div>
+                    <div class="result-box">
+                        <div class="result-title">⚙️ Training Settings</div>
+                        <div class="result-text">
+                            • Learning Rate: 2e-5 ~ 5e-5<br>
+                            • Epochs: 2-4<br>
+                            • Batch Size: 16 or 32
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="process-step">
+                <div class="step-header">
+                    <div class="step-number">4</div>
+                    <div class="step-title">Inference & Prediction</div>
+                </div>
+                <div class="step-content">
+                    <div class="step-description">
+                        Use the fine-tuned model to make predictions on new data.
+                    </div>
+                    <div class="example-box">
+                        <div class="example-label">🔮 Prediction Pipeline:</div>
+                        <div class="example-text">
+                            <strong>Step 1:</strong> Tokenize new input<br>
+                            <strong>Step 2:</strong> Pass through fine-tuned BERT<br>
+                            <strong>Step 3:</strong> Apply task-specific head<br>
+                            <strong>Step 4:</strong> Generate prediction with confidence score
+                        </div>
+                    </div>
+                    <div class="result-box">
+                        <div class="result-title">🎊 Final Output</div>
+                        <div class="result-text">
+                            Generate results in the appropriate format for the task:<br>
+                            Classification labels, token tags, answer spans, etc.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="text-align: center; padding: 20px; color: #666;">
+        <p style="font-size: 14px;">BERT revolutionized NLP by introducing bidirectional pre-training and transfer learning to the field.</p>
     </div>
 </body>
 </html>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,7 +23,6 @@
         
         .container {
             width: 960px;
-            height: 540px;
             position: relative;
             background: #ffffff;
             padding: 25px 40px;
@@ -253,6 +252,166 @@
         .highlight {
             font-weight: 600;
         }
+        
+        /* Calculation Example Section */
+        .calc-section {
+            background: #FFF9E6;
+            border: 3px solid #FFA726;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 10px;
+        }
+        
+        .calc-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #F57C00;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .calc-content {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .calc-example {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #FFB74D;
+        }
+        
+        .matrix-visual {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .matrix-grid {
+            display: grid;
+            gap: 2px;
+            background: #E0E0E0;
+            padding: 8px;
+            border-radius: 6px;
+        }
+        
+        .matrix-grid.size-8 {
+            grid-template-columns: repeat(8, 18px);
+            grid-template-rows: repeat(8, 18px);
+        }
+        
+        .matrix-grid.size-8-2 {
+            grid-template-columns: repeat(2, 18px);
+            grid-template-rows: repeat(8, 18px);
+        }
+        
+        .matrix-grid.size-2-8 {
+            grid-template-columns: repeat(8, 18px);
+            grid-template-rows: repeat(2, 18px);
+        }
+        
+        .matrix-cell {
+            width: 18px;
+            height: 18px;
+            background: #90CAF9;
+            border-radius: 2px;
+        }
+        
+        .matrix-cell.trainable {
+            background: #66BB6A;
+        }
+        
+        .matrix-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: #424242;
+        }
+        
+        .matrix-size {
+            font-size: 13px;
+            color: #666666;
+        }
+        
+        .decompose-arrow {
+            font-size: 28px;
+            color: #F57C00;
+            font-weight: 600;
+        }
+        
+        .calc-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+        }
+        
+        .stat-box {
+            background: white;
+            border: 2px solid #FFB74D;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #F57C00;
+            margin-bottom: 4px;
+        }
+        
+        .stat-desc {
+            font-size: 14px;
+            color: #666666;
+        }
+        
+        .formula-box {
+            background: #E3F2FD;
+            border: 2px solid #42A5F5;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .formula {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1976D2;
+            margin-bottom: 8px;
+        }
+        
+        .formula-explain {
+            font-size: 14px;
+            color: #555555;
+            line-height: 1.4;
+        }
+        
+        .reduction-highlight {
+            background: #FFE082;
+            border: 2px solid #FFA726;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            margin-top: 10px;
+        }
+        
+        .reduction-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: #E65100;
+        }
+        
+        .multiply-sign {
+            font-size: 20px;
+            color: #4CAF50;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -365,6 +524,169 @@
                         <div class="benefit-title">High Efficiency</div>
                         <div class="benefit-text">
                             <strong>90-95%</strong> of full fine-tuning performance
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Calculation Example Section -->
+            <div class="calc-section">
+                <div class="calc-title">🧮 Practical Example: LoRA Parameter Decomposition</div>
+                
+                <div class="calc-content">
+                    <!-- Visual Example -->
+                    <div class="calc-example">
+                        <div class="matrix-visual">
+                            <div class="matrix-grid size-8">
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                                <div class="matrix-cell"></div>
+                            </div>
+                            <div class="matrix-label">W (Frozen)</div>
+                            <div class="matrix-size">8×8 = 64 parameters</div>
+                        </div>
+                        
+                        <div class="decompose-arrow">≈</div>
+                        
+                        <div class="matrix-visual">
+                            <div class="matrix-grid size-8-2">
+                                <div class="matrix-cell trainable"></div>
+                                <div class="matrix-cell trainable"></div>
+                                <div class="matrix-cell trainable"></div>
+                                <div class="matrix-cell trainable"></div>
+                                <div class="matrix-cell trainable"></div>
+                                <div class="matrix-cell trainable"></div>
+                                <div class="matrix-cell trainable"></div>
+                                <div class="matrix-cell trainable"></div>
+                                <div class="matrix-cell trainable"></div>
+                                <div class="matrix-cell trainable"></div>
+                                <div class="matrix-cell trainable"></div>
+                                <div class="matrix-cell trainable"></div>
+                                <div class="matrix-cell trainable"></div>
+                                <div class="matrix-cell trainable"></div>
+                                <div class="matrix-cell trainable"></div>
+                                <div class="matrix-cell trainable"></div>
+                            </div>
+                            <div class="matrix-label">A (Trainable)</div>
+                            <div class="matrix-size">8×2 = 16 params</div>
+                        </div>
+                        
+                        <div class="multiply-sign">×</div>
+                        
+                        <div class="matrix-visual">
+                            <div class="matrix-grid size-2-8">
+                                <div class="matrix-cell trainable"></div>
+                                <div class="matrix-cell trainable"></div>
+                                <div class="matrix-cell trainable"></div>
+                                <div class="matrix-cell trainable"></div>
+                                <div class="matrix-cell trainable"></div>
+                                <div class="matrix-cell trainable"></div>
+                                <div class="matrix-cell trainable"></div>
+                                <div class="matrix-cell trainable"></div>
+                                <div class="matrix-cell trainable"></div>
+                                <div class="matrix-cell trainable"></div>
+                                <div class="matrix-cell trainable"></div>
+                                <div class="matrix-cell trainable"></div>
+                                <div class="matrix-cell trainable"></div>
+                                <div class="matrix-cell trainable"></div>
+                                <div class="matrix-cell trainable"></div>
+                                <div class="matrix-cell trainable"></div>
+                            </div>
+                            <div class="matrix-label">B (Trainable)</div>
+                            <div class="matrix-size">2×8 = 16 params</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Statistics -->
+                    <div class="calc-stats">
+                        <div class="stat-box">
+                            <div class="stat-value">64</div>
+                            <div class="stat-desc">Original Parameters</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value">32</div>
+                            <div class="stat-desc">LoRA Parameters<br>(16 + 16)</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value">50%</div>
+                            <div class="stat-desc">Reduction</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Formula -->
+                    <div class="formula-box">
+                        <div class="formula">With Rank r = 2: (m×r) + (r×n) = (8×2) + (2×8) = 32</div>
+                        <div class="formula-explain">
+                            Lower rank = fewer parameters<br>
+                            (r=1: 16 params, r=2: 32 params, r=4: 64 params)
+                        </div>
+                    </div>
+                    
+                    <!-- Highlight -->
+                    <div class="reduction-highlight">
+                        <div class="reduction-text">
+                            💡 In large-scale models, over 99% parameter reduction is possible!
                         </div>
                     </div>
                 </div>
