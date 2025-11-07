@@ -1,141 +1,142 @@
-# Machine Learning Course: Complete Lecture Series
-
-**Instructor:** Ho-min Park  
-**Email:** homin.park@ghent.ac.kr | powersimmani@gmail.com  
-**Course Level:** Intermediate to Advanced  
-**Total Lectures:** 20
-
----
+# Machine Learning & Deep Learning
 
 ## 📚 Course Overview
 
-This comprehensive machine learning course covers the complete pipeline from fundamental computer architecture to advanced deep learning models and explainability techniques. Students will gain both theoretical understanding and practical implementation skills across supervised learning, unsupervised learning, deep learning, and state-of-the-art generative models.
+Comprehensive summaries of a 20-lecture series on Machine Learning and Deep Learning.  
+**Instructor:** Ho-min Park (homin.park@ghent.ac.kr)
+
+Each lecture has been condensed to a 2-page summary extracting only the core content from the original materials.  
+For detailed code, examples, and slides, please refer to the original files.
 
 ---
 
-## 🎯 Course Structure
+## 📖 Lecture List
 
-### **Module 1: Foundations** (Lectures 1-3)
+### Part 1: Foundations and Infrastructure
 
-**Lecture 1: Computer Structure and Networks for ML**  
-Hardware components (CPU, GPU, TPU), memory hierarchy, distributed computing, and cloud platforms for machine learning deployment.
+- **[Lecture 1: Computer Structure and Networks for ML](Lecture01/readme.md)**  
+  Data representation, CPU/GPU architecture, memory management, distributed training
 
-**Lecture 2: Data Visualization**  
-Visual encoding principles, chart types, Gestalt principles, color theory, accessibility, and ML-specific visualizations for EDA and model evaluation.
+- **[Lecture 2: Data Visualization](Lecture02/readme.md)**  
+  Visualization principles, chart types, ML workflow visualization, dashboard design
 
-**Lecture 3: From Set Theory to Linear Regression**  
-Mathematical foundations including set theory, functions, vectors, matrices, probability distributions, and introduction to linear regression.
+### Part 2: Mathematical Foundations and Basic Models
 
-### **Module 2: Classical Machine Learning** (Lectures 4-6)
+- **[Lecture 3: From Set Theory to Linear Regression](Lecture03/readme.md)**  
+  Set theory, linear algebra, calculus, probability, linear regression
 
-**Lecture 4: From Linear to Logistic Regression**  
-Binary classification, sigmoid function, maximum likelihood estimation, gradient descent, and decision boundaries.
+- **[Lecture 4: From Linear to Logistic Regression](Lecture04/readme.md)**  
+  Regression to classification, logistic regression, regularization (Ridge, Lasso, Elastic Net)
 
-**Lecture 5: From Logistic Regression to Multi-layer Perceptrons**  
-Limitations of linear models, XOR problem, introduction to neural networks, activation functions, and backpropagation basics.
+- **[Lecture 5: From Logistic Regression to Multi-layer Perceptrons](Lecture05/readme.md)**  
+  Linear model limitations (XOR), MLP, Backpropagation
 
-**Lecture 6: Supervised Learning Evaluation**  
-Confusion matrices, ROC curves, precision-recall analysis, cross-validation, bias-variance tradeoff, and model selection strategies.
+### Part 3: Model Evaluation and Advanced Training Techniques
 
-### **Module 3: Deep Learning Fundamentals** (Lectures 7-10)
+- **[Lecture 6: Supervised Learning Evaluation](Lecture06/readme.md)**  
+  Data splitting, metrics (MSE, F1, AUC), cross-validation, hyperparameter tuning
 
-**Lecture 7: Multi-layer Perceptrons Deep Dive**  
-Network architecture design, universal approximation theorem, forward/backward propagation, gradient flow, and implementation strategies.
+- **[Lecture 7: Deep Learning Fundamentals](Lecture07/readme.md)**  
+  Importance of depth, activation functions (ReLU, GELU, Swish), hierarchical representation
 
-**Lecture 8: Loss, Optimization and Scheduling**  
-Loss functions (MSE, cross-entropy, custom losses), optimizers (SGD, Adam, RMSprop), learning rate scheduling, and convergence analysis.
+- **[Lecture 8: Loss, Optimization and Scheduling](Lecture08/readme.md)**  
+  Loss functions, optimization (SGD, Adam, AdamW), learning rate scheduling
 
-**Lecture 9: Initialization and Normalization**  
-Weight initialization techniques (Xavier, He), batch normalization, layer normalization, instance normalization, and training stability.
+- **[Lecture 9: Initialization and Normalization](Lecture09/readme.md)**  
+  Weight initialization (Xavier, He), normalization (Batch Norm, Layer Norm)
 
-**Lecture 10: Data Modality and Feature Extraction**  
-Convolutional Neural Networks (CNNs) for images, feature maps, pooling operations, famous architectures (AlexNet, VGG, ResNet), and transfer learning.
+### Part 4: Data Modalities
 
-### **Module 4: Sequential Data and NLP** (Lectures 11-14)
+- **[Lecture 10: Data Modality and Feature Extraction](Lecture10/readme.md)**  
+  Text (BoW, TF-IDF), Image (SIFT, HOG), Audio (MFCC), Graph
 
-**Lecture 11: Sequence Models**  
-Recurrent Neural Networks (RNNs), Long Short-Term Memory (LSTM), Gated Recurrent Units (GRU), bidirectional architectures, and sequence-to-sequence models.
+### Part 5: Sequence Models
 
-**Lecture 12: Advanced Sequence Models**  
-Encoder-decoder architectures, attention mechanisms, teacher forcing, beam search, and applications in machine translation and text generation.
+- **[Lecture 11: Sequence Models](Lecture11/readme.md)**  
+  Time series analysis (ARIMA), RNN, LSTM, GRU, Seq2Seq
 
-**Lecture 13: Transformer Architecture**  
-Self-attention mechanism, multi-head attention, positional encoding, transformer blocks, parallelization advantages, and scalability.
+- **[Lecture 12: Advanced Sequence Models](Lecture12/readme.md)**  
+  RNN limitations, Attention mechanism, Bidirectional RNN
 
-**Lecture 14: Pre-trained Language Models & LLM Era**  
-BERT, GPT series, T5, instruction tuning, fine-tuning strategies, prompt engineering, and the evolution to large language models.
+### Part 6: Transformers and LLMs
 
-### **Module 5: Generative Models** (Lectures 15-16)
+- **[Lecture 13: Transformer Architecture](Lecture13/readme.md)**  
+  Self-Attention, Multi-Head Attention, Positional Encoding
 
-**Lecture 15: Generative Adversarial Networks (GANs)**  
-Generator-discriminator framework, adversarial training, mode collapse, training stabilization techniques, and GAN variants (DCGAN, StyleGAN, CycleGAN).
+- **[Lecture 14: Pre-trained Language Models & LLM Era](Lecture14/readme.md)**  
+  BERT, GPT, T5, Transfer Learning, Fine-tuning, LLM
 
-**Lecture 16: Diffusion Models**  
-Forward/reverse diffusion processes, denoising diffusion probabilistic models (DDPM), score-based models, applications in image generation (DALL-E, Stable Diffusion).
+### Part 7: Generative Models
 
-### **Module 6: Unsupervised Learning** (Lectures 17-18)
+- **[Lecture 15: Generative Models - GAN](Lecture15/readme.md)**  
+  GAN theory, Minimax, DCGAN, StyleGAN, training stabilization
 
-**Lecture 17: Clustering and Unsupervised Learning Fundamentals**  
-K-means, hierarchical clustering, DBSCAN, dimensionality reduction (PCA, t-SNE, UMAP), and clustering evaluation metrics.
+- **[Lecture 16: Generative Models - Diffusion](Lecture16/readme.md)**  
+  Diffusion Models, Forward/Reverse processes, DDPM, DDIM
 
-**Lecture 18: Advanced Unsupervised Learning**  
-Autoencoders, variational autoencoders (VAE), self-supervised learning, contrastive learning, and representation learning techniques.
+### Part 8: Unsupervised Learning
 
-### **Module 7: Explainability and Interpretability** (Lectures 19-20)
+- **[Lecture 17: Clustering and Unsupervised Learning Fundamentals](Lecture17/readme.md)**  
+  K-Means, DBSCAN, GMM, Hierarchical clustering, PCA, t-SNE
 
-**Lecture 19: XAI Fundamentals and Traditional Methods**  
-Feature importance, permutation importance, partial dependence plots (PDP), LIME, model-agnostic interpretation techniques.
+- **[Lecture 18: Advanced Unsupervised Learning](Lecture18/readme.md)**  
+  Self-Supervised Learning, Contrastive Learning (SimCLR, MoCo), DTW
 
-**Lecture 20: SHAP and Deep Learning XAI**  
-SHAP values, game theory foundations, Grad-CAM, saliency maps, attention visualization, and interpretability in neural networks.
+### Part 9: Model Explainability
 
----
+- **[Lecture 19: Model Explainability - XAI Fundamentals](Lecture19/readme.md)**  
+  XAI motivation, Feature Importance, LIME, interpretability
 
-## 🛠️ Key Skills Acquired
-
-- **Data Processing & Visualization**: Transform raw data into insights through effective visualization and exploratory data analysis
-- **Classical ML**: Master supervised learning algorithms, evaluation metrics, and model selection
-- **Deep Learning**: Build and train neural networks for various tasks including computer vision and NLP
-- **Advanced Architectures**: Implement state-of-the-art models including Transformers, GANs, and Diffusion models
-- **Unsupervised Learning**: Extract patterns and structure from unlabeled data
-- **Model Interpretation**: Explain and interpret complex model predictions for stakeholders
-- **Practical Implementation**: Deploy models considering computational resources and scalability
+- **[Lecture 20: Model Explainability - SHAP and Deep Learning XAI](Lecture20/readme.md)**  
+  Shapley Values, SHAP, GradCAM, Integrated Gradients, Attention Visualization
 
 ---
 
-## 📖 Prerequisites
+## 💡 How to Use
 
-- Python programming proficiency
-- Basic linear algebra and calculus
-- Probability and statistics fundamentals
-- Familiarity with NumPy, Pandas, and Matplotlib
-
----
-
-## 💻 Tools and Technologies
-
-- **Languages**: Python
-- **Deep Learning Frameworks**: PyTorch, TensorFlow/Keras
-- **Data Processing**: NumPy, Pandas, Scikit-learn
-- **Visualization**: Matplotlib, Seaborn, Plotly
-- **Cloud Platforms**: AWS, Google Cloud, Azure
-- **Version Control**: Git/GitHub
+1. **Quick Review**: Quickly grasp the core concepts of each lecture
+2. **Lecture Selection**: Find and study topics of interest in depth
+3. **Pre-study**: Preview main content before lectures
+4. **Checklist**: Check learning objectives and assess understanding
 
 ---
 
-## 🎓 Course Outcomes
 
-Upon completing this course, students will be able to:
+## 🎓 Recommended Learning Path
 
-1. Design and implement end-to-end machine learning pipelines
-2. Select appropriate models and architectures for diverse problem domains
-3. Train, optimize, and evaluate deep learning models effectively
-4. Work with multiple data modalities (tabular, image, text, time-series)
-5. Build and deploy generative AI applications
-6. Interpret and explain model predictions to non-technical stakeholders
-7. Stay current with state-of-the-art developments in machine learning
+### Beginner → Intermediate
+1. Lectures 1-2 (Foundation Infrastructure)
+2. Lectures 3-5 (Mathematical Foundations and Basic Models)
+3. Lecture 6 (Model Evaluation)
+
+### Intermediate → Advanced
+4. Lectures 7-9 (Advanced Training Techniques)
+5. Lectures 10-12 (Data Modalities and Sequences)
+6. Lectures 13-14 (Transformers and LLMs)
+
+### Advanced Topics
+7. Lectures 15-16 (Generative Models)
+8. Lectures 17-18 (Unsupervised Learning)
+9. Lectures 19-20 (Model Explainability)
 
 ---
 
-**Course Materials**: All lecture slides, code examples, and assignments are available in the respective lecture folders.  
-**Questions**: Contact the instructor via email for course-related inquiries.
+## 📞 Contact
+
+**Instructor:** Ho-min Park  
+**Email:** homin.park@ghent.ac.kr | powersimmani@gmail.com  
+**Institution:** Ghent University
+
+---
+
+**Note:** These documents are summaries of the original lecture materials. For detailed content, code examples, and practice materials, please refer to the original files.
+
+---
+
+## 📦 Available Versions
+
+- **Korean Version**: `Lecture##_Summary.md` files
+- **English Version**: `Lecture##/readme.md` files (this version)
+- **Index Files**: 
+  - Korean: `LECTURES_INDEX.md`
+  - English: `LECTURES_INDEX_EN.md` (this file)
