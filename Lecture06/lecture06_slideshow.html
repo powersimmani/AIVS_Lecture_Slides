@@ -175,6 +175,85 @@
             max-width: 600px;
             z-index: 1000;
         }
+        
+        /* Slide list (menu) */
+        .slide-list {
+            position: fixed;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            max-height: 80vh;
+            overflow-y: auto;
+            display: none;
+            z-index: 999;
+        }
+        
+        .slide-list.active {
+            display: block;
+        }
+        
+        .slide-list-item {
+            color: white;
+            padding: 8px 12px;
+            margin: 5px 0;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+        
+        .slide-list-item:hover {
+            background: rgba(30, 100, 200, 0.5);
+        }
+        
+        .slide-list-item.current {
+            background: #1E64C8;
+            font-weight: 600;
+        }
+        
+        /* Top buttons */
+        .menu-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-btn:hover {
+            background: #1E64C8;
+        }
+        
+        .fullscreen-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .fullscreen-btn:hover {
+            background: #1E64C8;
+        }
     </style>
 </head>
 <body>
@@ -190,6 +269,13 @@
     
     <!-- Slide title -->
     <div class="slide-title" id="slideTitle">Loading...</div>
+    
+    <!-- Menu and fullscreen buttons -->
+    <button class="menu-btn" onclick="toggleMenu()">☰ Menu</button>
+    <button class="fullscreen-btn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
+    
+    <!-- Slide list -->
+    <div class="slide-list" id="slideList"></div>
     
     <!-- Slideshow container -->
     <div class="slideshow-container">
@@ -249,7 +335,7 @@
             { title: "Leave-One-Out CV", file: "Lecture06_28_Leave-One-Out CV.html", part: "4/4" },
             { title: "Bootstrapping", file: "Lecture06_29_Bootstrapping.html", part: "4/4" },
             { title: "Hyperparameter Tuning", file: "Lecture06_30_Hyperparameter Tuning.html", part: "4/4" },
-            { title: "Model Selection Strategy", file: "Lecture06_31_Model Selection Strategy.html", part: "4/4" },
+            { title: "Model Selection Strategy", file: "Lecture06_31_Model_Selection_Strategy.html", part: "4/4" },
             
             // Ending
             { title: "Thank You", file: "Lecture06_32_Thank you.html", part: null }
@@ -319,6 +405,41 @@
             }
         }
         
+        // 특정 슬라이드로 이동
+        function goToSlide(index) {
+            if (index >= 0 && index < slides.length) {
+                currentSlideIndex = index;
+                showSlide(currentSlideIndex);
+            }
+        }
+        
+        // 슬라이드 목록 생성
+        function buildSlideList() {
+            const slideList = document.getElementById('slideList');
+            slideList.innerHTML = '';
+            slides.forEach((slide, index) => {
+                const item = document.createElement('div');
+                item.className = 'slide-list-item';
+                item.textContent = `${index + 1}. ${slide.title}`;
+                item.onclick = () => goToSlide(index);
+                slideList.appendChild(item);
+            });
+        }
+        
+        // 메뉴 토글
+        function toggleMenu() {
+            document.getElementById('slideList').classList.toggle('active');
+        }
+        
+        // 전체화면 토글
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+        
         // 키보드 내비게이션
         document.addEventListener('keydown', (event) => {
             switch(event.key) {
@@ -343,6 +464,13 @@
             }
         });
         
+        // ESC로 메뉴 닫기
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.getElementById('slideList').classList.remove('active');
+            }
+        });
+        
         // 페이지 로드 시 슬라이드 초기화
         window.addEventListener('load', () => {
             const hashIndex = parseInt(window.location.hash.replace('#',''), 10);
@@ -350,6 +478,7 @@
                 currentSlideIndex = hashIndex - 1;
             }
             initializeSlides();
+            buildSlideList();
             showSlide(currentSlideIndex);
         });
         
