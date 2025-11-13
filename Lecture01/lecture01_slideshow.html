@@ -198,11 +198,12 @@
     
     <!-- Navigation controls -->
     <div class="nav-controls">
-        <button class="nav-button" id="prevBtn" onclick="changeSlide(-1)">◄</button>
+        <button class="nav-button" id="homeBtn" onclick="window.location.href='../index.html'" aria-label="Back to index" title="Back to index">⌂</button>
+        <button class="nav-button" id="prevBtn" onclick="changeSlide(-1)" aria-label="Previous slide" title="Previous slide">◄</button>
         <div class="slide-counter">
             <span id="currentSlide">1</span> / <span id="totalSlides">32</span>
         </div>
-        <button class="nav-button" id="nextBtn" onclick="changeSlide(1)">►</button>
+        <button class="nav-button" id="nextBtn" onclick="changeSlide(1)" aria-label="Next slide" title="Next slide">►</button>
     </div>
 
     <script>
@@ -262,13 +263,11 @@
                 
                 const iframe = document.createElement('iframe');
                 iframe.src = encodeURI(slide.file);
+                iframe.loading = 'lazy';
                 
                 slideDiv.appendChild(iframe);
                 container.appendChild(slideDiv);
             });
-            
-            // 첫 번째 슬라이드 표시
-            showSlide(0);
         }
         
         function showSlide(index) {
@@ -299,6 +298,9 @@
             // 진행 바 업데이트
             const progress = ((index + 1) / slides.length) * 100;
             document.getElementById('progressFill').style.width = progress + '%';
+            
+            // URL 해시 업데이트 (1-base index)
+            window.location.hash = (index + 1).toString();
             
             // 버튼 상태 업데이트
             document.getElementById('prevBtn').disabled = index === 0;
@@ -340,7 +342,12 @@
         
         // 페이지 로드 시 슬라이드 초기화
         window.addEventListener('load', () => {
+            const hashIndex = parseInt(window.location.hash.replace('#',''), 10);
+            if (!isNaN(hashIndex) && hashIndex >= 1 && hashIndex <= slides.length) {
+                currentSlideIndex = hashIndex - 1;
+            }
             initializeSlides();
+            showSlide(currentSlideIndex);
         });
         
         // 스페이스바로 스크롤 방지

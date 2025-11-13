@@ -192,9 +192,10 @@
     </div>
     
     <div class="controls">
-        <button class="control-btn" onclick="previousSlide()" id="prevBtn">◄</button>
+        <button class="control-btn" onclick="window.location.href='../index.html'" id="homeBtn" aria-label="Back to index" title="Back to index">⌂</button>
+        <button class="control-btn" onclick="previousSlide()" id="prevBtn" aria-label="Previous slide" title="Previous slide">◄</button>
         <span class="slide-counter" id="slideCounter">1 / 33</span>
-        <button class="control-btn" onclick="nextSlide()" id="nextBtn">►</button>
+        <button class="control-btn" onclick="nextSlide()" id="nextBtn" aria-label="Next slide" title="Next slide">►</button>
     </div>
 
     <script>
@@ -245,6 +246,7 @@
             slides.forEach((slide, index) => {
                 const iframe = document.createElement('iframe');
                 iframe.src = slide.file;
+                iframe.loading = 'lazy';
                 iframe.className = 'slide-frame';
                 if (index === 0) iframe.classList.add('active');
                 iframe.id = `slide-${index}`;
@@ -279,6 +281,8 @@
             updateSlideCounter();
             updateProgressBar();
             updateButtons();
+            // URL hash (1-based)
+            window.location.hash = (currentSlide + 1).toString();
         }
 
         function nextSlide() {
@@ -342,8 +346,15 @@
             }
         });
 
-        // Initialize slideshow on page load
-        window.addEventListener('load', initSlideshow);
+        // Initialize slideshow on page load with hash support
+        window.addEventListener('load', () => {
+            const hashIndex = parseInt(window.location.hash.replace('#',''), 10);
+            if (!isNaN(hashIndex) && hashIndex >= 1 && hashIndex <= totalSlides) {
+                currentSlide = hashIndex - 1;
+            }
+            initSlideshow();
+            showSlide(currentSlide);
+        });
     </script>
 </body>
 </html>
