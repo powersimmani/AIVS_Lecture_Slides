@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>1D Data - Histogram & KDE</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {
+            delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false}
+            ]
+        });"></script>
     <style>
         * {
             margin: 0;
@@ -370,13 +381,11 @@
         }
         
         .formula-text {
-            font-family: 'Courier New', monospace;
-            font-size: 16px;
-            font-weight: bold;
+            font-size: 18px;
             color: #6A1B9A;
             text-align: center;
-            margin-bottom: 10px;
-            padding: 8px;
+            margin-bottom: 12px;
+            padding: 10px;
             background: #F3E5F5;
             border-radius: 4px;
         }
@@ -384,18 +393,22 @@
         .formula-explanation {
             display: flex;
             flex-direction: column;
-            gap: 4px;
-            font-size: 13px;
+            gap: 6px;
+            font-size: 14px;
             color: #555;
         }
         
-        .formula-explanation span {
-            padding: 3px 0;
+        .formula-explanation .var-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 0;
         }
         
-        .formula-explanation strong {
+        .formula-explanation .var-symbol {
             color: #6A1B9A;
-            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            min-width: 30px;
         }
         
         @keyframes slideIn {
@@ -571,11 +584,26 @@
                         </div>
                     </div>
                     <div class="kde-formula-box">
-                        <div class="formula-text">KDE(x) = (1/nh) × Σ K((x - xᵢ)/h)</div>
+                        <div class="formula-text">
+                            $$\hat{f}(x) = \frac{1}{nh} \sum_{i=1}^{n} K\left(\frac{x - x_i}{h}\right)$$
+                        </div>
                         <div class="formula-explanation">
-                            <span><strong>n</strong> = number of data points</span>
-                            <span><strong>h</strong> = bandwidth (smoothing parameter)</span>
-                            <span><strong>K</strong> = kernel function (usually Gaussian)</span>
+                            <div class="var-item">
+                                <span class="var-symbol">$n$</span>
+                                <span>= number of data points</span>
+                            </div>
+                            <div class="var-item">
+                                <span class="var-symbol">$h$</span>
+                                <span>= bandwidth (smoothing parameter)</span>
+                            </div>
+                            <div class="var-item">
+                                <span class="var-symbol">$K$</span>
+                                <span>= kernel function (usually Gaussian)</span>
+                            </div>
+                            <div class="var-item">
+                                <span class="var-symbol">$x_i$</span>
+                                <span>= individual data points</span>
+                            </div>
                         </div>
                     </div>
                 </div>
