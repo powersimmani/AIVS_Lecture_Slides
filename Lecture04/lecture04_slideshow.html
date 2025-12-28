@@ -313,44 +313,44 @@
     <script>
         let currentSlideIndex = 0;
         
-        // 전체 슬라이드 순서 (PDF 순서대로)
+        // 전체 슬라이드 순서 (정확한 파일명 사용)
         const slides = [
             { title: "Title", file: "Lecture04_01_Lecture_4_From_Linear_to_Logistic_Regression.html", part: null },
             { title: "Lecture Contents", file: "Lecture04_02_Lecture_Contents.html", part: null },
             
             // Part 1 - Advanced Linear Regression
             { title: "Advanced Linear Regression", file: "Lecture04_03_Part_1_3_Advanced_Linear_Regression.html", part: "1/3" },
-            { title: "Review and Connection to Previous Lecture", file: "Lecture04_04_Review_and_Connection_to_Previous_Lecture.html", part: "1/3" },
-            { title: "Revisiting Linear Regression Assumptions", file: "Lecture04_05_Revisiting_Linear_Regression_Assumptions.html", part: "1/3" },
-            { title: "Polynomial Regression and Basis Expansion", file: "Lecture04_06_Polynomial_Regression_and_Basis_Expansion.html", part: "1/3" },
-            { title: "Ridge Regression (L2 Regularization)", file: "Lecture04_07_Ridge_Regression__L2_Regularization_.html", part: "1/3" },
-            { title: "Lasso Regression (L1 Regularization)", file: "Lecture04_08_Lasso_Regression__L1_Regularization_.html", part: "1/3" },
-            { title: "Elastic Net", file: "Lecture04_09_Elastic_Net.html", part: "1/3" },
-            { title: "Feature Selection and Importance", file: "Lecture04_10_Feature_Selection_and_Importance.html", part: "1/3" },
-            { title: "Limitations of Linear Regression", file: "Lecture04_11_Limitations_of_Linear_Regression.html", part: "1/3" },
+            { title: "Review and Connection to Previous Lecture", file: "Lecture04_04_Review and Connection to Previous Lecture.html", part: "1/3" },
+            { title: "Revisiting Linear Regression Assumptions", file: "Lecture04_05_Revisiting Linear Regression Assumptions.html", part: "1/3" },
+            { title: "Polynomial Regression and Basis Expansion", file: "Lecture04_06_Polynomial Regression and Basis Expansion.html", part: "1/3" },
+            { title: "Ridge Regression (L2 Regularization)", file: "Lecture04_07_Ridge Regression (L2 Regularization)", part: "1/3" },
+            { title: "Lasso Regression (L1 Regularization)", file: "Lecture04_08_Lasso Regression (L1 Regularization)", part: "1/3" },
+            { title: "Elastic Net", file: "Lecture04_09_Elastic Net.html", part: "1/3" },
+            { title: "Feature Selection and Importance", file: "Lecture04_10_Feature Selection and Importance.html", part: "1/3" },
+            { title: "Limitations of Linear Regression", file: "Lecture04_11_Limitations of Linear Regression.html", part: "1/3" },
             
             // Part 2 - Transition to Classification
             { title: "Transition to Classification", file: "Lecture04_12_Part_2_3_Transition_to_Classification.html", part: "2/3" },
-            { title: "Regression vs Classification Problems", file: "Lecture04_13_Regression_vs_Classification_Problems.html", part: "2/3" },
-            { title: "Linear Classifier Concepts", file: "Lecture04_14_Linear_Classifier_Concepts.html", part: "2/3" },
-            { title: "Perceptron Algorithm", file: "Lecture04_15_Perceptron_Algorithm.html", part: "2/3" },
-            { title: "Decision Boundaries and Linear Separability", file: "Lecture04_16_Decision_Boundaries_and_Linear_Separability.html", part: "2/3" },
-            { title: "Why Linear Regression Fails for Classification", file: "Lecture04_17_Why_Linear_Regression_Fails_for_Classification.html", part: "2/3" },
-            { title: "Odds and Log Odds", file: "Lecture04_18_Odds_and_Log_Odds.html", part: "2/3" },
-            { title: "Introduction to Sigmoid Function", file: "Lecture04_19_Introduction_to_Sigmoid_Function.html", part: "2/3" },
-            { title: "Properties of Logistic Function", file: "Lecture04_20_Properties_of_Logistic_Function.html", part: "2/3" },
+            { title: "Regression vs Classification Problems", file: "Lecture04_13_Regression vs Classification Problems.html", part: "2/3" },
+            { title: "Linear Classifier Concepts", file: "Lecture04_14_Linear Classifier Concepts.html", part: "2/3" },
+            { title: "Perceptron Algorithm", file: "Lecture04_15_Perceptron Algorithm.html", part: "2/3" },
+            { title: "Decision Boundaries and Linear Separability", file: "Lecture04_16_Decision Boundaries and Linear Separability.html", part: "2/3" },
+            { title: "Why Linear Regression Fails for Classification", file: "Lecture04_17_Why Linear Regression Fails for Classification.html", part: "2/3" },
+            { title: "Odds and Log Odds", file: "Lecture04_18_Odds and Log Odds.html", part: "2/3" },
+            { title: "Introduction to Sigmoid Function", file: "Lecture04_19_Introduction to Sigmoid Function.html", part: "2/3" },
+            { title: "Properties of Logistic Function", file: "Lecture04_20_Properties of Logistic Function.html", part: "2/3" },
             
             // Part 3 - Completing Logistic Regression
             { title: "Completing Logistic Regression", file: "Lecture04_21_Part_3_3_Completing_Logistic_Regression.html", part: "3/3" },
             { title: "Defining the Logistic Regression Model", file: "Lecture04_22_Defining_the_Logistic_Regression_Model.html", part: "3/3" },
-            { title: "Maximum Likelihood Estimation (MLE)", file: "Lecture04_23_Maximum_Likelihood_Estimation__MLE_.html", part: "3/3" },
-            { title: "Binary Cross-Entropy Loss", file: "Lecture04_24_Binary_Cross-Entropy_Loss.html", part: "3/3" },
-            { title: "Applying Gradient Descent", file: "Lecture04_25_Applying_Gradient_Descent.html", part: "3/3" },
-            { title: "Multiclass - One-vs-Rest Strategy", file: "Lecture04_26_Multiclass_-_One-vs-Rest_Strategy.html", part: "3/3" },
-            { title: "Softmax Regression", file: "Lecture04_27_Softmax_Regression.html", part: "3/3" },
-            { title: "Categorical Cross-Entropy", file: "Lecture04_28_Categorical_Cross-Entropy.html", part: "3/3" },
-            { title: "Regularized Logistic Regression", file: "Lecture04_29_Regularized_Logistic_Regression.html", part: "3/3" },
-            { title: "Real-World Cases and Implementation", file: "Lecture04_30_Real-World_Cases_and_Implementation.html", part: "3/3" },
+            { title: "Maximum Likelihood Estimation (MLE)", file: "Lecture04_23_Maximum Likelihood Estimation (MLE).html", part: "3/3" },
+            { title: "Binary Cross-Entropy Loss", file: "Lecture04_24_Binary Cross-Entropy Loss.html", part: "3/3" },
+            { title: "Applying Gradient Descent", file: "Lecture04_25_Applying Gradient Descent", part: "3/3" },
+            { title: "Multiclass - One-vs-Rest Strategy", file: "Lecture04_26_Multiclass - One-vs-Rest Strategy.html", part: "3/3" },
+            { title: "Softmax Regression", file: "Lecture04_27_Softmax Regression.html", part: "3/3" },
+            { title: "Categorical Cross-Entropy", file: "Lecture04_28_Categorical Cross-Entropy.html", part: "3/3" },
+            { title: "Regularized Logistic Regression", file: "Lecture04_29_Regularized Logistic Regression.html", part: "3/3" },
+            { title: "Real-World Cases and Implementation", file: "Lecture04_30_Real-World Cases and Implementation.html", part: "3/3" },
             
             // Ending
             { title: "Thank You", file: "Lecture04_31_Thank_you.html", part: null }
@@ -372,9 +372,6 @@
                 slideDiv.appendChild(iframe);
                 container.appendChild(slideDiv);
             });
-            
-            // 첫 번째 슬라이드 표시
-            // 초기 해시값이 있을 경우 해당 슬라이드로 이동은 로드 이벤트에서 처리
         }
         
         function showSlide(index) {
