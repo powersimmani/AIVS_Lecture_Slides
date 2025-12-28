@@ -16,9 +16,16 @@
             background: #ffffff;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             min-height: 100vh;
             padding: 20px;
+        }
+        
+        .page-wrapper {
+            width: 960px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
         }
         
         .container {
@@ -291,93 +298,283 @@
             font-size: 16px;
             line-height: 1.4;
         }
+        
+        /* Intuitive Explanation Section */
+        .explanation-section {
+            width: 960px;
+            background: #ffffff;
+            border: 2px solid #1E64C8;
+            border-radius: 12px;
+            padding: 30px 40px;
+        }
+        
+        .explanation-header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e8f0fe;
+        }
+        
+        .explanation-header h2 {
+            font-size: 22px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .explanation-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+        
+        .explanation-card {
+            background: #f8fafb;
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 4px solid #1E64C8;
+        }
+        
+        .explanation-card h3 {
+            font-size: 17px;
+            color: #1E64C8;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .explanation-card .icon {
+            font-size: 20px;
+        }
+        
+        .explanation-card p {
+            font-size: 15px;
+            color: #444;
+            line-height: 1.7;
+            margin-bottom: 12px;
+        }
+        
+        .example-box {
+            background: white;
+            border: 1px solid #d0e0f0;
+            border-radius: 6px;
+            padding: 12px 15px;
+            margin-top: 10px;
+        }
+        
+        .example-box .label {
+            font-size: 13px;
+            color: #1E64C8;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        
+        .example-box .content {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        .full-width-card {
+            grid-column: 1 / -1;
+        }
+        
+        .key-insight {
+            background: linear-gradient(135deg, #1E64C8 0%, #3d7dd8 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 20px 25px;
+            margin-top: 20px;
+        }
+        
+        .key-insight h3 {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .key-insight p {
+            font-size: 15px;
+            line-height: 1.7;
+            opacity: 0.95;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="header-title">Conditional Probability and Bayes' Theorem</div>
-        </div>
-        
-        <div class="main-grid">
-            <div class="left-panel">
-                <div class="concept-box">
-                    <div class="concept-title">Conditional Probability</div>
-                    <div class="formula">P(A|B) = P(A ∩ B) / P(B)</div>
-                    <div class="concept-desc">Probability of A given B has occurred</div>
-                </div>
-                
-                <div class="concept-box">
-                    <div class="concept-title">Multiplication Rule</div>
-                    <div class="formula">P(A ∩ B) = P(A|B)P(B)</div>
-                </div>
-                
-                <div class="venn-diagram">
-                    <div class="venn-title">Visual Representation</div>
-                    <div class="circles-container">
-                        <div class="circle circle-a">A</div>
-                        <div class="circle circle-b">B</div>
-                        <div class="intersection">A∩B</div>
-                    </div>
-                </div>
-                
-                <div class="independence-box">
-                    <div class="independence-title">Independence: X ⊥ Y</div>
-                    <div class="independence-formula">P(X|Y) = P(X)</div>
-                </div>
+    <div class="page-wrapper">
+        <!-- Original Slide -->
+        <div class="container">
+            <div class="header">
+                <div class="header-title">Conditional Probability and Bayes' Theorem</div>
             </div>
             
-            <div class="right-panel">
-                <div class="bayes-flow">
-                    <div class="flow-title">Bayes' Theorem</div>
-                    <div class="flow-formula">P(A|B) = P(B|A)P(A) / P(B)</div>
+            <div class="main-grid">
+                <div class="left-panel">
+                    <div class="concept-box">
+                        <div class="concept-title">Conditional Probability</div>
+                        <div class="formula">P(A|B) = P(A ∩ B) / P(B)</div>
+                        <div class="concept-desc">Probability of A given B has occurred</div>
+                    </div>
                     
-                    <div class="flow-steps">
-                        <div class="flow-step">
-                            <div class="step-box">
-                                <div class="step-label">Prior</div>
-                                <div class="step-formula">P(A)</div>
+                    <div class="concept-box">
+                        <div class="concept-title">Multiplication Rule</div>
+                        <div class="formula">P(A ∩ B) = P(A|B)P(B)</div>
+                    </div>
+                    
+                    <div class="venn-diagram">
+                        <div class="venn-title">Visual Representation</div>
+                        <div class="circles-container">
+                            <div class="circle circle-a">A</div>
+                            <div class="circle circle-b">B</div>
+                            <div class="intersection">A∩B</div>
+                        </div>
+                    </div>
+                    
+                    <div class="independence-box">
+                        <div class="independence-title">Independence: X ⊥ Y</div>
+                        <div class="independence-formula">P(X|Y) = P(X)</div>
+                    </div>
+                </div>
+                
+                <div class="right-panel">
+                    <div class="bayes-flow">
+                        <div class="flow-title">Bayes' Theorem</div>
+                        <div class="flow-formula">P(A|B) = P(B|A)P(A) / P(B)</div>
+                        
+                        <div class="flow-steps">
+                            <div class="flow-step">
+                                <div class="step-box">
+                                    <div class="step-label">Prior</div>
+                                    <div class="step-formula">P(A)</div>
+                                </div>
+                            </div>
+                            
+                            <div class="arrow-flow">→</div>
+                            
+                            <div class="flow-step">
+                                <div class="step-box">
+                                    <div class="step-label">Likelihood</div>
+                                    <div class="step-formula">P(B|A)</div>
+                                </div>
+                            </div>
+                            
+                            <div class="arrow-flow">→</div>
+                            
+                            <div class="flow-step">
+                                <div class="step-box">
+                                    <div class="step-label">Posterior</div>
+                                    <div class="step-formula">P(A|B)</div>
+                                </div>
                             </div>
                         </div>
-                        
-                        <div class="arrow-flow">→</div>
-                        
-                        <div class="flow-step">
-                            <div class="step-box">
-                                <div class="step-label">Likelihood</div>
-                                <div class="step-formula">P(B|A)</div>
-                            </div>
+                    </div>
+                    
+                    <div class="applications-box">
+                        <div class="app-title">Applications</div>
+                        <div class="app-item">
+                            Updating beliefs with new data
                         </div>
-                        
-                        <div class="arrow-flow">→</div>
-                        
-                        <div class="flow-step">
-                            <div class="step-box">
-                                <div class="step-label">Posterior</div>
-                                <div class="step-formula">P(A|B)</div>
-                            </div>
+                        <div class="app-item">
+                            Medical diagnosis and testing
+                        </div>
+                        <div class="app-item">
+                            Spam filtering and classification
+                        </div>
+                    </div>
+                    
+                    <div class="ml-application">
+                        <div class="ml-title">ML Foundation</div>
+                        <div class="ml-content">
+                            Bayesian regression and inference
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Intuitive Explanation Section -->
+        <div class="explanation-section">
+            <div class="explanation-header">
+                <h2>🎯 Intuitive Understanding</h2>
+            </div>
+            
+            <div class="explanation-grid">
+                <div class="explanation-card">
+                    <h3><span class="icon">🎲</span> Conditional Probability</h3>
+                    <p>
+                        Think of it as "zooming in" on a smaller world. Instead of looking at all possibilities, 
+                        we only consider the cases where B already happened. P(A|B) asks: <em>"Within the world 
+                        where B is true, how often does A also happen?"</em>
+                    </p>
+                    <div class="example-box">
+                        <div class="label">💡 Real-world Example</div>
+                        <div class="content">
+                            What's the probability it's raining <strong>given that</strong> the ground is wet? 
+                            We ignore all dry-ground scenarios and only look at wet-ground cases.
                         </div>
                     </div>
                 </div>
                 
-                <div class="applications-box">
-                    <div class="app-title">Applications</div>
-                    <div class="app-item">
-                        Updating beliefs with new data
-                    </div>
-                    <div class="app-item">
-                        Medical diagnosis and testing
-                    </div>
-                    <div class="app-item">
-                        Spam filtering and classification
+                <div class="explanation-card">
+                    <h3><span class="icon">🔗</span> Multiplication Rule</h3>
+                    <p>
+                        This tells us how to find the probability of two things happening together. 
+                        It's like asking: "What's the chance of B happening, <em>and then</em> A also happening 
+                        given that B occurred?"
+                    </p>
+                    <div class="example-box">
+                        <div class="label">💡 Real-world Example</div>
+                        <div class="content">
+                            Probability of drawing two aces in a row = P(first ace) × P(second ace | first was ace)
+                        </div>
                     </div>
                 </div>
                 
-                <div class="ml-application">
-                    <div class="ml-title">ML Foundation</div>
-                    <div class="ml-content">
-                        Bayesian regression and inference
+                <div class="explanation-card">
+                    <h3><span class="icon">🔄</span> Bayes' Theorem</h3>
+                    <p>
+                        Bayes lets you <strong>flip the direction</strong> of conditional probability. 
+                        If you know P(symptom | disease), Bayes helps you find P(disease | symptom) — 
+                        which is usually what we actually care about!
+                    </p>
+                    <div class="example-box">
+                        <div class="label">💡 The Three Steps</div>
+                        <div class="content">
+                            <strong>Prior:</strong> Your initial belief before seeing evidence<br>
+                            <strong>Likelihood:</strong> How well the evidence fits your hypothesis<br>
+                            <strong>Posterior:</strong> Your updated belief after seeing evidence
+                        </div>
                     </div>
+                </div>
+                
+                <div class="explanation-card">
+                    <h3><span class="icon">🔓</span> Independence</h3>
+                    <p>
+                        Two events are independent when knowing one tells you <em>nothing</em> about the other. 
+                        Learning that B happened doesn't change your belief about A at all — 
+                        the probability stays exactly the same.
+                    </p>
+                    <div class="example-box">
+                        <div class="label">💡 Real-world Example</div>
+                        <div class="content">
+                            A coin flip result is independent of previous flips. Getting heads 5 times 
+                            doesn't change the probability of the next flip being heads (still 50%).
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="key-insight full-width-card">
+                    <h3>💎 The Big Picture</h3>
+                    <p>
+                        Bayes' Theorem is fundamentally about <strong>learning from evidence</strong>. 
+                        You start with a belief (prior), observe new information (likelihood), and update your belief (posterior). 
+                        This is exactly how machine learning works — models start with initial parameters and update them as they see more data. 
+                        It's also how rational thinking works: we should update our beliefs proportionally to the strength of new evidence.
+                    </p>
                 </div>
             </div>
         </div>
