@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture 4 - From Linear to Logistic Regression</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #1a1a1a;
+            overflow: hidden;
+        }
+        
+        .slideshow-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .slide {
+            display: none;
+            width: 100vw;
+            height: 100vh;
+            background: white;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        .slide.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        /* Navigation controls */
+        .nav-controls {
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 6px 15px;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+        }
+        
+        .nav-button {
+            background: #1E64C8;
+            color: white;
+            border: none;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-button:hover {
+            background: #2874d8;
+            transform: scale(1.1);
+        }
+        
+        .nav-button:active {
+            transform: scale(0.95);
+        }
+        
+        .nav-button:disabled {
+            background: #555;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+        
+        .slide-counter {
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            min-width: 60px;
+            text-align: center;
+        }
+        
+        /* Progress bar */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #1E64C8;
+            transition: width 0.3s ease;
+        }
+        
+        /* Keyboard hint */
+        .keyboard-hint {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
+            animation: fadeOut 3s ease-in-out forwards;
+            z-index: 1000;
+        }
+        
+        @keyframes fadeOut {
+            0%, 70% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                pointer-events: none;
+            }
+        }
+        
+        .key {
+            display: inline-block;
+            background: #333;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin: 0 4px;
+            font-family: monospace;
+            border: 1px solid #555;
+        }
+        
+        /* Slide title overlay */
+        .slide-title {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(30, 100, 200, 0.9);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+            max-width: 600px;
+            z-index: 1000;
+        }
+        
+        /* Slide list (menu) */
+        .slide-list {
+            position: fixed;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            max-height: 80vh;
+            overflow-y: auto;
+            display: none;
+            z-index: 999;
+        }
+        
+        .slide-list.active {
+            display: block;
+        }
+        
+        .slide-list-item {
+            color: white;
+            padding: 8px 12px;
+            margin: 5px 0;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+        
+        .slide-list-item:hover {
+            background: rgba(30, 100, 200, 0.5);
+        }
+        
+        .slide-list-item.current {
+            background: #1E64C8;
+            font-weight: bold;
+        }
+        
+        .slide-list-item.part-header {
+            color: #ffc107;
+            font-weight: bold;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            margin-top: 10px;
+            padding-top: 15px;
+        }
+        
+        /* Menu toggle button */
+        .menu-toggle {
+            position: fixed;
+            bottom: 15px;
+            left: 15px;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-toggle:hover {
+            background: rgba(30, 100, 200, 0.8);
+        }
+        
+        /* Fullscreen button */
+        .fullscreen-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .fullscreen-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Scrollbar styling for slide list */
+        .slide-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .slide-list::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+        
+        .slide-list::-webkit-scrollbar-thumb {
+            background: rgba(30, 100, 200, 0.8);
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Progress bar -->
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+    
+    <!-- Slide title -->
+    <div class="slide-title" id="slideTitle">Loading...</div>
+    
+    <!-- Keyboard hint -->
+    <div class="keyboard-hint">
+        Use <span class="key">←</span> <span class="key">→</span> or <span class="key">Space</span> to navigate
+    </div>
+    
+    <!-- Slide list menu -->
+    <div class="slide-list" id="slideList"></div>
+    
+    <!-- Menu toggle button -->
+    <button class="menu-toggle" onclick="toggleMenu()">☰ Menu</button>
+    
+    <!-- Slideshow container -->
+    <div class="slideshow-container" id="slideContainer">
+        <!-- Slides will be inserted here dynamically -->
+    </div>
+    
+    <!-- Navigation controls -->
+    <div class="nav-controls">
+        <button class="nav-button" id="prevBtn" onclick="changeSlide(-1)">◀</button>
+        <span class="slide-counter">
+            <span id="currentSlide">1</span> / <span id="totalSlides">31</span>
+        </span>
+        <button class="nav-button" id="nextBtn" onclick="changeSlide(1)">▶</button>
+        <button class="fullscreen-btn" onclick="toggleFullscreen()">⛶</button>
+    </div>
+
+    <script>
+        let currentSlideIndex = 0;
+        
+        // 전체 슬라이드 순서 (PDF 순서대로)
+        const slides = [
+            { title: "Title", file: "Lecture04_01_Lecture_4_From_Linear_to_Logistic_Regression.html", part: null },
+            { title: "Lecture Contents", file: "Lecture04_02_Lecture_Contents.html", part: null },
+            
+            // Part 1 - Advanced Linear Regression
+            { title: "Advanced Linear Regression", file: "Lecture04_03_Part_1_3_Advanced_Linear_Regression.html", part: "1/3" },
+            { title: "Review and Connection to Previous Lecture", file: "Lecture04_04_Review_and_Connection_to_Previous_Lecture.html", part: "1/3" },
+            { title: "Revisiting Linear Regression Assumptions", file: "Lecture04_05_Revisiting_Linear_Regression_Assumptions.html", part: "1/3" },
+            { title: "Polynomial Regression and Basis Expansion", file: "Lecture04_06_Polynomial_Regression_and_Basis_Expansion.html", part: "1/3" },
+            { title: "Ridge Regression (L2 Regularization)", file: "Lecture04_07_Ridge_Regression__L2_Regularization_.html", part: "1/3" },
+            { title: "Lasso Regression (L1 Regularization)", file: "Lecture04_08_Lasso_Regression__L1_Regularization_.html", part: "1/3" },
+            { title: "Elastic Net", file: "Lecture04_09_Elastic_Net.html", part: "1/3" },
+            { title: "Feature Selection and Importance", file: "Lecture04_10_Feature_Selection_and_Importance.html", part: "1/3" },
+            { title: "Limitations of Linear Regression", file: "Lecture04_11_Limitations_of_Linear_Regression.html", part: "1/3" },
+            
+            // Part 2 - Transition to Classification
+            { title: "Transition to Classification", file: "Lecture04_12_Part_2_3_Transition_to_Classification.html", part: "2/3" },
+            { title: "Regression vs Classification Problems", file: "Lecture04_13_Regression_vs_Classification_Problems.html", part: "2/3" },
+            { title: "Linear Classifier Concepts", file: "Lecture04_14_Linear_Classifier_Concepts.html", part: "2/3" },
+            { title: "Perceptron Algorithm", file: "Lecture04_15_Perceptron_Algorithm.html", part: "2/3" },
+            { title: "Decision Boundaries and Linear Separability", file: "Lecture04_16_Decision_Boundaries_and_Linear_Separability.html", part: "2/3" },
+            { title: "Why Linear Regression Fails for Classification", file: "Lecture04_17_Why_Linear_Regression_Fails_for_Classification.html", part: "2/3" },
+            { title: "Odds and Log Odds", file: "Lecture04_18_Odds_and_Log_Odds.html", part: "2/3" },
+            { title: "Introduction to Sigmoid Function", file: "Lecture04_19_Introduction_to_Sigmoid_Function.html", part: "2/3" },
+            { title: "Properties of Logistic Function", file: "Lecture04_20_Properties_of_Logistic_Function.html", part: "2/3" },
+            
+            // Part 3 - Completing Logistic Regression
+            { title: "Completing Logistic Regression", file: "Lecture04_21_Part_3_3_Completing_Logistic_Regression.html", part: "3/3" },
+            { title: "Defining the Logistic Regression Model", file: "Lecture04_22_Defining_the_Logistic_Regression_Model.html", part: "3/3" },
+            { title: "Maximum Likelihood Estimation (MLE)", file: "Lecture04_23_Maximum_Likelihood_Estimation__MLE_.html", part: "3/3" },
+            { title: "Binary Cross-Entropy Loss", file: "Lecture04_24_Binary_Cross-Entropy_Loss.html", part: "3/3" },
+            { title: "Applying Gradient Descent", file: "Lecture04_25_Applying_Gradient_Descent.html", part: "3/3" },
+            { title: "Multiclass - One-vs-Rest Strategy", file: "Lecture04_26_Multiclass_-_One-vs-Rest_Strategy.html", part: "3/3" },
+            { title: "Softmax Regression", file: "Lecture04_27_Softmax_Regression.html", part: "3/3" },
+            { title: "Categorical Cross-Entropy", file: "Lecture04_28_Categorical_Cross-Entropy.html", part: "3/3" },
+            { title: "Regularized Logistic Regression", file: "Lecture04_29_Regularized_Logistic_Regression.html", part: "3/3" },
+            { title: "Real-World Cases and Implementation", file: "Lecture04_30_Real-World_Cases_and_Implementation.html", part: "3/3" },
+            
+            // Ending
+            { title: "Thank You", file: "Lecture04_31_Thank_you.html", part: null }
+        ];
+        
+        function initializeSlides() {
+            const container = document.getElementById('slideContainer');
+            
+            // 모든 슬라이드를 미리 생성
+            slides.forEach((slide, index) => {
+                const slideDiv = document.createElement('div');
+                slideDiv.className = 'slide';
+                slideDiv.id = `slide-${index}`;
+                
+                const iframe = document.createElement('iframe');
+                iframe.src = encodeURI(slide.file);
+                iframe.loading = 'lazy';
+                
+                slideDiv.appendChild(iframe);
+                container.appendChild(slideDiv);
+            });
+            
+            // 첫 번째 슬라이드 표시
+            // 초기 해시값이 있을 경우 해당 슬라이드로 이동은 로드 이벤트에서 처리
+        }
+        
+        function showSlide(index) {
+            // 모든 슬라이드 숨기기
+            const allSlides = document.querySelectorAll('.slide');
+            allSlides.forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            // 현재 슬라이드 표시
+            const currentSlide = document.getElementById(`slide-${index}`);
+            if (currentSlide) {
+                currentSlide.classList.add('active');
+            }
+            
+            // 제목 업데이트 (파트 정보 포함)
+            const slideInfo = slides[index];
+            let titleText = slideInfo.title;
+            if (slideInfo.part) {
+                titleText = `${slideInfo.title} | Part ${slideInfo.part}`;
+            }
+            document.getElementById('slideTitle').textContent = titleText;
+            
+            // 카운터 업데이트
+            document.getElementById('currentSlide').textContent = index + 1;
+            document.getElementById('totalSlides').textContent = slides.length;
+            
+            // 진행 바 업데이트
+            const progress = ((index + 1) / slides.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            
+            // URL 해시 업데이트 (1-base index)
+            window.location.hash = (index + 1).toString();
+            
+            // 버튼 상태 업데이트
+            document.getElementById('prevBtn').disabled = index === 0;
+            document.getElementById('nextBtn').disabled = index === slides.length - 1;
+            
+            // 메뉴 선택 상태 업데이트
+            const listItems = document.querySelectorAll('.slide-list-item');
+            listItems.forEach((item, i) => {
+                if (i === index) {
+                    item.classList.add('current');
+                } else {
+                    item.classList.remove('current');
+                }
+            });
+        }
+        
+        function changeSlide(direction) {
+            const newIndex = currentSlideIndex + direction;
+            
+            if (newIndex >= 0 && newIndex < slides.length) {
+                currentSlideIndex = newIndex;
+                showSlide(currentSlideIndex);
+            }
+        }
+        
+        // 특정 슬라이드로 이동
+        function goToSlide(index) {
+            if (index >= 0 && index < slides.length) {
+                currentSlideIndex = index;
+                showSlide(currentSlideIndex);
+            }
+        }
+        
+        // 슬라이드 목록 생성
+        function buildSlideList() {
+            const slideList = document.getElementById('slideList');
+            slideList.innerHTML = '';
+            slides.forEach((slide, index) => {
+                const item = document.createElement('div');
+                item.className = 'slide-list-item';
+                item.textContent = `${index + 1}. ${slide.title}`;
+                item.onclick = () => goToSlide(index);
+                slideList.appendChild(item);
+            });
+        }
+        
+        // 메뉴 토글
+        function toggleMenu() {
+            document.getElementById('slideList').classList.toggle('active');
+        }
+        
+        // 전체화면 토글
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+        
+        // 키보드 내비게이션
+        document.addEventListener('keydown', (event) => {
+            switch(event.key) {
+                case 'ArrowLeft':
+                case 'ArrowUp':
+                    changeSlide(-1);
+                    break;
+                case 'ArrowRight':
+                case 'ArrowDown':
+                case ' ':
+                    event.preventDefault();
+                    changeSlide(1);
+                    break;
+                case 'Home':
+                    currentSlideIndex = 0;
+                    showSlide(currentSlideIndex);
+                    break;
+                case 'End':
+                    currentSlideIndex = slides.length - 1;
+                    showSlide(currentSlideIndex);
+                    break;
+            }
+        });
+        
+        // ESC로 메뉴 닫기
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.getElementById('slideList').classList.remove('active');
+            }
+        });
+        
+        // 페이지 로드 시 슬라이드 초기화
+        window.addEventListener('load', () => {
+            const hashIndex = parseInt(window.location.hash.replace('#',''), 10);
+            if (!isNaN(hashIndex) && hashIndex >= 1 && hashIndex <= slides.length) {
+                currentSlideIndex = hashIndex - 1;
+            }
+            initializeSlides();
+            buildSlideList();
+            showSlide(currentSlideIndex);
+        });
+        
+        // 스페이스바로 스크롤 방지
+        window.addEventListener('keydown', (e) => {
+            if(e.key === ' ' && e.target === document.body) {
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>
