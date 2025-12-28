@@ -16,13 +16,13 @@
             background: white;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             min-height: 100vh;
+            padding: 20px 0;
         }
         
         .container {
             width: 960px;
-            height: 540px;
             padding: 28px 40px;
             background: white;
         }
@@ -180,6 +180,7 @@
             display: grid;
             grid-template-columns: 1.2fr 0.8fr;
             gap: 20px;
+            margin-bottom: 30px;
         }
         
         .optimization-card {
@@ -238,6 +239,373 @@
             text-align: center;
             line-height: 1.5;
             font-weight: 500;
+        }
+        
+        /* Divider */
+        .divider {
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #1E64C8, transparent);
+            margin: 30px 0;
+            border-radius: 2px;
+        }
+        
+        /* Visual Examples Section */
+        .examples-section {
+            margin-top: 20px;
+        }
+        
+        .example-box {
+            background: white;
+            border: 2.5px solid #1E64C8;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+        
+        .example-header {
+            background: #1E64C8;
+            color: white;
+            padding: 10px 20px;
+            font-size: 17px;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .example-content {
+            padding: 20px;
+        }
+        
+        /* Matrix Multiplication Visual */
+        .matmul-visual {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .matrix {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .matrix-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .matrix-grid {
+            display: grid;
+            gap: 3px;
+            border: 2px solid #1E64C8;
+            padding: 4px;
+            border-radius: 6px;
+            background: #f8fbff;
+        }
+        
+        .cell {
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+        }
+        
+        .cell.a { background: #1E64C8; }
+        .cell.b { background: #28a745; }
+        .cell.c { background: #ff6b35; }
+        .cell.highlight { background: #ffc107; color: #333; }
+        .cell.empty { background: #e0e0e0; }
+        
+        .operator {
+            font-size: 28px;
+            font-weight: bold;
+            color: #1E64C8;
+        }
+        
+        .arrow-down {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 15px 0;
+        }
+        
+        .arrow-down-icon {
+            font-size: 24px;
+            color: #1E64C8;
+        }
+        
+        .arrow-label {
+            font-size: 13px;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        /* GPU Threads Visual */
+        .gpu-section {
+            background: #e8f4e8;
+            border: 2px dashed #28a745;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+        
+        .gpu-title {
+            text-align: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: #28a745;
+            margin-bottom: 12px;
+        }
+        
+        .threads-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 4px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        .thread {
+            height: 28px;
+            background: #28a745;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .parallel-note {
+            text-align: center;
+            font-size: 13px;
+            color: #28a745;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+        
+        /* Convolution Visual */
+        .conv-visual {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 2px;
+            border: 2px solid #1E64C8;
+            padding: 3px;
+            border-radius: 6px;
+            background: #f0f5fc;
+        }
+        
+        .pixel {
+            width: 24px;
+            height: 24px;
+            border-radius: 3px;
+        }
+        
+        .pixel.img { background: linear-gradient(135deg, #74b9ff, #0984e3); }
+        .pixel.kernel { background: #ff6b35; }
+        .pixel.scan { background: #ffc107; border: 2px solid #ff6b35; }
+        .pixel.output { background: #28a745; }
+        
+        .kernel-box {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2px;
+            border: 3px solid #ff6b35;
+            padding: 3px;
+            border-radius: 6px;
+            background: #fff4e6;
+        }
+        
+        .slide-arrows {
+            display: flex;
+            gap: 5px;
+            margin-top: 8px;
+            justify-content: center;
+        }
+        
+        .slide-arrow {
+            width: 24px;
+            height: 24px;
+            background: #1E64C8;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+        
+        /* Attention Visual */
+        .attention-visual {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .formula-box {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px 24px;
+            text-align: center;
+        }
+        
+        .formula {
+            font-size: 18px;
+            font-family: 'Times New Roman', serif;
+            color: #333;
+        }
+        
+        .formula-main {
+            font-size: 20px;
+            font-weight: 500;
+        }
+        
+        .formula sub {
+            font-size: 12px;
+        }
+        
+        /* Calculation Steps */
+        .calc-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .calc-step {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            padding: 12px;
+            background: #fafbfc;
+            border-radius: 8px;
+        }
+        
+        .step-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1E64C8;
+            min-width: 80px;
+        }
+        
+        .small-matrix {
+            display: grid;
+            gap: 2px;
+            border: 2px solid;
+            padding: 3px;
+            border-radius: 5px;
+            background: white;
+        }
+        
+        .small-matrix.q { border-color: #e74c3c; }
+        .small-matrix.k { border-color: #3498db; }
+        .small-matrix.v { border-color: #2ecc71; }
+        .small-matrix.score { border-color: #9b59b6; }
+        .small-matrix.attn { border-color: #f39c12; }
+        .small-matrix.out { border-color: #1E64C8; }
+        
+        .sm-cell {
+            width: 28px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+            border-radius: 3px;
+        }
+        
+        .sm-cell.q { background: #fadbd8; color: #c0392b; }
+        .sm-cell.k { background: #d4e6f1; color: #2471a3; }
+        .sm-cell.v { background: #d4efdf; color: #1e8449; }
+        .sm-cell.score { background: #e8daef; color: #7d3c98; }
+        .sm-cell.attn { background: #fdebd0; color: #b9770e; }
+        .sm-cell.out { background: #d6eaf8; color: #1E64C8; }
+        
+        .op-symbol {
+            font-size: 18px;
+            font-weight: bold;
+            color: #666;
+        }
+        
+        .qkv-legend {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 5px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+        }
+        
+        .legend-dot.q { background: #e74c3c; }
+        .legend-dot.k { background: #3498db; }
+        .legend-dot.v { background: #2ecc71; }
+        
+        /* Key Insight Box */
+        .insight-box {
+            background: #e8f4e8;
+            border: 2px solid #28a745;
+            border-radius: 10px;
+            padding: 15px 20px;
+            text-align: center;
+            margin-top: 10px;
+        }
+        
+        .insight-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        
+        .insight-text {
+            font-size: 15px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .insight-highlight {
+            color: #28a745;
+            font-weight: 700;
+        }
+        
+        .step-note {
+            font-size: 11px;
+            color: #666;
+            text-align: center;
+            margin-top: 4px;
         }
     </style>
 </head>
@@ -310,6 +678,289 @@
             <div class="tensor-core-box">
                 <div class="tensor-core-title">Tensor Cores</div>
                 <div class="tensor-core-desc">Specialized hardware for mixed-precision matmul</div>
+            </div>
+        </div>
+        
+        <!-- Visual Examples Section -->
+        <div class="divider"></div>
+        
+        <div class="examples-section">
+            <div class="section-title">How Parallelization Works</div>
+            
+            <!-- Matrix Multiplication -->
+            <div class="example-box">
+                <div class="example-header">① Matrix Multiplication (matmul)</div>
+                <div class="example-content">
+                    <div class="matmul-visual">
+                        <div class="matrix">
+                            <div class="matrix-label">Matrix A</div>
+                            <div class="matrix-grid" style="grid-template-columns: repeat(3, 1fr);">
+                                <div class="cell a">1</div>
+                                <div class="cell a">2</div>
+                                <div class="cell a">3</div>
+                                <div class="cell a">4</div>
+                                <div class="cell a">5</div>
+                                <div class="cell a">6</div>
+                            </div>
+                        </div>
+                        
+                        <div class="operator">×</div>
+                        
+                        <div class="matrix">
+                            <div class="matrix-label">Matrix B</div>
+                            <div class="matrix-grid" style="grid-template-columns: repeat(2, 1fr);">
+                                <div class="cell b">a</div>
+                                <div class="cell b">b</div>
+                                <div class="cell b">c</div>
+                                <div class="cell b">d</div>
+                                <div class="cell b">e</div>
+                                <div class="cell b">f</div>
+                            </div>
+                        </div>
+                        
+                        <div class="operator">=</div>
+                        
+                        <div class="matrix">
+                            <div class="matrix-label">Result C</div>
+                            <div class="matrix-grid" style="grid-template-columns: repeat(2, 1fr);">
+                                <div class="cell c">★</div>
+                                <div class="cell c">★</div>
+                                <div class="cell c">★</div>
+                                <div class="cell c">★</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="gpu-section">
+                        <div class="gpu-title">⚡ GPU Parallel Execution</div>
+                        <div class="threads-grid">
+                            <div class="thread">T0</div>
+                            <div class="thread">T1</div>
+                            <div class="thread">T2</div>
+                            <div class="thread">T3</div>
+                            <div class="thread">T4</div>
+                            <div class="thread">T5</div>
+                            <div class="thread">T6</div>
+                            <div class="thread">T7</div>
+                        </div>
+                        <div class="parallel-note">Each output element computed by separate thread → All at once!</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Convolution -->
+            <div class="example-box">
+                <div class="example-header">② 2D Convolution (conv2d)</div>
+                <div class="example-content">
+                    <div class="conv-visual">
+                        <div class="matrix">
+                            <div class="matrix-label">Input Image</div>
+                            <div class="image-grid">
+                                <div class="pixel img"></div>
+                                <div class="pixel img"></div>
+                                <div class="pixel img"></div>
+                                <div class="pixel img"></div>
+                                <div class="pixel img"></div>
+                                <div class="pixel scan"></div>
+                                <div class="pixel scan"></div>
+                                <div class="pixel scan"></div>
+                                <div class="pixel img"></div>
+                                <div class="pixel img"></div>
+                                <div class="pixel scan"></div>
+                                <div class="pixel scan"></div>
+                                <div class="pixel scan"></div>
+                                <div class="pixel img"></div>
+                                <div class="pixel img"></div>
+                                <div class="pixel scan"></div>
+                                <div class="pixel scan"></div>
+                                <div class="pixel scan"></div>
+                                <div class="pixel img"></div>
+                                <div class="pixel img"></div>
+                                <div class="pixel img"></div>
+                                <div class="pixel img"></div>
+                                <div class="pixel img"></div>
+                                <div class="pixel img"></div>
+                                <div class="pixel img"></div>
+                            </div>
+                            <div class="slide-arrows">
+                                <div class="slide-arrow">→</div>
+                                <div class="slide-arrow">↓</div>
+                            </div>
+                        </div>
+                        
+                        <div class="operator">*</div>
+                        
+                        <div class="matrix">
+                            <div class="matrix-label">Kernel (3×3)</div>
+                            <div class="kernel-box">
+                                <div class="pixel kernel"></div>
+                                <div class="pixel kernel"></div>
+                                <div class="pixel kernel"></div>
+                                <div class="pixel kernel"></div>
+                                <div class="pixel kernel"></div>
+                                <div class="pixel kernel"></div>
+                                <div class="pixel kernel"></div>
+                                <div class="pixel kernel"></div>
+                                <div class="pixel kernel"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="operator">=</div>
+                        
+                        <div class="matrix">
+                            <div class="matrix-label">Feature Map</div>
+                            <div class="matrix-grid" style="grid-template-columns: repeat(3, 1fr); background: #e8f4e8;">
+                                <div class="cell" style="background: #28a745;">●</div>
+                                <div class="cell" style="background: #28a745;">●</div>
+                                <div class="cell" style="background: #28a745;">●</div>
+                                <div class="cell" style="background: #28a745;">●</div>
+                                <div class="cell" style="background: #28a745;">●</div>
+                                <div class="cell" style="background: #28a745;">●</div>
+                                <div class="cell" style="background: #28a745;">●</div>
+                                <div class="cell" style="background: #28a745;">●</div>
+                                <div class="cell" style="background: #28a745;">●</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="gpu-section">
+                        <div class="gpu-title">⚡ GPU Parallel Execution</div>
+                        <div class="parallel-note">All positions processed simultaneously<br>224×224 image × 64 filters = 3.2M parallel ops</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Self-Attention with Formula and Calculation -->
+            <div class="example-box">
+                <div class="example-header">③ Self-Attention (Transformer)</div>
+                <div class="example-content">
+                    <div class="attention-visual">
+                        <!-- Formula -->
+                        <div class="formula-box">
+                            <div class="formula formula-main">
+                                Attention(Q, K, V) = softmax( QK<sup>T</sup> / √d<sub>k</sub> ) · V
+                            </div>
+                        </div>
+                        
+                        <!-- Legend -->
+                        <div class="qkv-legend">
+                            <div class="legend-item"><div class="legend-dot q"></div>Q (Query)</div>
+                            <div class="legend-item"><div class="legend-dot k"></div>K (Key)</div>
+                            <div class="legend-item"><div class="legend-dot v"></div>V (Value)</div>
+                        </div>
+                        
+                        <!-- Calculation Steps -->
+                        <div class="calc-container">
+                            <!-- Step 1: Q × K^T -->
+                            <div class="calc-step">
+                                <div class="step-label">Step 1</div>
+                                <div class="small-matrix q" style="grid-template-columns: repeat(2, 1fr);">
+                                    <div class="sm-cell q">1</div>
+                                    <div class="sm-cell q">0</div>
+                                    <div class="sm-cell q">0</div>
+                                    <div class="sm-cell q">1</div>
+                                </div>
+                                <div class="op-symbol">×</div>
+                                <div class="small-matrix k" style="grid-template-columns: repeat(2, 1fr);">
+                                    <div class="sm-cell k">1</div>
+                                    <div class="sm-cell k">1</div>
+                                    <div class="sm-cell k">0</div>
+                                    <div class="sm-cell k">1</div>
+                                </div>
+                                <div class="op-symbol">=</div>
+                                <div class="small-matrix score" style="grid-template-columns: repeat(2, 1fr);">
+                                    <div class="sm-cell score">1</div>
+                                    <div class="sm-cell score">1</div>
+                                    <div class="sm-cell score">0</div>
+                                    <div class="sm-cell score">1</div>
+                                </div>
+                                <div style="font-size: 12px; color: #666;">QK<sup>T</sup></div>
+                            </div>
+                            <div class="step-note">Q × Kᵀ → Attention scores (parallel matmul)</div>
+                            
+                            <!-- Step 2: Softmax -->
+                            <div class="calc-step">
+                                <div class="step-label">Step 2</div>
+                                <div style="font-size: 14px; color: #666;">softmax(</div>
+                                <div class="small-matrix score" style="grid-template-columns: repeat(2, 1fr);">
+                                    <div class="sm-cell score">1</div>
+                                    <div class="sm-cell score">1</div>
+                                    <div class="sm-cell score">0</div>
+                                    <div class="sm-cell score">1</div>
+                                </div>
+                                <div style="font-size: 14px; color: #666;">)</div>
+                                <div class="op-symbol">=</div>
+                                <div class="small-matrix attn" style="grid-template-columns: repeat(2, 1fr);">
+                                    <div class="sm-cell attn">.5</div>
+                                    <div class="sm-cell attn">.5</div>
+                                    <div class="sm-cell attn">.27</div>
+                                    <div class="sm-cell attn">.73</div>
+                                </div>
+                            </div>
+                            <div class="step-note">Softmax → Probability distribution (parallel per row)</div>
+                            
+                            <!-- Step 3: × V -->
+                            <div class="calc-step">
+                                <div class="step-label">Step 3</div>
+                                <div class="small-matrix attn" style="grid-template-columns: repeat(2, 1fr);">
+                                    <div class="sm-cell attn">.5</div>
+                                    <div class="sm-cell attn">.5</div>
+                                    <div class="sm-cell attn">.27</div>
+                                    <div class="sm-cell attn">.73</div>
+                                </div>
+                                <div class="op-symbol">×</div>
+                                <div class="small-matrix v" style="grid-template-columns: repeat(2, 1fr);">
+                                    <div class="sm-cell v">1</div>
+                                    <div class="sm-cell v">2</div>
+                                    <div class="sm-cell v">3</div>
+                                    <div class="sm-cell v">4</div>
+                                </div>
+                                <div class="op-symbol">=</div>
+                                <div class="small-matrix out" style="grid-template-columns: repeat(2, 1fr);">
+                                    <div class="sm-cell out">2.0</div>
+                                    <div class="sm-cell out">3.0</div>
+                                    <div class="sm-cell out">2.5</div>
+                                    <div class="sm-cell out">3.5</div>
+                                </div>
+                            </div>
+                            <div class="step-note">Attn × V → Weighted sum of values (parallel matmul)</div>
+                        </div>
+                    </div>
+                    
+                    <div class="gpu-section">
+                        <div class="gpu-title">⚡ 3-Level Parallelism</div>
+                        <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; align-items: center;">
+                            <div style="text-align: center;">
+                                <div style="font-size: 18px;">📦</div>
+                                <div style="font-size: 11px; color: #28a745; font-weight: 600;">Batch</div>
+                            </div>
+                            <div style="font-size: 16px; color: #28a745;">×</div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 18px;">🔀</div>
+                                <div style="font-size: 11px; color: #28a745; font-weight: 600;">Heads</div>
+                            </div>
+                            <div style="font-size: 16px; color: #28a745;">×</div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 18px;">📝</div>
+                                <div style="font-size: 11px; color: #28a745; font-weight: 600;">Tokens</div>
+                            </div>
+                            <div style="font-size: 16px; color: #28a745;">=</div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 18px;">🚀</div>
+                                <div style="font-size: 11px; color: #28a745; font-weight: 600;">Millions parallel</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Key Insight -->
+            <div class="insight-box">
+                <div class="insight-icon">💡</div>
+                <div class="insight-text">
+                    <span class="insight-highlight">Key Insight:</span> 
+                    GPU runs thousands of threads simultaneously — turning sequential math into parallel power
+                </div>
             </div>
         </div>
     </div>
