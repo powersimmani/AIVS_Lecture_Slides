@@ -23,7 +23,6 @@
         
         .container {
             width: 960px;
-            height: 540px;
             background: #ffffff;
             position: relative;
             padding: 25px 35px;
@@ -229,6 +228,113 @@
             font-size: 16px;
             line-height: 1.5;
         }
+        
+        /* 추가 섹션 스타일 */
+        .section-divider {
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, #1E64C8, transparent);
+            margin: 30px 0;
+        }
+        
+        .meaning-section {
+            margin-top: 10px;
+        }
+        
+        .meaning-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .meaning-header-title {
+            font-size: 20px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .meaning-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+        
+        .meaning-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 18px;
+        }
+        
+        .meaning-card-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .meaning-item {
+            background: #f8fafb;
+            padding: 12px 14px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            border-left: 3px solid #1E64C8;
+        }
+        
+        .meaning-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .meaning-item-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .meaning-item-desc {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 10px 12px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            margin-top: 8px;
+            white-space: pre;
+            line-height: 1.4;
+        }
+        
+        .highlight {
+            color: #63b3ed;
+        }
+        
+        .relation-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 8px;
+            font-size: 14px;
+        }
+        
+        .relation-box {
+            background: #e8f4fd;
+            padding: 6px 10px;
+            border-radius: 4px;
+            color: #1E64C8;
+            font-weight: 500;
+        }
+        
+        .relation-arrow {
+            color: #1E64C8;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -353,6 +459,78 @@
                     <div class="ml-title">ML Application</div>
                     <div class="ml-content">
                         Matrices encode systems of linear equations
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Added Section: Meanings of Matrix Multiplication -->
+        <div class="section-divider"></div>
+        
+        <div class="meaning-section">
+            <div class="meaning-header">
+                <div class="meaning-header-title">Meanings of Matrix Multiplication</div>
+            </div>
+            
+            <div class="meaning-grid">
+                <!-- Geometric Meaning -->
+                <div class="meaning-card">
+                    <div class="meaning-card-title">🔷 Geometric Meaning</div>
+                    
+                    <div class="meaning-item">
+                        <div class="meaning-item-title">Linear Transformation</div>
+                        <div class="meaning-item-desc">
+                            Multiplying matrix A by vector x (Ax) transforms the vector through <strong>rotation, scaling, reflection, or shearing</strong>.
+                        </div>
+                        <div class="code-block"><span class="highlight">2D Rotation Matrix Example:</span>
+[cos θ  -sin θ] [x]
+[sin θ   cos θ] [y]
+→ Rotates point (x,y) by angle θ</div>
+                    </div>
+                    
+                    <div class="meaning-item">
+                        <div class="meaning-item-title">Composition of Transformations</div>
+                        <div class="meaning-item-desc">
+                            AB means applying transformation B first, then A. It combines two transformations into one.
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Other Meanings -->
+                <div class="meaning-card">
+                    <div class="meaning-card-title">🔶 Other Meanings</div>
+                    
+                    <div class="meaning-item">
+                        <div class="meaning-item-title">1. System of Linear Equations</div>
+                        <div class="meaning-item-desc">
+                            Express multiple equations at once in Ax = b form
+                        </div>
+                        <div class="code-block">2x + 3y = 5     [2 3][x]   [5]
+4x + 1y = 6  →  [4 1][y] = [6]</div>
+                    </div>
+                    
+                    <div class="meaning-item">
+                        <div class="meaning-item-title">2. Composition of Relations</div>
+                        <div class="meaning-item-desc">
+                            Connects two relations to create a new one
+                        </div>
+                        <div class="relation-flow">
+                            <span class="relation-box">Student</span>
+                            <span class="relation-arrow">→ A →</span>
+                            <span class="relation-box">Course</span>
+                            <span class="relation-arrow">→ B →</span>
+                            <span class="relation-box">Professor</span>
+                        </div>
+                        <div class="relation-flow" style="margin-top: 4px;">
+                            <span style="font-size: 13px; color: #666;">AB = Student → Professor relation</span>
+                        </div>
+                    </div>
+                    
+                    <div class="meaning-item">
+                        <div class="meaning-item-title">3. Weighted Summation (Neural Networks)</div>
+                        <div class="meaning-item-desc">
+                            In neural networks, it multiplies inputs by weights and sums them. Used to compute each neuron's output.
+                        </div>
                     </div>
                 </div>
             </div>
