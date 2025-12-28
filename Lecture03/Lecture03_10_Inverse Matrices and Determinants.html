@@ -23,7 +23,6 @@
         
         .container {
             width: 960px;
-            height: 540px;
             background: #ffffff;
             position: relative;
             padding: 25px 35px;
@@ -238,6 +237,91 @@
             margin: 8px 0;
             font-weight: 600;
         }
+        
+        /* Added section styles */
+        .section-divider {
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, #1E64C8, transparent);
+            margin: 30px 0;
+        }
+        
+        .meaning-section {
+            margin-top: 10px;
+        }
+        
+        .meaning-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .meaning-header-title {
+            font-size: 20px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        
+        .meaning-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+        
+        .meaning-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 18px;
+        }
+        
+        .meaning-card-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .meaning-item {
+            background: #f8fafb;
+            padding: 12px 14px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            border-left: 3px solid #1E64C8;
+        }
+        
+        .meaning-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .meaning-item-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .meaning-item-desc {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 10px 12px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            margin-top: 8px;
+            white-space: pre;
+            line-height: 1.4;
+        }
+        
+        .highlight {
+            color: #63b3ed;
+        }
     </style>
 </head>
 <body>
@@ -328,6 +412,132 @@
                     <div class="ml-content">
                         Normal equations in regression<br>
                         require matrix inverse: <strong>(XᵀX)⁻¹</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Added Section: Meanings of Inverse Matrix -->
+        <div class="section-divider"></div>
+        
+        <div class="meaning-section">
+            <div class="meaning-header">
+                <div class="meaning-header-title">Meanings of Inverse Matrix</div>
+            </div>
+            
+            <div class="meaning-grid">
+                <!-- Geometric Meaning -->
+                <div class="meaning-card">
+                    <div class="meaning-card-title">🔷 Geometric Meaning</div>
+                    
+                    <div class="meaning-item">
+                        <div class="meaning-item-title">Undo Transformation</div>
+                        <div class="meaning-item-desc">
+                            If A is a transformation, A⁻¹ <strong>reverses it back</strong> to the original state.
+                        </div>
+                        <div class="code-block"><span class="highlight">Examples:</span>
+A = 90° rotation  →  A⁻¹ = -90° rotation
+A = 2× scaling    →  A⁻¹ = 0.5× scaling
+A = shear right   →  A⁻¹ = shear left</div>
+                    </div>
+                </div>
+                
+                <!-- Other Meanings -->
+                <div class="meaning-card">
+                    <div class="meaning-card-title">🔶 Other Meanings</div>
+                    
+                    <div class="meaning-item">
+                        <div class="meaning-item-title">1. Direct Solution to Linear Systems</div>
+                        <div class="meaning-item-desc">
+                            Ax = b → x = A⁻¹b<br>
+                            Computes the solution directly by matrix multiplication.
+                        </div>
+                    </div>
+                    
+                    <div class="meaning-item">
+                        <div class="meaning-item-title">2. Reverse Relation</div>
+                        <div class="meaning-item-desc">
+                            If A represents "Parent → Child" relation,<br>
+                            A⁻¹ represents "Child → Parent" relation.
+                        </div>
+                    </div>
+                    
+                    <div class="meaning-item">
+                        <div class="meaning-item-title">3. Inverse Function</div>
+                        <div class="meaning-item-desc">
+                            For f(x) = Ax, the inverse function is f⁻¹(y) = A⁻¹y
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Added Section: Meanings of Determinant -->
+        <div class="section-divider"></div>
+        
+        <div class="meaning-section">
+            <div class="meaning-header">
+                <div class="meaning-header-title">Meanings of Determinant</div>
+            </div>
+            
+            <div class="meaning-grid">
+                <!-- Geometric Meaning -->
+                <div class="meaning-card">
+                    <div class="meaning-card-title">🔷 Geometric Meaning</div>
+                    
+                    <div class="meaning-item">
+                        <div class="meaning-item-title">Volume/Area Scaling Factor</div>
+                        <div class="meaning-item-desc">
+                            |det(A)| tells how much the transformation <strong>scales volumes</strong> (or areas in 2D).
+                        </div>
+                        <div class="code-block"><span class="highlight">Example:</span>
+det(A) = 3  → Volume becomes 3×
+det(A) = 0.5 → Volume becomes 0.5×</div>
+                    </div>
+                    
+                    <div class="meaning-item">
+                        <div class="meaning-item-title">Orientation</div>
+                        <div class="meaning-item-desc">
+                            • det > 0: Preserves orientation (no flip)<br>
+                            • det < 0: Reverses orientation (mirror flip)
+                        </div>
+                    </div>
+                    
+                    <div class="meaning-item">
+                        <div class="meaning-item-title">Dimension Collapse</div>
+                        <div class="meaning-item-desc">
+                            det = 0 means the transformation <strong>collapses dimensions</strong><br>
+                            (e.g., 3D → 2D plane, 2D → 1D line)
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Other Meanings -->
+                <div class="meaning-card">
+                    <div class="meaning-card-title">🔶 Other Meanings</div>
+                    
+                    <div class="meaning-item">
+                        <div class="meaning-item-title">1. Invertibility Test</div>
+                        <div class="meaning-item-desc">
+                            det(A) ≠ 0 ⟺ A⁻¹ exists<br>
+                            A quick way to check if inverse is possible.
+                        </div>
+                    </div>
+                    
+                    <div class="meaning-item">
+                        <div class="meaning-item-title">2. Linear Independence</div>
+                        <div class="meaning-item-desc">
+                            det(A) ≠ 0 ⟺ Column vectors are linearly independent<br>
+                            (No column can be written as a combination of others)
+                        </div>
+                    </div>
+                    
+                    <div class="meaning-item">
+                        <div class="meaning-item-title">3. Unique Solution Existence</div>
+                        <div class="meaning-item-desc">
+                            det(A) ≠ 0 ⟺ Ax = b has a unique solution<br>
+                            (Exactly one solution exists for any b)
+                        </div>
                     </div>
                 </div>
             </div>
