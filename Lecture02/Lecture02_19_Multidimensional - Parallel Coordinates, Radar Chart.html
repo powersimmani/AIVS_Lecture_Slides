@@ -23,7 +23,7 @@
         
         .container {
             width: 960px;
-            height: 540px;
+            height: 800px;
             display: flex;
             flex-direction: column;
             padding: 25px 35px;
@@ -272,6 +272,35 @@
             font-weight: bold;
             font-size: 16px;
         }
+        
+        .example-section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin: 16px 0 10px 0;
+            padding-left: 5px;
+            border-left: 4px solid #1E64C8;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 6px;
+            font-size: 12px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .legend-color {
+            width: 14px;
+            height: 3px;
+            border-radius: 2px;
+        }
     </style>
 </head>
 <body>
@@ -307,91 +336,43 @@
                                 <div class="data-line">
                                     <svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position: absolute; top: 20px; left: 0; width: 100%; height: calc(100% - 40px);">
                                         <!-- Blue cluster (high values) -->
-                                        <polyline
-                                            points="15,25 35,35 55,30 75,20"
-                                            fill="none"
-                                            stroke="#1E64C8"
-                                            stroke-width="0.8"
-                                            opacity="0.7"/>
-                                        
-                                        <polyline
-                                            points="15,30 35,30 55,25 75,25"
-                                            fill="none"
-                                            stroke="#1E64C8"
-                                            stroke-width="0.8"
-                                            opacity="0.7"/>
-                                        
-                                        <polyline
-                                            points="15,35 35,40 55,35 75,30"
-                                            fill="none"
-                                            stroke="#1E64C8"
-                                            stroke-width="0.8"
-                                            opacity="0.7"/>
+                                        <polyline points="15,25 35,35 55,30 75,20" fill="none" stroke="#1E64C8" stroke-width="0.8" opacity="0.7"/>
+                                        <polyline points="15,30 35,30 55,25 75,25" fill="none" stroke="#1E64C8" stroke-width="0.8" opacity="0.7"/>
+                                        <polyline points="15,35 35,40 55,35 75,30" fill="none" stroke="#1E64C8" stroke-width="0.8" opacity="0.7"/>
                                         
                                         <!-- Green cluster (low values) -->
-                                        <polyline
-                                            points="15,70 35,65 55,70 75,75"
-                                            fill="none"
-                                            stroke="#4CAF50"
-                                            stroke-width="0.8"
-                                            opacity="0.7"/>
-                                        
-                                        <polyline
-                                            points="15,75 35,70 55,75 75,70"
-                                            fill="none"
-                                            stroke="#4CAF50"
-                                            stroke-width="0.8"
-                                            opacity="0.7"/>
-                                        
-                                        <polyline
-                                            points="15,80 35,75 55,80 75,80"
-                                            fill="none"
-                                            stroke="#4CAF50"
-                                            stroke-width="0.8"
-                                            opacity="0.7"/>
+                                        <polyline points="15,70 35,65 55,70 75,75" fill="none" stroke="#4CAF50" stroke-width="0.8" opacity="0.7"/>
+                                        <polyline points="15,75 35,70 55,75 75,70" fill="none" stroke="#4CAF50" stroke-width="0.8" opacity="0.7"/>
+                                        <polyline points="15,80 35,75 55,80 75,80" fill="none" stroke="#4CAF50" stroke-width="0.8" opacity="0.7"/>
                                         
                                         <!-- Orange outlier -->
-                                        <polyline
-                                            points="15,50 35,25 55,75 75,45"
-                                            fill="none"
-                                            stroke="#FF9800"
-                                            stroke-width="1.2"
-                                            opacity="0.9"/>
+                                        <polyline points="15,50 35,25 55,75 75,45" fill="none" stroke="#FF9800" stroke-width="1.2" opacity="0.9"/>
                                         
-                                        <!-- Dots to show intersection points -->
-                                        <!-- Blue cluster dots -->
+                                        <!-- Dots -->
                                         <circle cx="15" cy="25" r="1.5" fill="#1E64C8"/>
                                         <circle cx="35" cy="35" r="1.5" fill="#1E64C8"/>
                                         <circle cx="55" cy="30" r="1.5" fill="#1E64C8"/>
                                         <circle cx="75" cy="20" r="1.5" fill="#1E64C8"/>
-                                        
                                         <circle cx="15" cy="30" r="1.5" fill="#1E64C8"/>
                                         <circle cx="35" cy="30" r="1.5" fill="#1E64C8"/>
                                         <circle cx="55" cy="25" r="1.5" fill="#1E64C8"/>
                                         <circle cx="75" cy="25" r="1.5" fill="#1E64C8"/>
-                                        
                                         <circle cx="15" cy="35" r="1.5" fill="#1E64C8"/>
                                         <circle cx="35" cy="40" r="1.5" fill="#1E64C8"/>
                                         <circle cx="55" cy="35" r="1.5" fill="#1E64C8"/>
                                         <circle cx="75" cy="30" r="1.5" fill="#1E64C8"/>
-                                        
-                                        <!-- Green cluster dots -->
                                         <circle cx="15" cy="70" r="1.5" fill="#4CAF50"/>
                                         <circle cx="35" cy="65" r="1.5" fill="#4CAF50"/>
                                         <circle cx="55" cy="70" r="1.5" fill="#4CAF50"/>
                                         <circle cx="75" cy="75" r="1.5" fill="#4CAF50"/>
-                                        
                                         <circle cx="15" cy="75" r="1.5" fill="#4CAF50"/>
                                         <circle cx="35" cy="70" r="1.5" fill="#4CAF50"/>
                                         <circle cx="55" cy="75" r="1.5" fill="#4CAF50"/>
                                         <circle cx="75" cy="70" r="1.5" fill="#4CAF50"/>
-                                        
                                         <circle cx="15" cy="80" r="1.5" fill="#4CAF50"/>
                                         <circle cx="35" cy="75" r="1.5" fill="#4CAF50"/>
                                         <circle cx="55" cy="80" r="1.5" fill="#4CAF50"/>
                                         <circle cx="75" cy="80" r="1.5" fill="#4CAF50"/>
-                                        
-                                        <!-- Orange outlier dots -->
                                         <circle cx="15" cy="50" r="1.8" fill="#FF9800"/>
                                         <circle cx="35" cy="25" r="1.8" fill="#FF9800"/>
                                         <circle cx="55" cy="75" r="1.8" fill="#FF9800"/>
@@ -409,35 +390,18 @@
                         <div class="chart-visual">
                             <div class="radar-chart">
                                 <svg viewBox="0 0 200 200">
-                                    <!-- Grid circles -->
                                     <circle cx="100" cy="100" r="80" fill="none" stroke="#E0E0E0" stroke-width="1"/>
                                     <circle cx="100" cy="100" r="60" fill="none" stroke="#E0E0E0" stroke-width="1"/>
                                     <circle cx="100" cy="100" r="40" fill="none" stroke="#E0E0E0" stroke-width="1"/>
                                     <circle cx="100" cy="100" r="20" fill="none" stroke="#E0E0E0" stroke-width="1"/>
-                                    
-                                    <!-- Axes -->
                                     <line x1="100" y1="100" x2="100" y2="20" stroke="#666" stroke-width="1"/>
                                     <line x1="100" y1="100" x2="169" y2="50" stroke="#666" stroke-width="1"/>
                                     <line x1="100" y1="100" x2="169" y2="150" stroke="#666" stroke-width="1"/>
                                     <line x1="100" y1="100" x2="100" y2="180" stroke="#666" stroke-width="1"/>
                                     <line x1="100" y1="100" x2="31" y2="150" stroke="#666" stroke-width="1"/>
                                     <line x1="100" y1="100" x2="31" y2="50" stroke="#666" stroke-width="1"/>
-                                    
-                                    <!-- Profile 1 (blue) -->
-                                    <polygon
-                                        points="100,40 150,60 150,130 100,160 50,130 60,60"
-                                        fill="rgba(30, 100, 200, 0.3)"
-                                        stroke="#1E64C8"
-                                        stroke-width="2"/>
-                                    
-                                    <!-- Profile 2 (green) -->
-                                    <polygon
-                                        points="100,50 140,70 160,140 100,150 40,140 50,70"
-                                        fill="rgba(76, 175, 80, 0.3)"
-                                        stroke="#4CAF50"
-                                        stroke-width="2"/>
-                                    
-                                    <!-- Axis labels -->
+                                    <polygon points="100,40 150,60 150,130 100,160 50,130 60,60" fill="rgba(30, 100, 200, 0.3)" stroke="#1E64C8" stroke-width="2"/>
+                                    <polygon points="100,50 140,70 160,140 100,150 40,140 50,70" fill="rgba(76, 175, 80, 0.3)" stroke="#4CAF50" stroke-width="2"/>
                                     <text x="100" y="15" text-anchor="middle" font-size="11" fill="#666" font-weight="600">A</text>
                                     <text x="175" y="50" text-anchor="start" font-size="11" fill="#666" font-weight="600">B</text>
                                     <text x="175" y="155" text-anchor="start" font-size="11" fill="#666" font-weight="600">C</text>
@@ -448,6 +412,108 @@
                             </div>
                         </div>
                         <div class="chart-description">Circular layout comparing entity profiles</div>
+                    </div>
+                </div>
+                
+                <!-- Real-World Examples Section -->
+                <div class="example-section-title">📌 Real-World Examples</div>
+                
+                <div class="chart-row">
+                    <!-- Car Comparison - Parallel Coordinates -->
+                    <div class="chart-card">
+                        <div class="chart-title">🚗 Car Comparison</div>
+                        <div class="chart-visual">
+                            <div class="parallel-coords">
+                                <div class="data-line">
+                                    <svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position: absolute; top: 15px; left: 0; width: 100%; height: calc(100% - 35px);">
+                                        <!-- Axis lines -->
+                                        <line x1="15" y1="0" x2="15" y2="85" stroke="#666" stroke-width="0.5"/>
+                                        <line x1="35" y1="0" x2="35" y2="85" stroke="#666" stroke-width="0.5"/>
+                                        <line x1="55" y1="0" x2="55" y2="85" stroke="#666" stroke-width="0.5"/>
+                                        <line x1="75" y1="0" x2="75" y2="85" stroke="#666" stroke-width="0.5"/>
+                                        
+                                        <!-- Sports Cars (Red) - High HP, Low MPG, High Price -->
+                                        <polyline points="15,70 35,15 55,25 75,15" fill="none" stroke="#E53935" stroke-width="1.2" opacity="0.8"/>
+                                        <polyline points="15,65 35,20 55,30 75,20" fill="none" stroke="#E53935" stroke-width="1.2" opacity="0.8"/>
+                                        
+                                        <!-- Economy Cars (Blue) - Low HP, High MPG, Low Price -->
+                                        <polyline points="15,25 35,75 55,70 75,75" fill="none" stroke="#1E64C8" stroke-width="1.2" opacity="0.8"/>
+                                        <polyline points="15,30 35,70 55,65 75,70" fill="none" stroke="#1E64C8" stroke-width="1.2" opacity="0.8"/>
+                                        
+                                        <!-- SUVs (Green) - Mid HP, Low MPG, Mid Price -->
+                                        <polyline points="15,45 35,50 55,60 75,45" fill="none" stroke="#4CAF50" stroke-width="1.2" opacity="0.8"/>
+                                        <polyline points="15,50 35,55 55,55 75,50" fill="none" stroke="#4CAF50" stroke-width="1.2" opacity="0.8"/>
+                                        
+                                        <!-- Dots -->
+                                        <circle cx="15" cy="70" r="2" fill="#E53935"/>
+                                        <circle cx="35" cy="15" r="2" fill="#E53935"/>
+                                        <circle cx="55" cy="25" r="2" fill="#E53935"/>
+                                        <circle cx="75" cy="15" r="2" fill="#E53935"/>
+                                        <circle cx="15" cy="25" r="2" fill="#1E64C8"/>
+                                        <circle cx="35" cy="75" r="2" fill="#1E64C8"/>
+                                        <circle cx="55" cy="70" r="2" fill="#1E64C8"/>
+                                        <circle cx="75" cy="75" r="2" fill="#1E64C8"/>
+                                        <circle cx="15" cy="45" r="2" fill="#4CAF50"/>
+                                        <circle cx="35" cy="50" r="2" fill="#4CAF50"/>
+                                        <circle cx="55" cy="60" r="2" fill="#4CAF50"/>
+                                        <circle cx="75" cy="45" r="2" fill="#4CAF50"/>
+                                        
+                                        <!-- Labels -->
+                                        <text x="15" y="95" text-anchor="middle" font-size="7" fill="#666" font-weight="600">MPG</text>
+                                        <text x="35" y="95" text-anchor="middle" font-size="7" fill="#666" font-weight="600">Horsepower</text>
+                                        <text x="55" y="95" text-anchor="middle" font-size="7" fill="#666" font-weight="600">Weight</text>
+                                        <text x="75" y="95" text-anchor="middle" font-size="7" fill="#666" font-weight="600">Price</text>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="legend">
+                            <div class="legend-item"><div class="legend-color" style="background:#E53935"></div>Sports</div>
+                            <div class="legend-item"><div class="legend-color" style="background:#1E64C8"></div>Economy</div>
+                            <div class="legend-item"><div class="legend-color" style="background:#4CAF50"></div>SUV</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Player Stats - Radar Chart -->
+                    <div class="chart-card">
+                        <div class="chart-title">⚽ Player Stats</div>
+                        <div class="chart-visual">
+                            <div class="radar-chart">
+                                <svg viewBox="0 0 200 200">
+                                    <!-- Grid -->
+                                    <circle cx="100" cy="100" r="70" fill="none" stroke="#E0E0E0" stroke-width="1"/>
+                                    <circle cx="100" cy="100" r="52" fill="none" stroke="#E0E0E0" stroke-width="1"/>
+                                    <circle cx="100" cy="100" r="35" fill="none" stroke="#E0E0E0" stroke-width="1"/>
+                                    <circle cx="100" cy="100" r="17" fill="none" stroke="#E0E0E0" stroke-width="1"/>
+                                    
+                                    <!-- Axes (6 axes) -->
+                                    <line x1="100" y1="100" x2="100" y2="30" stroke="#666" stroke-width="1"/>
+                                    <line x1="100" y1="100" x2="160" y2="55" stroke="#666" stroke-width="1"/>
+                                    <line x1="100" y1="100" x2="160" y2="145" stroke="#666" stroke-width="1"/>
+                                    <line x1="100" y1="100" x2="100" y2="170" stroke="#666" stroke-width="1"/>
+                                    <line x1="100" y1="100" x2="40" y2="145" stroke="#666" stroke-width="1"/>
+                                    <line x1="100" y1="100" x2="40" y2="55" stroke="#666" stroke-width="1"/>
+                                    
+                                    <!-- Player A (Striker - Blue) -->
+                                    <polygon points="100,35 155,60 150,140 100,160 55,130 50,65" fill="rgba(30, 100, 200, 0.3)" stroke="#1E64C8" stroke-width="2"/>
+                                    
+                                    <!-- Player B (Midfielder - Orange) -->
+                                    <polygon points="100,50 140,70 130,130 100,140 70,130 60,70" fill="rgba(255, 152, 0, 0.3)" stroke="#FF9800" stroke-width="2"/>
+                                    
+                                    <!-- Labels -->
+                                    <text x="100" y="22" text-anchor="middle" font-size="9" fill="#333" font-weight="600">Speed</text>
+                                    <text x="168" y="55" text-anchor="start" font-size="9" fill="#333" font-weight="600">Shooting</text>
+                                    <text x="168" y="150" text-anchor="start" font-size="9" fill="#333" font-weight="600">Passing</text>
+                                    <text x="100" y="182" text-anchor="middle" font-size="9" fill="#333" font-weight="600">Stamina</text>
+                                    <text x="28" y="150" text-anchor="end" font-size="9" fill="#333" font-weight="600">Defense</text>
+                                    <text x="28" y="55" text-anchor="end" font-size="9" fill="#333" font-weight="600">Dribbling</text>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="legend">
+                            <div class="legend-item"><div class="legend-color" style="background:#1E64C8"></div>Striker</div>
+                            <div class="legend-item"><div class="legend-color" style="background:#FF9800"></div>Midfielder</div>
+                        </div>
                     </div>
                 </div>
             </div>
