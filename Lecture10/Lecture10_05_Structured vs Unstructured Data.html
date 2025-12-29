@@ -22,7 +22,7 @@
         
         .container {
             width: 960px;
-            height: 1300px;
+            height: 1680px;
             position: relative;
             padding: 30px;
         }
@@ -31,7 +31,7 @@
             font-size: 26px;
             font-weight: 600;
             color: #1E64C8;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             text-align: center;
         }
         
@@ -39,7 +39,7 @@
             display: grid;
             grid-template-columns: 1fr 80px 1fr;
             gap: 0;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
         
         .column {
@@ -251,6 +251,136 @@
             font-weight: 600;
             color: #1E64C8;
         }
+        
+        /* Feature Extraction Section Styles */
+        .feature-extraction-section {
+            margin-top: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .extraction-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .extraction-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .extraction-source {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 70px;
+        }
+        
+        .extraction-icon {
+            font-size: 32px;
+            margin-bottom: 5px;
+        }
+        
+        .extraction-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+            text-align: center;
+        }
+        
+        .extraction-arrow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #1E64C8;
+            min-width: 80px;
+        }
+        
+        .arrow-icon {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .arrow-label {
+            font-size: 10px;
+            font-weight: 600;
+            text-align: center;
+            color: #1E64C8;
+            background: #F0F6FF;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-top: 2px;
+        }
+        
+        .extraction-result {
+            flex: 1;
+            background: #F0F6FF;
+            border-radius: 8px;
+            padding: 10px;
+        }
+        
+        .result-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .result-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        
+        .feature-tag {
+            background: #1E64C8;
+            color: white;
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 12px;
+            white-space: nowrap;
+        }
+        
+        .feature-tag.highlight {
+            background: #FF6B35;
+        }
+        
+        /* Vector visualization */
+        .vector-display {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            margin-top: 6px;
+        }
+        
+        .vector-bracket {
+            font-size: 20px;
+            color: #1E64C8;
+            font-weight: 300;
+        }
+        
+        .vector-values {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+        
+        .vector-value {
+            font-size: 10px;
+            color: #333;
+            font-family: 'Consolas', monospace;
+        }
+        
+        .vector-dots {
+            font-size: 10px;
+            color: #666;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -302,6 +432,126 @@
         <div class="stat-box">
             <div class="stat-number">80-90%</div>
             <div class="stat-text">of enterprise data is unstructured and growing rapidly</div>
+        </div>
+        
+        <!-- Feature Extraction Section -->
+        <div class="section-title-box">
+            <div class="section-title-text">Feature Extraction: Unstructured → Structured</div>
+        </div>
+        
+        <div class="feature-extraction-section">
+            <div class="extraction-grid">
+                <!-- Text to Features -->
+                <div class="extraction-card">
+                    <div class="extraction-source">
+                        <div class="extraction-icon">📝</div>
+                        <div class="extraction-label">Text</div>
+                    </div>
+                    <div class="extraction-arrow">
+                        <div class="arrow-icon">→</div>
+                        <div class="arrow-label">NLP</div>
+                    </div>
+                    <div class="extraction-result">
+                        <div class="result-title">Numeric Features</div>
+                        <div class="result-features">
+                            <span class="feature-tag">TF-IDF</span>
+                            <span class="feature-tag highlight">Embeddings</span>
+                            <span class="feature-tag">Sentiment</span>
+                            <span class="feature-tag">N-grams</span>
+                        </div>
+                        <div class="vector-display">
+                            <span class="vector-bracket">[</span>
+                            <div class="vector-values">
+                                <span class="vector-value">0.23, -0.45, 0.87, ...</span>
+                            </div>
+                            <span class="vector-bracket">]</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Image to Features -->
+                <div class="extraction-card">
+                    <div class="extraction-source">
+                        <div class="extraction-icon">🖼️</div>
+                        <div class="extraction-label">Image</div>
+                    </div>
+                    <div class="extraction-arrow">
+                        <div class="arrow-icon">→</div>
+                        <div class="arrow-label">CNN</div>
+                    </div>
+                    <div class="extraction-result">
+                        <div class="result-title">Numeric Features</div>
+                        <div class="result-features">
+                            <span class="feature-tag highlight">CNN Features</span>
+                            <span class="feature-tag">Histogram</span>
+                            <span class="feature-tag">SIFT</span>
+                            <span class="feature-tag">HOG</span>
+                        </div>
+                        <div class="vector-display">
+                            <span class="vector-bracket">[</span>
+                            <div class="vector-values">
+                                <span class="vector-value">1.52, 0.73, -2.14, ...</span>
+                            </div>
+                            <span class="vector-bracket">]</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Audio to Features -->
+                <div class="extraction-card">
+                    <div class="extraction-source">
+                        <div class="extraction-icon">🎵</div>
+                        <div class="extraction-label">Audio</div>
+                    </div>
+                    <div class="extraction-arrow">
+                        <div class="arrow-icon">→</div>
+                        <div class="arrow-label">DSP</div>
+                    </div>
+                    <div class="extraction-result">
+                        <div class="result-title">Numeric Features</div>
+                        <div class="result-features">
+                            <span class="feature-tag highlight">MFCC</span>
+                            <span class="feature-tag">Spectral</span>
+                            <span class="feature-tag">Pitch</span>
+                            <span class="feature-tag">Chroma</span>
+                        </div>
+                        <div class="vector-display">
+                            <span class="vector-bracket">[</span>
+                            <div class="vector-values">
+                                <span class="vector-value">-0.82, 3.41, 0.15, ...</span>
+                            </div>
+                            <span class="vector-bracket">]</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Video to Features -->
+                <div class="extraction-card">
+                    <div class="extraction-source">
+                        <div class="extraction-icon">🎬</div>
+                        <div class="extraction-label">Video</div>
+                    </div>
+                    <div class="extraction-arrow">
+                        <div class="arrow-icon">→</div>
+                        <div class="arrow-label">CV+DL</div>
+                    </div>
+                    <div class="extraction-result">
+                        <div class="result-title">Numeric Features</div>
+                        <div class="result-features">
+                            <span class="feature-tag highlight">3D-CNN</span>
+                            <span class="feature-tag">Optical Flow</span>
+                            <span class="feature-tag">I3D</span>
+                        </div>
+                        <div class="vector-display">
+                            <span class="vector-bracket">[</span>
+                            <div class="vector-values">
+                                <span class="vector-value">2.67, -1.23, 0.94, ...</span>
+                            </div>
+                            <span class="vector-bracket">]</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         
         <div class="section-title-box">
