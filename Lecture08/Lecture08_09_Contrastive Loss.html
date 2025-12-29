@@ -23,7 +23,7 @@
         
         .container {
             width: 960px;
-            height: 540px;
+            height: 820px;
             padding: 30px;
             background: #ffffff;
         }
@@ -246,6 +246,146 @@
             color: #1E64C8;
             font-weight: 600;
         }
+        
+        .visual-section {
+            margin-top: 25px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+        
+        .visual-box {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        
+        .visual-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .embedding-space {
+            position: relative;
+            height: 180px;
+            background: linear-gradient(135deg, #fafafa 0%, #f0f0f0 100%);
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        
+        .embed-point {
+            position: absolute;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+        
+        .embed-point.class-a {
+            background: #1E64C8;
+        }
+        
+        .embed-point.class-b {
+            background: #e53935;
+        }
+        
+        .embed-point.class-c {
+            background: #43a047;
+        }
+        
+        .distance-line {
+            position: absolute;
+            height: 2px;
+            transform-origin: left center;
+        }
+        
+        .distance-line.similar {
+            background: #28a745;
+        }
+        
+        .distance-line.dissimilar {
+            background: #dc3545;
+            stroke-dasharray: 5,5;
+        }
+        
+        .space-label {
+            position: absolute;
+            font-size: 11px;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .formula-visual {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .formula-main {
+            font-size: 15px;
+            color: #1E64C8;
+            font-weight: 600;
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+        
+        .formula-parts {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .formula-part {
+            background: #f8f9fa;
+            border-radius: 6px;
+            padding: 10px 14px;
+            font-size: 13px;
+        }
+        
+        .formula-part.similar {
+            border-left: 3px solid #28a745;
+            color: #28a745;
+        }
+        
+        .formula-part.dissimilar {
+            border-left: 3px solid #dc3545;
+            color: #dc3545;
+        }
+        
+        .comparison-container {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .comparison-box {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .comparison-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        
+        .arrow-indicator {
+            font-size: 24px;
+            color: #1E64C8;
+            margin: 10px 0;
+        }
     </style>
 </head>
 <body>
@@ -319,6 +459,84 @@
                     <div class="foundation-text">
                         🔗 Foundation for Siamese Networks
                     </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Visual Explanation Section -->
+        <div class="visual-section">
+            <div class="visual-box">
+                <div class="visual-title">🔄 Embedding Space Transformation</div>
+                <div class="comparison-container">
+                    <div class="comparison-box">
+                        <div class="comparison-label">Before Training</div>
+                        <div class="embedding-space" style="height: 140px;">
+                            <!-- Scattered points before training -->
+                            <div class="embed-point class-a" style="left: 25%; top: 20%;">A</div>
+                            <div class="embed-point class-a" style="left: 70%; top: 65%;">A</div>
+                            <div class="embed-point class-b" style="left: 40%; top: 55%;">B</div>
+                            <div class="embed-point class-b" style="left: 15%; top: 70%;">B</div>
+                            <div class="embed-point class-c" style="left: 55%; top: 25%;">C</div>
+                            <div class="embed-point class-c" style="left: 80%; top: 30%;">C</div>
+                            <div class="space-label" style="bottom: 5px; right: 10px;">Random</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center;">
+                        <div class="arrow-indicator">→</div>
+                    </div>
+                    <div class="comparison-box">
+                        <div class="comparison-label">After Training</div>
+                        <div class="embedding-space" style="height: 140px;">
+                            <!-- Clustered points after training -->
+                            <div class="embed-point class-a" style="left: 15%; top: 25%;">A</div>
+                            <div class="embed-point class-a" style="left: 22%; top: 38%;">A</div>
+                            <div class="embed-point class-b" style="left: 45%; top: 60%;">B</div>
+                            <div class="embed-point class-b" style="left: 52%; top: 72%;">B</div>
+                            <div class="embed-point class-c" style="left: 75%; top: 22%;">C</div>
+                            <div class="embed-point class-c" style="left: 82%; top: 35%;">C</div>
+                            <div class="space-label" style="bottom: 5px; right: 10px;">Structured</div>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 12px; font-size: 13px; color: #666;">
+                    Similar pairs cluster together • Dissimilar pairs separate
+                </div>
+            </div>
+            
+            <div class="visual-box">
+                <div class="visual-title">📐 Loss Function Components</div>
+                <div class="formula-visual">
+                    <div class="formula-main">
+                        L = (1-Y)·½·D² + Y·½·max(0, m-D)²
+                    </div>
+                    <div class="formula-parts">
+                        <div class="formula-part similar">
+                            <strong>Y=0 (Similar)</strong><br>
+                            Minimize D²<br>
+                            <span style="font-size: 11px;">Pull together</span>
+                        </div>
+                        <div class="formula-part dissimilar">
+                            <strong>Y=1 (Dissimilar)</strong><br>
+                            Push if D &lt; margin<br>
+                            <span style="font-size: 11px;">Maintain distance</span>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top: 15px;">
+                    <svg viewBox="0 0 400 80" style="width: 100%; height: 80px;">
+                        <!-- Similar pair visualization -->
+                        <circle cx="60" cy="40" r="14" fill="#1E64C8"/>
+                        <circle cx="100" cy="40" r="14" fill="#1E64C8"/>
+                        <line x1="74" y1="40" x2="86" y2="40" stroke="#28a745" stroke-width="3"/>
+                        <text x="80" y="70" font-size="11" fill="#28a745" text-anchor="middle" font-weight="600">Similar → Close</text>
+                        
+                        <!-- Dissimilar pair visualization -->
+                        <circle cx="260" cy="40" r="14" fill="#1E64C8"/>
+                        <circle cx="340" cy="40" r="14" fill="#e53935"/>
+                        <line x1="274" y1="40" x2="326" y2="40" stroke="#dc3545" stroke-width="2" stroke-dasharray="5,3"/>
+                        <text x="300" y="25" font-size="10" fill="#666" text-anchor="middle">margin</text>
+                        <text x="300" y="70" font-size="11" fill="#dc3545" text-anchor="middle" font-weight="600">Dissimilar → Apart</text>
+                    </svg>
                 </div>
             </div>
         </div>

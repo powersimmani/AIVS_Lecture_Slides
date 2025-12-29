@@ -23,7 +23,7 @@
         
         .container {
             width: 960px;
-            height: 540px;
+            height: 680px;
             display: flex;
             flex-direction: column;
             gap: 20px;
@@ -276,6 +276,56 @@
             color: #333;
             line-height: 1.5;
         }
+        
+        .numerical-section {
+            grid-column: 1 / -1;
+            background: #e8f5e9;
+            border: 2px solid #4caf50;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        
+        .numerical-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #2e7d32;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .numerical-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+        }
+        
+        .calc-box {
+            background: white;
+            border-radius: 6px;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .calc-label {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 6px;
+        }
+        
+        .calc-formula {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 4px;
+        }
+        
+        .calc-result {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2e7d32;
+        }
     </style>
 </head>
 <body>
@@ -407,6 +457,36 @@
                     <div class="insight-text">
                         The chain rule is the mathematical foundation of backpropagation. It allows us to compute gradients efficiently by decomposing complex derivatives into simpler parts, multiplying local gradients as we traverse backward through the computational graph.
                     </div>
+                </div>
+            </div>
+            
+            <!-- Numerical Example Section -->
+            <div class="numerical-section">
+                <div class="numerical-title">
+                    <span>🔢</span>
+                    <span>Numerical Example: d/dx sin(x²) at x = 2</span>
+                </div>
+                <div class="numerical-grid">
+                    <div class="calc-box">
+                        <div class="calc-label">Step 1: Inner function</div>
+                        <div class="calc-formula">g(2) = 2² = 4</div>
+                        <div class="calc-result">g = 4</div>
+                    </div>
+                    <div class="calc-box">
+                        <div class="calc-label">Step 2: Outer derivative</div>
+                        <div class="calc-formula">f'(g) = cos(4)</div>
+                        <div class="calc-result">≈ -0.654</div>
+                    </div>
+                    <div class="calc-box">
+                        <div class="calc-label">Step 3: Inner derivative</div>
+                        <div class="calc-formula">g'(2) = 2 × 2</div>
+                        <div class="calc-result">= 4</div>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 12px; padding: 10px; background: white; border-radius: 6px;">
+                    <span style="font-size: 15px; color: #555;">Final Result: </span>
+                    <span style="font-family: 'Courier New', monospace; font-size: 16px;">cos(4) × 4 = -0.654 × 4 = </span>
+                    <span style="font-size: 20px; font-weight: 600; color: #2e7d32;">-2.615</span>
                 </div>
             </div>
         </div>

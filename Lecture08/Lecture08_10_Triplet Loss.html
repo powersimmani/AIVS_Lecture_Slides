@@ -23,7 +23,7 @@
         
         .container {
             width: 960px;
-            height: 540px;
+            height: 820px;
             padding: 30px;
             background: #ffffff;
         }
@@ -277,6 +277,133 @@
             font-size: 12px;
             font-weight: 600;
         }
+        
+        .visual-section {
+            margin-top: 25px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+        
+        .visual-box {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        
+        .visual-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .triplet-visual {
+            position: relative;
+            height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .triplet-point {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+        }
+        
+        .triplet-point.anchor {
+            background: #1E64C8;
+        }
+        
+        .triplet-point.positive {
+            background: #28a745;
+        }
+        
+        .triplet-point.negative {
+            background: #dc3545;
+        }
+        
+        .distance-label {
+            position: absolute;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+        }
+        
+        .distance-label.positive {
+            color: #28a745;
+            border: 1px solid #28a745;
+        }
+        
+        .distance-label.negative {
+            color: #dc3545;
+            border: 1px solid #dc3545;
+        }
+        
+        .visual-caption {
+            text-align: center;
+            font-size: 13px;
+            color: #666;
+            margin-top: 10px;
+            line-height: 1.4;
+        }
+        
+        .margin-explanation {
+            background: #e8f5e9;
+            border-radius: 6px;
+            padding: 10px 12px;
+            margin-top: 12px;
+            font-size: 13px;
+            color: #2e7d32;
+            text-align: center;
+        }
+        
+        .comparison-visual {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .state-box {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .state-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .state-diagram {
+            background: linear-gradient(135deg, #fafafa 0%, #f0f0f0 100%);
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            height: 130px;
+            position: relative;
+        }
+        
+        .arrow-between {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #1E64C8;
+        }
     </style>
 </head>
 <body>
@@ -363,6 +490,100 @@
                             <div>Fine-grained Similarity Learning</div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Visual Explanation Section -->
+        <div class="visual-section">
+            <div class="visual-box">
+                <div class="visual-title">🎯 Triplet Structure in Embedding Space</div>
+                <div class="triplet-visual">
+                    <svg viewBox="0 0 280 160" style="width: 100%; height: 160px;">
+                        <!-- Connection lines -->
+                        <line x1="140" y1="45" x2="70" y2="115" stroke="#28a745" stroke-width="3"/>
+                        <line x1="140" y1="45" x2="220" y2="100" stroke="#dc3545" stroke-width="2" stroke-dasharray="6,3"/>
+                        
+                        <!-- Distance labels -->
+                        <rect x="75" y="65" width="45" height="20" rx="10" fill="white" stroke="#28a745" stroke-width="1"/>
+                        <text x="97" y="79" font-size="10" fill="#28a745" text-anchor="middle" font-weight="600">d(a,p)</text>
+                        
+                        <rect x="170" y="58" width="45" height="20" rx="10" fill="white" stroke="#dc3545" stroke-width="1"/>
+                        <text x="192" y="72" font-size="10" fill="#dc3545" text-anchor="middle" font-weight="600">d(a,n)</text>
+                        
+                        <!-- Points -->
+                        <circle cx="140" cy="40" r="22" fill="#1E64C8"/>
+                        <text x="140" y="45" font-size="10" fill="white" text-anchor="middle" font-weight="600">Anchor</text>
+                        
+                        <circle cx="65" cy="120" r="22" fill="#28a745"/>
+                        <text x="65" y="125" font-size="10" fill="white" text-anchor="middle" font-weight="600">Positive</text>
+                        
+                        <circle cx="225" cy="105" r="22" fill="#dc3545"/>
+                        <text x="225" y="110" font-size="10" fill="white" text-anchor="middle" font-weight="600">Negative</text>
+                        
+                        <!-- Margin indicator -->
+                        <text x="140" y="155" font-size="11" fill="#666" text-anchor="middle">Goal: d(a,p) + margin &lt; d(a,n)</text>
+                    </svg>
+                </div>
+                <div class="margin-explanation">
+                    ✓ Positive should be closer than Negative by at least a margin
+                </div>
+            </div>
+            
+            <div class="visual-box">
+                <div class="visual-title">🔄 Learning Process</div>
+                <div class="comparison-visual">
+                    <div class="state-box">
+                        <div class="state-label">Before Training</div>
+                        <div class="state-diagram">
+                            <svg viewBox="0 0 150 130" style="width: 100%; height: 100%;">
+                                <!-- Wrong: Negative closer -->
+                                <circle cx="75" cy="35" r="18" fill="#1E64C8"/>
+                                <text x="75" y="39" font-size="8" fill="white" text-anchor="middle" font-weight="600">A</text>
+                                
+                                <circle cx="45" cy="95" r="16" fill="#28a745"/>
+                                <text x="45" y="99" font-size="8" fill="white" text-anchor="middle" font-weight="600">P</text>
+                                
+                                <circle cx="95" cy="60" r="16" fill="#dc3545"/>
+                                <text x="95" y="64" font-size="8" fill="white" text-anchor="middle" font-weight="600">N</text>
+                                
+                                <!-- Lines -->
+                                <line x1="75" y1="53" x2="50" y2="80" stroke="#28a745" stroke-width="2"/>
+                                <line x1="85" y1="50" x2="90" y2="55" stroke="#dc3545" stroke-width="2"/>
+                                
+                                <!-- X mark -->
+                                <text x="120" y="25" font-size="20" fill="#dc3545">✗</text>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="arrow-between">→</div>
+                    <div class="state-box">
+                        <div class="state-label">After Training</div>
+                        <div class="state-diagram">
+                            <svg viewBox="0 0 150 130" style="width: 100%; height: 100%;">
+                                <!-- Correct: Positive closer with margin -->
+                                <circle cx="55" cy="50" r="18" fill="#1E64C8"/>
+                                <text x="55" y="54" font-size="8" fill="white" text-anchor="middle" font-weight="600">A</text>
+                                
+                                <circle cx="55" cy="95" r="16" fill="#28a745"/>
+                                <text x="55" y="99" font-size="8" fill="white" text-anchor="middle" font-weight="600">P</text>
+                                
+                                <circle cx="120" cy="70" r="16" fill="#dc3545"/>
+                                <text x="120" y="74" font-size="8" fill="white" text-anchor="middle" font-weight="600">N</text>
+                                
+                                <!-- Lines -->
+                                <line x1="55" y1="68" x2="55" y2="79" stroke="#28a745" stroke-width="2"/>
+                                <line x1="73" y1="55" x2="104" y2="65" stroke="#dc3545" stroke-width="2" stroke-dasharray="4,2"/>
+                                
+                                <!-- Check mark -->
+                                <text x="120" y="25" font-size="20" fill="#28a745">✓</text>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="visual-caption" style="margin-top: 12px;">
+                    <strong style="color: #28a745;">d(a,p)</strong> becomes smaller • 
+                    <strong style="color: #dc3545;">d(a,n)</strong> becomes larger
                 </div>
             </div>
         </div>

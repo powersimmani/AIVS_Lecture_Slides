@@ -17,7 +17,7 @@
         }
         .container {
             width: 960px;
-            height: 540px;
+            height: 750px;
             position: relative;
             background: white;
             padding: 30px;
@@ -122,6 +122,96 @@
             font-size: 24px;
             margin-bottom: 8px;
         }
+        
+        .sampling-section {
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .sampling-card {
+            background: #f8f9fb;
+            border-radius: 8px;
+            padding: 15px;
+            border-left: 4px solid #1E64C8;
+        }
+        
+        .sampling-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .sampling-icon {
+            font-size: 18px;
+        }
+        
+        .sampling-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .sampling-content {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.5;
+        }
+        
+        .iid-box {
+            border-left-color: #4caf50;
+        }
+        
+        .iid-box .sampling-title {
+            color: #2e7d32;
+        }
+        
+        .stratified-box {
+            border-left-color: #9c27b0;
+        }
+        
+        .stratified-box .sampling-title {
+            color: #7b1fa2;
+        }
+        
+        .timeseries-box {
+            border-left-color: #ff9800;
+        }
+        
+        .timeseries-box .sampling-title {
+            color: #e65100;
+        }
+        
+        .leakage-box {
+            border-left-color: #f44336;
+        }
+        
+        .leakage-box .sampling-title {
+            color: #c62828;
+        }
+        
+        .visual-example {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 8px;
+            padding: 8px;
+            background: white;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        
+        .dot-a { background: #1E64C8; }
+        .dot-b { background: #ff9800; }
+        .dot-c { background: #4caf50; }
     </style>
 </head>
 <body>
@@ -169,6 +259,76 @@
                 • Never use test data during model development<br>
                 • Proper splitting ensures honest performance assessment<br>
                 • Keep test set completely isolated until final evaluation
+            </div>
+        </div>
+        
+        <!-- IID & Sampling Section -->
+        <div class="sampling-section">
+            <div class="sampling-card iid-box">
+                <div class="sampling-header">
+                    <span class="sampling-icon">🎲</span>
+                    <span class="sampling-title">IID Assumption</span>
+                </div>
+                <div class="sampling-content">
+                    <strong>Independent & Identically Distributed</strong><br>
+                    All sets must be drawn independently from the same distribution
+                </div>
+                <div class="visual-example">
+                    <span>Train:</span>
+                    <span class="dot dot-a"></span><span class="dot dot-b"></span><span class="dot dot-c"></span>
+                    <span style="margin-left:8px;">Test:</span>
+                    <span class="dot dot-a"></span><span class="dot dot-b"></span><span class="dot dot-c"></span>
+                    <span style="margin-left:8px; color:#2e7d32;">✓ Same distribution</span>
+                </div>
+            </div>
+            
+            <div class="sampling-card stratified-box">
+                <div class="sampling-header">
+                    <span class="sampling-icon">📊</span>
+                    <span class="sampling-title">Stratified Sampling</span>
+                </div>
+                <div class="sampling-content">
+                    Preserves class proportions across all splits<br>
+                    Essential for imbalanced datasets
+                </div>
+                <div class="visual-example">
+                    <span>Original 80:20 →</span>
+                    <span style="color:#7b1fa2;">Train 80:20, Test 80:20</span>
+                    <span style="margin-left:8px; color:#2e7d32;">✓</span>
+                </div>
+            </div>
+            
+            <div class="sampling-card timeseries-box">
+                <div class="sampling-header">
+                    <span class="sampling-icon">📈</span>
+                    <span class="sampling-title">Time Series Data</span>
+                </div>
+                <div class="sampling-content">
+                    <strong>No random split!</strong> Must respect temporal order<br>
+                    Train on past → Validate/Test on future
+                </div>
+                <div class="visual-example">
+                    <span style="background:#fff3e0; padding:2px 6px; border-radius:3px;">Jan-Jun: Train</span>
+                    <span>→</span>
+                    <span style="background:#e3f2fd; padding:2px 6px; border-radius:3px;">Jul-Aug: Val</span>
+                    <span>→</span>
+                    <span style="background:#e8f5e9; padding:2px 6px; border-radius:3px;">Sep-Dec: Test</span>
+                </div>
+            </div>
+            
+            <div class="sampling-card leakage-box">
+                <div class="sampling-header">
+                    <span class="sampling-icon">🚨</span>
+                    <span class="sampling-title">Data Leakage</span>
+                </div>
+                <div class="sampling-content">
+                    When test information leaks into training<br>
+                    Causes overly optimistic performance estimates
+                </div>
+                <div class="visual-example">
+                    <span style="color:#c62828;">❌ Normalize before split</span>
+                    <span style="margin-left:12px; color:#2e7d32;">✓ Normalize after split (fit on train only)</span>
+                </div>
             </div>
         </div>
     </div>

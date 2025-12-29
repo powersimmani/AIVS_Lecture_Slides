@@ -17,7 +17,7 @@
             background: white;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             min-height: 100vh;
             padding: 20px;
         }
@@ -25,11 +25,8 @@
         .container {
             max-width: 960px;
             width: 95vw;
-            min-height: 540px;
-            height: auto;
             background: white;
             position: relative;
-            overflow: hidden;
             padding: 20px 35px;
         }
         
@@ -241,109 +238,110 @@
             font-size: 13px;
             color: #333;
         }
-    
-        
-        /* Responsive adjustments */
-        @media screen and (max-width: 1000px) {
-            .container {
-                width: 98vw !important;
-                max-width: 98vw !important;
-                padding: 15px 20px !important;
-            }
+
+        /* ===== ADDITIONAL SECTION STYLES ===== */
+        .divider {
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #1E64C8, transparent);
+            margin: 35px 0;
+            border-radius: 2px;
         }
-        
-        @media screen and (max-width: 768px) {
-            .container {
-                padding: 10px 15px !important;
-            }
-            
-            .title {
-                font-size: 20px !important;
-            }
-            
-            /* 그리드 레이아웃을 1열로 */
-            .challenges-grid,
-            .comparison-grid,
-            .solutions-grid,
-            .guide-grid,
-            .findings-section,
-            .benefits-grid,
-            .applications-section,
-            .guidelines-grid,
-            .components-section,
-            .techniques-grid,
-            .deployment-section,
-            .savings-grid,
-            .results-grid,
-            .functions-grid,
-            .features-grid,
-            .comparison-section,
-            .bottom-section {
-                grid-template-columns: 1fr !important;
-            }
-            
-            .gradient-flow,
-            .network-visual,
-            .flow-steps,
-            .bottleneck-flow,
-            .example-flow,
-            .dimension-box,
-            .inception-structure .parallel-paths,
-            .comparison-section {
-                flex-direction: column !important;
-                gap: 15px !important;
-            }
-            
-            .arrow-back,
-            .arrow,
-            .arrow-right,
-            .arrow-connector,
-            .conv-arrow {
-                transform: rotate(90deg);
-                margin: 5px 0 !important;
-            }
-            
-            /* SVG와 layer 위치 조정 */
-            .layers-container,
-            .architecture-visual {
-                height: auto !important;
-                min-height: 300px !important;
-            }
-            
-            .layer-node {
-                position: relative !important;
-                left: auto !important;
-                margin: 10px 0 !important;
-            }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 18px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #E3F2FD;
         }
-        
-        @media screen and (max-width: 480px) {
-            .container {
-                padding: 8px 10px !important;
-            }
-            
-            .title {
-                font-size: 18px !important;
-            }
-            
-            .card-header,
-            .scenario-label,
-            .card-title,
-            .function-title,
-            .arch-title,
-            .flow-title {
-                font-size: 16px !important;
-            }
-            
-            .layer-box,
-            .conv-box,
-            .step-circle,
-            .layer-circle {
-                font-size: 14px !important;
-                padding: 8px !important;
-            }
+
+        .detail-section {
+            margin-bottom: 30px;
         }
-    
+
+        .explanation-text {
+            font-size: 15px;
+            line-height: 1.7;
+            color: #333;
+            margin-bottom: 18px;
+        }
+
+        .visual-comparison {
+            background: #F5F5F5;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .example-box {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 18px;
+            margin: 15px 0;
+        }
+
+        .example-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 12px;
+        }
+
+        .calc-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #EEE;
+        }
+
+        .calc-row:last-child {
+            border-bottom: none;
+            font-weight: 700;
+        }
+
+        .calc-label {
+            font-size: 14px;
+            color: #333;
+        }
+
+        .calc-value {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+
+        .calc-value.red {
+            color: #C62828;
+        }
+
+        .calc-value.green {
+            color: #2E7D32;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #FFF8E1 0%, #FFECB3 100%);
+            border: 2px solid #FF9800;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 18px 0;
+        }
+
+        .highlight-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #E65100;
+            margin-bottom: 8px;
+        }
+
+        .highlight-text {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.5;
+        }
     </style>
 </head>
 <body>
@@ -412,6 +410,144 @@
                 </div>
             </div>
         </div>
+
+        <!-- ===== ADDITIONAL EXPLANATION ===== -->
+        <div class="divider"></div>
+
+        <div class="detail-section">
+            <div class="section-title">📚 How It Works: Step by Step</div>
+            
+            <p class="explanation-text">
+                Standard convolution processes <strong>spatial patterns</strong> and <strong>channel relationships</strong> simultaneously. Depthwise Separable Convolution breaks this into two simpler operations, dramatically reducing computation while maintaining most of the representational power.
+            </p>
+
+            <svg width="100%" height="280" viewBox="0 0 900 280">
+                <!-- Standard Conv -->
+                <g transform="translate(20, 20)">
+                    <text x="180" y="0" text-anchor="middle" fill="#C62828" font-size="16" font-weight="bold">Standard 3×3 Conv</text>
+                    
+                    <!-- Input -->
+                    <rect x="0" y="30" width="80" height="100" fill="#FFCDD2" stroke="#E57373" stroke-width="2" rx="5"/>
+                    <text x="40" y="75" text-anchor="middle" fill="#C62828" font-size="12" font-weight="bold">Input</text>
+                    <text x="40" y="95" text-anchor="middle" fill="#C62828" font-size="11">M channels</text>
+                    
+                    <!-- Arrow -->
+                    <path d="M90 80 L140 80" stroke="#C62828" stroke-width="3" marker-end="url(#arrowRed)"/>
+                    
+                    <!-- Filter -->
+                    <rect x="150" y="40" width="100" height="80" fill="#EF5350" stroke="#C62828" stroke-width="2" rx="5"/>
+                    <text x="200" y="70" text-anchor="middle" fill="white" font-size="11" font-weight="bold">3×3 Filter</text>
+                    <text x="200" y="90" text-anchor="middle" fill="white" font-size="10">M × N filters</text>
+                    <text x="200" y="108" text-anchor="middle" fill="white" font-size="9">(all at once)</text>
+                    
+                    <!-- Arrow -->
+                    <path d="M260 80 L310 80" stroke="#C62828" stroke-width="3" marker-end="url(#arrowRed)"/>
+                    
+                    <!-- Output -->
+                    <rect x="320" y="30" width="80" height="100" fill="#FFCDD2" stroke="#E57373" stroke-width="2" rx="5"/>
+                    <text x="360" y="75" text-anchor="middle" fill="#C62828" font-size="12" font-weight="bold">Output</text>
+                    <text x="360" y="95" text-anchor="middle" fill="#C62828" font-size="11">N channels</text>
+                    
+                    <defs>
+                        <marker id="arrowRed" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#C62828"/>
+                        </marker>
+                    </defs>
+                </g>
+                
+                <!-- Depthwise Separable -->
+                <g transform="translate(470, 20)">
+                    <text x="200" y="0" text-anchor="middle" fill="#2E7D32" font-size="16" font-weight="bold">Depthwise Separable Conv</text>
+                    
+                    <!-- Input -->
+                    <rect x="0" y="30" width="60" height="100" fill="#C8E6C9" stroke="#4CAF50" stroke-width="2" rx="5"/>
+                    <text x="30" y="75" text-anchor="middle" fill="#2E7D32" font-size="11" font-weight="bold">Input</text>
+                    <text x="30" y="92" text-anchor="middle" fill="#2E7D32" font-size="10">M ch</text>
+                    
+                    <!-- Arrow -->
+                    <path d="M70 80 L100 80" stroke="#F57C00" stroke-width="2" marker-end="url(#arrowOrange)"/>
+                    
+                    <!-- Depthwise -->
+                    <rect x="110" y="40" width="90" height="80" fill="#FF9800" stroke="#F57C00" stroke-width="2" rx="5"/>
+                    <text x="155" y="65" text-anchor="middle" fill="white" font-size="10" font-weight="bold">Depthwise</text>
+                    <text x="155" y="80" text-anchor="middle" fill="white" font-size="9">3×3 per channel</text>
+                    <text x="155" y="95" text-anchor="middle" fill="white" font-size="9">(M filters)</text>
+                    
+                    <!-- Arrow -->
+                    <path d="M210 80 L240 80" stroke="#43A047" stroke-width="2" marker-end="url(#arrowGreen)"/>
+                    
+                    <!-- Pointwise -->
+                    <rect x="250" y="40" width="90" height="80" fill="#66BB6A" stroke="#43A047" stroke-width="2" rx="5"/>
+                    <text x="295" y="65" text-anchor="middle" fill="white" font-size="10" font-weight="bold">Pointwise</text>
+                    <text x="295" y="80" text-anchor="middle" fill="white" font-size="9">1×1 Conv</text>
+                    <text x="295" y="95" text-anchor="middle" fill="white" font-size="9">(M→N)</text>
+                    
+                    <!-- Arrow -->
+                    <path d="M350 80 L380 80" stroke="#2E7D32" stroke-width="2" marker-end="url(#arrowGreen)"/>
+                    
+                    <!-- Output -->
+                    <rect x="390" y="30" width="60" height="100" fill="#C8E6C9" stroke="#4CAF50" stroke-width="2" rx="5"/>
+                    <text x="420" y="75" text-anchor="middle" fill="#2E7D32" font-size="11" font-weight="bold">Output</text>
+                    <text x="420" y="92" text-anchor="middle" fill="#2E7D32" font-size="10">N ch</text>
+                    
+                    <defs>
+                        <marker id="arrowOrange" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+                            <path d="M0,0 L0,6 L8,3 z" fill="#F57C00"/>
+                        </marker>
+                        <marker id="arrowGreen" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+                            <path d="M0,0 L0,6 L8,3 z" fill="#43A047"/>
+                        </marker>
+                    </defs>
+                </g>
+                
+                <!-- Comparison labels -->
+                <text x="225" y="200" text-anchor="middle" fill="#C62828" font-size="13" font-weight="bold">Parameters: 3² × M × N</text>
+                <text x="225" y="220" text-anchor="middle" fill="#C62828" font-size="12">= 9MN</text>
+                
+                <text x="670" y="200" text-anchor="middle" fill="#2E7D32" font-size="13" font-weight="bold">Parameters: 3² × M + M × N</text>
+                <text x="670" y="220" text-anchor="middle" fill="#2E7D32" font-size="12">= 9M + MN</text>
+                
+                <!-- Reduction ratio -->
+                <rect x="350" y="240" width="200" height="35" fill="#FFF8E1" stroke="#FF9800" stroke-width="2" rx="8"/>
+                <text x="450" y="263" text-anchor="middle" fill="#E65100" font-size="14" font-weight="bold">Reduction: ~1/N + 1/9 ≈ 8-9×</text>
+            </svg>
+        </div>
+
+        <div class="detail-section">
+            <div class="section-title">🔢 Concrete Example</div>
+            
+            <div class="example-box">
+                <div class="example-title">3×3 Conv: 64 channels → 128 channels</div>
+                <div class="calc-row">
+                    <span class="calc-label">Standard Conv parameters:</span>
+                    <span class="calc-value red">3 × 3 × 64 × 128 = 73,728</span>
+                </div>
+                <div class="calc-row">
+                    <span class="calc-label">Depthwise (3×3 per channel):</span>
+                    <span class="calc-value">3 × 3 × 64 = 576</span>
+                </div>
+                <div class="calc-row">
+                    <span class="calc-label">Pointwise (1×1 to expand):</span>
+                    <span class="calc-value">1 × 1 × 64 × 128 = 8,192</span>
+                </div>
+                <div class="calc-row">
+                    <span class="calc-label">Depthwise Separable Total:</span>
+                    <span class="calc-value green">576 + 8,192 = 8,768</span>
+                </div>
+                <div class="calc-row">
+                    <span class="calc-label">Reduction ratio:</span>
+                    <span class="calc-value green">73,728 / 8,768 = 8.4× smaller!</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <div class="highlight-title">💡 Why Does This Work?</div>
+            <div class="highlight-text">
+                The key insight is that <strong>spatial correlations</strong> (edges, textures) and <strong>cross-channel correlations</strong> (combining color/feature channels) are largely independent. By processing them separately, we lose minimal representational power while gaining massive computational efficiency. This makes deep learning practical on mobile devices and edge computing.
+            </div>
+        </div>
+
     </div>
 </body>
 </html>

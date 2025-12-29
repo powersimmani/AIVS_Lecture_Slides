@@ -23,7 +23,7 @@
         
         .container {
             width: 960px;
-            height: 540px;
+            height: 600px;
             display: flex;
             flex-direction: column;
             gap: 18px;
@@ -89,6 +89,7 @@
             padding: 10px;
             background: white;
             border-radius: 6px;
+            min-height: 220px;
         }
         
         .graph-row {
@@ -256,63 +257,56 @@
                         <span>Forward Pass</span>
                     </div>
                     <div class="graph-area">
-                        <div class="graph-row">
-                            <div class="node">
-                                <div class="node-circle input-node">x</div>
-                                <div class="node-label">Input</div>
-                                <div class="node-value">2</div>
-                            </div>
+                        <svg viewBox="0 0 400 180" style="width: 100%; height: 100%;">
+                            <!-- Connections -->
+                            <line x1="55" y1="45" x2="120" y2="45" stroke="#1E64C8" stroke-width="2" marker-end="url(#arrowBlue)"/>
+                            <line x1="170" y1="45" x2="230" y2="45" stroke="#1E64C8" stroke-width="2" marker-end="url(#arrowBlue)"/>
+                            <line x1="280" y1="45" x2="340" y2="45" stroke="#1E64C8" stroke-width="2" marker-end="url(#arrowBlue)"/>
                             
-                            <div class="edge">
-                                <div class="arrow-right">→</div>
-                            </div>
+                            <!-- w to multiply -->
+                            <path d="M 55 100 L 90 100 L 90 60 L 120 60" fill="none" stroke="#1E64C8" stroke-width="2"/>
                             
-                            <div class="node">
-                                <div class="node-circle operation-node">×</div>
-                                <div class="node-label">Multiply</div>
-                            </div>
+                            <!-- b to add -->
+                            <path d="M 55 155 L 200 155 L 200 60 L 230 60" fill="none" stroke="#1E64C8" stroke-width="2"/>
                             
-                            <div class="edge">
-                                <div class="arrow-right">→</div>
-                            </div>
+                            <!-- Arrow marker -->
+                            <defs>
+                                <marker id="arrowBlue" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                    <path d="M0,0 L0,6 L9,3 z" fill="#1E64C8"/>
+                                </marker>
+                            </defs>
                             
-                            <div class="node">
-                                <div class="node-circle operation-node">+</div>
-                                <div class="node-label">Add</div>
-                            </div>
+                            <!-- Input x -->
+                            <circle cx="30" cy="45" r="25" fill="#e3f2fd" stroke="#1E64C8" stroke-width="3"/>
+                            <text x="30" y="50" text-anchor="middle" font-size="16" font-weight="600" fill="#1E64C8">x</text>
+                            <text x="30" y="80" text-anchor="middle" font-size="11" fill="#666">Input: 2</text>
                             
-                            <div class="edge">
-                                <div class="arrow-right">→</div>
-                            </div>
+                            <!-- Weight w -->
+                            <circle cx="30" cy="100" r="25" fill="#e3f2fd" stroke="#1E64C8" stroke-width="3"/>
+                            <text x="30" y="105" text-anchor="middle" font-size="16" font-weight="600" fill="#1E64C8">w</text>
+                            <text x="30" y="135" text-anchor="middle" font-size="11" fill="#666">Weight: 3</text>
                             
-                            <div class="node">
-                                <div class="node-circle output-node">L</div>
-                                <div class="node-label">Loss</div>
-                                <div class="node-value">13</div>
-                            </div>
-                        </div>
-                        
-                        <div class="graph-row" style="margin-top: -40px;">
-                            <div class="node">
-                                <div class="node-circle input-node">w</div>
-                                <div class="node-label">Weight</div>
-                                <div class="node-value">3</div>
-                            </div>
+                            <!-- Bias b -->
+                            <circle cx="30" cy="155" r="25" fill="#e3f2fd" stroke="#1E64C8" stroke-width="3"/>
+                            <text x="30" y="160" text-anchor="middle" font-size="16" font-weight="600" fill="#1E64C8">b</text>
+                            <text x="55" y="175" text-anchor="middle" font-size="11" fill="#666">Bias: 7</text>
                             
-                            <div style="width: 60px; height: 40px; border-left: 2px solid #1E64C8; border-bottom: 2px solid #1E64C8; margin-left: 30px;"></div>
-                        </div>
-                        
-                        <div class="graph-row" style="margin-top: -40px;">
-                            <div class="node">
-                                <div class="node-circle input-node">b</div>
-                                <div class="node-label">Bias</div>
-                                <div class="node-value">7</div>
-                            </div>
+                            <!-- Multiply -->
+                            <circle cx="145" cy="45" r="25" fill="#fff3e0" stroke="#ff9800" stroke-width="3"/>
+                            <text x="145" y="52" text-anchor="middle" font-size="20" font-weight="600" fill="#e65100">×</text>
+                            <text x="145" y="80" text-anchor="middle" font-size="11" fill="#666">= 6</text>
                             
-                            <div style="width: 220px; height: 40px; border-left: 2px solid #1E64C8; border-bottom: 2px solid #1E64C8; margin-left: 30px;"></div>
-                        </div>
-                        
-                        <div style="text-align: center; font-size: 14px; color: #666; margin-top: 10px; font-family: 'Courier New', monospace;">
+                            <!-- Add -->
+                            <circle cx="255" cy="45" r="25" fill="#fff3e0" stroke="#ff9800" stroke-width="3"/>
+                            <text x="255" y="52" text-anchor="middle" font-size="20" font-weight="600" fill="#e65100">+</text>
+                            <text x="255" y="80" text-anchor="middle" font-size="11" fill="#666">= 13</text>
+                            
+                            <!-- Loss L -->
+                            <circle cx="365" cy="45" r="25" fill="#e8f5e9" stroke="#4caf50" stroke-width="3"/>
+                            <text x="365" y="50" text-anchor="middle" font-size="16" font-weight="600" fill="#2e7d32">L</text>
+                            <text x="365" y="80" text-anchor="middle" font-size="11" fill="#666">Loss: 13</text>
+                        </svg>
+                        <div style="text-align: center; font-size: 14px; color: #666; font-family: 'Courier New', monospace;">
                             z = w·x + b = 3×2 + 7 = 13
                         </div>
                     </div>
@@ -325,71 +319,69 @@
                         <span>Backward Pass</span>
                     </div>
                     <div class="graph-area">
-                        <div class="graph-row">
-                            <div class="node">
-                                <div class="node-circle input-node">x</div>
-                                <div class="node-label">Input</div>
-                                <div class="gradient-value">∂L/∂x=3</div>
-                            </div>
+                        <svg viewBox="0 0 400 180" style="width: 100%; height: 100%;">
+                            <!-- Backward arrows (right to left) -->
+                            <defs>
+                                <marker id="arrowRed" markerWidth="10" markerHeight="10" refX="0" refY="3" orient="auto">
+                                    <path d="M9,0 L9,6 L0,3 z" fill="#d32f2f"/>
+                                </marker>
+                            </defs>
                             
-                            <div class="edge">
-                                <div class="arrow-left">←</div>
-                                <div class="gradient-label">×w</div>
-                            </div>
+                            <!-- Main backward flow -->
+                            <line x1="340" y1="45" x2="280" y2="45" stroke="#d32f2f" stroke-width="2" marker-end="url(#arrowRed)"/>
+                            <line x1="230" y1="45" x2="170" y2="45" stroke="#d32f2f" stroke-width="2" marker-end="url(#arrowRed)"/>
+                            <line x1="120" y1="45" x2="55" y2="45" stroke="#d32f2f" stroke-width="2" marker-end="url(#arrowRed)"/>
                             
-                            <div class="node">
-                                <div class="node-circle operation-node">×</div>
-                                <div class="node-label">Multiply</div>
-                            </div>
+                            <!-- Gradient labels on arrows -->
+                            <rect x="285" y="30" width="45" height="16" rx="3" fill="#ffebee"/>
+                            <text x="307" y="42" text-anchor="middle" font-size="10" fill="#d32f2f" font-weight="600">∂L/∂z</text>
                             
-                            <div class="edge">
-                                <div class="arrow-left">←</div>
-                                <div class="gradient-label">1</div>
-                            </div>
+                            <rect x="185" y="30" width="25" height="16" rx="3" fill="#ffebee"/>
+                            <text x="197" y="42" text-anchor="middle" font-size="10" fill="#d32f2f" font-weight="600">1</text>
                             
-                            <div class="node">
-                                <div class="node-circle operation-node">+</div>
-                                <div class="node-label">Add</div>
-                            </div>
+                            <rect x="75" y="30" width="30" height="16" rx="3" fill="#ffebee"/>
+                            <text x="90" y="42" text-anchor="middle" font-size="10" fill="#d32f2f" font-weight="600">×w</text>
                             
-                            <div class="edge">
-                                <div class="arrow-left">←</div>
-                                <div class="gradient-label">∂L/∂z</div>
-                            </div>
+                            <!-- w backward path -->
+                            <path d="M 120 60 L 90 60 L 90 100 L 55 100" fill="none" stroke="#d32f2f" stroke-width="2" marker-end="url(#arrowRed)"/>
+                            <rect x="92" y="55" width="22" height="14" rx="3" fill="#ffebee"/>
+                            <text x="103" y="65" text-anchor="middle" font-size="9" fill="#d32f2f" font-weight="600">×x</text>
                             
-                            <div class="node">
-                                <div class="node-circle output-node">L</div>
-                                <div class="node-label">Loss</div>
-                                <div class="gradient-value">1</div>
-                            </div>
-                        </div>
-                        
-                        <div class="graph-row" style="margin-top: -40px;">
-                            <div class="node">
-                                <div class="node-circle input-node">w</div>
-                                <div class="node-label">Weight</div>
-                                <div class="gradient-value">∂L/∂w=2</div>
-                            </div>
+                            <!-- b backward path -->
+                            <path d="M 230 60 L 200 60 L 200 155 L 55 155" fill="none" stroke="#d32f2f" stroke-width="2" marker-end="url(#arrowRed)"/>
+                            <rect x="202" y="100" width="18" height="14" rx="3" fill="#ffebee"/>
+                            <text x="211" y="110" text-anchor="middle" font-size="9" fill="#d32f2f" font-weight="600">1</text>
                             
-                            <div style="width: 60px; height: 40px; border-left: 2px solid #d32f2f; border-top: 2px solid #d32f2f; margin-left: 30px; position: relative;">
-                                <div class="gradient-label" style="position: absolute; top: -20px; left: 10px;">×x</div>
-                            </div>
-                        </div>
-                        
-                        <div class="graph-row" style="margin-top: -40px;">
-                            <div class="node">
-                                <div class="node-circle input-node">b</div>
-                                <div class="node-label">Bias</div>
-                                <div class="gradient-value">∂L/∂b=1</div>
-                            </div>
+                            <!-- Input x -->
+                            <circle cx="30" cy="45" r="25" fill="#e3f2fd" stroke="#1E64C8" stroke-width="3"/>
+                            <text x="30" y="50" text-anchor="middle" font-size="16" font-weight="600" fill="#1E64C8">x</text>
+                            <text x="30" y="80" text-anchor="middle" font-size="10" fill="#d32f2f" font-weight="600">∂L/∂x=3</text>
                             
-                            <div style="width: 220px; height: 40px; border-left: 2px solid #d32f2f; border-top: 2px solid #d32f2f; margin-left: 30px; position: relative;">
-                                <div class="gradient-label" style="position: absolute; top: -20px; left: 80px;">1</div>
-                            </div>
-                        </div>
-                        
-                        <div style="text-align: center; font-size: 14px; color: #d32f2f; margin-top: 10px; font-family: 'Courier New', monospace;">
-                            Chain Rule: ∂L/∂w = ∂L/∂z · ∂z/∂w
+                            <!-- Weight w -->
+                            <circle cx="30" cy="100" r="25" fill="#e3f2fd" stroke="#1E64C8" stroke-width="3"/>
+                            <text x="30" y="105" text-anchor="middle" font-size="16" font-weight="600" fill="#1E64C8">w</text>
+                            <text x="30" y="135" text-anchor="middle" font-size="10" fill="#d32f2f" font-weight="600">∂L/∂w=2</text>
+                            
+                            <!-- Bias b -->
+                            <circle cx="30" cy="155" r="25" fill="#e3f2fd" stroke="#1E64C8" stroke-width="3"/>
+                            <text x="30" y="160" text-anchor="middle" font-size="16" font-weight="600" fill="#1E64C8">b</text>
+                            <text x="55" y="175" text-anchor="middle" font-size="10" fill="#d32f2f" font-weight="600">∂L/∂b=1</text>
+                            
+                            <!-- Multiply -->
+                            <circle cx="145" cy="45" r="25" fill="#fff3e0" stroke="#ff9800" stroke-width="3"/>
+                            <text x="145" y="52" text-anchor="middle" font-size="20" font-weight="600" fill="#e65100">×</text>
+                            
+                            <!-- Add -->
+                            <circle cx="255" cy="45" r="25" fill="#fff3e0" stroke="#ff9800" stroke-width="3"/>
+                            <text x="255" y="52" text-anchor="middle" font-size="20" font-weight="600" fill="#e65100">+</text>
+                            
+                            <!-- Loss L -->
+                            <circle cx="365" cy="45" r="25" fill="#e8f5e9" stroke="#4caf50" stroke-width="3"/>
+                            <text x="365" y="50" text-anchor="middle" font-size="16" font-weight="600" fill="#2e7d32">L</text>
+                            <text x="365" y="80" text-anchor="middle" font-size="10" fill="#d32f2f" font-weight="600">∂L/∂L=1</text>
+                        </svg>
+                        <div style="text-align: center; font-size: 14px; color: #d32f2f; font-family: 'Courier New', monospace;">
+                            Chain Rule: ∂L/∂w = ∂L/∂z · ∂z/∂w = 1 × 2 = 2
                         </div>
                     </div>
                 </div>

@@ -23,7 +23,7 @@
         
         .container {
             width: 960px;
-            height: 540px;
+            height: 720px;
             display: flex;
             flex-direction: column;
             gap: 20px;
@@ -83,6 +83,7 @@
             position: relative;
             background: white;
             border-radius: 4px;
+            min-height: 180px;
         }
         
         canvas {
@@ -316,7 +317,8 @@
                 const height = canvas.height / window.devicePixelRatio;
                 const centerX = width / 2;
                 const centerY = height / 2;
-                const scale = 40;
+                const scaleX = 30;  // x축 스케일 (좌우 압축)
+                const scaleY = 70;  // y축 스케일 (상하 확대)
                 
                 ctx.clearRect(0, 0, width, height);
                 
@@ -337,13 +339,13 @@
                     if (i !== 0) {
                         // Vertical lines
                         ctx.beginPath();
-                        ctx.moveTo(centerX + i * scale, 0);
-                        ctx.lineTo(centerX + i * scale, height);
+                        ctx.moveTo(centerX + i * scaleX, 0);
+                        ctx.lineTo(centerX + i * scaleX, height);
                         ctx.stroke();
                         // Horizontal lines
                         ctx.beginPath();
-                        ctx.moveTo(0, centerY - i * scale);
-                        ctx.lineTo(width, centerY - i * scale);
+                        ctx.moveTo(0, centerY - i * scaleY * 0.5);
+                        ctx.lineTo(width, centerY - i * scaleY * 0.5);
                         ctx.stroke();
                     }
                 }
@@ -354,9 +356,9 @@
                 ctx.beginPath();
                 
                 for (let x = 0; x < width; x += 1) {
-                    const inputZ = (x - centerX) / scale;
+                    const inputZ = (x - centerX) / scaleX;
                     const outputY = activationFn(inputZ);
-                    const canvasY = centerY - outputY * scale;
+                    const canvasY = centerY - outputY * scaleY;
                     
                     if (x === 0) {
                         ctx.moveTo(x, canvasY);
@@ -377,11 +379,11 @@
                 ctx.font = 'bold 11px Aptos, Segoe UI, sans-serif';
                 
                 if (activationFn === sigmoid) {
-                    ctx.fillText('1', centerX + 5, centerY - scale + 15);
+                    ctx.fillText('1', centerX + 5, centerY - scaleY + 15);
                     ctx.fillText('0', centerX + 5, centerY + 15);
                 } else {
-                    ctx.fillText('1', centerX + 5, centerY - scale + 15);
-                    ctx.fillText('-1', centerX + 5, centerY + scale + 15);
+                    ctx.fillText('1', centerX + 5, centerY - scaleY + 15);
+                    ctx.fillText('-1', centerX + 5, centerY + scaleY + 15);
                     ctx.fillText('0', centerX + 5, centerY + 15);
                 }
             }

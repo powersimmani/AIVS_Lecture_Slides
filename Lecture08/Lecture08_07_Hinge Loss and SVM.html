@@ -23,7 +23,7 @@
         
         .container {
             width: 960px;
-            height: 540px;
+            height: 820px;
             padding: 30px;
             background: #ffffff;
         }
@@ -203,6 +203,133 @@
             color: #2c3e50;
             line-height: 1.4;
         }
+        
+        .visual-section {
+            margin-top: 25px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+        
+        .visual-box {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        
+        .visual-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .graph-container {
+            position: relative;
+            height: 160px;
+            margin: 0 auto;
+        }
+        
+        .graph-svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .margin-diagram {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .margin-visual {
+            position: relative;
+            width: 100%;
+            height: 140px;
+            background: linear-gradient(90deg, #ffebee 0%, #ffebee 35%, #fff 35%, #fff 65%, #e8f5e9 65%, #e8f5e9 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .decision-boundary {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: #1E64C8;
+            transform: translateX(-50%);
+        }
+        
+        .margin-zone {
+            position: absolute;
+            left: 35%;
+            right: 35%;
+            top: 0;
+            bottom: 0;
+            border-left: 2px dashed #1E64C8;
+            border-right: 2px dashed #1E64C8;
+            opacity: 0.6;
+        }
+        
+        .data-point {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            color: white;
+        }
+        
+        .point-negative {
+            background: #e53935;
+        }
+        
+        .point-positive {
+            background: #43a047;
+        }
+        
+        .margin-labels {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .loss-labels {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        
+        .loss-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .loss-color {
+            width: 20px;
+            height: 3px;
+        }
+        
+        .loss-color.hinge {
+            background: #1E64C8;
+        }
+        
+        .loss-color.squared {
+            background: #e53935;
+        }
     </style>
 </head>
 <body>
@@ -271,6 +398,88 @@
                             Smoother variant<br>
                             Differentiable smooth form
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Visual Explanation Section -->
+        <div class="visual-section">
+            <div class="visual-box">
+                <div class="visual-title">📈 Hinge Loss Graph</div>
+                <div class="graph-container">
+                    <svg class="graph-svg" viewBox="0 0 300 160">
+                        <!-- Axes -->
+                        <line x1="40" y1="130" x2="280" y2="130" stroke="#333" stroke-width="2"/>
+                        <line x1="150" y1="20" x2="150" y2="140" stroke="#333" stroke-width="2"/>
+                        
+                        <!-- Axis labels -->
+                        <text x="285" y="135" font-size="12" fill="#333">y·f(x)</text>
+                        <text x="155" y="18" font-size="12" fill="#333">Loss</text>
+                        
+                        <!-- Grid lines -->
+                        <line x1="40" y1="70" x2="280" y2="70" stroke="#ddd" stroke-width="1" stroke-dasharray="4"/>
+                        <line x1="200" y1="20" x2="200" y2="140" stroke="#ddd" stroke-width="1" stroke-dasharray="4"/>
+                        
+                        <!-- Tick marks and values -->
+                        <text x="145" y="145" font-size="11" fill="#666">0</text>
+                        <text x="195" y="145" font-size="11" fill="#666">1</text>
+                        <text x="245" y="145" font-size="11" fill="#666">2</text>
+                        <text x="95" y="145" font-size="11" fill="#666">-1</text>
+                        <text x="28" y="75" font-size="11" fill="#666">1</text>
+                        <text x="28" y="135" font-size="11" fill="#666">0</text>
+                        
+                        <!-- Linear Hinge Loss line -->
+                        <polyline points="40,20 200,130 280,130" fill="none" stroke="#1E64C8" stroke-width="3"/>
+                        
+                        <!-- Squared Hinge Loss curve -->
+                        <path d="M 40,20 Q 120,90 200,130 L 280,130" fill="none" stroke="#e53935" stroke-width="2" stroke-dasharray="6,3"/>
+                        
+                        <!-- Margin indicator -->
+                        <circle cx="200" cy="130" r="5" fill="#1E64C8"/>
+                        <text x="190" y="155" font-size="10" fill="#1E64C8" font-weight="600">margin</text>
+                        
+                        <!-- Zero loss region highlight -->
+                        <rect x="200" y="125" width="80" height="10" fill="#e8f5e9" opacity="0.5"/>
+                    </svg>
+                </div>
+                <div class="loss-labels">
+                    <div class="loss-label">
+                        <div class="loss-color hinge"></div>
+                        <span>Linear Hinge</span>
+                    </div>
+                    <div class="loss-label">
+                        <div class="loss-color squared"></div>
+                        <span>Squared Hinge</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="visual-box">
+                <div class="visual-title">🎯 SVM Margin Concept</div>
+                <div class="margin-diagram">
+                    <div class="margin-visual">
+                        <!-- Margin zone -->
+                        <div class="margin-zone"></div>
+                        <!-- Decision boundary -->
+                        <div class="decision-boundary"></div>
+                        
+                        <!-- Negative class points -->
+                        <div class="data-point point-negative" style="left: 12%; top: 25%;">−</div>
+                        <div class="data-point point-negative" style="left: 18%; top: 60%;">−</div>
+                        <div class="data-point point-negative" style="left: 8%; top: 75%;">−</div>
+                        <div class="data-point point-negative" style="left: 30%; top: 45%;">−</div>
+                        
+                        <!-- Positive class points -->
+                        <div class="data-point point-positive" style="left: 72%; top: 30%;">+</div>
+                        <div class="data-point point-positive" style="left: 80%; top: 55%;">+</div>
+                        <div class="data-point point-positive" style="left: 85%; top: 75%;">+</div>
+                        <div class="data-point point-positive" style="left: 68%; top: 70%;">+</div>
+                    </div>
+                    <div class="margin-labels">
+                        <span style="color: #e53935;">Class −1</span>
+                        <span style="color: #1E64C8; font-weight: 600;">← Margin →</span>
+                        <span style="color: #43a047;">Class +1</span>
                     </div>
                 </div>
             </div>

@@ -17,7 +17,7 @@
         }
         .container {
             width: 960px;
-            height: 540px;
+            height: 780px;
             position: relative;
             background: white;
             padding: 30px;
@@ -137,6 +137,93 @@
             font-size: 32px;
             margin-bottom: 5px;
         }
+        
+        .classification-section {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .classification-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        
+        .class-card {
+            background: #f8f9fb;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .class-card.underfit-card {
+            border: 2px solid #e74c3c;
+        }
+        
+        .class-card.good-card {
+            border: 2px solid #27ae60;
+        }
+        
+        .class-card.overfit-card {
+            border: 2px solid #f39c12;
+        }
+        
+        .class-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .underfit-card .class-title { color: #e74c3c; }
+        .good-card .class-title { color: #27ae60; }
+        .overfit-card .class-title { color: #f39c12; }
+        
+        .class-svg {
+            width: 100%;
+            height: 120px;
+            background: white;
+            border-radius: 6px;
+        }
+        
+        .class-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 8px;
+        }
+        
+        .legend-row {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 10px;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        
+        .legend-dot.class-a { background: #1E64C8; }
+        .legend-dot.class-b { background: #e74c3c; }
     </style>
 </head>
 <body>
@@ -222,6 +309,125 @@
                         <span class="error-label">Val Error:</span>
                         <div class="error-bar"><div class="error-fill high"></div></div>
                     </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 2D Classification Example -->
+        <div class="classification-section">
+            <div class="section-title">📊 2D Classification Example: Decision Boundaries</div>
+            <div class="classification-grid">
+                <!-- Underfitting -->
+                <div class="class-card underfit-card">
+                    <div class="class-title">Underfitting (Linear)</div>
+                    <svg class="class-svg" viewBox="0 0 120 100">
+                        <!-- Grid background -->
+                        <rect x="10" y="5" width="100" height="85" fill="#fafafa" stroke="#eee" rx="3"/>
+                        
+                        <!-- Linear decision boundary (too simple) -->
+                        <line x1="10" y1="80" x2="110" y2="20" stroke="#e74c3c" stroke-width="2" stroke-dasharray="4,2"/>
+                        
+                        <!-- Class A (blue) - circular pattern -->
+                        <circle cx="35" cy="35" r="4" fill="#1E64C8"/>
+                        <circle cx="45" cy="45" r="4" fill="#1E64C8"/>
+                        <circle cx="55" cy="35" r="4" fill="#1E64C8"/>
+                        <circle cx="45" cy="55" r="4" fill="#1E64C8"/>
+                        <circle cx="60" cy="50" r="4" fill="#1E64C8"/>
+                        <circle cx="50" cy="40" r="4" fill="#1E64C8"/>
+                        
+                        <!-- Class B (red) - surrounding -->
+                        <circle cx="25" cy="20" r="4" fill="#e74c3c"/>
+                        <circle cx="75" cy="25" r="4" fill="#e74c3c"/>
+                        <circle cx="85" cy="45" r="4" fill="#e74c3c"/>
+                        <circle cx="80" cy="70" r="4" fill="#e74c3c"/>
+                        <circle cx="30" cy="75" r="4" fill="#e74c3c"/>
+                        <circle cx="20" cy="50" r="4" fill="#e74c3c"/>
+                        
+                        <!-- Misclassified indicators -->
+                        <text x="72" y="28" font-size="8" fill="#e74c3c">✗</text>
+                        <text x="28" y="78" font-size="8" fill="#e74c3c">✗</text>
+                    </svg>
+                    <div class="class-label">Linear boundary can't separate circular pattern</div>
+                </div>
+                
+                <!-- Good Fit -->
+                <div class="class-card good-card">
+                    <div class="class-title">Good Fit (Appropriate)</div>
+                    <svg class="class-svg" viewBox="0 0 120 100">
+                        <!-- Grid background -->
+                        <rect x="10" y="5" width="100" height="85" fill="#fafafa" stroke="#eee" rx="3"/>
+                        
+                        <!-- Smooth elliptical decision boundary -->
+                        <ellipse cx="50" cy="45" rx="28" ry="22" fill="none" stroke="#27ae60" stroke-width="2"/>
+                        
+                        <!-- Class A (blue) - inside -->
+                        <circle cx="35" cy="35" r="4" fill="#1E64C8"/>
+                        <circle cx="45" cy="45" r="4" fill="#1E64C8"/>
+                        <circle cx="55" cy="35" r="4" fill="#1E64C8"/>
+                        <circle cx="45" cy="55" r="4" fill="#1E64C8"/>
+                        <circle cx="60" cy="50" r="4" fill="#1E64C8"/>
+                        <circle cx="50" cy="40" r="4" fill="#1E64C8"/>
+                        
+                        <!-- Class B (red) - outside -->
+                        <circle cx="25" cy="20" r="4" fill="#e74c3c"/>
+                        <circle cx="75" cy="25" r="4" fill="#e74c3c"/>
+                        <circle cx="85" cy="45" r="4" fill="#e74c3c"/>
+                        <circle cx="80" cy="70" r="4" fill="#e74c3c"/>
+                        <circle cx="30" cy="75" r="4" fill="#e74c3c"/>
+                        <circle cx="20" cy="50" r="4" fill="#e74c3c"/>
+                        
+                        <!-- Checkmark -->
+                        <text x="95" y="18" font-size="10" fill="#27ae60">✓</text>
+                    </svg>
+                    <div class="class-label">Smooth boundary generalizes well</div>
+                </div>
+                
+                <!-- Overfitting -->
+                <div class="class-card overfit-card">
+                    <div class="class-title">Overfitting (Too Complex)</div>
+                    <svg class="class-svg" viewBox="0 0 120 100">
+                        <!-- Grid background -->
+                        <rect x="10" y="5" width="100" height="85" fill="#fafafa" stroke="#eee" rx="3"/>
+                        
+                        <!-- Overly complex decision boundary -->
+                        <path d="M 22 45 Q 25 30, 35 28 Q 42 26, 45 35 Q 48 42, 55 38 Q 62 34, 65 42 Q 68 50, 62 55 Q 56 60, 50 58 Q 44 56, 40 60 Q 36 64, 30 58 Q 24 52, 22 45 Z" 
+                              fill="none" stroke="#f39c12" stroke-width="2"/>
+                        
+                        <!-- Class A (blue) - inside, fitted exactly -->
+                        <circle cx="35" cy="35" r="4" fill="#1E64C8"/>
+                        <circle cx="45" cy="45" r="4" fill="#1E64C8"/>
+                        <circle cx="55" cy="38" r="4" fill="#1E64C8"/>
+                        <circle cx="45" cy="55" r="4" fill="#1E64C8"/>
+                        <circle cx="60" cy="48" r="4" fill="#1E64C8"/>
+                        <circle cx="50" cy="40" r="4" fill="#1E64C8"/>
+                        
+                        <!-- Class B (red) - outside -->
+                        <circle cx="25" cy="20" r="4" fill="#e74c3c"/>
+                        <circle cx="75" cy="25" r="4" fill="#e74c3c"/>
+                        <circle cx="85" cy="45" r="4" fill="#e74c3c"/>
+                        <circle cx="80" cy="70" r="4" fill="#e74c3c"/>
+                        <circle cx="30" cy="75" r="4" fill="#e74c3c"/>
+                        <circle cx="20" cy="50" r="4" fill="#e74c3c"/>
+                        
+                        <!-- New test point that would be misclassified -->
+                        <circle cx="42" cy="38" r="3" fill="#1E64C8" opacity="0.4" stroke="#f39c12" stroke-width="1"/>
+                        <text x="46" y="36" font-size="7" fill="#f39c12">?</text>
+                    </svg>
+                    <div class="class-label">Wiggly boundary memorizes noise</div>
+                </div>
+            </div>
+            <div class="legend-row">
+                <div class="legend-item">
+                    <div class="legend-dot class-a"></div>
+                    <span>Class A</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot class-b"></div>
+                    <span>Class B</span>
+                </div>
+                <div class="legend-item">
+                    <span style="color:#666;">—</span>
+                    <span>Decision Boundary</span>
                 </div>
             </div>
         </div>

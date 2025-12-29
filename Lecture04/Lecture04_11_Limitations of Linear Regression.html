@@ -13,17 +13,16 @@
         
         body {
             font-family: Aptos, 'Segoe UI', sans-serif;
-            background: white;
+            background: #f5f5f5;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             min-height: 100vh;
             padding: 20px;
         }
         
         .container {
             width: 960px;
-            height: 540px;
             background: white;
             padding: 30px;
             position: relative;
@@ -41,14 +40,12 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
-            height: calc(100% - 50px);
         }
         
         .limitations-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 12px;
-            flex: 1;
         }
         
         .limitation-card {
@@ -164,6 +161,159 @@
             font-weight: bold;
             flex-shrink: 0;
         }
+
+        /* Visual Section Styles */
+        .visual-section {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 3px dashed #1E64C8;
+        }
+
+        .visual-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .visual-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .visual-card {
+            background: #fafafa;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s;
+        }
+
+        .visual-card:hover {
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+            transform: translateY(-3px);
+        }
+
+        .visual-card-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #dc3545;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #dc3545;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 180px;
+            margin-bottom: 10px;
+        }
+
+        .visual-card-caption {
+            font-size: 11px;
+            color: #666;
+            line-height: 1.4;
+            background: #fff;
+            padding: 8px;
+            border-radius: 6px;
+            border-left: 3px solid #dc3545;
+        }
+
+        /* SVG Styles */
+        .axis-line {
+            stroke: #333;
+            stroke-width: 2;
+        }
+
+        .axis-label {
+            font-size: 11px;
+            fill: #666;
+        }
+
+        .data-point {
+            transition: all 0.3s;
+        }
+
+        .data-point:hover {
+            r: 7;
+        }
+
+        .regression-line {
+            stroke-width: 2.5;
+            fill: none;
+        }
+
+        .ideal-curve {
+            stroke: #28a745;
+            stroke-width: 2;
+            stroke-dasharray: 6,3;
+            fill: none;
+        }
+
+        .wrong-fit {
+            stroke: #dc3545;
+            stroke-width: 2.5;
+            fill: none;
+        }
+
+        .outlier {
+            fill: #ff6b6b;
+            stroke: #dc3545;
+            stroke-width: 2;
+        }
+
+        .normal-point {
+            fill: #1E64C8;
+        }
+
+        .class-a {
+            fill: #1E64C8;
+        }
+
+        .class-b {
+            fill: #ff9800;
+        }
+
+        .threshold-line {
+            stroke: #9c27b0;
+            stroke-width: 2;
+            stroke-dasharray: 5,5;
+        }
+
+        .annotation {
+            font-size: 10px;
+            fill: #333;
+        }
+
+        .annotation-bad {
+            fill: #dc3545;
+            font-weight: 600;
+        }
+
+        .annotation-good {
+            fill: #28a745;
+            font-weight: 600;
+        }
+
+        .zone-good {
+            fill: rgba(40, 167, 69, 0.1);
+        }
+
+        .zone-bad {
+            fill: rgba(220, 53, 69, 0.1);
+        }
+
+        .legend {
+            font-size: 9px;
+        }
+
+        .legend-box {
+            rx: 2;
+            ry: 2;
+        }
     </style>
 </head>
 <body>
@@ -231,6 +381,286 @@
                         </div>
                     </div>
                     <div class="next-arrow">→</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Visual Demonstrations Section -->
+        <div class="visual-section">
+            <div class="visual-title">📊 Visual Demonstrations of Limitations</div>
+            
+            <div class="visual-grid">
+                <!-- 1. Non-linear Decision Boundary -->
+                <div class="visual-card">
+                    <div class="visual-card-title">Non-linear Patterns</div>
+                    <div class="chart-container">
+                        <svg width="100%" height="100%" viewBox="0 0 200 160">
+                            <!-- Axes -->
+                            <line x1="30" y1="140" x2="190" y2="140" class="axis-line"/>
+                            <line x1="30" y1="140" x2="30" y2="10" class="axis-line"/>
+                            <text x="110" y="155" class="axis-label" text-anchor="middle">X</text>
+                            <text x="15" y="75" class="axis-label" text-anchor="middle" transform="rotate(-90, 15, 75)">Y</text>
+                            
+                            <!-- Data points following curve -->
+                            <circle cx="40" cy="120" r="5" class="data-point normal-point"/>
+                            <circle cx="55" cy="95" r="5" class="data-point normal-point"/>
+                            <circle cx="70" cy="60" r="5" class="data-point normal-point"/>
+                            <circle cx="85" cy="40" r="5" class="data-point normal-point"/>
+                            <circle cx="100" cy="30" r="5" class="data-point normal-point"/>
+                            <circle cx="115" cy="35" r="5" class="data-point normal-point"/>
+                            <circle cx="130" cy="50" r="5" class="data-point normal-point"/>
+                            <circle cx="145" cy="75" r="5" class="data-point normal-point"/>
+                            <circle cx="160" cy="105" r="5" class="data-point normal-point"/>
+                            <circle cx="175" cy="125" r="5" class="data-point normal-point"/>
+                            
+                            <!-- Wrong linear fit -->
+                            <line x1="35" y1="85" x2="180" y2="65" class="wrong-fit"/>
+                            
+                            <!-- Ideal curve -->
+                            <path d="M 40 120 Q 100 15 175 125" class="ideal-curve"/>
+                            
+                            <!-- Legend -->
+                            <rect x="45" y="5" width="8" height="8" fill="#dc3545" class="legend-box"/>
+                            <text x="56" y="12" class="legend">Linear (Wrong)</text>
+                            <rect x="115" y="5" width="8" height="8" fill="#28a745" class="legend-box"/>
+                            <text x="126" y="12" class="legend">Ideal Curve</text>
+                        </svg>
+                    </div>
+                    <div class="visual-card-caption">
+                        Linear regression forces a straight line through curved data, causing systematic errors
+                    </div>
+                </div>
+
+                <!-- 2. Classification Problem -->
+                <div class="visual-card">
+                    <div class="visual-card-title">Classification Problem</div>
+                    <div class="chart-container">
+                        <svg width="100%" height="100%" viewBox="0 0 200 160">
+                            <!-- Axes -->
+                            <line x1="30" y1="140" x2="190" y2="140" class="axis-line"/>
+                            <line x1="30" y1="140" x2="30" y2="10" class="axis-line"/>
+                            <text x="110" y="155" class="axis-label" text-anchor="middle">X (Feature)</text>
+                            <text x="12" y="30" class="axis-label">1</text>
+                            <text x="12" y="130" class="axis-label">0</text>
+                            <line x1="28" y1="30" x2="32" y2="30" stroke="#333" stroke-width="1"/>
+                            <line x1="28" y1="130" x2="32" y2="130" stroke="#333" stroke-width="1"/>
+                            
+                            <!-- Class 0 points (bottom) -->
+                            <circle cx="45" cy="125" r="5" class="data-point class-b"/>
+                            <circle cx="60" cy="130" r="5" class="data-point class-b"/>
+                            <circle cx="75" cy="125" r="5" class="data-point class-b"/>
+                            <circle cx="90" cy="130" r="5" class="data-point class-b"/>
+                            <circle cx="105" cy="125" r="5" class="data-point class-b"/>
+                            
+                            <!-- Class 1 points (top) -->
+                            <circle cx="115" cy="35" r="5" class="data-point class-a"/>
+                            <circle cx="130" cy="30" r="5" class="data-point class-a"/>
+                            <circle cx="145" cy="35" r="5" class="data-point class-a"/>
+                            <circle cx="160" cy="30" r="5" class="data-point class-a"/>
+                            <circle cx="175" cy="35" r="5" class="data-point class-a"/>
+                            
+                            <!-- Linear regression line (goes beyond 0-1) -->
+                            <line x1="35" y1="145" x2="185" y2="5" class="wrong-fit"/>
+                            
+                            <!-- Problem zones -->
+                            <rect x="30" y="5" width="160" height="25" class="zone-bad" opacity="0.3"/>
+                            <rect x="30" y="140" width="160" height="15" class="zone-bad" opacity="0.3"/>
+                            
+                            <!-- Annotations -->
+                            <text x="100" y="18" class="annotation annotation-bad" text-anchor="middle">y > 1 (Invalid!)</text>
+                            <text x="55" y="152" class="annotation annotation-bad" text-anchor="middle">y < 0</text>
+                            
+                            <!-- Legend -->
+                            <rect x="45" y="55" width="8" height="8" fill="#1E64C8" class="legend-box"/>
+                            <text x="56" y="62" class="legend">Class 1</text>
+                            <rect x="95" y="55" width="8" height="8" fill="#ff9800" class="legend-box"/>
+                            <text x="106" y="62" class="legend">Class 0</text>
+                        </svg>
+                    </div>
+                    <div class="visual-card-caption">
+                        Linear regression outputs can exceed [0,1] range, making probability interpretation impossible
+                    </div>
+                </div>
+
+                <!-- 3. Outlier Sensitivity -->
+                <div class="visual-card">
+                    <div class="visual-card-title">Outlier Sensitivity</div>
+                    <div class="chart-container">
+                        <svg width="100%" height="100%" viewBox="0 0 200 160">
+                            <!-- Axes -->
+                            <line x1="30" y1="140" x2="190" y2="140" class="axis-line"/>
+                            <line x1="30" y1="140" x2="30" y2="10" class="axis-line"/>
+                            <text x="110" y="155" class="axis-label" text-anchor="middle">X</text>
+                            <text x="15" y="75" class="axis-label" text-anchor="middle" transform="rotate(-90, 15, 75)">Y</text>
+                            
+                            <!-- Normal data points -->
+                            <circle cx="45" cy="115" r="5" class="data-point normal-point"/>
+                            <circle cx="60" cy="105" r="5" class="data-point normal-point"/>
+                            <circle cx="75" cy="100" r="5" class="data-point normal-point"/>
+                            <circle cx="90" cy="90" r="5" class="data-point normal-point"/>
+                            <circle cx="105" cy="85" r="5" class="data-point normal-point"/>
+                            <circle cx="120" cy="75" r="5" class="data-point normal-point"/>
+                            <circle cx="135" cy="70" r="5" class="data-point normal-point"/>
+                            <circle cx="150" cy="60" r="5" class="data-point normal-point"/>
+                            
+                            <!-- Outlier -->
+                            <circle cx="170" cy="20" r="7" class="data-point outlier"/>
+                            <text x="170" y="15" class="annotation annotation-bad" text-anchor="middle" font-size="18">!</text>
+                            
+                            <!-- True fit (without outlier) -->
+                            <line x1="40" y1="118" x2="175" y2="48" class="ideal-curve" stroke="#28a745"/>
+                            
+                            <!-- Distorted fit (with outlier) -->
+                            <line x1="40" y1="125" x2="175" y2="25" class="wrong-fit"/>
+                            
+                            <!-- Arrow showing pull -->
+                            <path d="M 155 55 Q 165 40 168 28" fill="none" stroke="#dc3545" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+                            <defs>
+                                <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                    <polygon points="0 0, 10 3.5, 0 7" fill="#dc3545"/>
+                                </marker>
+                            </defs>
+                            
+                            <!-- Legend -->
+                            <rect x="45" y="5" width="8" height="8" fill="#28a745" class="legend-box"/>
+                            <text x="56" y="12" class="legend">True Fit</text>
+                            <rect x="100" y="5" width="8" height="8" fill="#dc3545" class="legend-box"/>
+                            <text x="111" y="12" class="legend">Distorted</text>
+                        </svg>
+                    </div>
+                    <div class="visual-card-caption">
+                        A single outlier can dramatically shift the regression line, distorting all predictions
+                    </div>
+                </div>
+
+                <!-- 4. Feature Engineering Required -->
+                <div class="visual-card">
+                    <div class="visual-card-title">Complex Patterns Need Engineering</div>
+                    <div class="chart-container">
+                        <svg width="100%" height="100%" viewBox="0 0 200 160">
+                            <!-- Left side: Original space -->
+                            <rect x="25" y="15" width="70" height="130" fill="#fff5f5" stroke="#dc3545" stroke-width="1" rx="5"/>
+                            <text x="60" y="10" class="annotation" text-anchor="middle" font-weight="600">Original X</text>
+                            
+                            <!-- Circular pattern that can't be separated -->
+                            <circle cx="60" cy="80" r="25" fill="none" stroke="#1E64C8" stroke-width="2"/>
+                            <circle cx="60" cy="80" r="6" fill="#1E64C8"/>
+                            
+                            <!-- Outer points -->
+                            <circle cx="60" cy="45" r="4" fill="#ff9800"/>
+                            <circle cx="60" cy="115" r="4" fill="#ff9800"/>
+                            <circle cx="35" cy="80" r="4" fill="#ff9800"/>
+                            <circle cx="85" cy="80" r="4" fill="#ff9800"/>
+                            <circle cx="42" cy="62" r="4" fill="#ff9800"/>
+                            <circle cx="78" cy="98" r="4" fill="#ff9800"/>
+                            
+                            <!-- Inner points -->
+                            <circle cx="55" cy="75" r="4" fill="#1E64C8"/>
+                            <circle cx="65" cy="85" r="4" fill="#1E64C8"/>
+                            <circle cx="52" cy="82" r="4" fill="#1E64C8"/>
+                            
+                            <!-- Arrow -->
+                            <path d="M 100 80 L 125 80" stroke="#333" stroke-width="2" marker-end="url(#arrowhead2)"/>
+                            <text x="112" y="72" class="annotation" text-anchor="middle" font-size="8">Transform</text>
+                            <text x="112" y="92" class="annotation" text-anchor="middle" font-size="7">x² + y²</text>
+                            <defs>
+                                <marker id="arrowhead2" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                    <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
+                                </marker>
+                            </defs>
+                            
+                            <!-- Right side: Transformed space -->
+                            <rect x="130" y="15" width="65" height="130" fill="#f0fff0" stroke="#28a745" stroke-width="1" rx="5"/>
+                            <text x="162" y="10" class="annotation" text-anchor="middle" font-weight="600">New Feature</text>
+                            
+                            <!-- Linearly separable in transformed space -->
+                            <circle cx="145" cy="110" r="4" fill="#1E64C8"/>
+                            <circle cx="155" cy="115" r="4" fill="#1E64C8"/>
+                            <circle cx="165" cy="105" r="4" fill="#1E64C8"/>
+                            <circle cx="175" cy="118" r="4" fill="#1E64C8"/>
+                            
+                            <circle cx="145" cy="50" r="4" fill="#ff9800"/>
+                            <circle cx="155" cy="45" r="4" fill="#ff9800"/>
+                            <circle cx="165" cy="55" r="4" fill="#ff9800"/>
+                            <circle cx="175" cy="40" r="4" fill="#ff9800"/>
+                            <circle cx="150" cy="60" r="4" fill="#ff9800"/>
+                            <circle cx="170" cy="48" r="4" fill="#ff9800"/>
+                            
+                            <!-- Separation line -->
+                            <line x1="135" y1="82" x2="190" y2="82" stroke="#28a745" stroke-width="2"/>
+                            <text x="162" y="78" class="annotation annotation-good" text-anchor="middle" font-size="8">Separable!</text>
+                        </svg>
+                    </div>
+                    <div class="visual-card-caption">
+                        Non-linear patterns require manual feature transformation (like x² terms) to become linearly separable
+                    </div>
+                </div>
+
+                <!-- 5. Interpretation Difficulty -->
+                <div class="visual-card">
+                    <div class="visual-card-title">Interpretation Complexity</div>
+                    <div class="chart-container">
+                        <svg width="100%" height="100%" viewBox="0 0 200 160">
+                            <!-- Simple model -->
+                            <rect x="15" y="20" width="80" height="50" fill="#e8f5e9" stroke="#28a745" stroke-width="2" rx="5"/>
+                            <text x="55" y="35" class="annotation annotation-good" text-anchor="middle" font-weight="600">Simple Model</text>
+                            <text x="55" y="50" class="annotation" text-anchor="middle" font-size="9">y = β₀ + β₁x₁ + β₂x₂</text>
+                            <text x="55" y="62" class="annotation" text-anchor="middle" font-size="8" fill="#28a745">✓ Easy to interpret</text>
+                            
+                            <!-- Arrow -->
+                            <text x="55" y="82" class="annotation" text-anchor="middle" font-size="16">↓</text>
+                            <text x="55" y="95" class="annotation" text-anchor="middle" font-size="8">Add interactions</text>
+                            
+                            <!-- Complex model -->
+                            <rect x="5" y="100" width="190" height="55" fill="#ffebee" stroke="#dc3545" stroke-width="2" rx="5"/>
+                            <text x="100" y="115" class="annotation annotation-bad" text-anchor="middle" font-weight="600">Complex Model</text>
+                            <text x="100" y="130" class="annotation" text-anchor="middle" font-size="7">y = β₀ + β₁x₁ + β₂x₂ + β₃x₁² + β₄x₂² + β₅x₁x₂ + β₆x₁²x₂ + ...</text>
+                            <text x="100" y="148" class="annotation" text-anchor="middle" font-size="8" fill="#dc3545">✕ Hard to explain coefficient meanings</text>
+                            
+                            <!-- Complexity indicator -->
+                            <rect x="155" y="25" width="35" height="45" fill="#fff" stroke="#666" stroke-width="1" rx="3"/>
+                            <text x="172" y="38" class="annotation" text-anchor="middle" font-size="8" font-weight="600">Terms</text>
+                            <text x="172" y="52" class="annotation annotation-good" text-anchor="middle" font-size="12">3</text>
+                            <text x="172" y="65" class="annotation annotation-bad" text-anchor="middle" font-size="10">→ 20+</text>
+                        </svg>
+                    </div>
+                    <div class="visual-card-caption">
+                        Adding polynomial and interaction terms exponentially increases model complexity and reduces interpretability
+                    </div>
+                </div>
+
+                <!-- 6. Categorical Outcomes -->
+                <div class="visual-card">
+                    <div class="visual-card-title">Categorical Outcomes</div>
+                    <div class="chart-container">
+                        <svg width="100%" height="100%" viewBox="0 0 200 160">
+                            <!-- Category boxes -->
+                            <rect x="20" y="20" width="50" height="35" fill="#e3f2fd" stroke="#1E64C8" stroke-width="2" rx="5"/>
+                            <text x="45" y="42" class="annotation" text-anchor="middle" font-weight="600" fill="#1E64C8">Cat 🐱</text>
+                            
+                            <rect x="75" y="20" width="50" height="35" fill="#fff3e0" stroke="#ff9800" stroke-width="2" rx="5"/>
+                            <text x="100" y="42" class="annotation" text-anchor="middle" font-weight="600" fill="#ff9800">Dog 🐕</text>
+                            
+                            <rect x="130" y="20" width="50" height="35" fill="#e8f5e9" stroke="#28a745" stroke-width="2" rx="5"/>
+                            <text x="155" y="42" class="annotation" text-anchor="middle" font-weight="600" fill="#28a745">Bird 🐦</text>
+                            
+                            <!-- Question mark -->
+                            <text x="100" y="75" class="annotation" text-anchor="middle" font-size="24" fill="#dc3545">?</text>
+                            
+                            <!-- Linear output -->
+                            <rect x="30" y="85" width="140" height="30" fill="#ffebee" stroke="#dc3545" stroke-width="2" rx="5"/>
+                            <text x="100" y="100" class="annotation" text-anchor="middle" font-size="9">Linear Output: y = 1.7</text>
+                            <text x="100" y="110" class="annotation annotation-bad" text-anchor="middle" font-size="8">What does 1.7 mean?!</text>
+                            
+                            <!-- What we need -->
+                            <rect x="30" y="120" width="140" height="35" fill="#e8f5e9" stroke="#28a745" stroke-width="2" rx="5"/>
+                            <text x="100" y="133" class="annotation annotation-good" text-anchor="middle" font-size="9">What we need:</text>
+                            <text x="100" y="148" class="annotation" text-anchor="middle" font-size="8">P(Cat)=0.1, P(Dog)=0.8, P(Bird)=0.1</text>
+                        </svg>
+                    </div>
+                    <div class="visual-card-caption">
+                        Linear regression cannot naturally output probabilities for multiple categories
+                    </div>
                 </div>
             </div>
         </div>

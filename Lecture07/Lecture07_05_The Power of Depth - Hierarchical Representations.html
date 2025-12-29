@@ -23,7 +23,7 @@
         
         .container {
             width: 960px;
-            height: 540px;
+            min-height: 540px;
             background: white;
             position: relative;
             overflow: hidden;
@@ -159,6 +159,218 @@
             font-weight: bold;
         }
         
+        /* New Visual Cortex Explanation Styles */
+        .cortex-explanation {
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch;
+            gap: 12px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed #ccc;
+        }
+        
+        .cortex-card {
+            flex: 1;
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            border: 2px solid #ddd;
+            transition: all 0.3s ease;
+        }
+        
+        .cortex-card:hover {
+            border-color: #1E64C8;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.15);
+        }
+        
+        .cortex-card .area-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .cortex-card .visual-demo {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+        
+        .cortex-card .area-desc {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.3;
+        }
+        
+        /* V1 - Edge patterns */
+        .v1-pattern {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4px;
+            width: 54px;
+            height: 54px;
+        }
+        
+        .v1-pattern .edge {
+            background: #333;
+        }
+        
+        .v1-pattern .edge-h {
+            grid-column: span 3;
+            height: 3px;
+            align-self: center;
+        }
+        
+        .v1-pattern .edge-v {
+            grid-row: span 3;
+            width: 3px;
+            justify-self: center;
+        }
+        
+        .v1-pattern .edge-d {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 45%, #333 45%, #333 55%, transparent 55%);
+        }
+        
+        /* V2 - Contour patterns */
+        .v2-pattern {
+            position: relative;
+            width: 54px;
+            height: 54px;
+        }
+        
+        .v2-pattern .contour {
+            position: absolute;
+            border: 3px solid #333;
+            border-radius: 50%;
+        }
+        
+        .v2-pattern .contour1 {
+            width: 50px;
+            height: 50px;
+            top: 2px;
+            left: 2px;
+            border-color: #1E64C8;
+        }
+        
+        .v2-pattern .contour2 {
+            width: 30px;
+            height: 30px;
+            top: 12px;
+            left: 12px;
+            border-radius: 4px;
+            border-color: #42A5F5;
+        }
+        
+        /* V4 - Color and shape */
+        .v4-pattern {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            width: 54px;
+            height: 54px;
+            justify-content: center;
+            align-content: center;
+        }
+        
+        .v4-pattern .shape {
+            width: 22px;
+            height: 22px;
+        }
+        
+        .v4-pattern .circle {
+            background: #FF6B6B;
+            border-radius: 50%;
+        }
+        
+        .v4-pattern .square {
+            background: #4ECDC4;
+            border-radius: 3px;
+        }
+        
+        .v4-pattern .triangle {
+            width: 0;
+            height: 0;
+            border-left: 11px solid transparent;
+            border-right: 11px solid transparent;
+            border-bottom: 22px solid #FFE66D;
+            background: transparent;
+        }
+        
+        .v4-pattern .diamond {
+            background: #95E1D3;
+            transform: rotate(45deg);
+            border-radius: 2px;
+            width: 16px;
+            height: 16px;
+            margin: 3px;
+        }
+        
+        /* IT - Complete object (face) */
+        .it-pattern {
+            width: 54px;
+            height: 54px;
+            position: relative;
+        }
+        
+        .it-pattern .face {
+            width: 50px;
+            height: 54px;
+            background: #FFE0B2;
+            border-radius: 50% 50% 45% 45%;
+            position: relative;
+            margin: 0 auto;
+        }
+        
+        .it-pattern .eye {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #333;
+            border-radius: 50%;
+            top: 18px;
+        }
+        
+        .it-pattern .eye-left {
+            left: 12px;
+        }
+        
+        .it-pattern .eye-right {
+            right: 12px;
+        }
+        
+        .it-pattern .nose {
+            position: absolute;
+            width: 6px;
+            height: 8px;
+            background: #FFCC80;
+            border-radius: 50%;
+            top: 26px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .it-pattern .mouth {
+            position: absolute;
+            width: 16px;
+            height: 8px;
+            border: 2px solid #333;
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
         .benefits-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -240,6 +452,66 @@
                 <span class="cortex-stage">V4</span>
                 <span class="arrow-small">→</span>
                 <span class="cortex-stage">IT</span>
+            </div>
+            
+            <!-- New Visual Explanation -->
+            <div class="cortex-explanation">
+                <div class="cortex-card">
+                    <div class="area-name">V1 (Primary Visual)</div>
+                    <div class="visual-demo">
+                        <div class="v1-pattern">
+                            <div class="edge edge-d"></div>
+                            <div class="edge edge-d" style="transform: rotate(90deg);"></div>
+                            <div class="edge edge-d"></div>
+                            <div class="edge edge-d" style="transform: rotate(90deg);"></div>
+                            <div style="background: #333; width: 6px; height: 6px; margin: auto;"></div>
+                            <div class="edge edge-d"></div>
+                            <div class="edge edge-d" style="transform: rotate(90deg);"></div>
+                            <div class="edge edge-d"></div>
+                            <div class="edge edge-d" style="transform: rotate(90deg);"></div>
+                        </div>
+                    </div>
+                    <div class="area-desc">Edges, lines, orientation<br>Basic pattern detection</div>
+                </div>
+                
+                <div class="cortex-card">
+                    <div class="area-name">V2</div>
+                    <div class="visual-demo">
+                        <div class="v2-pattern">
+                            <div class="contour contour1"></div>
+                            <div class="contour contour2"></div>
+                        </div>
+                    </div>
+                    <div class="area-desc">Contours, boundaries<br>Simple shape combinations</div>
+                </div>
+                
+                <div class="cortex-card">
+                    <div class="area-name">V4</div>
+                    <div class="visual-demo">
+                        <div class="v4-pattern">
+                            <div class="shape circle"></div>
+                            <div class="shape square"></div>
+                            <div class="shape triangle"></div>
+                            <div class="shape diamond"></div>
+                        </div>
+                    </div>
+                    <div class="area-desc">Color, complex shapes<br>Geometric patterns</div>
+                </div>
+                
+                <div class="cortex-card">
+                    <div class="area-name">IT (Inferotemporal)</div>
+                    <div class="visual-demo">
+                        <div class="it-pattern">
+                            <div class="face">
+                                <div class="eye eye-left"></div>
+                                <div class="eye eye-right"></div>
+                                <div class="nose"></div>
+                                <div class="mouth"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="area-desc">Complete object recognition<br>Faces, semantic concepts</div>
+                </div>
             </div>
         </div>
         

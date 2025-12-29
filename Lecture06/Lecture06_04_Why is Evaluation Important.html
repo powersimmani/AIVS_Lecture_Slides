@@ -17,7 +17,7 @@
         }
         .container {
             width: 960px;
-            height: 540px;
+            height: 720px;
             position: relative;
             background: white;
             padding: 30px;
@@ -92,6 +92,100 @@
             margin-bottom: 8px;
             background: rgba(255, 255, 255, 0.3);
         }
+        
+        .visual-section {
+            margin-top: 25px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            max-width: 880px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .scenario-card {
+            border-radius: 8px;
+            padding: 15px;
+            position: relative;
+        }
+        
+        .bad-scenario {
+            background: #ffebee;
+            border: 2px solid #ef5350;
+        }
+        
+        .good-scenario {
+            background: #e8f5e9;
+            border: 2px solid #66bb6a;
+        }
+        
+        .scenario-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            font-weight: 600;
+            font-size: 15px;
+        }
+        
+        .bad-scenario .scenario-header {
+            color: #c62828;
+        }
+        
+        .good-scenario .scenario-header {
+            color: #2e7d32;
+        }
+        
+        .scenario-icon {
+            font-size: 20px;
+        }
+        
+        .scenario-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+        
+        .flow-item {
+            background: white;
+            padding: 8px 10px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 12px;
+            flex: 1;
+        }
+        
+        .flow-arrow {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .result-bad {
+            background: #ffcdd2 !important;
+            color: #c62828;
+            font-weight: 600;
+        }
+        
+        .result-good {
+            background: #c8e6c9 !important;
+            color: #2e7d32;
+            font-weight: 600;
+        }
+        
+        .scenario-example {
+            margin-top: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #555;
+        }
+        
+        .example-label {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
     </style>
 </head>
 <body>
@@ -125,6 +219,47 @@
             <div class="reason-box">
                 <div class="reason-number">7</div>
                 <div class="reason-text">Enables comparison between different algorithms objectively</div>
+            </div>
+        </div>
+        
+        <!-- Visual Example Section -->
+        <div class="visual-section">
+            <div class="scenario-card bad-scenario">
+                <div class="scenario-header">
+                    <span class="scenario-icon">❌</span>
+                    <span>Without Proper Evaluation</span>
+                </div>
+                <div class="scenario-flow">
+                    <div class="flow-item">Train Model</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-item">Deploy</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-item result-bad">Fails!</div>
+                </div>
+                <div class="scenario-example">
+                    <div class="example-label">🏥 Example: Medical Diagnosis</div>
+                    Model shows 95% training accuracy but only 60% on real patients → Misdiagnosis risk
+                </div>
+            </div>
+            
+            <div class="scenario-card good-scenario">
+                <div class="scenario-header">
+                    <span class="scenario-icon">✓</span>
+                    <span>With Proper Evaluation</span>
+                </div>
+                <div class="scenario-flow">
+                    <div class="flow-item">Train</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-item" style="background:#e3f2fd;">Evaluate</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-item">Deploy</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-item result-good">Success!</div>
+                </div>
+                <div class="scenario-example">
+                    <div class="example-label">🏥 Example: Medical Diagnosis</div>
+                    Evaluation catches overfitting → Model refined → Reliable 92% accuracy on new patients
+                </div>
             </div>
         </div>
     </div>

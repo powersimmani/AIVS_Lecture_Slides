@@ -7,18 +7,18 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: Aptos, 'Segoe UI', sans-serif; background: #ffffff; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
-        .container { width: 960px; height: 540px; padding: 30px; background: #ffffff; }
+        .container { width: 960px; padding: 30px; background: #ffffff; }
         .header { text-align: center; margin-bottom: 20px; }
         .main-title { font-size: 20px; font-weight: 600; color: #1E64C8; margin-bottom: 6px; }
         .subtitle { font-size: 16px; color: #666; }
-        .content-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; height: 440px; }
+        .content-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px; }
         .left-section, .right-section { display: flex; flex-direction: column; gap: 15px; }
         .importance-box { background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%); color: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 12px rgba(30, 100, 200, 0.3); text-align: center; }
         .importance-icon { font-size: 32px; margin-bottom: 10px; }
         .importance-text { font-size: 17px; font-weight: 600; line-height: 1.6; }
         .problems-box { background: #f8f9fa; border: 2px solid #1E64C8; border-radius: 8px; padding: 18px; flex: 1; }
         .problems-title { font-size: 18px; font-weight: 600; color: #1E64C8; margin-bottom: 12px; text-align: center; }
-        .problems-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; height: calc(100% - 40px); }
+        .problems-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .problem-card { padding: 16px; border-radius: 8px; display: flex; flex-direction: column; justify-content: center; }
         .problem-card.too-large { background: #f8d7da; border: 2px solid #dc3545; }
         .problem-card.too-small { background: #fff3cd; border: 2px solid #ffc107; }
@@ -45,6 +45,188 @@
         .insight-item { display: flex; align-items: flex-start; gap: 10px; }
         .insight-icon { background: #1E64C8; color: white; min-width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0; margin-top: 2px; }
         .insight-text { font-size: 16px; color: #2c3e50; line-height: 1.5; }
+
+        /* New Visual Comparison Section */
+        .visualization-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 5px;
+        }
+        .viz-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .viz-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        .viz-card {
+            background: white;
+            border-radius: 10px;
+            padding: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .viz-card.large-lr { border-top: 4px solid #dc3545; }
+        .viz-card.small-lr { border-top: 4px solid #ffc107; }
+        .viz-card.optimal-lr { border-top: 4px solid #28a745; }
+        
+        .viz-card-title {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        .viz-card.large-lr .viz-card-title { color: #dc3545; }
+        .viz-card.small-lr .viz-card-title { color: #856404; }
+        .viz-card.optimal-lr .viz-card-title { color: #28a745; }
+
+        .loss-landscape {
+            width: 100%;
+            height: 120px;
+            position: relative;
+            background: linear-gradient(180deg, #f0f4f8 0%, #dce4ec 100%);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        
+        /* Loss curve (bowl shape) */
+        .loss-curve {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+        }
+        .loss-curve svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        /* Optimization ball */
+        .opt-ball {
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        }
+        
+        /* Large LR - oscillating/diverging */
+        .large-lr .opt-ball {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            animation: largeLR 2s ease-in-out infinite;
+        }
+        
+        /* Small LR - very slow movement */
+        .small-lr .opt-ball {
+            background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+            animation: smallLR 4s ease-out infinite;
+        }
+        
+        /* Optimal LR - smooth convergence */
+        .optimal-lr .opt-ball {
+            background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+            animation: optimalLR 3s ease-in-out infinite;
+        }
+        
+        @keyframes largeLR {
+            0% { left: 15%; top: 35%; }
+            15% { left: 85%; top: 40%; }
+            30% { left: 10%; top: 30%; }
+            45% { left: 90%; top: 25%; }
+            60% { left: 5%; top: 20%; }
+            75% { left: 95%; top: 15%; }
+            90% { left: 0%; top: 10%; }
+            100% { left: 15%; top: 35%; }
+        }
+        
+        @keyframes smallLR {
+            0% { left: 15%; top: 35%; }
+            25% { left: 22%; top: 42%; }
+            50% { left: 28%; top: 48%; }
+            75% { left: 33%; top: 53%; }
+            100% { left: 15%; top: 35%; }
+        }
+        
+        @keyframes optimalLR {
+            0% { left: 15%; top: 35%; }
+            20% { left: 30%; top: 50%; }
+            40% { left: 42%; top: 62%; }
+            60% { left: 48%; top: 68%; }
+            80% { left: 50%; top: 72%; }
+            100% { left: 15%; top: 35%; }
+        }
+        
+        .viz-description {
+            font-size: 13px;
+            color: #495057;
+            text-align: center;
+            line-height: 1.5;
+        }
+        
+        /* Trail effect for balls */
+        .trail {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            opacity: 0.3;
+            transform: translate(-50%, -50%);
+        }
+        
+        .large-lr .trail { background: #dc3545; }
+        .small-lr .trail { background: #ffc107; }
+        .optimal-lr .trail { background: #28a745; }
+        
+        /* Minimum point indicator */
+        .minimum-point {
+            position: absolute;
+            left: 50%;
+            bottom: 18px;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: #1E64C8;
+            font-weight: 600;
+        }
+        .minimum-star {
+            position: absolute;
+            left: 50%;
+            bottom: 25px;
+            transform: translateX(-50%);
+            font-size: 16px;
+        }
+
+        /* Restart button */
+        .restart-btn {
+            display: block;
+            margin: 16px auto 0;
+            padding: 8px 20px;
+            background: #1E64C8;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .restart-btn:hover {
+            background: #1854a8;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(30, 100, 200, 0.4);
+        }
     </style>
 </head>
 <body>
@@ -141,6 +323,93 @@
                 </div>
             </div>
         </div>
+
+        <!-- New Visual Comparison Section -->
+        <div class="visualization-section">
+            <div class="viz-title">🔬 Visual Comparison: How Learning Rate Affects Optimization</div>
+            <div class="viz-grid">
+                <!-- Large Learning Rate -->
+                <div class="viz-card large-lr">
+                    <div class="viz-card-title">❌ Too Large (η = 1.0)</div>
+                    <div class="loss-landscape">
+                        <svg class="loss-curve" viewBox="0 0 200 100" preserveAspectRatio="none">
+                            <defs>
+                                <linearGradient id="curveGrad1" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#f8d7da;stop-opacity:0.3" />
+                                    <stop offset="100%" style="stop-color:#dc3545;stop-opacity:0.2" />
+                                </linearGradient>
+                            </defs>
+                            <path d="M0,100 Q50,100 70,60 Q100,10 130,60 Q150,100 200,100 Z" fill="url(#curveGrad1)" stroke="#dc3545" stroke-width="2"/>
+                        </svg>
+                        <div class="opt-ball"></div>
+                        <div class="minimum-star">⭐</div>
+                        <div class="minimum-point">minimum</div>
+                    </div>
+                    <div class="viz-description">
+                        Overshoots the minimum repeatedly,<br>
+                        causing oscillation or divergence
+                    </div>
+                </div>
+
+                <!-- Small Learning Rate -->
+                <div class="viz-card small-lr">
+                    <div class="viz-card-title">🐢 Too Small (η = 0.001)</div>
+                    <div class="loss-landscape">
+                        <svg class="loss-curve" viewBox="0 0 200 100" preserveAspectRatio="none">
+                            <defs>
+                                <linearGradient id="curveGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#fff3cd;stop-opacity:0.3" />
+                                    <stop offset="100%" style="stop-color:#ffc107;stop-opacity:0.2" />
+                                </linearGradient>
+                            </defs>
+                            <path d="M0,100 Q50,100 70,60 Q100,10 130,60 Q150,100 200,100 Z" fill="url(#curveGrad2)" stroke="#ffc107" stroke-width="2"/>
+                        </svg>
+                        <div class="opt-ball"></div>
+                        <div class="minimum-star">⭐</div>
+                        <div class="minimum-point">minimum</div>
+                    </div>
+                    <div class="viz-description">
+                        Takes tiny steps, extremely slow<br>
+                        progress toward the minimum
+                    </div>
+                </div>
+
+                <!-- Optimal Learning Rate -->
+                <div class="viz-card optimal-lr">
+                    <div class="viz-card-title">✅ Optimal (η = 0.1)</div>
+                    <div class="loss-landscape">
+                        <svg class="loss-curve" viewBox="0 0 200 100" preserveAspectRatio="none">
+                            <defs>
+                                <linearGradient id="curveGrad3" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#d4edda;stop-opacity:0.3" />
+                                    <stop offset="100%" style="stop-color:#28a745;stop-opacity:0.2" />
+                                </linearGradient>
+                            </defs>
+                            <path d="M0,100 Q50,100 70,60 Q100,10 130,60 Q150,100 200,100 Z" fill="url(#curveGrad3)" stroke="#28a745" stroke-width="2"/>
+                        </svg>
+                        <div class="opt-ball"></div>
+                        <div class="minimum-star">⭐</div>
+                        <div class="minimum-point">minimum</div>
+                    </div>
+                    <div class="viz-description">
+                        Balanced steps lead to smooth<br>
+                        and efficient convergence
+                    </div>
+                </div>
+            </div>
+            <button class="restart-btn" onclick="restartAnimations()">🔄 Restart Animation</button>
+        </div>
     </div>
+
+    <script>
+        function restartAnimations() {
+            const balls = document.querySelectorAll('.opt-ball');
+            balls.forEach(ball => {
+                ball.style.animation = 'none';
+                ball.offsetHeight; // Trigger reflow
+                ball.style.animation = '';
+            });
+        }
+    </script>
 </body>
 </html>

@@ -23,7 +23,7 @@
         
         .container {
             width: 960px;
-            height: 540px;
+            height: 820px;
             padding: 30px;
             background: #ffffff;
         }
@@ -228,6 +228,162 @@
             line-height: 1.5;
             margin-bottom: 6px;
         }
+        
+        .visual-section {
+            margin-top: 25px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+        
+        .visual-box {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        
+        .visual-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .graph-container {
+            position: relative;
+            height: 160px;
+            margin: 0 auto;
+        }
+        
+        .graph-svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .imbalance-visual {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .class-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .class-label {
+            min-width: 90px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .samples-container {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            flex: 1;
+        }
+        
+        .sample {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+        }
+        
+        .sample.negative {
+            background: #90caf9;
+        }
+        
+        .sample.positive {
+            background: #ef5350;
+        }
+        
+        .sample.easy {
+            opacity: 0.4;
+        }
+        
+        .sample.hard {
+            opacity: 1;
+            box-shadow: 0 0 4px rgba(0,0,0,0.3);
+        }
+        
+        .weight-bar-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 8px;
+        }
+        
+        .weight-label {
+            min-width: 80px;
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .weight-bar {
+            height: 20px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .weight-bar.high {
+            background: linear-gradient(90deg, #1E64C8, #2874d8);
+        }
+        
+        .weight-bar.low {
+            background: #b0bec5;
+        }
+        
+        .loss-legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 12px;
+            font-size: 13px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .legend-line {
+            width: 24px;
+            height: 3px;
+        }
+        
+        .legend-line.ce {
+            background: #90a4ae;
+        }
+        
+        .legend-line.focal1 {
+            background: #42a5f5;
+        }
+        
+        .legend-line.focal2 {
+            background: #1E64C8;
+        }
+        
+        .focus-explanation {
+            background: #e8f5e9;
+            border-radius: 6px;
+            padding: 10px 12px;
+            margin-top: 12px;
+            font-size: 14px;
+            color: #2e7d32;
+            text-align: center;
+            line-height: 1.4;
+        }
     </style>
 </head>
 <body>
@@ -302,6 +458,107 @@
                     <div class="app-title">💡 Main Applications</div>
                     <div class="app-item"><strong>•</strong> Object Detection (e.g., RetinaNet)</div>
                     <div class="app-item"><strong>•</strong> Imbalanced Classification Tasks</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Visual Explanation Section -->
+        <div class="visual-section">
+            <div class="visual-box">
+                <div class="visual-title">📈 Loss Comparison: CE vs Focal Loss</div>
+                <div class="graph-container">
+                    <svg class="graph-svg" viewBox="0 0 300 160">
+                        <!-- Axes -->
+                        <line x1="40" y1="140" x2="280" y2="140" stroke="#333" stroke-width="2"/>
+                        <line x1="40" y1="140" x2="40" y2="20" stroke="#333" stroke-width="2"/>
+                        
+                        <!-- Axis labels -->
+                        <text x="150" y="155" font-size="11" fill="#333" text-anchor="middle">Probability of Ground Truth (p)</text>
+                        <text x="15" y="80" font-size="11" fill="#333" transform="rotate(-90, 15, 80)">Loss</text>
+                        
+                        <!-- Tick marks -->
+                        <text x="40" y="152" font-size="10" fill="#666" text-anchor="middle">0</text>
+                        <text x="160" y="152" font-size="10" fill="#666" text-anchor="middle">0.5</text>
+                        <text x="280" y="152" font-size="10" fill="#666" text-anchor="middle">1</text>
+                        
+                        <!-- Cross-Entropy curve (gray) -->
+                        <path d="M 40,20 Q 80,60 120,90 Q 180,120 240,135 L 280,140" 
+                              fill="none" stroke="#90a4ae" stroke-width="2.5"/>
+                        
+                        <!-- Focal Loss γ=1 (light blue) -->
+                        <path d="M 40,50 Q 80,80 120,105 Q 180,128 240,138 L 280,140" 
+                              fill="none" stroke="#42a5f5" stroke-width="2.5"/>
+                        
+                        <!-- Focal Loss γ=2 (dark blue) -->
+                        <path d="M 40,70 Q 80,100 120,120 Q 180,135 240,139 L 280,140" 
+                              fill="none" stroke="#1E64C8" stroke-width="3"/>
+                        
+                        <!-- Well-classified region highlight -->
+                        <rect x="200" y="130" width="80" height="12" fill="#e8f5e9" opacity="0.6" rx="2"/>
+                        <text x="240" y="125" font-size="9" fill="#2e7d32" text-anchor="middle">Easy samples</text>
+                        
+                        <!-- Hard sample region -->
+                        <text x="70" y="45" font-size="9" fill="#c62828">Hard samples</text>
+                    </svg>
+                </div>
+                <div class="loss-legend">
+                    <div class="legend-item">
+                        <div class="legend-line ce"></div>
+                        <span>Cross-Entropy</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-line focal1"></div>
+                        <span>Focal (γ=1)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-line focal2"></div>
+                        <span>Focal (γ=2)</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="visual-box">
+                <div class="visual-title">⚖️ How Focal Loss Reweights Samples</div>
+                <div class="imbalance-visual">
+                    <div class="class-row">
+                        <div class="class-label">Background<br>(Easy)</div>
+                        <div class="samples-container">
+                            <div class="sample negative easy"></div>
+                            <div class="sample negative easy"></div>
+                            <div class="sample negative easy"></div>
+                            <div class="sample negative easy"></div>
+                            <div class="sample negative easy"></div>
+                            <div class="sample negative easy"></div>
+                            <div class="sample negative easy"></div>
+                            <div class="sample negative easy"></div>
+                            <div class="sample negative easy"></div>
+                            <div class="sample negative easy"></div>
+                            <div class="sample negative easy"></div>
+                            <div class="sample negative easy"></div>
+                        </div>
+                    </div>
+                    <div class="class-row">
+                        <div class="class-label">Object<br>(Hard)</div>
+                        <div class="samples-container">
+                            <div class="sample positive hard"></div>
+                            <div class="sample positive hard"></div>
+                        </div>
+                    </div>
+                    
+                    <div style="border-top: 1px dashed #1E64C8; margin: 8px 0; padding-top: 8px;">
+                        <div style="font-size: 13px; color: #1E64C8; font-weight: 600; margin-bottom: 8px;">Loss Weight by (1-p)^γ:</div>
+                        <div class="weight-bar-container">
+                            <div class="weight-label">Easy (p=0.9)</div>
+                            <div class="weight-bar low" style="width: 30px;">0.01</div>
+                        </div>
+                        <div class="weight-bar-container">
+                            <div class="weight-label">Hard (p=0.2)</div>
+                            <div class="weight-bar high" style="width: 180px;">0.64</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="focus-explanation">
+                    ✓ Easy samples contribute little → Model focuses on hard examples
                 </div>
             </div>
         </div>
