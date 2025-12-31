@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,7 +23,6 @@
         
         .container {
             width: 960px;
-            height: 540px;
             background: white;
             padding: 30px;
             display: flex;
@@ -103,11 +102,16 @@
             border: 2px solid #e0e0e0;
             border-radius: 8px;
             padding: 12px 15px;
-            font-family: 'Courier New', monospace;
-            font-size: 16px;
+            font-family: 'Times New Roman', Georgia, serif;
+            font-size: 17px;
+            font-style: italic;
             color: #333;
             text-align: center;
             margin-bottom: 8px;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .loss-desc {
@@ -148,6 +152,10 @@
             padding: 15px 12px;
             margin-bottom: 8px;
             transition: all 0.3s ease;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
         }
         
         .step:hover .step-box {
@@ -178,16 +186,11 @@
         }
         
         .step-content {
+            font-family: 'Times New Roman', Georgia, serif;
             font-size: 16px;
+            font-style: italic;
             color: #555;
-            line-height: 1.3;
-        }
-        
-        .step-formula {
-            font-family: 'Courier New', monospace;
-            font-size: 15px;
-            color: #333;
-            margin-top: 5px;
+            line-height: 1.4;
         }
         
         .arrow {
@@ -213,9 +216,142 @@
         }
         
         .final-formula {
-            font-size: 18px;
-            font-family: 'Courier New', monospace;
-            font-weight: 600;
+            font-family: 'Times New Roman', Georgia, serif;
+            font-size: 19px;
+            font-style: italic;
+        }
+
+        /* Math styling */
+        .math {
+            font-family: 'Times New Roman', Georgia, serif;
+            font-style: italic;
+        }
+        
+        .math sub, .math sup {
+            font-size: 0.75em;
+        }
+        
+        .norm {
+            font-style: normal;
+            font-weight: normal;
+        }
+
+        /* 4D Vector Example Section */
+        .example-section {
+            margin-top: 25px;
+            background: linear-gradient(135deg, #FFF8E7 0%, #ffffff 100%);
+            border: 2px solid #E67E22;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .example-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 700;
+            color: #E67E22;
+            margin-bottom: 18px;
+        }
+
+        .example-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .example-step {
+            background: white;
+            border: 2px solid #F39C12;
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+        .example-step-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .example-step-number {
+            background: #E67E22;
+            color: white;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .example-step-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #D35400;
+        }
+
+        .vector-display {
+            background: #FEF9E7;
+            border: 1px solid #F9E79F;
+            border-radius: 8px;
+            padding: 10px 15px;
+            font-size: 14px;
+            color: #333;
+            margin: 8px 0;
+        }
+
+        .vector-label {
+            font-family: 'Times New Roman', Georgia, serif;
+            font-style: italic;
+            font-weight: 700;
+            color: #E67E22;
+            margin-right: 8px;
+        }
+
+        .calc-line {
+            font-family: 'Times New Roman', Georgia, serif;
+            font-size: 14px;
+            color: #555;
+            margin: 5px 0;
+            padding-left: 10px;
+        }
+
+        .result-box {
+            background: linear-gradient(135deg, #E67E22 0%, #F39C12 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .result-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .result-formula {
+            font-family: 'Times New Roman', Georgia, serif;
+            font-size: 15px;
+            margin-bottom: 8px;
+        }
+
+        .result-value {
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .note-box {
+            background: #EBF5FB;
+            border-left: 4px solid #3498DB;
+            padding: 12px 15px;
+            margin-top: 15px;
+            border-radius: 0 8px 8px 0;
+            font-size: 14px;
+            color: #2C3E50;
         }
     </style>
 </head>
@@ -232,7 +368,9 @@
                     <div class="loss-name">Simplified Loss</div>
                     <div class="badge">✓ Preferred</div>
                 </div>
-                <div class="loss-formula">L_simple = E_{t,x₀,ε} [||ε - ε_θ(x_t, t)||²]</div>
+                <div class="loss-formula">
+                    <span class="math">L<sub>simple</sub> = E<sub>t, x<sub>0</sub>, ε</sub> [ || ε − ε<sub>θ</sub>(x<sub>t</sub>, t) ||² ]</span>
+                </div>
                 <div class="loss-desc">Works better in practice</div>
             </div>
             
@@ -240,8 +378,10 @@
                 <div class="loss-header">
                     <div class="loss-name">Variational Lower Bound</div>
                 </div>
-                <div class="loss-formula">L_vlb = E[log p(x₀) - log p_θ(x₀)]</div>
-                <div class="loss-desc">Theoretical foundation</div>
+                <div class="loss-formula">
+                    <span class="math">L<sub>vlb</sub> = Σ<sub>t</sub> E<sub>q</sub>[ D<sub>KL</sub>( q(x<sub>t−1</sub>|x<sub>t</sub>, x<sub>0</sub>) || p<sub>θ</sub>(x<sub>t−1</sub>|x<sub>t</sub>) ) ]</span>
+                </div>
+                <div class="loss-desc">Theoretical foundation (ELBO)</div>
             </div>
         </div>
         
@@ -253,7 +393,7 @@
                     <div class="step-box">
                         <div class="step-number">1</div>
                         <div class="step-title">Sample Timestep</div>
-                        <div class="step-content">t ~ Uniform{1,...,T}</div>
+                        <div class="step-content">t ~ Uniform{1, ..., T}</div>
                     </div>
                 </div>
                 
@@ -274,7 +414,7 @@
                         <div class="step-number">3</div>
                         <div class="step-title">Create Noisy Sample</div>
                         <div class="step-content">
-                            <div class="step-formula">x_t = √ᾱ_t · x₀ + √(1-ᾱ_t) · ε</div>
+                            x<sub>t</sub> = √α̅<sub>t</sub> · x<sub>0</sub> + √(1−α̅<sub>t</sub>) · ε
                         </div>
                     </div>
                 </div>
@@ -285,14 +425,90 @@
                     <div class="step-box">
                         <div class="step-number">4</div>
                         <div class="step-title">Gradient Descent</div>
-                        <div class="step-content">Update θ to minimize loss</div>
+                        <div class="step-content">Update θ to<br>minimize loss</div>
                     </div>
                 </div>
             </div>
             
             <div class="final-objective">
                 <div class="final-title">⚡ Optimization Objective</div>
-                <div class="final-formula">minimize ||ε - ε_θ(x_t, t)||²</div>
+                <div class="final-formula">minimize || ε − ε<sub>θ</sub>(x<sub>t</sub>, t) ||²</div>
+            </div>
+        </div>
+
+        <!-- 4D Vector Calculation Example -->
+        <div class="example-section">
+            <div class="example-title">📐 4D Vector Calculation Example</div>
+            
+            <div class="example-grid">
+                <div class="example-step">
+                    <div class="example-step-header">
+                        <div class="example-step-number">1</div>
+                        <div class="example-step-title">Initial Data & Parameters</div>
+                    </div>
+                    <div class="vector-display">
+                        <span class="vector-label">x<sub>0</sub> =</span> [0.8, −0.5, 0.3, 1.2]
+                    </div>
+                    <div class="vector-display">
+                        <span class="vector-label">t =</span> 50 &nbsp;(with T=100)
+                    </div>
+                    <div class="vector-display">
+                        <span class="vector-label">α̅<sub>t</sub> =</span> 0.64 &nbsp;(√α̅<sub>t</sub> = 0.8)
+                    </div>
+                </div>
+                
+                <div class="example-step">
+                    <div class="example-step-header">
+                        <div class="example-step-number">2</div>
+                        <div class="example-step-title">Noise Sampling</div>
+                    </div>
+                    <div class="vector-display">
+                        <span class="vector-label">ε ~</span> N(0, I)
+                    </div>
+                    <div class="vector-display">
+                        <span class="vector-label">ε =</span> [0.2, −0.7, 1.1, −0.4]
+                    </div>
+                    <div class="calc-line">√(1−α̅<sub>t</sub>) = √0.36 = 0.6</div>
+                </div>
+                
+                <div class="example-step">
+                    <div class="example-step-header">
+                        <div class="example-step-number">3</div>
+                        <div class="example-step-title">Create Noisy Sample</div>
+                    </div>
+                    <div class="calc-line">x<sub>t</sub> = √α̅<sub>t</sub> · x<sub>0</sub> + √(1−α̅<sub>t</sub>) · ε</div>
+                    <div class="calc-line">= 0.8 × [0.8, −0.5, 0.3, 1.2] + 0.6 × [0.2, −0.7, 1.1, −0.4]</div>
+                    <div class="calc-line">= [0.64, −0.40, 0.24, 0.96] + [0.12, −0.42, 0.66, −0.24]</div>
+                    <div class="vector-display">
+                        <span class="vector-label">x<sub>t</sub> =</span> [0.76, −0.82, 0.90, 0.72]
+                    </div>
+                </div>
+                
+                <div class="example-step">
+                    <div class="example-step-header">
+                        <div class="example-step-number">4</div>
+                        <div class="example-step-title">Model Prediction & Loss</div>
+                    </div>
+                    <div class="vector-display">
+                        <span class="vector-label">ε<sub>θ</sub>(x<sub>t</sub>, t) =</span> [0.3, −0.5, 0.9, −0.3]
+                    </div>
+                    <div class="calc-line">ε − ε<sub>θ</sub> = [0.2−0.3, −0.7−(−0.5), 1.1−0.9, −0.4−(−0.3)]</div>
+                    <div class="vector-display">
+                        <span class="vector-label">Difference =</span> [−0.1, −0.2, 0.2, −0.1]
+                    </div>
+                </div>
+            </div>
+            
+            <div class="result-box">
+                <div class="result-title">MSE Loss Calculation</div>
+                <div class="result-formula">L = || ε − ε<sub>θ</sub> ||² = (−0.1)² + (−0.2)² + (0.2)² + (−0.1)²</div>
+                <div class="result-formula">= 0.01 + 0.04 + 0.04 + 0.01</div>
+                <div class="result-value">L = 0.10</div>
+            </div>
+
+            <div class="note-box">
+                💡 <strong>Key Point:</strong> The model ε<sub>θ</sub> predicts the original noise ε by only observing x<sub>t</sub> and t. 
+                As the loss decreases, noise prediction becomes more accurate, enabling the reverse process to recover clean images.
             </div>
         </div>
     </div>

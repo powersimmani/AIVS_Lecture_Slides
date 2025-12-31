@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DDPM Sampling</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {
+            delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false}
+            ]
+        });"></script>
     <style>
         * {
             margin: 0;
@@ -107,10 +118,9 @@
             background: white;
             border: 2px solid #e0e0e0;
             border-radius: 6px;
-            padding: 8px 12px;
+            padding: 10px 15px;
             margin-top: 8px;
-            font-family: 'Courier New', monospace;
-            font-size: 16px;
+            font-size: 18px;
             color: #333;
         }
         
@@ -165,12 +175,11 @@
             font-size: 16px;
             font-weight: 700;
             color: #1E64C8;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
         }
         
         .sub-step-formula {
-            font-size: 15px;
-            font-family: 'Courier New', monospace;
+            font-size: 16px;
             color: #333;
         }
         
@@ -200,6 +209,11 @@
             font-size: 17px;
             font-weight: 600;
         }
+
+        /* KaTeX 수식 스타일 조정 */
+        .katex {
+            font-size: 1.1em;
+        }
     </style>
 </head>
 <body>
@@ -217,7 +231,7 @@
                     <div class="step-title">Initialize from Pure Noise</div>
                 </div>
                 <div class="step-content">
-                    <div class="step-formula">x_T ~ N(0, I)</div>
+                    <div class="step-formula">$\mathbf{x}_T \sim \mathcal{N}(\mathbf{0}, \mathbf{I})$</div>
                 </div>
             </div>
             
@@ -226,28 +240,28 @@
                 <div class="iteration-header">
                     <div class="iteration-icon">🔄</div>
                     <div class="iteration-title">Iterative Denoising</div>
-                    <div class="iteration-range">t = T, T-1, ..., 1</div>
+                    <div class="iteration-range">$t = T, T-1, \ldots, 1$</div>
                 </div>
                 
                 <div class="sub-steps">
                     <div class="sub-step">
                         <div class="sub-step-title">① Predict Noise</div>
-                        <div class="sub-step-formula">ε̂ = ε_θ(x_t, t)</div>
+                        <div class="sub-step-formula">$\hat{\boldsymbol{\epsilon}} = \boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t)$</div>
                     </div>
                     
                     <div class="sub-step">
                         <div class="sub-step-title">② Compute Mean</div>
-                        <div class="sub-step-formula">μ_θ(x_t, t)</div>
+                        <div class="sub-step-formula">$\boldsymbol{\mu}_\theta(\mathbf{x}_t, t)$</div>
                     </div>
                     
                     <div class="sub-step">
                         <div class="sub-step-title">③ Sample Noise</div>
-                        <div class="sub-step-formula">z ~ N(0,I) if t>1, else z=0</div>
+                        <div class="sub-step-formula">$\mathbf{z} \sim \mathcal{N}(\mathbf{0}, \mathbf{I})$ if $t > 1$, else $\mathbf{z} = \mathbf{0}$</div>
                     </div>
                     
                     <div class="sub-step">
                         <div class="sub-step-title">④ Update State</div>
-                        <div class="sub-step-formula">x_{t-1} = μ_θ(x_t,t) + σ_t·z</div>
+                        <div class="sub-step-formula">$\mathbf{x}_{t-1} = \boldsymbol{\mu}_\theta(\mathbf{x}_t, t) + \sigma_t \cdot \mathbf{z}$</div>
                     </div>
                 </div>
             </div>
@@ -259,13 +273,13 @@
                     <div class="step-title">Final Output</div>
                 </div>
                 <div class="step-content">
-                    x₀ is the generated sample
+                    $\mathbf{x}_0$ is the generated sample
                 </div>
             </div>
         </div>
         
         <div class="complexity-box">
-            <div class="complexity-text">⏱️ Time Complexity: O(T) forward passes • Typically T = 1000</div>
+            <div class="complexity-text">⏱️ Time Complexity: $\mathcal{O}(T)$ forward passes • Typically $T = 1000$</div>
         </div>
     </div>
 </body>

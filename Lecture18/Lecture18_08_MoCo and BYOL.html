@@ -23,7 +23,6 @@
         
         .container {
             width: 960px;
-            height: 540px;
             display: flex;
             flex-direction: column;
             padding: 25px;
@@ -51,7 +50,6 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 25px;
-            flex: 1;
         }
         
         .method-section {
@@ -197,6 +195,187 @@
             color: #f44336;
             font-weight: 600;
         }
+
+        /* New styles for vector calculation section */
+        .section-divider {
+            text-align: center;
+            margin: 30px 0 20px 0;
+            padding: 15px;
+            background: linear-gradient(90deg, #1E64C8, #4CAF50);
+            border-radius: 8px;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .calc-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 24px;
+            border: 2px solid #e0e0e0;
+            margin-bottom: 20px;
+        }
+
+        .calc-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 3px solid #1E64C8;
+        }
+
+        .calc-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+
+        .calc-step {
+            background: white;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-left: 4px solid #1E64C8;
+        }
+
+        .calc-step:last-child {
+            margin-bottom: 0;
+        }
+
+        .step-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .step-number {
+            background: #1E64C8;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+        }
+
+        .vector-display {
+            background: #f0f4f8;
+            border-radius: 6px;
+            padding: 12px 16px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+            margin: 8px 0;
+            overflow-x: auto;
+        }
+
+        .vector-name {
+            color: #1E64C8;
+            font-weight: 600;
+        }
+
+        .vector-values {
+            color: #333;
+        }
+
+        .formula-box {
+            background: #e8f4ff;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin: 10px 0;
+            text-align: center;
+            font-size: 15px;
+        }
+
+        .formula {
+            font-family: 'Times New Roman', serif;
+            font-size: 17px;
+            color: #1E64C8;
+        }
+
+        .calculation {
+            background: #fff3e0;
+            border-radius: 6px;
+            padding: 12px 16px;
+            margin: 8px 0;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+        }
+
+        .result-box {
+            background: #e8f5e9;
+            border: 2px solid #4CAF50;
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin-top: 12px;
+            text-align: center;
+        }
+
+        .result-label {
+            color: #2e7d32;
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .result-value {
+            color: #1b5e20;
+            font-size: 18px;
+            font-weight: 700;
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+
+        .explanation {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+            margin-top: 8px;
+        }
+
+        .negative-sample {
+            background: #ffebee;
+            border-left-color: #f44336;
+        }
+
+        .positive-result {
+            color: #4CAF50;
+            font-weight: 600;
+        }
+
+        .negative-result {
+            color: #f44336;
+            font-weight: 600;
+        }
+
+        .comparison-row {
+            display: flex;
+            gap: 15px;
+            margin: 10px 0;
+        }
+
+        .comparison-item {
+            flex: 1;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .comparison-positive {
+            background: #e8f5e9;
+            border: 1px solid #4CAF50;
+        }
+
+        .comparison-negative {
+            background: #ffebee;
+            border: 1px solid #f44336;
+        }
     </style>
 </head>
 <body>
@@ -309,6 +488,259 @@
                 <div class="performance-badge">✓ Excellent ImageNet Performance</div>
             </div>
         </div>
+
+        <!-- Vector Calculation Section -->
+        <div class="section-divider">
+            📐 Vector Calculation Examples
+        </div>
+
+        <!-- MoCo Calculation -->
+        <div class="calc-section">
+            <div class="calc-header">
+                <div class="method-icon">🔄</div>
+                <div class="calc-title">MoCo: InfoNCE Loss Calculation</div>
+            </div>
+
+            <div class="calc-step">
+                <div class="step-title">
+                    <div class="step-number">1</div>
+                    Define Input Vectors
+                </div>
+                <div class="explanation">
+                    Query encoder produces query vector <b>q</b>, momentum encoder produces positive key <b>k⁺</b> and negative keys from queue.
+                </div>
+                <div class="vector-display">
+                    <span class="vector-name">q</span> (query) = <span class="vector-values">[0.8, 0.4, 0.2, 0.1]</span> → normalized: <span class="vector-values">[0.857, 0.429, 0.214, 0.107]</span>
+                </div>
+                <div class="vector-display">
+                    <span class="vector-name">k⁺</span> (positive key) = <span class="vector-values">[0.7, 0.5, 0.3, 0.1]</span> → normalized: <span class="vector-values">[0.761, 0.543, 0.326, 0.109]</span>
+                </div>
+                <div class="vector-display">
+                    <span class="vector-name">k₁⁻</span> (negative key 1) = <span class="vector-values">[-0.3, 0.6, -0.4, 0.5]</span> → normalized: <span class="vector-values">[-0.324, 0.649, -0.432, 0.541]</span>
+                </div>
+                <div class="vector-display">
+                    <span class="vector-name">k₂⁻</span> (negative key 2) = <span class="vector-values">[0.1, -0.7, 0.5, 0.3]</span> → normalized: <span class="vector-values">[0.110, -0.769, 0.549, 0.330]</span>
+                </div>
+            </div>
+
+            <div class="calc-step">
+                <div class="step-title">
+                    <div class="step-number">2</div>
+                    Calculate Similarity Scores (Dot Products)
+                </div>
+                <div class="formula-box">
+                    <span class="formula">similarity(a, b) = a · b = Σ(aᵢ × bᵢ)</span>
+                </div>
+                <div class="calculation">
+                    <b>q · k⁺</b> = (0.857×0.761) + (0.429×0.543) + (0.214×0.326) + (0.107×0.109)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 0.652 + 0.233 + 0.070 + 0.012 = <span class="positive-result">0.967</span>
+                </div>
+                <div class="calculation">
+                    <b>q · k₁⁻</b> = (0.857×-0.324) + (0.429×0.649) + (0.214×-0.432) + (0.107×0.541)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= -0.278 + 0.278 + (-0.092) + 0.058 = <span class="negative-result">-0.034</span>
+                </div>
+                <div class="calculation">
+                    <b>q · k₂⁻</b> = (0.857×0.110) + (0.429×-0.769) + (0.214×0.549) + (0.107×0.330)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 0.094 + (-0.330) + 0.117 + 0.035 = <span class="negative-result">-0.084</span>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-item comparison-positive">
+                        <b>Positive Pair:</b> 0.967<br>
+                        <small>High similarity ✓</small>
+                    </div>
+                    <div class="comparison-item comparison-negative">
+                        <b>Negative Pairs:</b> -0.034, -0.084<br>
+                        <small>Low similarity ✓</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="calc-step">
+                <div class="step-title">
+                    <div class="step-number">3</div>
+                    Apply Temperature Scaling (τ = 0.07)
+                </div>
+                <div class="formula-box">
+                    <span class="formula">scaled_sim = similarity / τ</span>
+                </div>
+                <div class="calculation">
+                    q · k⁺ / τ = 0.967 / 0.07 = <b>13.81</b><br>
+                    q · k₁⁻ / τ = -0.034 / 0.07 = <b>-0.49</b><br>
+                    q · k₂⁻ / τ = -0.084 / 0.07 = <b>-1.20</b>
+                </div>
+                <div class="explanation">
+                    Temperature τ sharpens the distribution - lower τ makes the model more confident.
+                </div>
+            </div>
+
+            <div class="calc-step">
+                <div class="step-title">
+                    <div class="step-number">4</div>
+                    Compute InfoNCE Loss
+                </div>
+                <div class="formula-box">
+                    <span class="formula">ℒ = -log( exp(q·k⁺/τ) / [exp(q·k⁺/τ) + Σexp(q·kᵢ⁻/τ)] )</span>
+                </div>
+                <div class="calculation">
+                    exp(13.81) = 999,148.5<br>
+                    exp(-0.49) = 0.613<br>
+                    exp(-1.20) = 0.301<br><br>
+                    Denominator = 999,148.5 + 0.613 + 0.301 = 999,149.4<br><br>
+                    Softmax probability = 999,148.5 / 999,149.4 = <b>0.999999</b>
+                </div>
+                <div class="result-box">
+                    <div class="result-label">InfoNCE Loss</div>
+                    <div class="result-value">ℒ = -log(0.999999) ≈ 0.000001</div>
+                </div>
+                <div class="explanation">
+                    Low loss indicates the model successfully distinguishes the positive pair from negatives. The goal is to minimize this loss during training.
+                </div>
+            </div>
+        </div>
+
+        <!-- BYOL Calculation -->
+        <div class="calc-section">
+            <div class="calc-header">
+                <div class="method-icon">🎯</div>
+                <div class="calc-title">BYOL: Mean Squared Error Loss Calculation</div>
+            </div>
+
+            <div class="calc-step">
+                <div class="step-title">
+                    <div class="step-number">1</div>
+                    Define Input Vectors
+                </div>
+                <div class="explanation">
+                    Online network produces prediction <b>p</b>, target network (with stop-gradient) produces projection <b>z</b>.
+                </div>
+                <div class="vector-display">
+                    <span class="vector-name">p</span> (online prediction) = <span class="vector-values">[0.6, 0.3, 0.5, 0.2]</span>
+                </div>
+                <div class="vector-display">
+                    <span class="vector-name">z</span> (target projection) = <span class="vector-values">[0.7, 0.4, 0.4, 0.3]</span>
+                </div>
+            </div>
+
+            <div class="calc-step">
+                <div class="step-title">
+                    <div class="step-number">2</div>
+                    L2 Normalize Both Vectors
+                </div>
+                <div class="formula-box">
+                    <span class="formula">x̄ = x / ||x||₂ &nbsp;&nbsp;where&nbsp;&nbsp; ||x||₂ = √(Σxᵢ²)</span>
+                </div>
+                <div class="calculation">
+                    ||p||₂ = √(0.6² + 0.3² + 0.5² + 0.2²) = √(0.36 + 0.09 + 0.25 + 0.04) = √0.74 = <b>0.860</b><br><br>
+                    <b>p̄</b> = [0.6/0.860, 0.3/0.860, 0.5/0.860, 0.2/0.860]<br>
+                    &nbsp;&nbsp;= <b>[0.698, 0.349, 0.581, 0.233]</b>
+                </div>
+                <div class="calculation">
+                    ||z||₂ = √(0.7² + 0.4² + 0.4² + 0.3²) = √(0.49 + 0.16 + 0.16 + 0.09) = √0.90 = <b>0.949</b><br><br>
+                    <b>z̄</b> = [0.7/0.949, 0.4/0.949, 0.4/0.949, 0.3/0.949]<br>
+                    &nbsp;&nbsp;= <b>[0.738, 0.422, 0.422, 0.316]</b>
+                </div>
+            </div>
+
+            <div class="calc-step">
+                <div class="step-title">
+                    <div class="step-number">3</div>
+                    Calculate MSE Between Normalized Vectors
+                </div>
+                <div class="formula-box">
+                    <span class="formula">ℒ = ||p̄ - z̄||² = Σ(p̄ᵢ - z̄ᵢ)²</span>
+                </div>
+                <div class="calculation">
+                    Differences:<br>
+                    p̄₁ - z̄₁ = 0.698 - 0.738 = <b>-0.040</b><br>
+                    p̄₂ - z̄₂ = 0.349 - 0.422 = <b>-0.073</b><br>
+                    p̄₃ - z̄₃ = 0.581 - 0.422 = <b>+0.159</b><br>
+                    p̄₄ - z̄₄ = 0.233 - 0.316 = <b>-0.083</b>
+                </div>
+                <div class="calculation">
+                    Squared differences:<br>
+                    (-0.040)² = 0.0016<br>
+                    (-0.073)² = 0.0053<br>
+                    (+0.159)² = 0.0253<br>
+                    (-0.083)² = 0.0069
+                </div>
+                <div class="result-box">
+                    <div class="result-label">BYOL Loss (MSE)</div>
+                    <div class="result-value">ℒ = 0.0016 + 0.0053 + 0.0253 + 0.0069 = 0.0391</div>
+                </div>
+            </div>
+
+            <div class="calc-step">
+                <div class="step-title">
+                    <div class="step-number">4</div>
+                    Alternative Formula (Cosine Similarity)
+                </div>
+                <div class="formula-box">
+                    <span class="formula">ℒ = 2 - 2 × (p̄ · z̄) = 2 - 2 × cos(θ)</span>
+                </div>
+                <div class="calculation">
+                    p̄ · z̄ = (0.698×0.738) + (0.349×0.422) + (0.581×0.422) + (0.233×0.316)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 0.515 + 0.147 + 0.245 + 0.074 = <b>0.981</b>
+                </div>
+                <div class="result-box">
+                    <div class="result-label">BYOL Loss (Cosine Form)</div>
+                    <div class="result-value">ℒ = 2 - 2 × 0.981 = 2 - 1.962 = 0.038</div>
+                </div>
+                <div class="explanation">
+                    Both formulas are equivalent for L2-normalized vectors. The loss approaches 0 when vectors are identical (cosine = 1) and 4 when completely opposite (cosine = -1).
+                </div>
+            </div>
+
+            <div class="calc-step">
+                <div class="step-title">
+                    <div class="step-number">5</div>
+                    Symmetrized Loss (Full BYOL)
+                </div>
+                <div class="formula-box">
+                    <span class="formula">ℒ_total = ℒ(p, z') + ℒ(p', z)</span>
+                </div>
+                <div class="explanation">
+                    In practice, BYOL uses two augmented views and computes loss in both directions, then averages them. This symmetrization helps learn more robust representations.
+                </div>
+                <div class="calculation">
+                    If ℒ(p, z') = 0.038 and ℒ(p', z) = 0.042<br><br>
+                    <b>ℒ_total</b> = 0.038 + 0.042 = <b>0.080</b>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Differences Summary -->
+        <div class="calc-section" style="background: linear-gradient(135deg, #f0f4ff, #fff0f5);">
+            <div class="calc-header">
+                <div class="method-icon">⚖️</div>
+                <div class="calc-title">Key Differences in Loss Computation</div>
+            </div>
+            
+            <div class="comparison-grid" style="margin-top: 15px;">
+                <div class="calc-step" style="border-left-color: #1E64C8;">
+                    <div class="step-title" style="justify-content: center;">
+                        🔄 MoCo
+                    </div>
+                    <ul style="margin-left: 20px; line-height: 1.8;">
+                        <li><b>Contrastive:</b> Requires negative samples</li>
+                        <li><b>InfoNCE:</b> Softmax over all keys</li>
+                        <li><b>Queue:</b> 65,536 negatives typically</li>
+                        <li><b>Goal:</b> Maximize pos/neg ratio</li>
+                    </ul>
+                </div>
+                <div class="calc-step" style="border-left-color: #9C27B0;">
+                    <div class="step-title" style="justify-content: center;">
+                        🎯 BYOL
+                    </div>
+                    <ul style="margin-left: 20px; line-height: 1.8;">
+                        <li><b>Non-contrastive:</b> No negatives needed</li>
+                        <li><b>MSE:</b> Direct regression loss</li>
+                        <li><b>Predictor:</b> Prevents collapse</li>
+                        <li><b>Goal:</b> Match target representation</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
     </div>
 </body>
 </html>

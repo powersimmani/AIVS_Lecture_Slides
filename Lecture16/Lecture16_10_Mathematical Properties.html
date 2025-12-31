@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mathematical Properties</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {
+            delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false}
+            ]
+        });"></script>
     <style>
         * {
             margin: 0;
@@ -93,8 +104,7 @@
             background: white;
             border: 2px solid #e0e0e0;
             border-radius: 6px;
-            padding: 10px 15px;
-            font-family: 'Courier New', monospace;
+            padding: 12px 15px;
             font-size: 17px;
             color: #333;
             text-align: center;
@@ -134,6 +144,11 @@
             font-size: 20px;
             margin-right: 10px;
         }
+
+        /* KaTeX 스타일 조정 */
+        .katex {
+            font-size: 1.1em;
+        }
     </style>
 </head>
 <body>
@@ -150,8 +165,8 @@
                     <div class="property-icon">📊</div>
                     <div class="property-title">Mean Preservation</div>
                 </div>
-                <div class="property-formula">E[x_t] = √ᾱ_t · x₀</div>
-                <div class="property-description">Expected value scaled by √ᾱ_t</div>
+                <div class="property-formula">$\mathbb{E}[x_t] = \sqrt{\bar{\alpha}_t} \cdot x_0$</div>
+                <div class="property-description">Expected value scaled by $\sqrt{\bar{\alpha}_t}$</div>
             </div>
             
             <!-- Variance Growth -->
@@ -160,7 +175,7 @@
                     <div class="property-icon">📈</div>
                     <div class="property-title">Variance Growth</div>
                 </div>
-                <div class="property-formula">Var[x_t] = (1-ᾱ_t) · I</div>
+                <div class="property-formula">$\text{Var}[x_t] = (1-\bar{\alpha}_t) \cdot \mathbf{I}$</div>
                 <div class="property-description">Variance increases as noise accumulates</div>
             </div>
             
@@ -170,7 +185,7 @@
                     <div class="property-icon">🔔</div>
                     <div class="property-title">Gaussian Distribution</div>
                 </div>
-                <div class="property-formula">q(x_t|x₀) = N(x_t; √ᾱ_t·x₀, (1-ᾱ_t)·I)</div>
+                <div class="property-formula">$q(x_t|x_0) = \mathcal{N}(x_t;\, \sqrt{\bar{\alpha}_t}\,x_0,\, (1-\bar{\alpha}_t)\mathbf{I})$</div>
                 <div class="property-description">Complete distributional characterization</div>
             </div>
             
@@ -180,7 +195,7 @@
                     <div class="property-icon">🔙</div>
                     <div class="property-title">Posterior Distribution</div>
                 </div>
-                <div class="property-formula">q(x_{t-1}|x_t,x₀)</div>
+                <div class="property-formula">$q(x_{t-1}|x_t, x_0) = \mathcal{N}(x_{t-1};\, \tilde{\mu}_t,\, \tilde{\beta}_t \mathbf{I})$</div>
                 <div class="property-description">Also Gaussian with closed-form solution</div>
             </div>
             
@@ -190,6 +205,7 @@
                     <div class="property-icon">🧮</div>
                     <div class="property-title">Tractable Likelihood</div>
                 </div>
+                <div class="property-formula">$\log p_\theta(x_0) \geq \mathcal{L}_{\text{ELBO}}$</div>
                 <div class="property-description">Can compute exact log-likelihood for model evaluation and comparison</div>
             </div>
             
@@ -199,16 +215,8 @@
                     <div class="property-icon">🔄</div>
                     <div class="property-title">Reversibility</div>
                 </div>
+                <div class="property-formula">$p_\theta(x_{t-1}|x_t) = \mathcal{N}(x_{t-1};\, \mu_\theta,\, \Sigma_\theta)$</div>
                 <div class="property-description">Theoretical foundation enables the reverse generative process</div>
-            </div>
-            
-            <!-- Independence -->
-            <div class="property-card">
-                <div class="property-header">
-                    <div class="property-icon">🎲</div>
-                    <div class="property-title">Noise Independence</div>
-                </div>
-                <div class="property-description">Noise at different timesteps is independent, simplifying analysis</div>
             </div>
         </div>
         

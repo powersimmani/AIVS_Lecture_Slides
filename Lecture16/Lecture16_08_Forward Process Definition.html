@@ -23,7 +23,6 @@
         
         .container {
             width: 960px;
-            height: 540px;
             background: white;
             padding: 30px;
             display: flex;
@@ -182,6 +181,221 @@
             font-weight: 600;
             box-shadow: 0 2px 8px rgba(30, 100, 200, 0.2);
         }
+
+        /* New styles for example section */
+        .divider {
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #1E64C8, transparent);
+            margin: 30px 0;
+            border-radius: 2px;
+        }
+
+        .example-section {
+            margin-top: 10px;
+        }
+
+        .example-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .example-subtitle {
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+            margin-top: -15px;
+            margin-bottom: 20px;
+        }
+
+        .step-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .step-box {
+            flex: 1;
+            background: linear-gradient(135deg, #f8fbff 0%, #ffffff 100%);
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .step-box:hover {
+            border-color: #1E64C8;
+            box-shadow: 0 4px 15px rgba(30, 100, 200, 0.15);
+        }
+
+        .step-box.initial {
+            border-color: #27AE60;
+            background: linear-gradient(135deg, #f0fff4 0%, #ffffff 100%);
+        }
+
+        .step-box.final {
+            border-color: #E74C3C;
+            background: linear-gradient(135deg, #fff5f5 0%, #ffffff 100%);
+        }
+
+        .step-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .step-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+        }
+
+        .step-box.initial .step-name {
+            color: #27AE60;
+        }
+
+        .step-box.final .step-name {
+            color: #E74C3C;
+        }
+
+        .step-params {
+            font-size: 11px;
+            color: #888;
+            font-family: 'Courier New', monospace;
+        }
+
+        .vector-display {
+            background: white;
+            border-radius: 6px;
+            padding: 8px;
+            margin-bottom: 8px;
+            border: 1px solid #eee;
+        }
+
+        .vector-label {
+            font-size: 11px;
+            color: #888;
+            margin-bottom: 4px;
+        }
+
+        .vector-values {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+        }
+
+        .vector-value {
+            background: #f0f8ff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .step-box.initial .vector-value {
+            background: #e8f5e9;
+            color: #27AE60;
+        }
+
+        .step-box.final .vector-value {
+            background: #ffebee;
+            color: #E74C3C;
+        }
+
+        .calculation-detail {
+            font-size: 11px;
+            color: #666;
+            background: #fafafa;
+            padding: 6px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            line-height: 1.6;
+        }
+
+        .calc-line {
+            margin-bottom: 2px;
+        }
+
+        .calc-highlight {
+            color: #1E64C8;
+            font-weight: 600;
+        }
+
+        .noise-value {
+            color: #9B59B6;
+        }
+
+        .arrow-down {
+            text-align: center;
+            font-size: 24px;
+            color: #1E64C8;
+            margin: 8px 0;
+        }
+
+        .insight-box {
+            background: linear-gradient(135deg, #FFF3E0 0%, #FFF8E1 100%);
+            border: 2px solid #FFB74D;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .insight-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #E65100;
+            margin-bottom: 8px;
+        }
+
+        .insight-content {
+            font-size: 13px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .insight-item {
+            margin-bottom: 5px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .insight-item::before {
+            content: "•";
+            position: absolute;
+            left: 5px;
+            color: #FFB74D;
+            font-weight: bold;
+        }
+
+        .norm-badge {
+            display: inline-block;
+            background: #E3F2FD;
+            color: #1565C0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-left: 5px;
+        }
+
+        .step-box.initial .norm-badge {
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+
+        .step-box.final .norm-badge {
+            background: #FFEBEE;
+            color: #C62828;
+        }
     </style>
 </head>
 <body>
@@ -247,6 +461,117 @@
             <div class="property-card">
                 <div class="property-label">✨ End Result</div>
                 <div class="property-value">xₜ ~ N(0, I) is pure Gaussian noise</div>
+            </div>
+        </div>
+
+        <!-- New Example Section -->
+        <div class="divider"></div>
+        
+        <div class="example-section">
+            <div class="example-title">🧮 Concrete Example: 4D Vector Forward Process</div>
+            <div class="example-subtitle">Using larger β values (0.1→0.2→0.3) for visualization. Real diffusion uses smaller values over 1000 steps.</div>
+
+            <div class="step-container">
+                <!-- Step 0: Original Data -->
+                <div class="step-box initial">
+                    <div class="step-header">
+                        <span class="step-name">x₀ (Original)</span>
+                        <span class="norm-badge">‖x‖ = 2.45</span>
+                    </div>
+                    <div class="vector-display">
+                        <div class="vector-label">Original 4D Vector</div>
+                        <div class="vector-values">
+                            <span class="vector-value">1.00</span>
+                            <span class="vector-value">2.00</span>
+                            <span class="vector-value">-1.00</span>
+                            <span class="vector-value">0.50</span>
+                        </div>
+                    </div>
+                    <div class="calculation-detail">
+                        <div class="calc-line">📌 This is our <span class="calc-highlight">starting data point</span></div>
+                        <div class="calc-line">📌 Could represent: image pixel values, latent code, etc.</div>
+                    </div>
+                </div>
+
+                <!-- Step 1 -->
+                <div class="step-box">
+                    <div class="step-header">
+                        <span class="step-name">x₁ (t=1)</span>
+                        <span class="norm-badge">‖x‖ = 2.41</span>
+                    </div>
+                    <div class="vector-display">
+                        <div class="vector-label">β₁=0.10, α₁=0.90</div>
+                        <div class="vector-values">
+                            <span class="vector-value">1.11</span>
+                            <span class="vector-value">1.80</span>
+                            <span class="vector-value">-0.70</span>
+                            <span class="vector-value">0.41</span>
+                        </div>
+                    </div>
+                    <div class="calculation-detail">
+                        <div class="calc-line">√α₁ = <span class="calc-highlight">0.949</span>, √(1-α₁) = <span class="calc-highlight">0.316</span></div>
+                        <div class="calc-line">ε₁ ~ N(0,I) = <span class="noise-value">[0.5, -0.3, 0.8, -0.2]</span></div>
+                        <div class="calc-line">x₁ = 0.949·x₀ + 0.316·ε₁</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="arrow-down">⬇️ Add more noise ⬇️</div>
+
+            <div class="step-container">
+                <!-- Step 2 -->
+                <div class="step-box">
+                    <div class="step-header">
+                        <span class="step-name">x₂ (t=2)</span>
+                        <span class="norm-badge">‖x‖ = 2.19</span>
+                    </div>
+                    <div class="vector-display">
+                        <div class="vector-label">β₂=0.20, α₂=0.80</div>
+                        <div class="vector-values">
+                            <span class="vector-value">0.79</span>
+                            <span class="vector-value">1.43</span>
+                            <span class="vector-value">-0.81</span>
+                            <span class="vector-value">0.82</span>
+                        </div>
+                    </div>
+                    <div class="calculation-detail">
+                        <div class="calc-line">√α₂ = <span class="calc-highlight">0.894</span>, √(1-α₂) = <span class="calc-highlight">0.447</span></div>
+                        <div class="calc-line">ε₂ ~ N(0,I) = <span class="noise-value">[-0.4, -0.2, -0.4, 1.0]</span></div>
+                        <div class="calc-line">x₂ = 0.894·x₁ + 0.447·ε₂</div>
+                    </div>
+                </div>
+
+                <!-- Step 3 (Final) -->
+                <div class="step-box final">
+                    <div class="step-header">
+                        <span class="step-name">x₃ (t=3)</span>
+                        <span class="norm-badge">‖x‖ = 1.87</span>
+                    </div>
+                    <div class="vector-display">
+                        <div class="vector-label">β₃=0.30, α₃=0.70</div>
+                        <div class="vector-values">
+                            <span class="vector-value">0.41</span>
+                            <span class="vector-value">1.45</span>
+                            <span class="vector-value">-0.42</span>
+                            <span class="vector-value">0.55</span>
+                        </div>
+                    </div>
+                    <div class="calculation-detail">
+                        <div class="calc-line">√α₃ = <span class="calc-highlight">0.837</span>, √(1-α₃) = <span class="calc-highlight">0.548</span></div>
+                        <div class="calc-line">ε₃ ~ N(0,I) = <span class="noise-value">[-0.5, 0.3, 0.5, -0.2]</span></div>
+                        <div class="calc-line">x₃ = 0.837·x₂ + 0.548·ε₃</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="insight-box">
+                <div class="insight-title">💡 Key Observations from the Example</div>
+                <div class="insight-content">
+                    <div class="insight-item"><strong>Signal decay:</strong> √αₜ shrinks the previous value → original information gradually fades</div>
+                    <div class="insight-item"><strong>Noise accumulation:</strong> √(1-αₜ) scales random noise → randomness increases each step</div>
+                    <div class="insight-item"><strong>Norm trend:</strong> Vector magnitude (‖x‖) changes as data transforms toward N(0, I)</div>
+                    <div class="insight-item"><strong>After T=1000 steps:</strong> With real β schedule (0.0001→0.02), x_T ≈ pure Gaussian noise</div>
+                </div>
             </div>
         </div>
     </div>

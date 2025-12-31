@@ -14,10 +14,13 @@
         body {
             font-family: Aptos, 'Segoe UI', sans-serif;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            justify-content: flex-start;
             align-items: center;
             min-height: 100vh;
             background: #ffffff;
+            padding: 40px 0;
+            gap: 80px;
         }
         
         .container {
@@ -286,10 +289,234 @@
             color: #666;
             line-height: 1.4;
         }
+        
+        /* Training Process Styles */
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 12px;
+            border-bottom: 3px solid #1E64C8;
+        }
+        
+        .training-container {
+            width: 960px;
+            padding: 40px;
+            background: #ffffff;
+        }
+        
+        .training-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .training-step {
+            display: flex;
+            gap: 24px;
+            align-items: flex-start;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .step-number {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #1E64C8, #5088d4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .step-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+        
+        .step-description {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+        
+        .step-diagram {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .diagram-box {
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+        }
+        
+        .diagram-input {
+            background: #f0f4f8;
+            border: 2px solid #d0d9e3;
+            color: #555;
+        }
+        
+        .diagram-forward {
+            background: #1E64C8;
+            color: white;
+        }
+        
+        .diagram-backward {
+            background: #5088d4;
+            color: white;
+        }
+        
+        .diagram-output {
+            background: #e8f2ff;
+            border: 2px solid #1E64C8;
+            color: #1E64C8;
+        }
+        
+        .diagram-loss {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .diagram-gradient {
+            background: #28a745;
+            color: white;
+        }
+        
+        .diagram-arrow {
+            font-size: 20px;
+            color: #888;
+        }
+        
+        .formula-box {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-family: 'Times New Roman', serif;
+            font-size: 16px;
+            color: #333;
+            text-align: center;
+            margin-top: 12px;
+        }
+        
+        .gradient-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        
+        .gradient-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: center;
+        }
+        
+        .gradient-label {
+            font-size: 13px;
+            color: #666;
+            min-width: 100px;
+        }
+        
+        .gradient-cells {
+            display: flex;
+            gap: 6px;
+        }
+        
+        .gradient-cell {
+            width: 50px;
+            height: 30px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 500;
+        }
+        
+        .grad-forward {
+            background: linear-gradient(90deg, #ff6b6b, #1E64C8);
+            color: white;
+        }
+        
+        .grad-backward {
+            background: linear-gradient(270deg, #ff6b6b, #5088d4);
+            color: white;
+        }
+        
+        .summary-box {
+            background: linear-gradient(135deg, #1E64C8, #5088d4);
+            color: white;
+            padding: 24px;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+        
+        .summary-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .summary-points {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        
+        .summary-point {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .check-icon {
+            width: 20px;
+            height: 20px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 12px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <div class="section-title">Bidirectional RNN Architecture</div>
         <div class="architecture">
             <!-- Input Layer -->
             <div class="input-layer">
@@ -422,6 +649,153 @@
             <div class="info-title">Key Feature</div>
             <div class="info-text">
                 BiRNN processes sequences in both directions, concatenating forward (h→) and backward (h←) hidden states to capture full context at each time step.
+            </div>
+        </div>
+    </div>
+    
+    <!-- Training Process Section -->
+    <div class="training-container">
+        <div class="section-title">Training Process</div>
+        
+        <div class="training-steps">
+            <!-- Step 1: Forward Pass -->
+            <div class="training-step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <div class="step-title">Forward Pass</div>
+                    <div class="step-description">
+                        Both directional RNNs process the input sequence simultaneously. The Forward RNN computes hidden states from t=1 to t=T, while the Backward RNN computes from t=T to t=1.
+                    </div>
+                    <div class="step-diagram">
+                        <div class="diagram-box diagram-input">x₁, x₂, ..., xₜ</div>
+                        <div class="diagram-arrow">→</div>
+                        <div class="diagram-box diagram-forward">Forward: h→ₜ = f(xₜ, h→ₜ₋₁)</div>
+                        <div class="diagram-arrow">+</div>
+                        <div class="diagram-box diagram-backward">Backward: h←ₜ = f(xₜ, h←ₜ₊₁)</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 2: Output Computation -->
+            <div class="training-step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <div class="step-title">Output Computation</div>
+                    <div class="step-description">
+                        At each time step, the forward and backward hidden states are concatenated to produce the final output. This allows the model to utilize both past and future context at each position.
+                    </div>
+                    <div class="step-diagram">
+                        <div class="diagram-box diagram-forward">h→ₜ</div>
+                        <div class="diagram-arrow">⊕</div>
+                        <div class="diagram-box diagram-backward">h←ₜ</div>
+                        <div class="diagram-arrow">→</div>
+                        <div class="diagram-box diagram-output">yₜ = g([h→ₜ; h←ₜ])</div>
+                    </div>
+                    <div class="formula-box">
+                        ŷₜ = softmax(Wᵧ · [h→ₜ; h←ₜ] + bᵧ)
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 3: Loss Calculation -->
+            <div class="training-step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <div class="step-title">Loss Calculation</div>
+                    <div class="step-description">
+                        The loss is computed by comparing predictions with actual target values. The losses from all time steps are summed to obtain the total sequence loss.
+                    </div>
+                    <div class="step-diagram">
+                        <div class="diagram-box diagram-output">ŷₜ (prediction)</div>
+                        <div class="diagram-arrow">vs</div>
+                        <div class="diagram-box diagram-input">yₜ (target)</div>
+                        <div class="diagram-arrow">→</div>
+                        <div class="diagram-box diagram-loss">Loss = Σ L(ŷₜ, yₜ)</div>
+                    </div>
+                    <div class="formula-box">
+                        L = -Σₜ Σᵢ yₜ,ᵢ log(ŷₜ,ᵢ)  (Cross-Entropy Loss)
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 4: BPTT -->
+            <div class="training-step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <div class="step-title">Backpropagation Through Time (BPTT)</div>
+                    <div class="step-description">
+                        Gradients are propagated backward through time. In BiRNN, BPTT is performed independently for the Forward RNN and Backward RNN.
+                    </div>
+                    <div class="gradient-flow">
+                        <div class="gradient-row">
+                            <div class="gradient-label">Forward BPTT:</div>
+                            <div class="gradient-cells">
+                                <div class="gradient-cell grad-forward">∂L/∂h→₄</div>
+                                <div class="gradient-cell grad-forward">∂L/∂h→₃</div>
+                                <div class="gradient-cell grad-forward">∂L/∂h→₂</div>
+                                <div class="gradient-cell grad-forward">∂L/∂h→₁</div>
+                            </div>
+                            <span style="font-size: 14px; color: #888;">← backward propagation</span>
+                        </div>
+                        <div class="gradient-row">
+                            <div class="gradient-label">Backward BPTT:</div>
+                            <div class="gradient-cells">
+                                <div class="gradient-cell grad-backward">∂L/∂h←₁</div>
+                                <div class="gradient-cell grad-backward">∂L/∂h←₂</div>
+                                <div class="gradient-cell grad-backward">∂L/∂h←₃</div>
+                                <div class="gradient-cell grad-backward">∂L/∂h←₄</div>
+                            </div>
+                            <span style="font-size: 14px; color: #888;">→ forward propagation</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 5: Parameter Update -->
+            <div class="training-step">
+                <div class="step-number">5</div>
+                <div class="step-content">
+                    <div class="step-title">Parameter Update</div>
+                    <div class="step-description">
+                        All parameters are updated using the computed gradients. The Forward RNN, Backward RNN, and output layer parameters are updated independently.
+                    </div>
+                    <div class="step-diagram">
+                        <div class="diagram-box diagram-gradient">∇W→</div>
+                        <div class="diagram-box diagram-gradient">∇W←</div>
+                        <div class="diagram-box diagram-gradient">∇Wᵧ</div>
+                        <div class="diagram-arrow">→</div>
+                        <div class="diagram-box diagram-output">θ ← θ - η∇L</div>
+                    </div>
+                    <div class="formula-box">
+                        W→ ← W→ - η · ∂L/∂W→ , W← ← W← - η · ∂L/∂W← , Wᵧ ← Wᵧ - η · ∂L/∂Wᵧ
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Summary Box -->
+        <div class="summary-box">
+            <div class="summary-title">
+                <span>📋</span>
+                <span>Training Summary</span>
+            </div>
+            <div class="summary-points">
+                <div class="summary-point">
+                    <div class="check-icon">✓</div>
+                    <span>Forward/Backward RNNs <strong>do not share parameters</strong> (independent learning)</span>
+                </div>
+                <div class="summary-point">
+                    <div class="check-icon">✓</div>
+                    <span>BPTT is performed <strong>independently for each direction</strong></span>
+                </div>
+                <div class="summary-point">
+                    <div class="check-icon">✓</div>
+                    <span><strong>LSTM/GRU recommended</strong> to mitigate vanishing gradient problem</span>
+                </div>
+                <div class="summary-point">
+                    <div class="check-icon">✓</div>
+                    <span>Requires full sequence → <strong>not suitable for real-time</strong> (offline only)</span>
+                </div>
             </div>
         </div>
     </div>

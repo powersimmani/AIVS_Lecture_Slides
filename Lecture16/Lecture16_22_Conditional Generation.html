@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Conditional Generation</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -23,7 +24,6 @@
         
         .container {
             width: 960px;
-            height: 540px;
             background: white;
             padding: 30px;
             display: flex;
@@ -139,7 +139,6 @@
         }
         
         .formula-text {
-            font-family: 'Courier New', monospace;
             font-size: 16px;
             color: #333;
         }
@@ -224,11 +223,165 @@
             border-radius: 8px;
             text-align: center;
             box-shadow: 0 4px 15px rgba(155, 89, 182, 0.25);
+            margin-bottom: 20px;
         }
         
         .application-text {
             font-size: 17px;
             font-weight: 600;
+        }
+
+        /* Vector Example Section */
+        .example-section {
+            background: linear-gradient(135deg, #fff9e6 0%, #ffffff 100%);
+            border: 2px solid #F39C12;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 10px;
+        }
+
+        .example-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #E67E22;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .example-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .input-section {
+            background: white;
+            border-radius: 10px;
+            padding: 18px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .input-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .input-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+
+        .input-label {
+            width: 200px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        .input-value {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .vector {
+            background: #f8f9fa;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .calculation-section {
+            background: white;
+            border-radius: 10px;
+            padding: 18px;
+            border: 2px solid #27AE60;
+        }
+
+        .calc-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #27AE60;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .calc-step {
+            margin-bottom: 15px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #1E64C8;
+        }
+
+        .calc-step:last-child {
+            border-left-color: #27AE60;
+            background: #f0fff4;
+        }
+
+        .step-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+
+        .calc-step:last-child .step-label {
+            color: #27AE60;
+        }
+
+        .step-content {
+            font-size: 15px;
+            color: #333;
+        }
+
+        .result-box {
+            background: linear-gradient(135deg, #27AE60 0%, #2ECC71 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .result-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            opacity: 0.9;
+        }
+
+        .result-content {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .interpretation {
+            margin-top: 15px;
+            padding: 15px;
+            background: #e8f4fd;
+            border-radius: 8px;
+            border-left: 4px solid #1E64C8;
+        }
+
+        .interpretation-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 8px;
+        }
+
+        .interpretation-text {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.6;
         }
     </style>
 </head>
@@ -250,33 +403,33 @@
             <div class="classifier-flow">
                 <div class="flow-box">
                     <div class="flow-label">Base Score</div>
-                    <div class="flow-content">s (original)</div>
+                    <div class="flow-content">\( s \) (original)</div>
                 </div>
                 
                 <div class="arrow">+</div>
                 
                 <div class="flow-box">
                     <div class="flow-label">Classifier Gradient</div>
-                    <div class="flow-content">w · ∇_x log p(y|x_t)</div>
+                    <div class="flow-content">\( w \cdot \nabla_x \log p(y|x_t) \)</div>
                 </div>
                 
                 <div class="arrow">=</div>
                 
                 <div class="flow-box" style="border-color: #27AE60; border-width: 3px;">
                     <div class="flow-label" style="color: #27AE60;">Modified Score</div>
-                    <div class="flow-content">s̃</div>
+                    <div class="flow-content">\( \tilde{s} \)</div>
                 </div>
             </div>
             
             <div class="formulas-grid">
                 <div class="formula-card">
                     <div class="formula-title">Modified Score Formula</div>
-                    <div class="formula-text">s̃ = s + w·∇_x log p(y|x_t)</div>
+                    <div class="formula-text">\( \tilde{s} = s + w \cdot \nabla_x \log p(y|x_t) \)</div>
                 </div>
                 
                 <div class="formula-card">
                     <div class="formula-title">Guidance Scale</div>
-                    <div class="formula-text">w controls conditioning strength</div>
+                    <div class="formula-text">\( w \) controls conditioning strength</div>
                 </div>
             </div>
         </div>
@@ -319,6 +472,67 @@
         
         <div class="application-box">
             <div class="application-text">💡 Key Insight: Use classifier gradients to guide generation toward desired conditions</div>
+        </div>
+
+        <!-- Vector Calculation Example Section -->
+        <div class="example-section">
+            <div class="example-title">📐 Vector Calculation Example</div>
+            
+            <div class="example-grid">
+                <div class="input-section">
+                    <div class="input-title">📥 Input Values</div>
+                    
+                    <div class="input-item">
+                        <span class="input-label">Base Score \( s \):</span>
+                        <span class="input-value vector">[0.5, -0.3, 0.2]</span>
+                    </div>
+                    
+                    <div class="input-item">
+                        <span class="input-label">Classifier Gradient \( \nabla_x \log p(y|x_t) \):</span>
+                        <span class="input-value vector">[0.1, 0.4, -0.2]</span>
+                    </div>
+                    
+                    <div class="input-item">
+                        <span class="input-label">Guidance Scale \( w \):</span>
+                        <span class="input-value vector">2.0</span>
+                    </div>
+                </div>
+
+                <div class="calculation-section">
+                    <div class="calc-title">🔢 Step-by-Step Calculation</div>
+                    
+                    <div class="calc-step">
+                        <div class="step-label">Step 1: Scale the Gradient</div>
+                        <div class="step-content">
+                            \( w \cdot \nabla_x \log p(y|x_t) = 2.0 \times [0.1, 0.4, -0.2] \)<br>
+                            \( = [0.2, 0.8, -0.4] \)
+                        </div>
+                    </div>
+                    
+                    <div class="calc-step">
+                        <div class="step-label">Step 2: Add to Base Score</div>
+                        <div class="step-content">
+                            \( \tilde{s} = [0.5, -0.3, 0.2] + [0.2, 0.8, -0.4] \)<br>
+                            \( = [0.7, 0.5, -0.2] \)
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="result-box">
+                <div class="result-title">✨ Final Modified Score</div>
+                <div class="result-content">\( \tilde{s} = [0.7, 0.5, -0.2] \)</div>
+            </div>
+
+            <div class="interpretation">
+                <div class="interpretation-title">💬 Interpretation</div>
+                <div class="interpretation-text">
+                    The Classifier Gradient represents the direction toward the desired class (e.g., "cat"). 
+                    By setting <strong>w=2.0</strong>, we push more strongly in this direction, 
+                    making the generated image closer to the target class. 
+                    Higher values of w lead to stronger conditioning, but setting it too high may degrade image quality.
+                </div>
+            </div>
         </div>
     </div>
 </body>

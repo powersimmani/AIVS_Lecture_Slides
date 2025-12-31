@@ -15,10 +15,11 @@
             font-family: Aptos, 'Segoe UI', sans-serif;
             background: white;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
             min-height: 100vh;
             padding: 20px;
+            gap: 50px;
         }
         
         .container {
@@ -27,6 +28,7 @@
             background: white;
             position: relative;
             padding: 25px 40px;
+            margin-bottom: 40px;
         }
         
         .header {
@@ -224,9 +226,307 @@
             font-size: 16px;
             flex-shrink: 0;
         }
+
+        /* 3D Visualization Section */
+        .visualization-3d-container {
+            width: 960px;
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-top: 60px;
+            border: 2px solid #1E64C8;
+        }
+
+        .viz-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .viz-title {
+            font-size: 26px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .viz-subtitle {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .viz-main {
+            display: flex;
+            gap: 25px;
+        }
+
+        .canvas-wrapper {
+            flex: 2;
+            background: #F5F9FF;
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid #1E64C8;
+        }
+
+        #canvas3d {
+            width: 100%;
+            height: 450px;
+            display: block;
+        }
+
+        .axis-labels {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            display: flex;
+            gap: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .axis-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #333;
+        }
+
+        .axis-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+        }
+
+        .axis-x { background: #ff6b6b; }
+        .axis-y { background: #4ecdc4; }
+        .axis-z { background: #ffe66d; }
+
+        .control-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .control-card {
+            background: #F5F9FF;
+            border: 2px solid #1E64C8;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .control-card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .slider-container {
+            margin-bottom: 15px;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .slider-label span {
+            font-size: 13px;
+            color: #333;
+        }
+
+        .slider-value {
+            background: rgba(30, 100, 200, 0.3);
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #6db3f2;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: #ddd;
+            border-radius: 3px;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1E64C8, #4a9eff);
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(30, 100, 200, 0.5);
+            transition: transform 0.2s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .legend-item:last-child {
+            border-bottom: none;
+        }
+
+        .legend-color {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            flex-shrink: 0;
+        }
+
+        .legend-pdata {
+            background: linear-gradient(135deg, #1E64C8, #4a9eff);
+            box-shadow: 0 2px 8px rgba(30, 100, 200, 0.4);
+        }
+
+        .legend-pg {
+            background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+            box-shadow: 0 2px 8px rgba(255, 107, 107, 0.4);
+        }
+
+        .legend-text {
+            flex: 1;
+        }
+
+        .legend-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 2px;
+        }
+
+        .legend-desc {
+            font-size: 11px;
+            color: #666;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #1E64C8, #4a9eff);
+            color: white;
+            box-shadow: 0 4px 15px rgba(30, 100, 200, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(30, 100, 200, 0.5);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #1E64C8;
+            border: 2px solid #1E64C8;
+        }
+
+        .btn-secondary:hover {
+            background: #F5F9FF;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: #ddd;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 15px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #1E64C8, #4ecdc4);
+            border-radius: 2px;
+            transition: width 0.3s;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #4ecdc4;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .equation-display {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            border: 1px solid #ddd;
+        }
+
+        .equation {
+            font-size: 14px;
+            color: #1E64C8;
+            line-height: 1.8;
+        }
+
+        .equation sub {
+            font-size: 10px;
+        }
+
+        .convergence-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #4ecdc4;
+            margin-top: 8px;
+        }
     </style>
 </head>
 <body>
+    <!-- Original Slide Content -->
     <div class="container">
         <div class="header">
             <div class="part-label">Part 2/6: Mathematical Foundations</div>
@@ -334,19 +634,438 @@
             <div class="advantages">
                 <div class="advantages-title">Key Advantages</div>
                 <div class="advantage-item">
-                    <span class="check-icon">✓</span>
+                    <span class="check-icon">✔</span>
                     <span>Implicit density modeling</span>
                 </div>
                 <div class="advantage-item">
-                    <span class="check-icon">✓</span>
+                    <span class="check-icon">✔</span>
                     <span>No explicit likelihood computation</span>
                 </div>
                 <div class="advantage-item">
-                    <span class="check-icon">✓</span>
+                    <span class="check-icon">✔</span>
                     <span>Direct sampling capability</span>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- 3D Visualization Section -->
+    <div class="visualization-3d-container">
+        <div class="viz-header">
+            <div class="viz-title">3D Distribution Convergence Visualization</div>
+            <div class="viz-subtitle">Interactive visualization of p<sub>g</sub> converging to p<sub>data</sub> in 2D variable space</div>
+        </div>
+
+        <div class="viz-main">
+            <div class="canvas-wrapper">
+                <canvas id="canvas3d"></canvas>
+                <div class="axis-labels">
+                    <div class="axis-label"><div class="axis-dot axis-x"></div>X (Variable 1)</div>
+                    <div class="axis-label"><div class="axis-dot axis-y"></div>Y (Variable 2)</div>
+                    <div class="axis-label"><div class="axis-dot axis-z"></div>Z (Probability)</div>
+                </div>
+            </div>
+
+            <div class="control-panel">
+                <div class="control-card">
+                    <div class="control-card-title">Training Progress</div>
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <span>Convergence (t)</span>
+                            <span class="slider-value" id="tValue">0%</span>
+                        </div>
+                        <input type="range" id="tSlider" min="0" max="100" value="0">
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                    </div>
+                    <div class="status-indicator">
+                        <div class="status-dot"></div>
+                        <span id="statusText">Initial State</span>
+                    </div>
+                </div>
+
+                <div class="control-card">
+                    <div class="control-card-title">Distribution Legend</div>
+                    <div class="legend-item">
+                        <div class="legend-color legend-pdata"></div>
+                        <div class="legend-text">
+                            <div class="legend-name">p<sub>data</sub>(x, y)</div>
+                            <div class="legend-desc">Target Gaussian Mixture (3 peaks)</div>
+                        </div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color legend-pg"></div>
+                        <div class="legend-text">
+                            <div class="legend-name">p<sub>g</sub>(x, y)</div>
+                            <div class="legend-desc">Generator Distribution (Learning)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-card">
+                    <div class="control-card-title">KL Divergence</div>
+                    <div class="equation-display">
+                        <div class="equation">D<sub>KL</sub>(p<sub>data</sub> || p<sub>g</sub>)</div>
+                        <div class="convergence-value" id="klValue">∞</div>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-primary" id="animateBtn">▶ Animate</button>
+                    <button class="btn btn-secondary" id="resetBtn">↺ Reset</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Three.js 3D Visualization
+        let scene, camera, renderer;
+        let pDataMesh, pGMesh;
+        let convergenceT = 0;
+        let isAnimating = false;
+        let animationId = null;
+
+        const gridSize = 50;
+        const range = 3;
+
+        function init() {
+            const canvas = document.getElementById('canvas3d');
+            const width = canvas.clientWidth;
+            const height = canvas.clientHeight;
+
+            // Scene
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0xF5F9FF);
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+            camera.position.set(6, 5, 6);
+            camera.lookAt(0, 0, 0);
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+            renderer.setSize(width, height);
+            renderer.setPixelRatio(window.devicePixelRatio);
+
+            // Lights
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+            scene.add(ambientLight);
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(5, 10, 5);
+            scene.add(directionalLight);
+
+            const pointLight = new THREE.PointLight(0x4a9eff, 0.5);
+            pointLight.position.set(-5, 5, -5);
+            scene.add(pointLight);
+
+            // Grid helper
+            const gridHelper = new THREE.GridHelper(6, 12, 0x1E64C8, 0xc0d8f0);
+            gridHelper.position.y = -0.01;
+            scene.add(gridHelper);
+
+            // Axes
+            createAxes();
+
+            // Create distributions
+            createPDataSurface();
+            createPGSurface();
+
+            // Mouse controls
+            let isDragging = false;
+            let previousMousePosition = { x: 0, y: 0 };
+            let spherical = { theta: Math.PI / 4, phi: Math.PI / 4, radius: 10 };
+
+            canvas.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                previousMousePosition = { x: e.clientX, y: e.clientY };
+            });
+
+            canvas.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                
+                const deltaX = e.clientX - previousMousePosition.x;
+                const deltaY = e.clientY - previousMousePosition.y;
+
+                spherical.theta -= deltaX * 0.01;
+                spherical.phi = Math.max(0.1, Math.min(Math.PI / 2 - 0.1, spherical.phi - deltaY * 0.01));
+
+                updateCameraPosition();
+                previousMousePosition = { x: e.clientX, y: e.clientY };
+            });
+
+            canvas.addEventListener('mouseup', () => isDragging = false);
+            canvas.addEventListener('mouseleave', () => isDragging = false);
+
+            canvas.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                spherical.radius = Math.max(5, Math.min(20, spherical.radius + e.deltaY * 0.01));
+                updateCameraPosition();
+            });
+
+            function updateCameraPosition() {
+                camera.position.x = spherical.radius * Math.sin(spherical.phi) * Math.cos(spherical.theta);
+                camera.position.y = spherical.radius * Math.cos(spherical.phi);
+                camera.position.z = spherical.radius * Math.sin(spherical.phi) * Math.sin(spherical.theta);
+                camera.lookAt(0, 0, 0);
+            }
+
+            // Animation loop
+            function animate() {
+                requestAnimationFrame(animate);
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            // Event listeners
+            document.getElementById('tSlider').addEventListener('input', (e) => {
+                convergenceT = parseInt(e.target.value) / 100;
+                updateVisualization();
+            });
+
+            document.getElementById('animateBtn').addEventListener('click', toggleAnimation);
+            document.getElementById('resetBtn').addEventListener('click', resetAnimation);
+        }
+
+        function createAxes() {
+            const axisLength = 3.5;
+            
+            // X axis (red)
+            const xGeom = new THREE.BufferGeometry().setFromPoints([
+                new THREE.Vector3(0, 0, 0),
+                new THREE.Vector3(axisLength, 0, 0)
+            ]);
+            const xMat = new THREE.LineBasicMaterial({ color: 0xff6b6b, linewidth: 2 });
+            scene.add(new THREE.Line(xGeom, xMat));
+
+            // Y axis (cyan) - note: in Three.js, Y is up, but we'll use Z for our "Y" variable
+            const yGeom = new THREE.BufferGeometry().setFromPoints([
+                new THREE.Vector3(0, 0, 0),
+                new THREE.Vector3(0, 0, axisLength)
+            ]);
+            const yMat = new THREE.LineBasicMaterial({ color: 0x4ecdc4, linewidth: 2 });
+            scene.add(new THREE.Line(yGeom, yMat));
+
+            // Z axis (yellow) - probability
+            const zGeom = new THREE.BufferGeometry().setFromPoints([
+                new THREE.Vector3(0, 0, 0),
+                new THREE.Vector3(0, axisLength, 0)
+            ]);
+            const zMat = new THREE.LineBasicMaterial({ color: 0xffe66d, linewidth: 2 });
+            scene.add(new THREE.Line(zGeom, zMat));
+        }
+
+        // Single gaussian at specific position
+        function gaussian2D(x, y, centerX = 0, centerY = 0, sigmaX = 0.5, sigmaY = 0.5, amplitude = 1) {
+            const dx = x - centerX;
+            const dy = y - centerY;
+            return amplitude * Math.exp(-(dx * dx) / (2 * sigmaX * sigmaX) - (dy * dy) / (2 * sigmaY * sigmaY));
+        }
+
+        // Gaussian Mixture with 3 peaks at different positions
+        function gaussianMixture(x, y) {
+            // Peak 1: Upper left
+            const g1 = gaussian2D(x, y, -1.2, 1.0, 0.45, 0.45, 1.0);
+            // Peak 2: Right side
+            const g2 = gaussian2D(x, y, 1.3, 0.2, 0.5, 0.6, 0.85);
+            // Peak 3: Lower center
+            const g3 = gaussian2D(x, y, -0.3, -1.1, 0.55, 0.4, 0.75);
+            
+            return g1 + g2 + g3;
+        }
+
+        function createPDataSurface() {
+            const geometry = new THREE.PlaneGeometry(6, 6, gridSize - 1, gridSize - 1);
+            const positions = geometry.attributes.position.array;
+
+            for (let i = 0; i < positions.length; i += 3) {
+                const x = positions[i];
+                const z = positions[i + 1];
+                const height = gaussianMixture(x, z) * 2.0;
+                positions[i + 2] = height;
+            }
+
+            geometry.computeVertexNormals();
+            geometry.rotateX(-Math.PI / 2);
+
+            const material = new THREE.MeshPhongMaterial({
+                color: 0x1E64C8,
+                transparent: true,
+                opacity: 0.6,
+                side: THREE.DoubleSide,
+                shininess: 50,
+                wireframe: false
+            });
+
+            pDataMesh = new THREE.Mesh(geometry, material);
+            scene.add(pDataMesh);
+
+            // Wireframe overlay
+            const wireframeMat = new THREE.MeshBasicMaterial({
+                color: 0x4a9eff,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.3
+            });
+            const wireframe = new THREE.Mesh(geometry.clone(), wireframeMat);
+            scene.add(wireframe);
+        }
+
+        function createPGSurface() {
+            const geometry = new THREE.PlaneGeometry(6, 6, gridSize - 1, gridSize - 1);
+            
+            updatePGGeometry(geometry, 0);
+
+            geometry.computeVertexNormals();
+            geometry.rotateX(-Math.PI / 2);
+
+            const material = new THREE.MeshPhongMaterial({
+                color: 0xff6b6b,
+                transparent: true,
+                opacity: 0.5,
+                side: THREE.DoubleSide,
+                shininess: 30
+            });
+
+            pGMesh = new THREE.Mesh(geometry, material);
+            pGMesh.position.y = 0.01; // Slight offset to prevent z-fighting
+            scene.add(pGMesh);
+
+            // Wireframe overlay for pg
+            const wireframeMat = new THREE.MeshBasicMaterial({
+                color: 0xff8e8e,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.4
+            });
+            const wireframe = new THREE.Mesh(geometry.clone(), wireframeMat);
+            wireframe.position.y = 0.01;
+            pGMesh.wireframeMesh = wireframe;
+            scene.add(wireframe);
+        }
+
+        function updatePGGeometry(geometry, t) {
+            const positions = geometry.attributes.position.array;
+            const uniformHeight = 0.25;
+            
+            for (let i = 0; i < positions.length; i += 3) {
+                const x = positions[i];
+                const z = positions[i + 1];
+                
+                // Interpolate between uniform and gaussian mixture
+                const gaussianHeight = gaussianMixture(x, z) * 2.0;
+                const height = uniformHeight * (1 - t) + gaussianHeight * t;
+                
+                positions[i + 2] = height;
+            }
+
+            geometry.attributes.position.needsUpdate = true;
+            geometry.computeVertexNormals();
+        }
+
+        function updateVisualization() {
+            // Update p_g surface
+            const geometry = pGMesh.geometry.clone();
+            geometry.rotateX(Math.PI / 2); // Undo the rotation first
+            updatePGGeometry(geometry, convergenceT);
+            geometry.rotateX(-Math.PI / 2);
+            
+            pGMesh.geometry.dispose();
+            pGMesh.geometry = geometry;
+
+            // Update wireframe
+            if (pGMesh.wireframeMesh) {
+                pGMesh.wireframeMesh.geometry.dispose();
+                pGMesh.wireframeMesh.geometry = geometry.clone();
+            }
+
+            // Update UI
+            document.getElementById('tValue').textContent = Math.round(convergenceT * 100) + '%';
+            document.getElementById('progressFill').style.width = (convergenceT * 100) + '%';
+
+            // Update status text
+            let status;
+            if (convergenceT < 0.1) status = 'Initial State';
+            else if (convergenceT < 0.3) status = 'Early Training';
+            else if (convergenceT < 0.6) status = 'Learning Features';
+            else if (convergenceT < 0.9) status = 'Fine-tuning';
+            else status = 'Converged!';
+            document.getElementById('statusText').textContent = status;
+
+            // Update KL divergence display (simplified approximation)
+            const kl = convergenceT < 0.99 ? (5 * Math.exp(-3 * convergenceT)).toFixed(3) : '≈ 0';
+            document.getElementById('klValue').textContent = kl;
+
+            // Update colors based on convergence
+            if (convergenceT > 0.9) {
+                pGMesh.material.color.setHex(0x4CAF50);
+                if (pGMesh.wireframeMesh) {
+                    pGMesh.wireframeMesh.material.color.setHex(0x81c784);
+                }
+            } else {
+                pGMesh.material.color.setHex(0xff6b6b);
+                if (pGMesh.wireframeMesh) {
+                    pGMesh.wireframeMesh.material.color.setHex(0xff8e8e);
+                }
+            }
+        }
+
+        function toggleAnimation() {
+            const btn = document.getElementById('animateBtn');
+            
+            if (isAnimating) {
+                isAnimating = false;
+                btn.textContent = '▶ Animate';
+                if (animationId) cancelAnimationFrame(animationId);
+            } else {
+                isAnimating = true;
+                btn.textContent = '⏸ Pause';
+                if (convergenceT >= 1) convergenceT = 0;
+                animateConvergence();
+            }
+        }
+
+        function animateConvergence() {
+            if (!isAnimating) return;
+            
+            convergenceT += 0.005;
+            if (convergenceT >= 1) {
+                convergenceT = 1;
+                isAnimating = false;
+                document.getElementById('animateBtn').textContent = '▶ Animate';
+            }
+
+            document.getElementById('tSlider').value = convergenceT * 100;
+            updateVisualization();
+
+            if (isAnimating) {
+                animationId = requestAnimationFrame(animateConvergence);
+            }
+        }
+
+        function resetAnimation() {
+            isAnimating = false;
+            document.getElementById('animateBtn').textContent = '▶ Animate';
+            if (animationId) cancelAnimationFrame(animationId);
+            
+            convergenceT = 0;
+            document.getElementById('tSlider').value = 0;
+            updateVisualization();
+        }
+
+        // Initialize on load
+        window.addEventListener('load', init);
+        window.addEventListener('resize', () => {
+            const canvas = document.getElementById('canvas3d');
+            const width = canvas.clientWidth;
+            const height = canvas.clientHeight;
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+            renderer.setSize(width, height);
+        });
+    </script>
 </body>
 </html>
