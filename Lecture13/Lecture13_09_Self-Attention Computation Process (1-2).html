@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Self-Attention Computation Process with Example</title>
+    <title>Positional Encoding Methods</title>
     <style>
         * {
             margin: 0;
@@ -13,480 +13,442 @@
         
         body {
             font-family: Aptos, 'Segoe UI', sans-serif;
-            background: #f5f5f5;
-            padding: 40px 20px;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
         
-        .page {
-            max-width: 1200px;
-            margin: 0 auto;
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 20px 30px;
             background: white;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
         
         .title {
             text-align: center;
-            font-size: 32px;
-            font-weight: 700;
-            color: #1E64C8;
-            margin-bottom: 40px;
-        }
-        
-        .flow-container {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 30px;
-        }
-        
-        .step-box {
-            display: flex;
-            align-items: stretch;
-            gap: 16px;
-        }
-        
-        .step-number-box {
-            background: #1E64C8;
-            color: white;
-            width: 50px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            font-weight: 700;
-            flex-shrink: 0;
-        }
-        
-        .step-content {
-            flex: 1;
-            background: #f0f7ff;
-            border: 2px solid #1E64C8;
-            border-radius: 8px;
-            padding: 12px 18px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        
-        .step-title {
-            font-size: 18px;
+            font-size: 22px;
             font-weight: 600;
             color: #1E64C8;
-            margin-bottom: 4px;
         }
         
-        .step-description {
-            font-size: 15px;
-            color: #333;
-            line-height: 1.4;
+        .methods-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+        }
+        
+        .method-card {
+            border-radius: 6px;
+            padding: 10px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            border: 2px solid;
+        }
+        
+        .sinusoidal {
+            background: #f0f7ff;
+            border-color: #1E64C8;
+        }
+        
+        .learned {
+            background: #f0fdf4;
+            border-color: #16a34a;
+        }
+        
+        .relative {
+            background: #fef3c7;
+            border-color: #f59e0b;
+        }
+        
+        .method-header {
+            text-align: center;
+            padding-bottom: 6px;
+            border-bottom: 1px solid;
+        }
+        
+        .sinusoidal .method-header {
+            border-color: #1E64C8;
+        }
+        
+        .learned .method-header {
+            border-color: #16a34a;
+        }
+        
+        .relative .method-header {
+            border-color: #f59e0b;
+        }
+        
+        .method-icon {
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+        
+        .method-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .sinusoidal .method-name {
+            color: #1E64C8;
+        }
+        
+        .learned .method-name {
+            color: #16a34a;
+        }
+        
+        .relative .method-name {
+            color: #d97700;
+        }
+        
+        .method-source {
+            font-size: 10px;
+            color: #666;
+            font-style: italic;
+        }
+        
+        .formula-section {
+            background: white;
+            border-radius: 4px;
+            padding: 6px 8px;
         }
         
         .formula {
             font-family: 'Courier New', monospace;
-            background: white;
-            padding: 4px 10px;
-            border-radius: 4px;
-            font-size: 15px;
-            font-weight: 600;
-            color: #1E64C8;
-            display: inline-block;
-            margin-top: 4px;
-            border: 1px solid #1E64C8;
+            font-size: 10px;
+            color: #333;
+            line-height: 1.4;
         }
         
-        .arrow-down {
-            text-align: center;
-            color: #1E64C8;
-            font-size: 20px;
-            height: 6px;
+        .advantage-item {
             display: flex;
             align-items: center;
-            justify-content: center;
-        }
-        
-        .insight-section {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 40px;
-        }
-        
-        .insight-box {
-            flex: 1;
-            background: #fff9f0;
-            border: 2px solid #f59e0b;
-            border-radius: 8px;
-            padding: 12px 16px;
-            text-align: center;
-        }
-        
-        .insight-icon {
-            font-size: 22px;
-            margin-bottom: 4px;
-        }
-        
-        .insight-text {
-            font-size: 15px;
+            gap: 4px;
+            font-size: 11px;
             color: #333;
-            line-height: 1.3;
-            font-weight: 500;
+        }
+        
+        .advantage-icon {
+            font-size: 10px;
         }
         
         .highlight {
-            color: #1E64C8;
             font-weight: 600;
         }
         
-        .highlight-orange {
-            color: #d97700;
-            font-weight: 600;
-        }
-        
-        .example-section {
-            background: #f8feff;
-            border: 3px solid #1E64C8;
-            border-radius: 12px;
-            padding: 30px;
-        }
-        
-        .example-title {
-            font-size: 26px;
-            font-weight: 700;
-            color: #1E64C8;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        
-        .example-setup {
-            background: #fff;
-            padding: 15px;
-            border-radius: 8px;
-            border: 2px solid #1E64C8;
-            margin-bottom: 20px;
-            font-size: 16px;
-            text-align: center;
-        }
-        
-        .example-step {
-            margin-bottom: 25px;
-        }
-        
-        .example-label {
-            font-size: 16px;
-            font-weight: 600;
-            color: #1E64C8;
-            margin-bottom: 10px;
-        }
-        
-        .matrix {
-            background: white;
+        /* Attention Section */
+        .attention-section {
+            background: #f8fafc;
             border: 2px solid #1E64C8;
             border-radius: 8px;
-            padding: 15px;
-            display: inline-block;
-        }
-        
-        .matrix-row {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 6px;
-        }
-        
-        .matrix-row:last-child {
-            margin-bottom: 0;
-        }
-        
-        .matrix-row span {
-            background: #f0f7ff;
-            padding: 8px 12px;
-            border-radius: 4px;
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-            font-weight: 600;
-            color: #1E64C8;
-            min-width: 50px;
-            text-align: center;
-        }
-        
-        .weight-matrices {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-        
-        .weight-matrix-group {
+            padding: 12px 16px;
+            flex: 1;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .weight-label {
-            font-family: 'Courier New', monospace;
-            font-size: 16px;
-            font-weight: 700;
-            color: #1E64C8;
-        }
-        
-        .matrix.small .matrix-row span {
-            min-width: 40px;
-            padding: 6px 10px;
-            font-size: 13px;
-        }
-        
-        .note {
-            font-size: 13px;
-            color: #666;
-            font-style: italic;
-            margin-top: 10px;
-        }
-        
-        .attention-weights {
-            background: white;
-            border: 2px solid #1E64C8;
-            border-radius: 8px;
-            padding: 20px;
-        }
-        
-        .weight-bar {
-            display: flex;
-            align-items: center;
-            margin-bottom: 12px;
             gap: 10px;
         }
         
-        .weight-bar:last-child {
-            margin-bottom: 0;
-        }
-        
-        .bar-label {
+        .attention-title {
+            font-size: 14px;
             font-weight: 600;
             color: #1E64C8;
-            min-width: 70px;
-            font-size: 14px;
+            text-align: center;
         }
         
-        .bar {
-            background: linear-gradient(90deg, #1E64C8, #60a5fa);
-            height: 30px;
-            border-radius: 4px;
+        .matrices-row {
             display: flex;
+            gap: 16px;
+            justify-content: center;
+        }
+        
+        .matrix-box {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .matrix-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #333;
+            text-align: center;
+        }
+        
+        .matrix-formula {
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            color: #1E64C8;
+        }
+        
+        .matrix-container {
+            background: white;
+            border-radius: 4px;
+            padding: 6px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .matrix-table {
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            border-collapse: collapse;
+        }
+        
+        .matrix-table td {
+            padding: 2px 6px;
+            text-align: center;
+        }
+        
+        .matrix-table .header-cell {
+            background: #e8f4fd;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .bottom-row {
+            display: flex;
+            gap: 16px;
             align-items: center;
             justify-content: center;
-            color: white;
+        }
+        
+        .softmax-section {
+            background: #fff7ed;
+            border: 1px solid #f59e0b;
+            border-radius: 6px;
+            padding: 8px 12px;
+        }
+        
+        .softmax-title {
+            font-size: 11px;
             font-weight: 600;
-            font-size: 14px;
-            position: relative;
-            min-width: 60px;
+            color: #d97700;
+            margin-bottom: 6px;
+            text-align: center;
+        }
+        
+        .softmax-grid {
+            display: flex;
+            gap: 6px;
+        }
+        
+        .softmax-item {
+            text-align: center;
+            padding: 4px 8px;
+            background: white;
+            border-radius: 4px;
+            font-size: 10px;
+        }
+        
+        .softmax-token {
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .softmax-value {
+            color: #333;
+        }
+        
+        .softmax-value.max {
+            color: #16a34a;
+            font-weight: 600;
+        }
+        
+        .softmax-value.min {
+            color: #dc2626;
+        }
+        
+        .conclusion {
+            font-size: 12px;
+            color: #333;
+            padding: 8px 16px;
+            background: #f0fdf4;
+            border-radius: 4px;
+            border: 1px solid #16a34a;
+        }
+        
+        .conclusion strong {
+            color: #16a34a;
+        }
+        
+        .conclusion .red {
+            color: #dc2626;
+            font-weight: 600;
         }
     </style>
 </head>
 <body>
-    <div class="page">
-        <div class="title">Self-Attention Computation Process</div>
+    <div class="container">
+        <div class="title">Positional Encoding Methods</div>
         
-        <div class="flow-container">
-            <div class="step-box">
-                <div class="step-number-box">1</div>
-                <div class="step-content">
-                    <div class="step-title">Compute Query, Key, Value Matrices</div>
-                    <div class="step-description">
-                        Generate Q, K, V through linear projections<br>
-                        <span class="formula">Q = XW<sub>Q</sub> &nbsp;&nbsp; K = XW<sub>K</sub> &nbsp;&nbsp; V = XW<sub>V</sub></span>
+        <div class="methods-grid">
+            <div class="method-card sinusoidal">
+                <div class="method-header">
+                    <div class="method-icon">🌊</div>
+                    <div class="method-name">Sinusoidal</div>
+                    <div class="method-source">Original Transformer</div>
+                </div>
+                <div class="formula-section">
+                    <div class="formula">
+                        PE(pos, 2i) = sin(pos / 10000^(2i/d))<br>
+                        PE(pos, 2i+1) = cos(pos / 10000^(2i/d))
                     </div>
+                </div>
+                <div class="advantage-item">
+                    <span class="advantage-icon">✓</span>
+                    <span><span class="highlight">Any length</span> sequences</span>
                 </div>
             </div>
             
-            <div class="arrow-down">↓</div>
-            
-            <div class="step-box">
-                <div class="step-number-box">2</div>
-                <div class="step-content">
-                    <div class="step-title">Calculate Attention Scores</div>
-                    <div class="step-description">
-                        Compute dot product between queries and keys<br>
-                        <span class="formula">Scores = QK<sup>T</sup></span>
+            <div class="method-card learned">
+                <div class="method-header">
+                    <div class="method-icon">🎓</div>
+                    <div class="method-name">Learned</div>
+                    <div class="method-source">BERT Approach</div>
+                </div>
+                <div class="formula-section">
+                    <div class="formula">
+                        Trainable embedding matrix:<br>
+                        PE ∈ ℝ^(max_len × d_model)
                     </div>
+                </div>
+                <div class="advantage-item">
+                    <span class="advantage-icon">✓</span>
+                    <span><span class="highlight">Task-optimized</span></span>
                 </div>
             </div>
             
-            <div class="arrow-down">↓</div>
-            
-            <div class="step-box">
-                <div class="step-number-box">3</div>
-                <div class="step-content">
-                    <div class="step-title">Scale by √d<sub>k</sub></div>
-                    <div class="step-description">
-                        Normalize scores to stabilize gradients<br>
-                        <span class="formula">Scaled = QK<sup>T</sup> / √d<sub>k</sub></span>
+            <div class="method-card relative">
+                <div class="method-header">
+                    <div class="method-icon">🔗</div>
+                    <div class="method-name">Relative</div>
+                    <div class="method-source">T5, Transformer-XL</div>
+                </div>
+                <div class="formula-section">
+                    <div class="formula">
+                        Relative distances:<br>
+                        distance = pos_i - pos_j
                     </div>
                 </div>
-            </div>
-            
-            <div class="arrow-down">↓</div>
-            
-            <div class="step-box">
-                <div class="step-number-box">4</div>
-                <div class="step-content">
-                    <div class="step-title">Apply Softmax</div>
-                    <div class="step-description">
-                        Convert scores to attention weights (probabilities)<br>
-                        <span class="formula">Attention = softmax(QK<sup>T</sup> / √d<sub>k</sub>)</span>
-                    </div>
+                <div class="advantage-item">
+                    <span class="advantage-icon">✓</span>
+                    <span><span class="highlight">Best relationships</span></span>
                 </div>
             </div>
         </div>
         
-        <div class="insight-section">
-            <div class="insight-box">
-                <div class="insight-icon">🎯</div>
-                <div class="insight-text">
-                    <span class="highlight-orange">Higher scores</span> indicate<br>
-                    <span class="highlight">stronger relationships</span>
+        <div class="attention-section">
+            <div class="attention-title">📊 Attention Calculation Example</div>
+            
+            <div class="matrices-row">
+                <div class="matrix-box">
+                    <div class="matrix-label">Attention Scores <span class="matrix-formula">= QK<sup>T</sup></span></div>
+                    <div class="matrix-container">
+                        <table class="matrix-table">
+                            <tr>
+                                <td class="header-cell"></td>
+                                <td class="header-cell">T1</td>
+                                <td class="header-cell">T2</td>
+                                <td class="header-cell">T3</td>
+                                <td class="header-cell">T4</td>
+                                <td class="header-cell">T5</td>
+                            </tr>
+                            <tr>
+                                <td class="header-cell">T1</td>
+                                <td>1.29</td><td>1.46</td><td>1.27</td><td>1.44</td><td>1.41</td>
+                            </tr>
+                            <tr>
+                                <td class="header-cell">T2</td>
+                                <td>1.46</td><td>2.17</td><td>1.89</td><td>1.57</td><td>1.80</td>
+                            </tr>
+                            <tr>
+                                <td class="header-cell">T3</td>
+                                <td>1.27</td><td>1.89</td><td>2.38</td><td>1.79</td><td>2.05</td>
+                            </tr>
+                            <tr>
+                                <td class="header-cell">T4</td>
+                                <td>1.44</td><td>1.57</td><td>1.79</td><td>1.86</td><td>1.83</td>
+                            </tr>
+                            <tr>
+                                <td class="header-cell">T5</td>
+                                <td>1.41</td><td>1.80</td><td>2.05</td><td>1.83</td><td>1.94</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="matrix-box">
+                    <div class="matrix-label">Scaled Scores <span class="matrix-formula">= QK<sup>T</sup> / √d<sub>k</sub></span></div>
+                    <div class="matrix-container">
+                        <table class="matrix-table">
+                            <tr>
+                                <td class="header-cell"></td>
+                                <td class="header-cell">T1</td>
+                                <td class="header-cell">T2</td>
+                                <td class="header-cell">T3</td>
+                                <td class="header-cell">T4</td>
+                                <td class="header-cell">T5</td>
+                            </tr>
+                            <tr>
+                                <td class="header-cell">T1</td>
+                                <td>0.74</td><td>0.84</td><td>0.73</td><td>0.83</td><td>0.81</td>
+                            </tr>
+                            <tr>
+                                <td class="header-cell">T2</td>
+                                <td>0.84</td><td>1.25</td><td>1.09</td><td>0.91</td><td>1.04</td>
+                            </tr>
+                            <tr>
+                                <td class="header-cell">T3</td>
+                                <td>0.73</td><td>1.09</td><td>1.37</td><td>1.03</td><td>1.18</td>
+                            </tr>
+                            <tr>
+                                <td class="header-cell">T4</td>
+                                <td>0.83</td><td>0.91</td><td>1.03</td><td>1.07</td><td>1.06</td>
+                            </tr>
+                            <tr>
+                                <td class="header-cell">T5</td>
+                                <td>0.81</td><td>1.04</td><td>1.18</td><td>1.06</td><td>1.12</td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
             </div>
             
-            <div class="insight-box">
-                <div class="insight-icon">🔗</div>
-                <div class="insight-text">
-                    Scores determine how much<br>
-                    each token <span class="highlight">attends to others</span>
-                </div>
-            </div>
-        </div>
-        
-        <div class="example-section">
-            <div class="example-title">💡 Numerical Example</div>
-            
-            <div class="example-setup">
-                <strong>Setup:</strong> 5 tokens (sequence length), d<sub>model</sub> = 3 (hidden dimension), d<sub>k</sub> = 3
-            </div>
-            
-            <div class="example-step">
-                <div class="example-label">① Input Matrix X (5×3):</div>
-                <div class="matrix">
-                    <div class="matrix-row">
-                        <span>1.0</span><span>0.5</span><span>0.2</span>
-                    </div>
-                    <div class="matrix-row">
-                        <span>0.8</span><span>1.2</span><span>0.3</span>
-                    </div>
-                    <div class="matrix-row">
-                        <span>0.6</span><span>0.9</span><span>1.1</span>
-                    </div>
-                    <div class="matrix-row">
-                        <span>1.1</span><span>0.4</span><span>0.7</span>
-                    </div>
-                    <div class="matrix-row">
-                        <span>0.9</span><span>0.7</span><span>0.8</span>
-                    </div>
-                </div>
-                <div class="note">Each row represents one token's embedding</div>
-            </div>
-            
-            <div class="example-step">
-                <div class="example-label">Weight Matrices W<sub>Q</sub>, W<sub>K</sub>, W<sub>V</sub> (3×3):</div>
-                <div class="weight-matrices">
-                    <div class="weight-matrix-group">
-                        <div class="weight-label">W<sub>Q</sub></div>
-                        <div class="matrix small">
-                            <div class="matrix-row"><span>1</span><span>0</span><span>0</span></div>
-                            <div class="matrix-row"><span>0</span><span>1</span><span>0</span></div>
-                            <div class="matrix-row"><span>0</span><span>0</span><span>1</span></div>
+            <div class="bottom-row">
+                <div class="softmax-section">
+                    <div class="softmax-title">🎯 Attention Weights after Softmax (First Row)</div>
+                    <div class="softmax-grid">
+                        <div class="softmax-item">
+                            <div class="softmax-token">Token 1</div>
+                            <div class="softmax-value">0.190</div>
+                        </div>
+                        <div class="softmax-item">
+                            <div class="softmax-token">Token 2</div>
+                            <div class="softmax-value max">0.210 ⬆</div>
+                        </div>
+                        <div class="softmax-item">
+                            <div class="softmax-token">Token 3</div>
+                            <div class="softmax-value min">0.188 ⬇</div>
+                        </div>
+                        <div class="softmax-item">
+                            <div class="softmax-token">Token 4</div>
+                            <div class="softmax-value">0.208</div>
+                        </div>
+                        <div class="softmax-item">
+                            <div class="softmax-token">Token 5</div>
+                            <div class="softmax-value">0.204</div>
                         </div>
                     </div>
-                    <div class="weight-matrix-group">
-                        <div class="weight-label">W<sub>K</sub></div>
-                        <div class="matrix small">
-                            <div class="matrix-row"><span>1</span><span>0</span><span>0</span></div>
-                            <div class="matrix-row"><span>0</span><span>1</span><span>0</span></div>
-                            <div class="matrix-row"><span>0</span><span>0</span><span>1</span></div>
-                        </div>
-                    </div>
-                    <div class="weight-matrix-group">
-                        <div class="weight-label">W<sub>V</sub></div>
-                        <div class="matrix small">
-                            <div class="matrix-row"><span>1</span><span>0</span><span>0</span></div>
-                            <div class="matrix-row"><span>0</span><span>1</span><span>0</span></div>
-                            <div class="matrix-row"><span>0</span><span>0</span><span>1</span></div>
-                        </div>
-                    </div>
                 </div>
-                <div class="note">Using identity matrices for simplicity → Q = K = V = X</div>
-            </div>
-            
-            <div class="example-step">
-                <div class="example-label">② Attention Scores = QK<sup>T</sup> (5×5):</div>
-                <div class="matrix">
-                    <div class="matrix-row">
-                        <span>1.29</span><span>1.46</span><span>1.48</span><span>1.35</span><span>1.41</span>
-                    </div>
-                    <div class="matrix-row">
-                        <span>1.46</span><span>2.17</span><span>1.89</span><span>1.61</span><span>1.69</span>
-                    </div>
-                    <div class="matrix-row">
-                        <span>1.48</span><span>1.89</span><span>2.38</span><span>1.69</span><span>1.91</span>
-                    </div>
-                    <div class="matrix-row">
-                        <span>1.35</span><span>1.61</span><span>1.69</span><span>1.66</span><span>1.63</span>
-                    </div>
-                    <div class="matrix-row">
-                        <span>1.41</span><span>1.69</span><span>1.91</span><span>1.63</span><span>1.94</span>
-                    </div>
+                
+                <div class="conclusion">
+                    Token 1 attends <strong>most to Token 2 (0.210)</strong> and <span class="red">least to Token 3 (0.188)</span>
                 </div>
-                <div class="note">Higher values indicate stronger similarity between token pairs</div>
-            </div>
-            
-            <div class="example-step">
-                <div class="example-label">③ Scaled Scores = QK<sup>T</sup> / √d<sub>k</sub> (÷√3 ≈ 1.732):</div>
-                <div class="matrix">
-                    <div class="matrix-row">
-                        <span>0.74</span><span>0.84</span><span>0.85</span><span>0.78</span><span>0.81</span>
-                    </div>
-                    <div class="matrix-row">
-                        <span>0.84</span><span>1.25</span><span>1.09</span><span>0.93</span><span>0.98</span>
-                    </div>
-                    <div class="matrix-row">
-                        <span>0.85</span><span>1.09</span><span>1.37</span><span>0.98</span><span>1.10</span>
-                    </div>
-                    <div class="matrix-row">
-                        <span>0.78</span><span>0.93</span><span>0.98</span><span>0.96</span><span>0.94</span>
-                    </div>
-                    <div class="matrix-row">
-                        <span>0.81</span><span>0.98</span><span>1.10</span><span>0.94</span><span>1.12</span>
-                    </div>
-                </div>
-                <div class="note">Scaling prevents gradients from becoming too small during backpropagation</div>
-            </div>
-            
-            <div class="example-step">
-                <div class="example-label">④ Attention Weights after Softmax (First Row Example):</div>
-                <div class="attention-weights">
-                    <div class="weight-bar">
-                        <div class="bar-label">Token 1:</div>
-                        <div class="bar" style="width: 18.2%;"><span>0.182</span></div>
-                    </div>
-                    <div class="weight-bar">
-                        <div class="bar-label">Token 2:</div>
-                        <div class="bar" style="width: 20.4%;"><span>0.204</span></div>
-                    </div>
-                    <div class="weight-bar">
-                        <div class="bar-label">Token 3:</div>
-                        <div class="bar" style="width: 20.7%;"><span>0.207</span></div>
-                    </div>
-                    <div class="weight-bar">
-                        <div class="bar-label">Token 4:</div>
-                        <div class="bar" style="width: 19.2%;"><span>0.192</span></div>
-                    </div>
-                    <div class="weight-bar">
-                        <div class="bar-label">Token 5:</div>
-                        <div class="bar" style="width: 19.8%;"><span>0.198</span></div>
-                    </div>
-                </div>
-                <div class="note">✓ Sum = 1.0 (normalized probability distribution)</div>
-                <div class="note">✓ Token 1 attends most to Token 3 (0.207) and least to itself (0.182)</div>
             </div>
         </div>
     </div>
