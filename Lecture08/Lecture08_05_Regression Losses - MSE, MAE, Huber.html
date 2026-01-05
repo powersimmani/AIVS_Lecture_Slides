@@ -31,7 +31,7 @@
             font-size: 20px;
             font-weight: 600;
             color: #1E64C8;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             text-align: center;
         }
         
@@ -39,17 +39,16 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 20px;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
         
         .loss-card {
             background: #f8f9fa;
             border: 2px solid #1E64C8;
             border-radius: 8px;
-            padding: 20px;
+            padding: 18px;
             display: flex;
             flex-direction: column;
-            height: 280px;
         }
         
         .loss-card.highlight {
@@ -70,15 +69,15 @@
             font-size: 18px;
             font-weight: 600;
             color: #1E64C8;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             text-align: center;
         }
         
         .loss-type {
-            font-size: 16px;
+            font-size: 14px;
             color: #666;
             text-align: center;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
             font-style: italic;
         }
         
@@ -86,18 +85,31 @@
             color: rgba(255, 255, 255, 0.9);
         }
         
+        /* Graph Container */
+        .graph-container {
+            background: white;
+            border-radius: 6px;
+            padding: 10px;
+            margin-bottom: 12px;
+            height: 120px;
+        }
+        
+        .loss-card.highlight .graph-container {
+            background: rgba(255, 255, 255, 0.95);
+        }
+        
         .characteristics {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
             flex: 1;
         }
         
         .characteristic {
             background: white;
-            padding: 10px 12px;
+            padding: 8px 10px;
             border-radius: 6px;
-            font-size: 16px;
+            font-size: 14px;
             line-height: 1.4;
             color: #2c3e50;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -118,14 +130,14 @@
         }
         
         .usage-title {
-            font-size: 17px;
+            font-size: 16px;
             font-weight: 600;
             color: #1E64C8;
             margin-bottom: 6px;
         }
         
         .usage-text {
-            font-size: 16px;
+            font-size: 15px;
             color: #2c3e50;
             line-height: 1.4;
         }
@@ -138,7 +150,7 @@
         }
         
         .examples-section {
-            margin-top: 40px;
+            margin-top: 30px;
             padding: 25px;
             background: #f8f9fa;
             border-radius: 8px;
@@ -230,6 +242,24 @@
             <div class="loss-card">
                 <div class="loss-name">MSE</div>
                 <div class="loss-type">Mean Squared Error (L2)</div>
+                <div class="graph-container">
+                    <svg viewBox="0 0 200 100" style="width: 100%; height: 100%;">
+                        <!-- Axes -->
+                        <line x1="20" y1="80" x2="180" y2="80" stroke="#333" stroke-width="1.5"/>
+                        <line x1="100" y1="10" x2="100" y2="85" stroke="#333" stroke-width="1.5"/>
+                        
+                        <!-- Labels -->
+                        <text x="185" y="83" font-size="10" fill="#333">error</text>
+                        <text x="103" y="15" font-size="10" fill="#333">loss</text>
+                        <text x="96" y="92" font-size="9" fill="#666">0</text>
+                        
+                        <!-- MSE Curve (parabola) -->
+                        <path d="M 20,15 Q 60,75 100,80 Q 140,75 180,15" fill="none" stroke="#1E64C8" stroke-width="2.5"/>
+                        
+                        <!-- Formula -->
+                        <text x="100" y="35" font-size="11" fill="#1E64C8" text-anchor="middle" font-weight="600">(y - ŷ)²</text>
+                    </svg>
+                </div>
                 <div class="characteristics">
                     <div class="characteristic">
                         <strong>✓</strong> Strong penalty for large errors
@@ -247,18 +277,43 @@
             <div class="loss-card highlight">
                 <div class="loss-name">Huber Loss</div>
                 <div class="loss-type">Hybrid Approach</div>
+                <div class="graph-container">
+                    <svg viewBox="0 0 200 100" style="width: 100%; height: 100%;">
+                        <!-- Axes -->
+                        <line x1="20" y1="80" x2="180" y2="80" stroke="#333" stroke-width="1.5"/>
+                        <line x1="100" y1="10" x2="100" y2="85" stroke="#333" stroke-width="1.5"/>
+                        
+                        <!-- Labels -->
+                        <text x="185" y="83" font-size="10" fill="#333">error</text>
+                        <text x="103" y="15" font-size="10" fill="#333">loss</text>
+                        <text x="96" y="92" font-size="9" fill="#666">0</text>
+                        
+                        <!-- Delta markers -->
+                        <line x1="70" y1="78" x2="70" y2="82" stroke="#666" stroke-width="1"/>
+                        <line x1="130" y1="78" x2="130" y2="82" stroke="#666" stroke-width="1"/>
+                        <text x="67" y="92" font-size="8" fill="#666">-δ</text>
+                        <text x="128" y="92" font-size="8" fill="#666">δ</text>
+                        
+                        <!-- Huber Loss Curve -->
+                        <!-- Linear part left -->
+                        <line x1="20" y1="20" x2="70" y2="55" stroke="#1E64C8" stroke-width="2.5"/>
+                        <!-- Quadratic part middle -->
+                        <path d="M 70,55 Q 100,80 130,55" fill="none" stroke="#1E64C8" stroke-width="2.5"/>
+                        <!-- Linear part right -->
+                        <line x1="130" y1="55" x2="180" y2="20" stroke="#1E64C8" stroke-width="2.5"/>
+                        
+                        <!-- Labels for regions -->
+                        <text x="45" y="30" font-size="9" fill="#666" text-anchor="middle">Linear</text>
+                        <text x="100" y="65" font-size="9" fill="#666" text-anchor="middle">Quadratic</text>
+                        <text x="155" y="30" font-size="9" fill="#666" text-anchor="middle">Linear</text>
+                    </svg>
+                </div>
                 <div class="characteristics">
                     <div class="characteristic">
                         <strong>✓</strong> Combines MSE and MAE advantages
                     </div>
                     <div class="characteristic">
-                        <strong>✓</strong> Small errors: Quadratic function
-                    </div>
-                    <div class="characteristic">
-                        <strong>✓</strong> Large errors: Linear function
-                    </div>
-                    <div class="characteristic">
-                        Adjustable with delta parameter
+                        <strong>✓</strong> Adjustable with delta parameter
                     </div>
                 </div>
             </div>
@@ -267,6 +322,25 @@
             <div class="loss-card">
                 <div class="loss-name">MAE</div>
                 <div class="loss-type">Mean Absolute Error (L1)</div>
+                <div class="graph-container">
+                    <svg viewBox="0 0 200 100" style="width: 100%; height: 100%;">
+                        <!-- Axes -->
+                        <line x1="20" y1="80" x2="180" y2="80" stroke="#333" stroke-width="1.5"/>
+                        <line x1="100" y1="10" x2="100" y2="85" stroke="#333" stroke-width="1.5"/>
+                        
+                        <!-- Labels -->
+                        <text x="185" y="83" font-size="10" fill="#333">error</text>
+                        <text x="103" y="15" font-size="10" fill="#333">loss</text>
+                        <text x="96" y="92" font-size="9" fill="#666">0</text>
+                        
+                        <!-- MAE Lines (V-shape) -->
+                        <line x1="20" y1="15" x2="100" y2="80" stroke="#1E64C8" stroke-width="2.5"/>
+                        <line x1="100" y1="80" x2="180" y2="15" stroke="#1E64C8" stroke-width="2.5"/>
+                        
+                        <!-- Formula -->
+                        <text x="100" y="50" font-size="11" fill="#1E64C8" text-anchor="middle" font-weight="600">|y - ŷ|</text>
+                    </svg>
+                </div>
                 <div class="characteristics">
                     <div class="characteristic">
                         <strong>✓</strong> Robust to outliers

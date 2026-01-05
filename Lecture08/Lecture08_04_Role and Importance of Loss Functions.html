@@ -24,126 +24,234 @@
         .container {
             width: 960px;
             height: 540px;
-            position: relative;
+            padding: 30px;
             background: #ffffff;
         }
         
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .main-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .content-wrapper {
+            display: flex;
+            gap: 30px;
+            height: calc(100% - 80px);
+        }
+        
+        /* Central concept */
+        .central-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-width: 180px;
+        }
+        
         .central-node {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            width: 200px;
-            height: 200px;
-            background: #1E64C8;
+            width: 160px;
+            height: 160px;
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
             border-radius: 50%;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             color: white;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 600;
             text-align: center;
             padding: 20px;
-            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.3);
-            z-index: 10;
+            box-shadow: 0 6px 20px rgba(30, 100, 200, 0.35);
+        }
+        
+        .central-subtitle {
+            font-size: 13px;
+            font-weight: 400;
+            margin-top: 6px;
+            opacity: 0.9;
+        }
+        
+        /* Grid layout for roles */
+        .roles-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 15px;
+            flex: 1;
         }
         
         .role-item {
-            position: absolute;
-            width: 280px;
-            height: 110px;
-            padding: 16px 20px;
             background: #f8f9fa;
             border: 2px solid #1E64C8;
-            border-radius: 8px;
-            font-size: 16px;
-            line-height: 1.4;
-            color: #2c3e50;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 14px 16px;
             display: flex;
-            flex-direction: column;
+            align-items: flex-start;
+            gap: 14px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .role-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.2);
+        }
+        
+        .role-icon {
+            min-width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
             justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
         }
         
-        .role-item strong {
+        .role-content {
+            flex: 1;
+        }
+        
+        .role-number {
+            display: inline-block;
+            background: #1E64C8;
+            color: white;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 22px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 6px;
+        }
+        
+        .role-title {
+            font-size: 15px;
+            font-weight: 600;
             color: #1E64C8;
-            display: block;
             margin-bottom: 4px;
+            display: flex;
+            align-items: center;
         }
         
-        /* 6 item positions (circular layout) */
-        .role-1 {
-            left: 50px;
-            top: 30px;
-        }
-        
-        .role-2 {
-            right: 50px;
-            top: 30px;
-        }
-        
-        .role-3 {
-            right: 50px;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-        
-        .role-4 {
-            right: 50px;
-            bottom: 30px;
-        }
-        
-        .role-5 {
-            left: 50px;
-            bottom: 30px;
-        }
-        
-        .role-6 {
-            left: 50px;
-            top: 50%;
-            transform: translateY(-50%);
+        .role-desc {
+            font-size: 13px;
+            color: #2c3e50;
+            line-height: 1.4;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Central node -->
-        <div class="central-node">
-            <div>Loss Function</div>
-            <div style="font-size: 16px; font-weight: 400; margin-top: 8px;">Role & Importance</div>
+        <div class="header">
+            <div class="main-title">Loss Function: Role & Importance</div>
+            <div class="subtitle">Understanding the Core Component of Neural Network Training</div>
         </div>
         
-        <!-- Role items -->
-        <div class="role-item role-1">
-            <strong>1. Quantification</strong>
-            Quantifies difference between predicted and actual values
-        </div>
-        
-        <div class="role-item role-2">
-            <strong>2. Gradient Direction</strong>
-            Guides optimization process by providing gradient direction
-        </div>
-        
-        <div class="role-item role-3">
-            <strong>3. Task-Specific Design</strong>
-            Different loss functions needed per task (regression vs classification)
-        </div>
-        
-        <div class="role-item role-4">
-            <strong>4. Performance Impact</strong>
-            Direct impact on model performance and behavior
-        </div>
-        
-        <div class="role-item role-5">
-            <strong>5. Objective Function</strong>
-            Acts as the objective function that the model seeks to minimize
-        </div>
-        
-        <div class="role-item role-6">
-            <strong>6. Convergence & Accuracy</strong>
-            Affects convergence speed and final model accuracy
+        <div class="content-wrapper">
+            <!-- Central node -->
+            <div class="central-section">
+                <div class="central-node">
+                    <div>📉</div>
+                    <div style="margin-top: 8px;">Loss Function</div>
+                    <div class="central-subtitle">Core of Optimization</div>
+                </div>
+            </div>
+            
+            <!-- Roles grid - Simple vertical/horizontal order -->
+            <div class="roles-grid">
+                <div class="role-item">
+                    <div class="role-icon">📏</div>
+                    <div class="role-content">
+                        <div class="role-title">
+                            <span class="role-number">1</span>
+                            Quantification
+                        </div>
+                        <div class="role-desc">
+                            Quantifies difference between predicted and actual values
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="role-item">
+                    <div class="role-icon">🧭</div>
+                    <div class="role-content">
+                        <div class="role-title">
+                            <span class="role-number">2</span>
+                            Gradient Direction
+                        </div>
+                        <div class="role-desc">
+                            Guides optimization process by providing gradient direction
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="role-item">
+                    <div class="role-icon">🎯</div>
+                    <div class="role-content">
+                        <div class="role-title">
+                            <span class="role-number">3</span>
+                            Task-Specific Design
+                        </div>
+                        <div class="role-desc">
+                            Different loss functions needed per task (regression vs classification)
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="role-item">
+                    <div class="role-icon">📊</div>
+                    <div class="role-content">
+                        <div class="role-title">
+                            <span class="role-number">4</span>
+                            Performance Impact
+                        </div>
+                        <div class="role-desc">
+                            Direct impact on model performance and behavior
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="role-item">
+                    <div class="role-icon">🎪</div>
+                    <div class="role-content">
+                        <div class="role-title">
+                            <span class="role-number">5</span>
+                            Objective Function
+                        </div>
+                        <div class="role-desc">
+                            Acts as the objective function that the model seeks to minimize
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="role-item">
+                    <div class="role-icon">⚡</div>
+                    <div class="role-content">
+                        <div class="role-title">
+                            <span class="role-number">6</span>
+                            Convergence & Accuracy
+                        </div>
+                        <div class="role-desc">
+                            Affects convergence speed and final model accuracy
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </body>

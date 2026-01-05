@@ -2,41 +2,253 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Warm-up and Linear Schedule</title>
-    <style>* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: Aptos, 'Segoe UI', sans-serif; background: #ffffff; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
-.container { width: 960px; height: 540px; padding: 30px; background: #ffffff; }
-.header { text-align: center; margin-bottom: 20px; }
-.main-title { font-size: 20px; font-weight: 600; color: #1E64C8; margin-bottom: 6px; }
-.subtitle { font-size: 16px; color: #666; }
-.content-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; height: 440px; }
-.left-section, .right-section { display: flex; flex-direction: column; gap: 15px; }
-.concept-box { background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%); color: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 12px rgba(30, 100, 200, 0.3); }
-.concept-title { font-size: 18px; font-weight: 600; margin-bottom: 10px; }
-.concept-desc { font-size: 16px; line-height: 1.6; }
-        .phase-box { background: #f8f9fa; border: 2px solid #1E64C8; border-radius: 8px; padding: 18px; flex: 1; }
-        .phase-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 2px solid #1E64C8; }
-        .phase-number { background: #1E64C8; color: white; min-width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 18px; flex-shrink: 0; }
-        .phase-title { font-size: 18px; font-weight: 600; color: #1E64C8; }
-        .phase-content { display: flex; flex-direction: column; gap: 8px; }
-        .phase-item { display: flex; align-items: flex-start; gap: 10px; }
-        .phase-icon { background: #1E64C8; color: white; min-width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0; margin-top: 2px; }
-        .phase-text { font-size: 16px; color: #2c3e50; line-height: 1.5; }
-        .combined-box { background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%); color: white; padding: 18px 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(30, 100, 200, 0.3); }
-        .combined-title { font-size: 17px; font-weight: 600; margin-bottom: 8px; text-align: center; }
-        .combined-desc { font-size: 16px; line-height: 1.6; text-align: center; }
-        .visual-box { background: #f8f9fa; border: 2px solid #1E64C8; border-radius: 8px; padding: 18px; }
-        .visual-title { font-size: 17px; font-weight: 600; color: #1E64C8; margin-bottom: 12px; text-align: center; }
-        .benefits-box { background: #f8f9fa; border: 2px solid #1E64C8; border-radius: 8px; padding: 18px; flex: 1; }
-        .benefits-title { font-size: 17px; font-weight: 600; color: #1E64C8; margin-bottom: 12px; }
-        .benefit-list { display: flex; flex-direction: column; gap: 8px; }
-        .benefit-item { display: flex; align-items: flex-start; gap: 10px; }
-        .benefit-icon { background: #28a745; color: white; min-width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0; margin-top: 2px; }
-        .benefit-text { font-size: 16px; color: #2c3e50; line-height: 1.5; }
-        .usage-box { background: linear-gradient(135deg, #e8f1fd 0%, #f0f8ff 100%); border: 2px solid #1E64C8; border-radius: 8px; padding: 16px 18px; }
-        .usage-title { font-size: 16px; font-weight: 600; color: #1E64C8; margin-bottom: 10px; text-align: center; }
-        .usage-examples { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
-        .usage-tag { background: white; padding: 6px 12px; border-radius: 16px; font-size: 16px; color: #2c3e50; border: 1px solid #1E64C8; }
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 25px;
+            background: #ffffff;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .main-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 6px;
+        }
+        
+        .subtitle {
+            font-size: 15px;
+            color: #666;
+        }
+        
+        .content-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            height: 460px;
+        }
+        
+        .left-section, .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .phase-box {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 14px;
+        }
+        
+        .phase-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #1E64C8;
+        }
+        
+        .phase-number {
+            background: #1E64C8;
+            color: white;
+            min-width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        
+        .phase-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E64C8;
+        }
+        
+        .phase-content {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .phase-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        
+        .phase-icon {
+            background: #1E64C8;
+            color: white;
+            min-width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .phase-text {
+            font-size: 14px;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+        
+        .combined-box {
+            background: linear-gradient(135deg, #1E64C8 0%, #2874d8 100%);
+            color: white;
+            padding: 14px 16px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(30, 100, 200, 0.3);
+        }
+        
+        .combined-title {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            text-align: center;
+        }
+        
+        .combined-desc {
+            font-size: 14px;
+            line-height: 1.5;
+            text-align: center;
+        }
+        
+        /* Visual Box with Proper Graph */
+        .visual-box {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 14px;
+        }
+        
+        .visual-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .graph-container {
+            background: white;
+            border-radius: 6px;
+            padding: 10px;
+            height: 150px;
+        }
+        
+        .benefits-box {
+            background: #f8f9fa;
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 14px;
+            flex: 1;
+        }
+        
+        .benefits-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 10px;
+        }
+        
+        .benefit-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        
+        .benefit-icon {
+            background: #28a745;
+            color: white;
+            min-width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .benefit-text {
+            font-size: 14px;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+        
+        .usage-box {
+            background: linear-gradient(135deg, #e8f1fd 0%, #f0f8ff 100%);
+            border: 2px solid #1E64C8;
+            border-radius: 8px;
+            padding: 14px 16px;
+        }
+        
+        .usage-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .usage-examples {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .usage-tag {
+            background: white;
+            padding: 5px 12px;
+            border-radius: 16px;
+            font-size: 13px;
+            color: #2c3e50;
+            border: 1px solid #1E64C8;
+        }
     </style>
 </head>
 <body>
@@ -61,7 +273,7 @@ body { font-family: Aptos, 'Segoe UI', sans-serif; background: #ffffff; display:
                             </div>
                         </div>
                         <div class="phase-item">
-                            <div class="phase-icon">🛡️</div>
+                            <div class="phase-icon">🛡</div>
                             <div class="phase-text">
                                 Prevents large gradient updates from random initialization
                             </div>
@@ -106,9 +318,65 @@ body { font-family: Aptos, 'Segoe UI', sans-serif; background: #ffffff; display:
             
             <div class="right-section">
                 <div class="visual-box">
-                    <div class="visual-title">Schedule Visualization</div>
-                    <div style="background: white; border-radius: 6px; padding: 15px; height: 140px;">
-                        <div style="font-size: 14px; color: #666; text-align: center;">LR increases during warm-up, then decreases linearly</div>
+                    <div class="visual-title">📈 Schedule Visualization</div>
+                    <div class="graph-container">
+                        <svg viewBox="0 0 380 130" style="width: 100%; height: 100%;">
+                            <!-- Grid -->
+                            <defs>
+                                <pattern id="grid" width="40" height="25" patternUnits="userSpaceOnUse">
+                                    <path d="M 40 0 L 0 0 0 25" fill="none" stroke="#eee" stroke-width="0.5"/>
+                                </pattern>
+                            </defs>
+                            <rect x="40" y="10" width="320" height="100" fill="url(#grid)"/>
+                            
+                            <!-- Axes -->
+                            <line x1="40" y1="110" x2="360" y2="110" stroke="#333" stroke-width="2"/>
+                            <line x1="40" y1="10" x2="40" y2="115" stroke="#333" stroke-width="2"/>
+                            
+                            <!-- Axis labels -->
+                            <text x="200" y="128" font-size="11" fill="#333" text-anchor="middle">Training Steps</text>
+                            <text x="15" y="65" font-size="11" fill="#333" text-anchor="middle" transform="rotate(-90, 15, 65)">Learning Rate</text>
+                            
+                            <!-- Y-axis labels -->
+                            <text x="35" y="25" font-size="9" fill="#666" text-anchor="end">max</text>
+                            <text x="35" y="113" font-size="9" fill="#666" text-anchor="end">0</text>
+                            
+                            <!-- Warm-up region highlight -->
+                            <rect x="40" y="10" width="60" height="100" fill="#e8f5e9" opacity="0.5"/>
+                            <text x="70" y="125" font-size="9" fill="#28a745" text-anchor="middle">Warm-up</text>
+                            
+                            <!-- Linear decay region -->
+                            <rect x="100" y="10" width="260" height="100" fill="#e3f2fd" opacity="0.3"/>
+                            <text x="230" y="125" font-size="9" fill="#1E64C8" text-anchor="middle">Linear Decay</text>
+                            
+                            <!-- Warm-up line (increasing) -->
+                            <line x1="40" y1="105" x2="100" y2="20" stroke="#28a745" stroke-width="3"/>
+                            
+                            <!-- Linear decay line (decreasing) -->
+                            <line x1="100" y1="20" x2="360" y2="100" stroke="#1E64C8" stroke-width="3"/>
+                            
+                            <!-- Peak point -->
+                            <circle cx="100" cy="20" r="5" fill="#e53935"/>
+                            <text x="105" y="15" font-size="9" fill="#e53935" font-weight="600">Peak LR</text>
+                            
+                            <!-- Arrows -->
+                            <path d="M 55 80 L 75 40" fill="none" stroke="#28a745" stroke-width="1.5" marker-end="url(#arrowGreen)"/>
+                            <path d="M 180 35 L 250 60" fill="none" stroke="#1E64C8" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+                            
+                            <!-- Arrow markers -->
+                            <defs>
+                                <marker id="arrowGreen" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                    <path d="M0,0 L0,6 L9,3 z" fill="#28a745"/>
+                                </marker>
+                                <marker id="arrowBlue" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                    <path d="M0,0 L0,6 L9,3 z" fill="#1E64C8"/>
+                                </marker>
+                            </defs>
+                            
+                            <!-- Annotations -->
+                            <text x="55" y="95" font-size="8" fill="#28a745">↑ Increase</text>
+                            <text x="280" y="50" font-size="8" fill="#1E64C8">↓ Decrease</text>
+                        </svg>
                     </div>
                 </div>
                 
@@ -142,6 +410,7 @@ body { font-family: Aptos, 'Segoe UI', sans-serif; background: #ffffff; display:
                         <div class="usage-tag">BERT</div>
                         <div class="usage-tag">GPT</div>
                         <div class="usage-tag">Vision Transformers</div>
+                        <div class="usage-tag">LLMs</div>
                     </div>
                 </div>
             </div>
