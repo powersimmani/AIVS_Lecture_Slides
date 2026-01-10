@@ -1,4 +1,4 @@
-# Lecture 7: Deep Learning Fundamentals
+# Lecture 7: Deep Neural Networks and Architecture Patterns
 
 ## 📋 Overview
 
