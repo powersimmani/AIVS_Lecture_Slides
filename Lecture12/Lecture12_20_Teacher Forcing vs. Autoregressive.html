@@ -209,44 +209,49 @@
         /* Summary Table */
         .summary-table {
             background: #f8f9fa;
-            border-radius: 10px;
-            padding: 16px 20px;
+            border-radius: 8px;
+            padding: 16px;
+            border: 2px solid #1E64C8;
         }
         
         .summary-title {
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 600;
-            color: #333;
+            color: #1E64C8;
             margin-bottom: 12px;
+            text-align: center;
         }
         
         .summary-grid {
             display: grid;
-            grid-template-columns: 1.2fr 1fr 1fr;
-            gap: 8px;
+            grid-template-columns: auto 1fr 1fr;
+            gap: 1px;
+            background: #d0d9e3;
+            border-radius: 6px;
+            overflow: hidden;
         }
         
         .summary-cell {
-            padding: 8px 12px;
+            background: white;
+            padding: 10px 12px;
             font-size: 14px;
-            border-radius: 6px;
+            display: flex;
+            align-items: center;
         }
         
         .summary-header {
-            background: #e9ecef;
+            background: #1E64C8;
+            color: white;
             font-weight: 600;
-            color: #333;
-            text-align: center;
+            justify-content: center;
         }
         
         .summary-label {
-            background: white;
-            color: #555;
+            font-weight: 600;
+            color: #333;
         }
         
         .summary-value {
-            background: white;
-            text-align: center;
             color: #555;
         }
         
@@ -263,7 +268,7 @@
 </head>
 <body>
     <div class="container">
-        <div class="main-title">Teacher Forcing vs. 자기회귀 디코딩</div>
+        <div class="main-title">Teacher Forcing vs. Autoregressive Decoding</div>
         
         <div class="content">
             <!-- Comparison Grid -->
@@ -275,23 +280,23 @@
                             <div class="method-badge">TF</div>
                             <div class="card-title">Teacher Forcing</div>
                         </div>
-                        <div class="phase-badge">훈련</div>
+                        <div class="phase-badge">Training</div>
                     </div>
                     
                     <div class="characteristics">
-                        <div class="char-title">작동 방식</div>
+                        <div class="char-title">How it Works</div>
                         <div class="char-list">
                             <div class="char-item">
                                 <span class="char-icon card-teacher">•</span>
-                                <span><strong>정답(ground-truth)</strong> 타겟 토큰을 입력으로 사용</span>
+                                <span>Uses <strong>ground-truth</strong> target tokens as input</span>
                             </div>
                             <div class="char-item">
                                 <span class="char-icon card-teacher">•</span>
-                                <span>모델이 올바른 이전 토큰을 받음</span>
+                                <span>Model receives correct previous token</span>
                             </div>
                             <div class="char-item">
                                 <span class="char-icon card-teacher">•</span>
-                                <span>훈련 중 오류 누적 없음</span>
+                                <span>No error accumulation during training</span>
                             </div>
                         </div>
                     </div>
@@ -300,24 +305,24 @@
                         <div class="pros-section">
                             <div class="section-header pros-header">
                                 <span>✓</span>
-                                <span>장점</span>
+                                <span>Advantages</span>
                             </div>
                             <div class="item-list">
                                 <div class="item">
                                     <span class="item-icon icon-pro">+</span>
-                                    <span>빠른 수렴</span>
+                                    <span>Faster convergence</span>
                                 </div>
                                 <div class="item">
                                     <span class="item-icon icon-pro">+</span>
-                                    <span>안정적인 기울기</span>
+                                    <span>Stable gradients</span>
                                 </div>
                                 <div class="item">
                                     <span class="item-icon icon-pro">+</span>
-                                    <span>훈련이 용이함</span>
+                                    <span>Easier to train</span>
                                 </div>
                                 <div class="item">
                                     <span class="item-icon icon-pro">+</span>
-                                    <span>병렬 처리 가능</span>
+                                    <span>Parallel processing</span>
                                 </div>
                             </div>
                         </div>
@@ -325,24 +330,24 @@
                         <div class="cons-section">
                             <div class="section-header cons-header">
                                 <span>✗</span>
-                                <span>단점</span>
+                                <span>Disadvantages</span>
                             </div>
                             <div class="item-list">
                                 <div class="item">
                                     <span class="item-icon icon-con">−</span>
-                                    <span>노출 편향 문제</span>
+                                    <span>Exposure bias problem</span>
                                 </div>
                                 <div class="item">
                                     <span class="item-icon icon-con">−</span>
-                                    <span>훈련/테스트 불일치</span>
+                                    <span>Train/test mismatch</span>
                                 </div>
                                 <div class="item">
                                     <span class="item-icon icon-con">−</span>
-                                    <span>추론 시 견고성 낮음</span>
+                                    <span>Less robust at inference</span>
                                 </div>
                                 <div class="item">
                                     <span class="item-icon icon-con">−</span>
-                                    <span>자체 오류 처리 불가</span>
+                                    <span>Can't handle own errors</span>
                                 </div>
                             </div>
                         </div>
@@ -354,25 +359,25 @@
                     <div class="card-header">
                         <div class="header-left">
                             <div class="method-badge">AR</div>
-                            <div class="card-title">자기회귀(Autoregressive)</div>
+                            <div class="card-title">Autoregressive</div>
                         </div>
-                        <div class="phase-badge">추론</div>
+                        <div class="phase-badge">Inference</div>
                     </div>
                     
                     <div class="characteristics">
-                        <div class="char-title">작동 방식</div>
+                        <div class="char-title">How it Works</div>
                         <div class="char-list">
                             <div class="char-item">
                                 <span class="char-icon card-auto">•</span>
-                                <span>모델의 <strong>자체 예측</strong>을 입력으로 사용</span>
+                                <span>Uses model's <strong>own predictions</strong> as input</span>
                             </div>
                             <div class="char-item">
                                 <span class="char-icon card-auto">•</span>
-                                <span>각 예측이 다음 단계의 입력으로 전달됨</span>
+                                <span>Each prediction feeds into next step</span>
                             </div>
                             <div class="char-item">
                                 <span class="char-icon card-auto">•</span>
-                                <span>시퀀스 전반에 오류가 누적될 수 있음</span>
+                                <span>Errors can compound over sequence</span>
                             </div>
                         </div>
                     </div>
@@ -381,24 +386,24 @@
                         <div class="pros-section">
                             <div class="section-header pros-header">
                                 <span>✓</span>
-                                <span>장점</span>
+                                <span>Advantages</span>
                             </div>
                             <div class="item-list">
                                 <div class="item">
                                     <span class="item-icon icon-pro">+</span>
-                                    <span>추론 모드와 일치</span>
+                                    <span>Matches inference mode</span>
                                 </div>
                                 <div class="item">
                                     <span class="item-icon icon-pro">+</span>
-                                    <span>더 현실적인 훈련</span>
+                                    <span>More realistic training</span>
                                 </div>
                                 <div class="item">
                                     <span class="item-icon icon-pro">+</span>
-                                    <span>더 나은 일반화 성능</span>
+                                    <span>Better generalization</span>
                                 </div>
                                 <div class="item">
                                     <span class="item-icon icon-pro">+</span>
-                                    <span>노출 편향 없음</span>
+                                    <span>No exposure bias</span>
                                 </div>
                             </div>
                         </div>
@@ -406,24 +411,24 @@
                         <div class="cons-section">
                             <div class="section-header cons-header">
                                 <span>✗</span>
-                                <span>단점</span>
+                                <span>Disadvantages</span>
                             </div>
                             <div class="item-list">
                                 <div class="item">
                                     <span class="item-icon icon-con">−</span>
-                                    <span>느린 훈련 속도</span>
+                                    <span>Slower training</span>
                                 </div>
                                 <div class="item">
                                     <span class="item-icon icon-con">−</span>
-                                    <span>불안정한 기울기</span>
+                                    <span>Unstable gradients</span>
                                 </div>
                                 <div class="item">
                                     <span class="item-icon icon-con">−</span>
-                                    <span>오류 누적</span>
+                                    <span>Error accumulation</span>
                                 </div>
                                 <div class="item">
                                     <span class="item-icon icon-con">−</span>
-                                    <span>순차 처리 필요</span>
+                                    <span>Sequential processing</span>
                                 </div>
                             </div>
                         </div>
@@ -433,27 +438,27 @@
             
             <!-- Summary Table -->
             <div class="summary-table">
-                <div class="summary-title">📊 빠른 비교</div>
+                <div class="summary-title">📊 Quick Comparison</div>
                 <div class="summary-grid">
-                    <div class="summary-cell summary-header">항목</div>
+                    <div class="summary-cell summary-header">Aspect</div>
                     <div class="summary-cell summary-header">Teacher Forcing</div>
-                    <div class="summary-cell summary-header">자기회귀</div>
+                    <div class="summary-cell summary-header">Autoregressive</div>
                     
-                    <div class="summary-cell summary-label">입력 소스</div>
-                    <div class="summary-cell summary-value"><span class="highlight-teacher">정답(Ground truth)</span></div>
-                    <div class="summary-cell summary-value"><span class="highlight-auto">모델 예측</span></div>
+                    <div class="summary-cell summary-label">Input Source</div>
+                    <div class="summary-cell summary-value"><span class="highlight-teacher">Ground truth</span></div>
+                    <div class="summary-cell summary-value"><span class="highlight-auto">Model predictions</span></div>
                     
-                    <div class="summary-cell summary-label">사용 단계</div>
-                    <div class="summary-cell summary-value"><span class="highlight-teacher">훈련</span></div>
-                    <div class="summary-cell summary-value"><span class="highlight-auto">추론</span></div>
+                    <div class="summary-cell summary-label">Usage Phase</div>
+                    <div class="summary-cell summary-value"><span class="highlight-teacher">Training</span></div>
+                    <div class="summary-cell summary-value"><span class="highlight-auto">Inference</span></div>
                     
-                    <div class="summary-cell summary-label">훈련 속도</div>
-                    <div class="summary-cell summary-value"><span class="highlight-teacher">빠름 ⚡</span></div>
-                    <div class="summary-cell summary-value">느림 🐌</div>
+                    <div class="summary-cell summary-label">Training Speed</div>
+                    <div class="summary-cell summary-value"><span class="highlight-teacher">Fast ⚡</span></div>
+                    <div class="summary-cell summary-value">Slow 🐌</div>
                     
-                    <div class="summary-cell summary-label">견고성</div>
-                    <div class="summary-cell summary-value">낮음 📉</div>
-                    <div class="summary-cell summary-value"><span class="highlight-auto">높음 📈</span></div>
+                    <div class="summary-cell summary-label">Robustness</div>
+                    <div class="summary-cell summary-value">Lower 📉</div>
+                    <div class="summary-cell summary-value"><span class="highlight-auto">Higher 📈</span></div>
                 </div>
             </div>
         </div>
