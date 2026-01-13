@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>어텐션 메커니즘 구조</title>
+    <title>Attention Mechanism Structure</title>
     <style>
         * {
             margin: 0;
@@ -12,7 +12,7 @@
         }
         
         body {
-            font-family: 'Malgun Gothic', Aptos, 'Segoe UI', sans-serif;
+            font-family: Aptos, 'Segoe UI', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -173,7 +173,7 @@
             opacity: 0.9;
         }
         
-        /* Score 연산 */
+        /* Score Computation */
         .score-box {
             background: white;
             border: 2px solid #1E64C8;
@@ -217,7 +217,7 @@
             font-weight: 600;
         }
         
-        /* Context 출력 */
+        /* Context Output */
         .context-output {
             width: 100px;
             height: 60px;
@@ -316,17 +316,17 @@
 </head>
 <body>
     <div class="container">
-        <div class="main-title">어텐션 메커니즘 구조</div>
+        <div class="main-title">Attention Mechanism Structure</div>
         
         <div class="content">
             <!-- Architecture Flow -->
             <div class="architecture-section">
-                <div class="architecture-title">단계별 어텐션 연산</div>
+                <div class="architecture-title">Step-by-Step Attention Computation</div>
                 
                 <div class="attention-flow">
                     <!-- Step 1: Inputs -->
                     <div class="flow-layer">
-                        <div class="layer-label">① 입력</div>
+                        <div class="layer-label">① Inputs</div>
                         <div class="layer-content">
                             <div class="encoder-states">
                                 <div class="encoder-state">h₁</div>
@@ -338,7 +338,7 @@
                             <div class="decoder-state">s<sub>t</sub></div>
                         </div>
                         <div style="text-align: center; font-size: 12px; color: #666;">
-                            인코더 상태 (키 & 값) + 디코더 상태 (쿼리)
+                            Encoder states (Keys & Values) + Decoder state (Query)
                         </div>
                     </div>
                     
@@ -346,29 +346,29 @@
                     
                     <!-- Step 2: QKV -->
                     <div class="flow-layer">
-                        <div class="layer-label">② 쿼리, 키, 값</div>
+                        <div class="layer-label">② Query, Key, Value</div>
                         <div class="layer-content">
                             <div class="qkv-section">
                                 <div class="qkv-box">
                                     <div class="qkv-component query-box">
                                         <div class="component-main">Q</div>
-                                        <div class="component-sub">쿼리</div>
+                                        <div class="component-sub">Query</div>
                                     </div>
-                                    <div class="qkv-label">s<sub>t</sub>에서</div>
+                                    <div class="qkv-label">from s<sub>t</sub></div>
                                 </div>
                                 <div class="qkv-box">
                                     <div class="qkv-component key-box">
                                         <div class="component-main">K</div>
-                                        <div class="component-sub">키</div>
+                                        <div class="component-sub">Keys</div>
                                     </div>
-                                    <div class="qkv-label">h<sub>i</sub>에서</div>
+                                    <div class="qkv-label">from h<sub>i</sub></div>
                                 </div>
                                 <div class="qkv-box">
                                     <div class="qkv-component value-box">
                                         <div class="component-main">V</div>
-                                        <div class="component-sub">값</div>
+                                        <div class="component-sub">Values</div>
                                     </div>
-                                    <div class="qkv-label">h<sub>i</sub>에서</div>
+                                    <div class="qkv-label">from h<sub>i</sub></div>
                                 </div>
                             </div>
                         </div>
@@ -378,11 +378,11 @@
                     
                     <!-- Step 3: Score -->
                     <div class="flow-layer">
-                        <div class="layer-label">③ 점수 계산</div>
+                        <div class="layer-label">③ Compute Scores</div>
                         <div class="layer-content">
                             <div class="score-box">
-                                <div class="score-formula">점수 = Q · K<sup>T</sup></div>
-                                <div class="score-label">쿼리와 각 키 간의 유사도</div>
+                                <div class="score-formula">score = Q · K<sup>T</sup></div>
+                                <div class="score-label">Similarity between Q and each K</div>
                             </div>
                         </div>
                     </div>
@@ -391,7 +391,7 @@
                     
                     <!-- Step 4: Attention Weights -->
                     <div class="flow-layer">
-                        <div class="layer-label">④ 어텐션 가중치 (소프트맥스)</div>
+                        <div class="layer-label">④ Attention Weights (Softmax)</div>
                         <div class="layer-content">
                             <div class="weights-display">
                                 <div class="weight-item">α₁: 0.1</div>
@@ -401,7 +401,7 @@
                             </div>
                         </div>
                         <div style="text-align: center; font-size: 12px; color: #666;">
-                            정규화된 점수 (합계 1.0)
+                            Normalized scores (sum to 1.0)
                         </div>
                     </div>
                     
@@ -409,10 +409,10 @@
                     
                     <!-- Step 5: Context Vector -->
                     <div class="flow-layer">
-                        <div class="layer-label">⑤ 문맥 벡터</div>
+                        <div class="layer-label">⑤ Context Vector</div>
                         <div class="layer-content">
                             <div class="context-output">
-                                <div class="context-label">가중합</div>
+                                <div class="context-label">Weighted sum</div>
                                 <div class="context-value">c<sub>t</sub></div>
                             </div>
                         </div>
@@ -429,10 +429,10 @@
                 <div class="component-card card-query">
                     <div class="card-header">
                         <div class="card-icon">Q</div>
-                        <div class="card-title">쿼리 (Query)</div>
+                        <div class="card-title">Query</div>
                     </div>
                     <div class="card-description">
-                        "무엇을 찾고 있는가?" 현재 디코더 상태에서 파생되어 관련 인코더 상태를 탐색함.
+                        "What am I looking for?" Derived from current decoder state to find relevant encoder states.
                     </div>
                     <div class="card-formula">
                         Q = W<sub>Q</sub> × s<sub>t</sub>
@@ -443,10 +443,10 @@
                 <div class="component-card card-key">
                     <div class="card-header">
                         <div class="card-icon">K</div>
-                        <div class="card-title">키 (Key)</div>
+                        <div class="card-title">Key</div>
                     </div>
                     <div class="card-description">
-                        "무엇을 담고 있는가?" 쿼리와 비교하기 위해 변환된 인코더 상태.
+                        "What do I contain?" Encoder states transformed to be compared with query.
                     </div>
                     <div class="card-formula">
                         K = W<sub>K</sub> × h<sub>i</sub>
@@ -457,10 +457,10 @@
                 <div class="component-card card-value">
                     <div class="card-header">
                         <div class="card-icon">V</div>
-                        <div class="card-title">값 (Value)</div>
+                        <div class="card-title">Value</div>
                     </div>
                     <div class="card-description">
-                        "어떤 정보를 추출할 것인가?" 어텐션 가중치에 따라 집계되는 실제 내용.
+                        "What information to extract?" Actual content to be aggregated based on attention weights.
                     </div>
                     <div class="card-formula">
                         V = W<sub>V</sub> × h<sub>i</sub>
