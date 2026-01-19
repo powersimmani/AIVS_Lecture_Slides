@@ -1,6 +1,6 @@
 Please visit the website [AIVS Lecture Slides](http://powersimmani.github.io/AIVS_Lecture_Slides/)
 
-# Machine Learning & Deep Learning
+# Introduction to Machine Learning
 
 ## 📚 Course Overview
 
