@@ -1,41 +1,41 @@
-# Lecture 10: Data Modality and Feature Extraction
+# Lecture 7: Deep Neural Networks and Architecture Patterns
 
 ## 📋 Overview
 
 **Instructor:** Ho-min Park  
 **Email:** homin.park@ghent.ac.kr | powersimmani@gmail.com
 
-This lecture covers feature extraction techniques for various data modalities (text, image, audio, graph).
+This lecture covers core principles of deep learning: importance of depth, activation functions, and hierarchical representation learning.
 
 ---
 
 ## 🎯 Learning Objectives
 
-1. Understand characteristics of different data modalities
-2. Apply traditional feature extraction techniques
-3. Text: BoW, TF-IDF, N-grams
-4. Image: SIFT, HOG, Edge Detection
-5. Audio: FFT, MFCC, Spectrogram
+1. Understand principles of deep architectures
+2. Compare and select modern activation functions
+3. Understand gradient flow and vanishing/exploding problems
+4. Understand hierarchical feature representation
+5. Design appropriate architectures
 
 ---
 
 ## 📚 Key Topics
 
-**Text**: BoW, TF-IDF, N-grams, Word Embeddings
-**Image**: Edge Detection, SIFT, HOG, Color Histograms
-**Audio**: FFT, MFCC, Mel-Spectrogram, Chroma
-**Video**: Optical Flow, 3D Convolutions
-**Graph**: Adjacency Matrix, Graph Kernels, Node Features
+**Importance of depth**: Shallow vs deep networks
+**Activation functions**: ReLU, Leaky ReLU, ELU, GELU, Swish
+**Gradient problems**: Vanishing/Exploding Gradients
+**Hierarchical representation**: Low-level → Mid-level → High-level features
+**Architecture design**: Number of layers, units, connection patterns
 
 ---
 
 ## 💡 Key Concepts
 
-- TF-IDF reflects word importance
-- SIFT/HOG are rotation/scale invariant
-- MFCC effective for speech recognition
-- Deep learning automatically learns features
-- Traditional methods are interpretable and efficient
+- Depth improves parameter efficiency and expressiveness
+- ReLU mitigates vanishing gradients
+- GELU/Swish preferred in modern models
+- Hierarchical representation learns complex patterns
+- Skip connections enable training of deep networks
 
 ---
 
