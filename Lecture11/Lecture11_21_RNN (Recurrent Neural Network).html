@@ -23,7 +23,6 @@
         
         .container {
             width: 960px;
-            height: 900px;
             position: relative;
             background: white;
             padding: 25px 45px;
@@ -206,6 +205,145 @@
             color: #E74C3C;
             font-weight: 600;
         }
+        
+        /* BPTT Section Styles */
+        .bptt-box {
+            background: linear-gradient(135deg, #8E44AD 0%, #9B59B6 100%);
+            color: white;
+            padding: 18px 30px;
+            border-radius: 8px;
+            margin-top: 30px;
+            margin-bottom: 22px;
+        }
+        
+        .bptt-title {
+            font-size: 20px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .bptt-subtitle {
+            font-size: 14px;
+            text-align: center;
+            opacity: 0.9;
+        }
+        
+        .bptt-formula-box {
+            background: #F5F0FA;
+            border: 2px solid #8E44AD;
+            border-radius: 8px;
+            padding: 16px 25px;
+            margin-bottom: 18px;
+        }
+        
+        .bptt-formula-title {
+            font-size: 15px;
+            color: #8E44AD;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .bptt-formula {
+            font-size: 16px;
+            color: #5B2C6F;
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            line-height: 1.8;
+        }
+        
+        .bptt-example-box {
+            background: #FAF5FF;
+            border: 2px solid #8E44AD;
+            border-radius: 8px;
+            padding: 18px 25px;
+            margin-bottom: 18px;
+        }
+        
+        .bptt-example-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #8E44AD;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .bptt-example-content {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .bptt-step {
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #2C3E50;
+            line-height: 1.5;
+        }
+        
+        .bptt-value {
+            color: #8E44AD;
+            font-weight: 600;
+        }
+        
+        .gradient-value {
+            color: #E74C3C;
+            font-weight: 600;
+        }
+        
+        .bptt-result {
+            background: #EDE7F6;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            border-left: 4px solid #8E44AD;
+        }
+        
+        .bptt-diagram {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin: 15px 0;
+            font-size: 14px;
+            flex-wrap: wrap;
+        }
+        
+        .bptt-node {
+            background: #8E44AD;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+        
+        .bptt-arrow {
+            color: #8E44AD;
+            font-size: 18px;
+        }
+        
+        .section-divider {
+            border: none;
+            height: 2px;
+            background: linear-gradient(to right, transparent, #8E44AD, transparent);
+            margin: 15px 0;
+        }
+        
+        .step-header {
+            background: #8E44AD;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 10px;
+            font-size: 14px;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -325,6 +463,184 @@
                 </div>
                 <div class="example-result">
                     <strong>Trend detected:</strong> Hidden states evolve [0, 0] → [0.59, 0.71] → [0.87, 0.95], capturing increasing trend through accumulated memory in both dimensions
+                </div>
+            </div>
+        </div>
+        
+        <!-- BPTT Section -->
+        <div class="bptt-box">
+            <div class="bptt-title">⏪ Backpropagation Through Time (BPTT)</div>
+            <div class="bptt-subtitle">Gradient flows backward through the unrolled network</div>
+        </div>
+        
+        <div class="bptt-formula-box">
+            <div class="bptt-formula-title">Core BPTT Formulas</div>
+            <div class="bptt-formula">
+                Output: y<sub>t</sub> = W<sub>hy</sub> × h<sub>t</sub><br>
+                Loss: L = Σ<sub>t</sub> L<sub>t</sub> = Σ<sub>t</sub> ½(y<sub>t</sub> - target<sub>t</sub>)²<br><br>
+                ∂L/∂W<sub>hy</sub> = Σ<sub>t</sub> (∂L<sub>t</sub>/∂y<sub>t</sub>) × h<sub>t</sub><sup>T</sup><br>
+                ∂L/∂h<sub>t</sub> = W<sub>hy</sub><sup>T</sup> × ∂L/∂y<sub>t</sub> + W<sub>hh</sub><sup>T</sup> × ∂L/∂h<sub>t+1</sub> × (1 - h<sub>t+1</sub>²)<br>
+                ∂L/∂W<sub>hh</sub> = Σ<sub>t</sub> (∂L/∂h<sub>t</sub> × (1 - h<sub>t</sub>²)) × h<sub>t-1</sub><sup>T</sup>
+            </div>
+        </div>
+        
+        <div class="bptt-example-box">
+            <div class="bptt-example-title">
+                <span>🔢</span>
+                <span>BPTT Calculation Example (2 timesteps)</span>
+            </div>
+            <div class="bptt-example-content">
+                <div class="bptt-step">
+                    <strong>Setup (using forward pass results above):</strong>
+                </div>
+                <div class="bptt-step">
+                    • Hidden states: h<sub>1</sub> = [0.59, 0.71], h<sub>2</sub> = [0.87, 0.95]
+                </div>
+                <div class="bptt-step">
+                    • W<sub>hy</sub> = [[0.4, 0.5]] (2→1), W<sub>hh</sub> = [[0.7, 0.2], [0.3, 0.8]]
+                </div>
+                <div class="bptt-step">
+                    • Targets: target<sub>1</sub> = 0.5, target<sub>2</sub> = 0.9
+                </div>
+                
+                <hr class="section-divider">
+                
+                <div class="step-header">Step 1: Forward Pass - Compute Outputs</div>
+                <div class="bptt-step">
+                    • y<sub>1</sub> = W<sub>hy</sub> × h<sub>1</sub> = [0.4, 0.5] × [0.59, 0.71] = 0.4×0.59 + 0.5×0.71 = <span class="bptt-value">0.591</span>
+                </div>
+                <div class="bptt-step">
+                    • y<sub>2</sub> = W<sub>hy</sub> × h<sub>2</sub> = [0.4, 0.5] × [0.87, 0.95] = 0.4×0.87 + 0.5×0.95 = <span class="bptt-value">0.823</span>
+                </div>
+                <div class="bptt-step">
+                    • L<sub>1</sub> = ½(0.591 - 0.5)² = <span class="bptt-value">0.0041</span>
+                </div>
+                <div class="bptt-step">
+                    • L<sub>2</sub> = ½(0.823 - 0.9)² = <span class="bptt-value">0.0030</span>
+                </div>
+                <div class="bptt-step">
+                    • Total Loss L = 0.0041 + 0.0030 = <span class="bptt-value">0.0071</span>
+                </div>
+                
+                <hr class="section-divider">
+                
+                <div class="step-header">Step 2: Backward Pass - Output Layer Gradients</div>
+                <div class="bptt-step">
+                    • ∂L<sub>1</sub>/∂y<sub>1</sub> = y<sub>1</sub> - target<sub>1</sub> = 0.591 - 0.5 = <span class="gradient-value">0.091</span>
+                </div>
+                <div class="bptt-step">
+                    • ∂L<sub>2</sub>/∂y<sub>2</sub> = y<sub>2</sub> - target<sub>2</sub> = 0.823 - 0.9 = <span class="gradient-value">-0.077</span>
+                </div>
+                <div class="bptt-step" style="margin-top: 10px;">
+                    • ∂L/∂W<sub>hy</sub> = ∂L<sub>1</sub>/∂y<sub>1</sub> × h<sub>1</sub><sup>T</sup> + ∂L<sub>2</sub>/∂y<sub>2</sub> × h<sub>2</sub><sup>T</sup>
+                </div>
+                <div class="bptt-step">
+                    &nbsp;&nbsp;= 0.091 × [0.59, 0.71] + (-0.077) × [0.87, 0.95]
+                </div>
+                <div class="bptt-step">
+                    &nbsp;&nbsp;= [0.054, 0.065] + [-0.067, -0.073] = <span class="gradient-value">[-0.013, -0.008]</span>
+                </div>
+                
+                <hr class="section-divider">
+                
+                <div class="step-header">Step 3: Backward Pass - Hidden Layer (t=2)</div>
+                <div class="bptt-step">
+                    • ∂L/∂h<sub>2</sub> = W<sub>hy</sub><sup>T</sup> × ∂L<sub>2</sub>/∂y<sub>2</sub> = [[0.4], [0.5]] × (-0.077)
+                </div>
+                <div class="bptt-step">
+                    &nbsp;&nbsp;= <span class="gradient-value">[-0.031, -0.039]</span>
+                </div>
+                <div class="bptt-step" style="margin-top: 10px;">
+                    • tanh derivative: (1 - h<sub>2</sub>²) = [1 - 0.87², 1 - 0.95²] = <span class="bptt-value">[0.243, 0.098]</span>
+                </div>
+                <div class="bptt-step">
+                    • δ<sub>2</sub> = ∂L/∂h<sub>2</sub> ⊙ (1 - h<sub>2</sub>²) = [-0.031, -0.039] ⊙ [0.243, 0.098]
+                </div>
+                <div class="bptt-step">
+                    &nbsp;&nbsp;= <span class="gradient-value">[-0.0075, -0.0038]</span>
+                </div>
+                
+                <hr class="section-divider">
+                
+                <div class="step-header">Step 4: Backward Pass - Hidden Layer (t=1) with Gradient Flow</div>
+                <div class="bptt-diagram">
+                    <div class="bptt-node">∂L/∂y<sub>2</sub></div>
+                    <span class="bptt-arrow">←</span>
+                    <div class="bptt-node">∂L/∂h<sub>2</sub></div>
+                    <span class="bptt-arrow">←</span>
+                    <div class="bptt-node">∂L/∂h<sub>1</sub></div>
+                    <span class="bptt-arrow">←</span>
+                    <div class="bptt-node">∂L/∂W</div>
+                </div>
+                <div class="bptt-step">
+                    • Gradient from t=1 output: W<sub>hy</sub><sup>T</sup> × ∂L<sub>1</sub>/∂y<sub>1</sub> = [[0.4], [0.5]] × 0.091 = <span class="bptt-value">[0.036, 0.046]</span>
+                </div>
+                <div class="bptt-step">
+                    • Gradient from t=2 (backprop through time):
+                </div>
+                <div class="bptt-step">
+                    &nbsp;&nbsp;W<sub>hh</sub><sup>T</sup> × δ<sub>2</sub> = [[0.7, 0.3], [0.2, 0.8]] × [-0.0075, -0.0038]
+                </div>
+                <div class="bptt-step">
+                    &nbsp;&nbsp;= [0.7×(-0.0075) + 0.3×(-0.0038), 0.2×(-0.0075) + 0.8×(-0.0038)]
+                </div>
+                <div class="bptt-step">
+                    &nbsp;&nbsp;= <span class="bptt-value">[-0.0064, -0.0045]</span>
+                </div>
+                <div class="bptt-step" style="margin-top: 10px;">
+                    • ∂L/∂h<sub>1</sub> = [0.036, 0.046] + [-0.0064, -0.0045] = <span class="gradient-value">[0.030, 0.042]</span>
+                </div>
+                <div class="bptt-step">
+                    • (1 - h<sub>1</sub>²) = [1 - 0.59², 1 - 0.71²] = <span class="bptt-value">[0.652, 0.496]</span>
+                </div>
+                <div class="bptt-step">
+                    • δ<sub>1</sub> = [0.030, 0.042] ⊙ [0.652, 0.496] = <span class="gradient-value">[0.020, 0.021]</span>
+                </div>
+                
+                <hr class="section-divider">
+                
+                <div class="step-header">Step 5: Compute Weight Gradients</div>
+                <div class="bptt-step">
+                    • ∂L/∂W<sub>hh</sub> = δ<sub>1</sub> × h<sub>0</sub><sup>T</sup> + δ<sub>2</sub> × h<sub>1</sub><sup>T</sup>
+                </div>
+                <div class="bptt-step">
+                    &nbsp;&nbsp;= [0.020, 0.021] × [0, 0]<sup>T</sup> + [-0.0075, -0.0038] × [0.59, 0.71]<sup>T</sup>
+                </div>
+                <div class="bptt-step">
+                    &nbsp;&nbsp;= [[0, 0], [0, 0]] + [[-0.0044, -0.0053], [-0.0022, -0.0027]]
+                </div>
+                <div class="bptt-step">
+                    &nbsp;&nbsp;= <span class="gradient-value">[[-0.0044, -0.0053], [-0.0022, -0.0027]]</span>
+                </div>
+                
+                <div class="bptt-result">
+                    <strong>Final Gradients:</strong><br>
+                    • ∂L/∂W<sub>hy</sub> = [-0.013, -0.008]<br>
+                    • ∂L/∂W<sub>hh</sub> = [[-0.0044, -0.0053], [-0.0022, -0.0027]]<br><br>
+                    <strong>Weight Update (η=0.1):</strong><br>
+                    • W<sub>hy</sub><sup>new</sup> = [0.4, 0.5] - 0.1 × [-0.013, -0.008] = [0.4013, 0.5008]<br>
+                    • The gradient from t=2 flows back to t=1 through W<sub>hh</sub>, demonstrating how BPTT captures temporal dependencies!
+                </div>
+            </div>
+        </div>
+        
+        <div class="challenges-box" style="margin-top: 18px; background: #FFF8E1; border-color: #FF9800;">
+            <div class="challenges-title" style="color: #FF9800;">
+                <span>💡</span>
+                <span>BPTT Key Insights</span>
+            </div>
+            <div class="challenges-list" style="flex-direction: column; gap: 8px; align-items: flex-start;">
+                <div class="challenge-item">
+                    <span class="challenge-bullet" style="color: #FF9800;">•</span>
+                    <span>Gradients multiply by W<sub>hh</sub> at each timestep → causes vanishing/exploding gradients</span>
+                </div>
+                <div class="challenge-item">
+                    <span class="challenge-bullet" style="color: #FF9800;">•</span>
+                    <span>tanh derivative (1-h²) ∈ [0,1] further shrinks gradients over long sequences</span>
+                </div>
+                <div class="challenge-item">
+                    <span class="challenge-bullet" style="color: #FF9800;">•</span>
+                    <span>LSTM/GRU solve this with gating mechanisms that control gradient flow</span>
                 </div>
             </div>
         </div>
