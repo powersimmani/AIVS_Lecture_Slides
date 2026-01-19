@@ -15,9 +15,12 @@
             font-family: Aptos, 'Segoe UI', sans-serif;
             background: white;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            gap: 40px;
+            padding: 20px 0;
         }
         
         .container {
@@ -235,9 +238,170 @@
             font-weight: 600;
             color: #d97700;
         }
+
+        /* ===== 계산 예시 섹션 스타일 ===== */
+        .example-container {
+            width: 960px;
+            padding: 30px;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .example-box {
+            background: #f0fdf4;
+            border: 3px solid #16a34a;
+            border-radius: 12px;
+            padding: 20px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .example-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+            color: #16a34a;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #16a34a;
+        }
+
+        .formula-section {
+            background: white;
+            border: 2px solid #16a34a;
+            border-radius: 8px;
+            padding: 16px 20px;
+        }
+
+        .formula-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #16a34a;
+            margin-bottom: 10px;
+        }
+
+        .formula-content {
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            color: #333;
+            line-height: 1.8;
+            text-align: center;
+        }
+
+        .calc-step {
+            background: white;
+            border: 2px solid #16a34a;
+            border-radius: 8px;
+            padding: 16px 20px;
+        }
+
+        .step-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #16a34a;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .step-number {
+            background: #16a34a;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .calc-content {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #333;
+            line-height: 1.8;
+            background: #f8fdf9;
+            padding: 12px 16px;
+            border-radius: 6px;
+            overflow-x: auto;
+        }
+
+        .calc-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 4px 0;
+        }
+
+        .matrix-display {
+            display: inline-block;
+            margin: 8px 0;
+        }
+
+        .result-box {
+            background: #dcfce7;
+            border: 2px solid #16a34a;
+            border-radius: 8px;
+            padding: 14px 20px;
+            text-align: center;
+        }
+
+        .result-label {
+            font-size: 14px;
+            color: #16a34a;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .result-value {
+            font-family: 'Courier New', monospace;
+            font-size: 15px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .note-box {
+            background: #fef3c7;
+            border: 2px solid #f59e0b;
+            border-radius: 8px;
+            padding: 12px 16px;
+            display: flex;
+            gap: 10px;
+            align-items: start;
+        }
+
+        .note-icon {
+            font-size: 18px;
+        }
+
+        .note-text {
+            font-size: 14px;
+            color: #92400e;
+            line-height: 1.5;
+        }
+
+        .highlight-orange {
+            font-weight: 600;
+            color: #d97706;
+        }
+
+        .two-column {
+            display: flex;
+            gap: 16px;
+        }
+
+        .two-column > * {
+            flex: 1;
+        }
     </style>
 </head>
 <body>
+    <!-- 기존 슬라이드 -->
     <div class="container">
         <div class="title">Feed-Forward Network & Layer Normalization</div>
         
@@ -333,6 +497,250 @@
                         <span class="placement-highlight">Post-LN</span> vs <span class="placement-highlight">Pre-LN</span><br>
                         affects training dynamics
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Layer Normalization Calculation Example -->
+    <div class="example-container">
+        <div class="example-box">
+            <div class="example-title">📝 Layer Normalization Calculation Example (d_model = 4)</div>
+            
+            <!-- Formula -->
+            <div class="formula-section">
+                <div class="formula-title">📌 Layer Normalization Formula</div>
+                <div class="formula-content">
+                    LayerNorm(x) = γ ⊙ (x - μ) / √(σ² + ε) + β<br>
+                    <span style="font-size: 13px; color: #666;">
+                        μ = mean, σ² = variance, γ = scale, β = shift, ε = 1e-6
+                    </span>
+                </div>
+            </div>
+
+            <!-- Input Data -->
+            <div class="calc-step">
+                <div class="step-title">
+                    <span class="step-number">0</span>
+                    Input Vector (After Self-Attention Output + Residual)
+                </div>
+                <div class="calc-content">
+                    <strong>x</strong> = [ 0.5, &nbsp; 1.2, &nbsp; -0.3, &nbsp; 0.6 ]&nbsp;&nbsp;&nbsp;(4-dimensional vector)
+                </div>
+            </div>
+
+            <div class="two-column">
+                <!-- Step 1: Mean -->
+                <div class="calc-step">
+                    <div class="step-title">
+                        <span class="step-number">1</span>
+                        Calculate Mean (μ)
+                    </div>
+                    <div class="calc-content">
+                        μ = (0.5 + 1.2 + (-0.3) + 0.6) / 4<br>
+                        &nbsp; = 2.0 / 4<br>
+                        <strong>&nbsp; = 0.5</strong>
+                    </div>
+                </div>
+
+                <!-- Step 2: Variance -->
+                <div class="calc-step">
+                    <div class="step-title">
+                        <span class="step-number">2</span>
+                        Calculate Variance (σ²)
+                    </div>
+                    <div class="calc-content">
+                        σ² = [(0.5-0.5)² + (1.2-0.5)²<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp; + (-0.3-0.5)² + (0.6-0.5)²] / 4<br>
+                        &nbsp;&nbsp; = [0 + 0.49 + 0.64 + 0.01] / 4<br>
+                        <strong>&nbsp;&nbsp; = 0.285</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Standard Deviation -->
+            <div class="calc-step">
+                <div class="step-title">
+                    <span class="step-number">3</span>
+                    Calculate Standard Deviation
+                </div>
+                <div class="calc-content">
+                    √(σ² + ε) = √(0.285 + 0.000001) ≈ √0.285 ≈ <strong>0.534</strong>
+                </div>
+            </div>
+
+            <!-- Step 4: Normalization -->
+            <div class="calc-step">
+                <div class="step-title">
+                    <span class="step-number">4</span>
+                    Normalization (Applied to Each Element)
+                </div>
+                <div class="calc-content">
+                    x̂₁ = (0.5 - 0.5) / 0.534 = 0 / 0.534 = <strong>0.000</strong><br>
+                    x̂₂ = (1.2 - 0.5) / 0.534 = 0.7 / 0.534 ≈ <strong>1.311</strong><br>
+                    x̂₃ = (-0.3 - 0.5) / 0.534 = -0.8 / 0.534 ≈ <strong>-1.498</strong><br>
+                    x̂₄ = (0.6 - 0.5) / 0.534 = 0.1 / 0.534 ≈ <strong>0.187</strong>
+                </div>
+            </div>
+
+            <!-- Step 5: Scale & Shift -->
+            <div class="calc-step">
+                <div class="step-title">
+                    <span class="step-number">5</span>
+                    Apply Scale (γ) & Shift (β)
+                </div>
+                <div class="calc-content">
+                    When γ = [1.0, 1.0, 1.0, 1.0], &nbsp; β = [0.0, 0.0, 0.0, 0.0]:<br><br>
+                    y = γ ⊙ x̂ + β = <strong>[ 0.000, &nbsp; 1.311, &nbsp; -1.498, &nbsp; 0.187 ]</strong>
+                </div>
+            </div>
+
+            <!-- Final Result -->
+            <div class="result-box">
+                <div class="result-label">✅ Final Result (LayerNorm Output)</div>
+                <div class="result-value">
+                    LayerNorm(x) = [ 0.000, &nbsp; 1.311, &nbsp; -1.498, &nbsp; 0.187 ]
+                </div>
+            </div>
+
+            <!-- Verification -->
+            <div class="note-box">
+                <div class="note-icon">💡</div>
+                <div class="note-text">
+                    <strong>Verification:</strong> Normalized vector has <span class="highlight-orange">mean ≈ 0</span>, <span class="highlight-orange">variance ≈ 1</span><br>
+                    Mean: (0 + 1.311 - 1.498 + 0.187) / 4 ≈ 0 ✓<br>
+                    Variance: (0² + 1.311² + 1.498² + 0.187²) / 4 ≈ 1 ✓
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Layer Normalization for Sequence Matrix -->
+    <div class="example-container">
+        <div class="example-box">
+            <div class="example-title">📝 Layer Normalization for Sequence Matrix (3×4 Matrix)</div>
+
+            <!-- Input Matrix -->
+            <div class="calc-step">
+                <div class="step-title">
+                    <span class="step-number">0</span>
+                    Input Matrix X (3 tokens × 4 dimensions)
+                </div>
+                <div class="calc-content" style="text-align: center;">
+                    Attention Output + Residual for "I go to school" sequence<br><br>
+                    <table style="margin: 0 auto; border-collapse: collapse; font-family: 'Courier New', monospace;">
+                        <tr>
+                            <td style="padding: 4px 8px; text-align: right; color: #666; font-size: 12px;">I</td>
+                            <td style="padding: 4px 12px; border: 1px solid #16a34a;">0.42</td>
+                            <td style="padding: 4px 12px; border: 1px solid #16a34a;">0.88</td>
+                            <td style="padding: 4px 12px; border: 1px solid #16a34a;">0.05</td>
+                            <td style="padding: 4px 12px; border: 1px solid #16a34a;">1.55</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 4px 8px; text-align: right; color: #666; font-size: 12px;">go to</td>
+                            <td style="padding: 4px 12px; border: 1px solid #16a34a;">1.08</td>
+                            <td style="padding: 4px 12px; border: 1px solid #16a34a;">1.14</td>
+                            <td style="padding: 4px 12px; border: 1px solid #16a34a;">-0.18</td>
+                            <td style="padding: 4px 12px; border: 1px solid #16a34a;">1.41</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 4px 8px; text-align: right; color: #666; font-size: 12px;">school</td>
+                            <td style="padding: 4px 12px; border: 1px solid #16a34a;">0.59</td>
+                            <td style="padding: 4px 12px; border: 1px solid #16a34a;">-0.19</td>
+                            <td style="padding: 4px 12px; border: 1px solid #16a34a;">0.47</td>
+                            <td style="padding: 4px 12px; border: 1px solid #16a34a;">1.33</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="note-box">
+                <div class="note-icon">⚠️</div>
+                <div class="note-text">
+                    <strong>Key Point:</strong> Layer Normalization is applied <span class="highlight-orange">independently to each row (token)</span>.<br>
+                    That is, mean and variance are computed over the 4-dimensional features for each token.
+                </div>
+            </div>
+
+            <!-- Row 1 Calculation -->
+            <div class="calc-step">
+                <div class="step-title">
+                    <span class="step-number">1</span>
+                    Row 1 ("I") Normalization: x = [0.42, 0.88, 0.05, 1.55]
+                </div>
+                <div class="calc-content">
+                    μ₁ = (0.42 + 0.88 + 0.05 + 1.55) / 4 = 2.90 / 4 = <strong>0.725</strong><br><br>
+                    σ₁² = [(-0.305)² + (0.155)² + (-0.675)² + (0.825)²] / 4<br>
+                    &nbsp;&nbsp;&nbsp; = [0.093 + 0.024 + 0.456 + 0.681] / 4 = <strong>0.3135</strong><br><br>
+                    √(σ₁² + ε) ≈ <strong>0.560</strong><br><br>
+                    LayerNorm(Row1) = [<strong>-0.545, 0.277, -1.205, 1.473</strong>]
+                </div>
+            </div>
+
+            <!-- Row 2 Calculation -->
+            <div class="calc-step">
+                <div class="step-title">
+                    <span class="step-number">2</span>
+                    Row 2 ("go to") Normalization: x = [1.08, 1.14, -0.18, 1.41]
+                </div>
+                <div class="calc-content">
+                    μ₂ = (1.08 + 1.14 + (-0.18) + 1.41) / 4 = 3.45 / 4 = <strong>0.8625</strong><br><br>
+                    σ₂² = [(0.2175)² + (0.2775)² + (-1.0425)² + (0.5475)²] / 4<br>
+                    &nbsp;&nbsp;&nbsp; = [0.047 + 0.077 + 1.087 + 0.300] / 4 = <strong>0.378</strong><br><br>
+                    √(σ₂² + ε) ≈ <strong>0.615</strong><br><br>
+                    LayerNorm(Row2) = [<strong>0.354, 0.451, -1.695, 0.890</strong>]
+                </div>
+            </div>
+
+            <!-- Row 3 Calculation -->
+            <div class="calc-step">
+                <div class="step-title">
+                    <span class="step-number">3</span>
+                    Row 3 ("school") Normalization: x = [0.59, -0.19, 0.47, 1.33]
+                </div>
+                <div class="calc-content">
+                    μ₃ = (0.59 + (-0.19) + 0.47 + 1.33) / 4 = 2.20 / 4 = <strong>0.55</strong><br><br>
+                    σ₃² = [(0.04)² + (-0.74)² + (-0.08)² + (0.78)²] / 4<br>
+                    &nbsp;&nbsp;&nbsp; = [0.002 + 0.548 + 0.006 + 0.608] / 4 = <strong>0.291</strong><br><br>
+                    √(σ₃² + ε) ≈ <strong>0.539</strong><br><br>
+                    LayerNorm(Row3) = [<strong>0.074, -1.373, -0.148, 1.447</strong>]
+                </div>
+            </div>
+
+            <!-- Final Result Matrix -->
+            <div class="result-box">
+                <div class="result-label">✅ Final Result Matrix (γ=1, β=0)</div>
+                <div class="result-value">
+                    <table style="margin: 0 auto; border-collapse: collapse; font-family: 'Courier New', monospace;">
+                        <tr>
+                            <td style="padding: 6px 14px; border: 1px solid #16a34a; background: #f0fdf4;">-0.545</td>
+                            <td style="padding: 6px 14px; border: 1px solid #16a34a; background: #f0fdf4;">0.277</td>
+                            <td style="padding: 6px 14px; border: 1px solid #16a34a; background: #f0fdf4;">-1.205</td>
+                            <td style="padding: 6px 14px; border: 1px solid #16a34a; background: #f0fdf4;">1.473</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 6px 14px; border: 1px solid #16a34a; background: #f0fdf4;">0.354</td>
+                            <td style="padding: 6px 14px; border: 1px solid #16a34a; background: #f0fdf4;">0.451</td>
+                            <td style="padding: 6px 14px; border: 1px solid #16a34a; background: #f0fdf4;">-1.695</td>
+                            <td style="padding: 6px 14px; border: 1px solid #16a34a; background: #f0fdf4;">0.890</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 6px 14px; border: 1px solid #16a34a; background: #f0fdf4;">0.074</td>
+                            <td style="padding: 6px 14px; border: 1px solid #16a34a; background: #f0fdf4;">-1.373</td>
+                            <td style="padding: 6px 14px; border: 1px solid #16a34a; background: #f0fdf4;">-0.148</td>
+                            <td style="padding: 6px 14px; border: 1px solid #16a34a; background: #f0fdf4;">1.447</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Comparison Note -->
+            <div class="note-box">
+                <div class="note-icon">📊</div>
+                <div class="note-text">
+                    <strong>Layer Norm vs Batch Norm Comparison:</strong><br>
+                    • <span class="highlight-orange">Layer Norm:</span> Normalizes over feature dimension for each sample (token) → Independent of batch size<br>
+                    • <span class="highlight-orange">Batch Norm:</span> Normalizes over batch for each feature → Not suitable for sequence models
                 </div>
             </div>
         </div>
