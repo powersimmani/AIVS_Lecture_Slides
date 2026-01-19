@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -551,7 +551,7 @@
     <div class="container">
         <div class="title">Masking Implementation</div>
         
-        <!-- 상단: 기존 내용 -->
+        <!-- Top Section: Original Content -->
         <div class="top-section">
             <div class="mask-types">
                 <!-- Padding Mask -->
@@ -607,7 +607,7 @@
                 </div>
             </div>
             
-            <!-- 구현 정보 -->
+            <!-- Implementation Info -->
             <div class="implementation-section">
                 <div class="info-card">
                     <div class="info-icon">⏱️</div>
@@ -634,16 +634,16 @@
             </div>
         </div>
         
-        <!-- 구분선 -->
+        <!-- Divider -->
         <div class="divider"></div>
         
-        <!-- 하단: Forward Pass 상세 예시 -->
+        <!-- Bottom Section: Forward Pass Detailed Example -->
         <div class="bottom-section">
             <div class="section-title">
                 📊 Transformer Forward Pass with Masking
             </div>
             
-            <!-- 입력 설정 -->
+            <!-- Input Setup -->
             <div class="input-setup">
                 <div class="setup-item">
                     <div class="setup-label">📝 Input Sequence</div>
@@ -701,7 +701,7 @@
                         </div>
                     </div>
                     <div class="explanation">
-                        각 행은 하나의 토큰 임베딩 (4차원 벡터). "I" = [0.2, -0.1, 0.3, 0.4], "go" = [0.1, 0.4, -0.2, 0.3]
+                        Each row is one token embedding (4-dim vector). "I" = [0.2, -0.1, 0.3, 0.4], "go" = [0.1, 0.4, -0.2, 0.3]
                     </div>
                 </div>
                 
@@ -767,7 +767,7 @@
                         </div>
                     </div>
                     <div class="explanation">
-                        같은 방식으로 K = XW<sub>K</sub>, V = XW<sub>V</sub> 계산. 각 토큰에 대해 Query, Key, Value 벡터 생성.
+                        Similarly compute K = XW<sub>K</sub>, V = XW<sub>V</sub>. Each token gets its own Query, Key, and Value vectors.
                     </div>
                 </div>
                 
@@ -834,12 +834,12 @@
                         </div>
                     </div>
                     <div class="explanation">
-                        각 (i,j) 위치는 "토큰 i가 토큰 j에 얼마나 attention할지"의 raw score. 
-                        예: (0,1)=0.08은 "I"가 "go"에 주목하는 정도.
+                        Each position (i,j) represents "how much token i should attend to token j" as a raw score.
+                        e.g., (0,1)=0.08 is how much "I" attends to "go".
                     </div>
                 </div>
                 
-                <!-- Step 4: Apply Mask (핵심!) -->
+                <!-- Step 4: Apply Mask (Key Step!) -->
                 <div class="step-box highlight-step">
                     <div class="step-header">
                         <div class="step-number red">4</div>
@@ -917,9 +917,9 @@
                         </div>
                     </div>
                     <div class="explanation red-border">
-                        <strong>핵심!</strong> Causal Mask는 상삼각 부분에 <span class="highlight-red">-∞</span>를 더함.<br>
-                        • 위치 (0,1): "I"가 미래 토큰 "go"를 보지 못하도록 <span class="highlight-red">-∞</span> 적용<br>
-                        • 위치 (1,0), (1,1): "go"는 과거("I")와 현재("go") 모두 볼 수 있음 → <span class="highlight-green">0</span> 유지
+                        <strong>Key Point!</strong> Causal Mask adds <span class="highlight-red">-∞</span> to upper triangular positions.<br>
+                        • Position (0,1): Prevents "I" from seeing future token "go" → <span class="highlight-red">-∞</span> applied<br>
+                        • Positions (1,0), (1,1): "go" can see past ("I") and present ("go") → <span class="highlight-green">0</span> kept
                     </div>
                 </div>
                 
@@ -979,10 +979,10 @@
                         </div>
                     </div>
                     <div class="explanation green-border">
-                        <strong>Softmax 결과:</strong><br>
+                        <strong>Softmax Result:</strong><br>
                         • Row 0 ("I"): e<sup>0.12</sup>/(e<sup>0.12</sup>+e<sup>-∞</sup>) = 1.13/1.13 = <span class="highlight-green">1.00</span>, e<sup>-∞</sup>=<span class="highlight-red">0.00</span><br>
                         • Row 1 ("go"): e<sup>0.15</sup>/(e<sup>0.15</sup>+e<sup>0.11</sup>) = 1.16/2.28 = <span class="highlight-green">0.51</span>, 1.12/2.28 = <span class="highlight-green">0.49</span><br>
-                        → <span class="highlight-red">-∞ 위치는 softmax 후 0이 됨!</span> 해당 토큰에 전혀 attention하지 않음.
+                        → <span class="highlight-red">-∞ positions become 0 after softmax!</span> No attention to those tokens.
                     </div>
                 </div>
                 
@@ -1048,19 +1048,19 @@
                         </div>
                     </div>
                     <div class="explanation">
-                        • <strong>"I" output</strong> = 1.00×V["I"] + 0.00×V["go"] = V["I"] 그대로 (자기 자신만 참조)<br>
-                        • <strong>"go" output</strong> = 0.51×V["I"] + 0.49×V["go"] (과거와 현재 정보 혼합)
+                        • <strong>"I" output</strong> = 1.00×V["I"] + 0.00×V["go"] = V["I"] unchanged (only references itself)<br>
+                        • <strong>"go" output</strong> = 0.51×V["I"] + 0.49×V["go"] (blends past and present information)
                     </div>
                 </div>
             </div>
             
             <!-- Key Point -->
             <div class="key-point">
-                <div class="key-point-title">⚠️ Key Takeaway: Masking의 역할</div>
+                <div class="key-point-title">⚠️ Key Takeaway: Role of Masking</div>
                 <div class="key-point-text">
-                    1. <span class="highlight-red">Causal Mask</span>: Decoder에서 미래 토큰 정보 차단 → 자기회귀(autoregressive) 생성 보장<br>
-                    2. <span class="highlight-blue">Padding Mask</span>: 패딩 토큰에 attention 방지 → 실제 토큰에만 집중<br>
-                    3. 두 마스크 모두 <strong>softmax 전에 적용</strong>하여 -∞ → 0 변환으로 완벽한 차단 구현
+                    1. <span class="highlight-red">Causal Mask</span>: Blocks future token information in Decoder → Ensures autoregressive generation<br>
+                    2. <span class="highlight-blue">Padding Mask</span>: Prevents attention to padding tokens → Focus only on real tokens<br>
+                    3. Both masks are applied <strong>before softmax</strong>, using -∞ → 0 transformation for complete blocking
                 </div>
             </div>
         </div>
