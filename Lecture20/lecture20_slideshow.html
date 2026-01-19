@@ -4,284 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lecture 20 - Complete Slideshow</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: Aptos, 'Segoe UI', sans-serif;
-            background: #1a1a1a;
-            overflow: hidden;
-        }
-        
-        .slideshow-container {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .slide {
-            display: none;
-            width: 100vw;
-            height: 100vh;
-            background: white;
-            animation: fadeIn 0.5s ease-in-out;
-        }
-        
-        .slide.active {
-            display: block;
-        }
-        
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: scale(0.98);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-        
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-        
-        /* Navigation controls */
-        .nav-controls {
-            position: fixed;
-            bottom: 15px;
-            right: 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(0, 0, 0, 0.6);
-            padding: 6px 15px;
-            border-radius: 50px;
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-        }
-        
-        .nav-button {
-            background: #1E64C8;
-            color: white;
-            border: none;
-            width: 26px;
-            height: 26px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-        
-        .nav-button:hover {
-            background: #2874d8;
-            transform: scale(1.1);
-        }
-        
-        .nav-button:active {
-            transform: scale(0.95);
-        }
-        
-        .nav-button:disabled {
-            background: #555;
-            cursor: not-allowed;
-            opacity: 0.5;
-        }
-        
-        .slide-counter {
-            color: white;
-            font-size: 12px;
-            font-weight: 600;
-            min-width: 60px;
-            text-align: center;
-        }
-        
-        /* Progress bar */
-        .progress-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.1);
-            z-index: 1000;
-        }
-        
-        .progress-fill {
-            height: 100%;
-            background: #1E64C8;
-            transition: width 0.3s ease;
-        }
-        
-        /* Keyboard hint */
-        .keyboard-hint {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-size: 14px;
-            backdrop-filter: blur(10px);
-            animation: fadeOut 3s ease-in-out forwards;
-            z-index: 1000;
-        }
-        
-        @keyframes fadeOut {
-            0%, 70% {
-                opacity: 1;
-            }
-            100% {
-                opacity: 0;
-                pointer-events: none;
-            }
-        }
-        
-        .key {
-            display: inline-block;
-            background: #333;
-            padding: 4px 8px;
-            border-radius: 4px;
-            margin: 0 4px;
-            font-family: monospace;
-            border: 1px solid #555;
-        }
-        
-        /* Slide title overlay */
-        .slide-title {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background: rgba(30, 100, 200, 0.9);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            backdrop-filter: blur(10px);
-            max-width: 600px;
-            z-index: 1000;
-        }
-        
-        /* Slide list (menu) */
-        .slide-list {
-            position: fixed;
-            left: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(0, 0, 0, 0.7);
-            padding: 20px;
-            border-radius: 10px;
-            max-height: 80vh;
-            overflow-y: auto;
-            display: none;
-            z-index: 999;
-        }
-        
-        .slide-list.active {
-            display: block;
-        }
-        
-        .slide-list-item {
-            color: white;
-            padding: 8px 12px;
-            margin: 5px 0;
-            cursor: pointer;
-            border-radius: 5px;
-            font-size: 14px;
-            transition: all 0.2s ease;
-        }
-        
-        .slide-list-item:hover {
-            background: rgba(30, 100, 200, 0.5);
-        }
-        
-        .slide-list-item.current {
-            background: #1E64C8;
-            font-weight: 600;
-        }
-        
-        /* Top buttons */
-        .menu-btn {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            z-index: 1000;
-            transition: all 0.3s ease;
-        }
-        
-        .menu-btn:hover {
-            background: #1E64C8;
-        }
-        
-        .fullscreen-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            z-index: 1000;
-            transition: all 0.3s ease;
-        }
-        
-        .fullscreen-btn:hover {
-            background: #1E64C8;
-        }
-    </style>
+    <link rel="stylesheet" href="../assets/slideshow.css">
 </head>
 <body>
     <!-- Progress bar -->
     <div class="progress-bar">
         <div class="progress-fill" id="progressFill"></div>
     </div>
-    
+
     <!-- Keyboard hint -->
     <div class="keyboard-hint">
         Use <span class="key">←</span> <span class="key">→</span> or <span class="key">Space</span> to navigate
     </div>
-    
+
     <!-- Slide title -->
     <div class="slide-title" id="slideTitle">Loading...</div>
-    
+
     <!-- Menu and fullscreen buttons -->
     <button class="menu-btn" onclick="toggleMenu()">☰ Menu</button>
     <button class="fullscreen-btn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
-    
+
     <!-- Slide list -->
     <div class="slide-list" id="slideList"></div>
-    
+
     <!-- Slideshow container -->
     <div class="slideshow-container">
         <div id="slideContainer"></div>
     </div>
-    
+
     <!-- Navigation controls -->
     <div class="nav-controls">
         <button class="nav-button" id="homeBtn" onclick="window.location.href='../index.html'" aria-label="Back to index" title="Back to index">⌂</button>
@@ -293,13 +43,10 @@
     </div>
 
     <script>
-        let currentSlideIndex = 0;
-        
-        // 전체 슬라이드 순서
         const slides = [
             { title: "Title", file: "Lecture20_01_Lecture 20 Model Explainability - SHAP and Deep Learning XAI.html", part: null },
             { title: "Lecture Contents", file: "Lecture20_02_Lecture Contents.html", part: null },
-            
+
             // Part 1
             { title: "SHAP Theory and Fundamentals", file: "Lecture20_03_Part 1_4 SHAP Theory and Fundamentals.html", part: "1/4" },
             { title: "Course Introduction - Game Theory-Based Explainability", file: "Lecture20_04_Course Introduction - Game Theory-Based Explainability.html", part: "1/4" },
@@ -310,7 +57,7 @@
             { title: "Interpreting SHAP Values", file: "Lecture20_09_Interpreting SHAP Values.html", part: "1/4" },
             { title: "Mathematical Properties of SHAP", file: "Lecture20_10_Mathematical Properties of SHAP.html", part: "1/4" },
             { title: "Hands-on: First SHAP Analysis", file: "Lecture20_11_Hands-on First SHAP Analysis.html", part: "1/4" },
-            
+
             // Part 2
             { title: "SHAP Implementation Methods", file: "Lecture20_12_Part 2_4 SHAP Implementation Methods.html", part: "2/4" },
             { title: "KernelSHAP", file: "Lecture20_13_KernelSHAP.html", part: "2/4" },
@@ -320,7 +67,7 @@
             { title: "SHAP Approximation Techniques", file: "Lecture20_17_SHAP Approximation Techniques.html", part: "2/4" },
             { title: "SHAP Interaction Values", file: "Lecture20_18_SHAP Interaction Values.html", part: "2/4" },
             { title: "Hands-on: Comparing Different SHAP Explainers", file: "Lecture20_19_Hands-on Comparing Different SHAP Explainers.html", part: "2/4" },
-            
+
             // Part 3
             { title: "SHAP Visualization and Analysis", file: "Lecture20_20_Part 3_4 SHAP Visualization and Analysis.html", part: "3/4" },
             { title: "Waterfall Plot", file: "Lecture20_21_Waterfall Plot.html", part: "3/4" },
@@ -328,7 +75,7 @@
             { title: "Summary Plot and Dependence Plot", file: "Lecture20_23_Summary Plot and Dependence Plot.html", part: "3/4" },
             { title: "SHAP for Time Series", file: "Lecture20_24_SHAP for Time Series.html", part: "3/4" },
             { title: "SHAP for Text and Images", file: "Lecture20_25_SHAP for Text and Images.html", part: "3/4" },
-            
+
             // Part 4
             { title: "Advanced Deep Learning XAI Techniques", file: "Lecture20_26_Part 4_4 Advanced Deep Learning XAI Techniques.html", part: "4/4" },
             { title: "Attention Mechanisms as Explanations", file: "Lecture20_27_Attention Mechanisms as Explanations.html", part: "4/4" },
@@ -336,158 +83,11 @@
             { title: "CAM-family Methods", file: "Lecture20_29_CAM-family Methods.html", part: "4/4" },
             { title: "Concept-based Explanations", file: "Lecture20_30_Concept-based Explanations.html", part: "4/4" },
             { title: "Future of XAI and Challenges", file: "Lecture20_31_Future of XAI and Challenges.html", part: "4/4" },
-            
+
             // Ending
             { title: "Thank You", file: "Lecture20_32_Thank you.html", part: null }
         ];
-        
-        function initializeSlides() {
-            const container = document.getElementById('slideContainer');
-            
-            // 모든 슬라이드를 미리 생성
-            slides.forEach((slide, index) => {
-                const slideDiv = document.createElement('div');
-                slideDiv.className = 'slide';
-                slideDiv.id = `slide-${index}`;
-                
-                const iframe = document.createElement('iframe');
-                iframe.src = encodeURI(slide.file);
-                iframe.loading = 'lazy';
-                
-                slideDiv.appendChild(iframe);
-                container.appendChild(slideDiv);
-            });
-            
-            // 초기 해시값이 있을 경우 해당 슬라이드로 이동은 로드 이벤트에서 처리
-        }
-        
-        function showSlide(index) {
-            // 모든 슬라이드 숨기기
-            const allSlides = document.querySelectorAll('.slide');
-            allSlides.forEach(slide => {
-                slide.classList.remove('active');
-            });
-            
-            // 현재 슬라이드 표시
-            const currentSlide = document.getElementById(`slide-${index}`);
-            if (currentSlide) {
-                currentSlide.classList.add('active');
-            }
-            
-            // 제목 업데이트 (파트 정보 포함)
-            const slideInfo = slides[index];
-            let titleText = slideInfo.title;
-            if (slideInfo.part) {
-                titleText = `${slideInfo.title} | Part ${slideInfo.part}`;
-            }
-            document.getElementById('slideTitle').textContent = titleText;
-            
-            // 카운터 업데이트
-            document.getElementById('currentSlide').textContent = index + 1;
-            document.getElementById('totalSlides').textContent = slides.length;
-            
-            // 진행 바 업데이트
-            const progress = ((index + 1) / slides.length) * 100;
-            document.getElementById('progressFill').style.width = progress + '%';
-            window.location.hash = (index + 1).toString();
-            
-            // 버튼 상태 업데이트
-            document.getElementById('prevBtn').disabled = index === 0;
-            document.getElementById('nextBtn').disabled = index === slides.length - 1;
-        }
-        
-        function changeSlide(direction) {
-            const newIndex = currentSlideIndex + direction;
-            
-            if (newIndex >= 0 && newIndex < slides.length) {
-                currentSlideIndex = newIndex;
-                showSlide(currentSlideIndex);
-            }
-        }
-        
-        // 특정 슬라이드로 이동
-        function goToSlide(index) {
-            if (index >= 0 && index < slides.length) {
-                currentSlideIndex = index;
-                showSlide(currentSlideIndex);
-            }
-        }
-        
-        // 슬라이드 목록 생성
-        function buildSlideList() {
-            const slideList = document.getElementById('slideList');
-            slideList.innerHTML = '';
-            slides.forEach((slide, index) => {
-                const item = document.createElement('div');
-                item.className = 'slide-list-item';
-                item.textContent = `${index + 1}. ${slide.title}`;
-                item.onclick = () => goToSlide(index);
-                slideList.appendChild(item);
-            });
-        }
-        
-        // 메뉴 토글
-        function toggleMenu() {
-            document.getElementById('slideList').classList.toggle('active');
-        }
-        
-        // 전체화면 토글
-        function toggleFullscreen() {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen();
-            } else {
-                document.exitFullscreen();
-            }
-        }
-        
-        // 키보드 내비게이션
-        document.addEventListener('keydown', (event) => {
-            switch(event.key) {
-                case 'ArrowLeft':
-                case 'ArrowUp':
-                    changeSlide(-1);
-                    break;
-                case 'ArrowRight':
-                case 'ArrowDown':
-                case ' ':
-                    event.preventDefault();
-                    changeSlide(1);
-                    break;
-                case 'Home':
-                    currentSlideIndex = 0;
-                    showSlide(currentSlideIndex);
-                    break;
-                case 'End':
-                    currentSlideIndex = slides.length - 1;
-                    showSlide(currentSlideIndex);
-                    break;
-            }
-        });
-        
-        // ESC로 메뉴 닫기
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                document.getElementById('slideList').classList.remove('active');
-            }
-        });
-        
-        // 페이지 로드 시 슬라이드 초기화
-        window.addEventListener('load', () => {
-            const hashIndex = parseInt(window.location.hash.replace('#',''), 10);
-            if (!isNaN(hashIndex) && hashIndex >= 1 && hashIndex <= slides.length) {
-                currentSlideIndex = hashIndex - 1;
-            }
-            initializeSlides();
-            buildSlideList();
-            showSlide(currentSlideIndex);
-        });
-        
-        // 스페이스바로 스크롤 방지
-        window.addEventListener('keydown', (e) => {
-            if(e.key === ' ' && e.target === document.body) {
-                e.preventDefault();
-            }
-        });
     </script>
+    <script src="../assets/slideshow.js"></script>
 </body>
 </html>

@@ -1,0 +1,250 @@
+/* Slideshow Common Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Aptos, 'Segoe UI', sans-serif;
+    background: #1a1a1a;
+    overflow: hidden;
+}
+
+.slideshow-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.slide {
+    display: none;
+    width: 100vw;
+    height: 100vh;
+    background: white;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.slide.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* Navigation controls */
+.nav-controls {
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 6px 15px;
+    border-radius: 50px;
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+}
+
+.nav-button {
+    background: #1E64C8;
+    color: white;
+    border: none;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.nav-button:hover {
+    background: #2874d8;
+    transform: scale(1.1);
+}
+
+.nav-button:active {
+    transform: scale(0.95);
+}
+
+.nav-button:disabled {
+    background: #555;
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.slide-counter {
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    min-width: 60px;
+    text-align: center;
+}
+
+/* Progress bar */
+.progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    z-index: 1000;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #1E64C8;
+    transition: width 0.3s ease;
+}
+
+/* Keyboard hint */
+.keyboard-hint {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    backdrop-filter: blur(10px);
+    animation: fadeOut 3s ease-in-out forwards;
+    z-index: 1000;
+}
+
+@keyframes fadeOut {
+    0%, 70% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        pointer-events: none;
+    }
+}
+
+.key {
+    display: inline-block;
+    background: #333;
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin: 0 4px;
+    font-family: monospace;
+    border: 1px solid #555;
+}
+
+/* Slide title overlay */
+.slide-title {
+    position: fixed;
+    top: 20px;
+    left: 130px;
+    background: rgba(30, 100, 200, 0.9);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    backdrop-filter: blur(10px);
+    max-width: 600px;
+    z-index: 1000;
+}
+
+/* Slide list (menu) */
+.slide-list {
+    position: fixed;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+    max-height: 80vh;
+    overflow-y: auto;
+    display: none;
+    z-index: 999;
+}
+
+.slide-list.active {
+    display: block;
+}
+
+.slide-list-item {
+    color: white;
+    padding: 8px 12px;
+    margin: 5px 0;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.slide-list-item:hover {
+    background: rgba(30, 100, 200, 0.5);
+}
+
+.slide-list-item.current {
+    background: #1E64C8;
+    font-weight: 600;
+}
+
+/* Top buttons */
+.menu-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+.menu-btn:hover {
+    background: #1E64C8;
+}
+
+.fullscreen-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+.fullscreen-btn:hover {
+    background: #1E64C8;
+}
