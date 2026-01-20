@@ -4,7 +4,7 @@ Learn AI and deep learning concepts by calculating them by hand in Excel spreads
 
 ## Inspiration
 
-This project was inspired by [ai-by-hand-excel](https://github.com/spdustin/ai-by-hand-excel). The original project's idea has been extended and adapted to fit our lecture curriculum.
+This project was inspired by [ai-by-hand-excel](https://github.com/ImagineAILab/ai-by-hand-excel). The original project's idea has been extended and adapted to fit our lecture curriculum.
 
 ## File List
 
@@ -77,4 +77,4 @@ This project was inspired by [ai-by-hand-excel](https://github.com/spdustin/ai-b
 
 ## License
 
-Educational use only. Inspired by [ai-by-hand-excel](https://github.com/spdustin/ai-by-hand-excel).
+Educational use only. Inspired by [ai-by-hand-excel](https://github.com/ImagineAILab/ai-by-hand-excel).
