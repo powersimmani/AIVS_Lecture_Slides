@@ -25,7 +25,7 @@ This project was inspired by [ai-by-hand-excel](https://github.com/ImagineAILab/
 |------|-------------|
 | `Lecture05_MLP.xlsx` | Multi-Layer Perceptron forward/backward propagation |
 
-### Lecture 07: Data Modality and Feature Extraction
+### Lecture 07: Deep Neural Networks and Architecture Patterns
 | File | Description |
 |------|-------------|
 | `Lecture07_CNN.xlsx` | CNN convolution operations and pooling |

@@ -135,10 +135,17 @@ For detailed code, examples, and slides, please refer to the original files.
 
 ---
 
-## 📦 Available Versions
+## 📦 Additional Resources
 
-- **Korean Version**: `Lecture##_Summary.md` files
-- **English Version**: `Lecture##/readme.md` files (this version)
-- **Index Files**: 
-  - Korean: `LECTURES_INDEX.md`
-  - English: `LECTURES_INDEX_EN.md` (this file)
+### Excel Worksheets
+Learn AI and deep learning concepts by calculating them by hand in Excel spreadsheets.
+- **[Excel Worksheets](Excel-worksheets/README.md)** - Hands-on calculations for Linear Algebra, CNN, RNN, LSTM, Transformer, and more
+
+### Podcast Scripts
+Audio-friendly lecture scripts for learning on the go.
+- **Korean**: [podcast_script/](podcast_script/) - 20 podcast scripts (Lecture01-20)
+- **English**: [podcast_script_eng/](podcast_script_eng/) - English versions
+
+### Detailed Summaries
+In-depth summaries broken down by lecture parts.
+- **[summary/](summary/)** - Multi-part summaries for each lecture
