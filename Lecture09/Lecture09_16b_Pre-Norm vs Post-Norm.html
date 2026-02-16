@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pre-Norm vs Post-Norm</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 14px; }
+        .main-title { font-size: 24px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #1E64C8; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card.postnorm { border-color: #FF9800; }
+        .card.prenorm { border-color: #4CAF50; }
+        .card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 2px solid #e0e0e0; }
+        .card-title { font-size: 17px; font-weight: 700; }
+        .postnorm .card-title { color: #FF9800; }
+        .prenorm .card-title { color: #4CAF50; }
+        .card-subtitle { font-size: 11px; color: #666; }
+        .flow-box { background: #f8f8f8; border-radius: 8px; padding: 12px; margin-bottom: 10px; font-family: 'Courier New', monospace; font-size: 11px; line-height: 1.6; }
+        .flow-arrow { color: #666; }
+        .flow-norm { font-weight: 700; }
+        .postnorm .flow-norm { color: #FF9800; }
+        .prenorm .flow-norm { color: #4CAF50; }
+        .feature-item { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: #333; margin-bottom: 5px; line-height: 1.4; }
+        .feature-icon { font-weight: bold; flex-shrink: 0; }
+        .postnorm .feature-icon { color: #FF9800; }
+        .prenorm .feature-icon { color: #4CAF50; }
+        .bottom-section { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 12px; }
+        .compare-box { background: #E3F2FD; border: 2px solid #1E64C8; border-radius: 10px; padding: 12px; }
+        .compare-title { font-size: 14px; font-weight: 700; color: #1565C0; margin-bottom: 8px; text-align: center; }
+        .comparison-table { width: 100%; font-size: 11px; border-collapse: collapse; }
+        .comparison-table th { background: #1E64C8; color: white; padding: 5px; text-align: center; }
+        .comparison-table td { padding: 5px; text-align: center; border-bottom: 1px solid #e0e0e0; }
+        .highlight-green { background: #E8F5E9; font-weight: 600; }
+        .highlight-orange { background: #FFF3E0; font-weight: 600; }
+        .recommend-box { background: #E8F5E9; border: 2px solid #4CAF50; border-radius: 10px; padding: 12px; }
+        .recommend-title { font-size: 14px; font-weight: 700; color: #2E7D32; margin-bottom: 8px; text-align: center; }
+        .recommend-content { font-size: 12px; color: #333; line-height: 1.5; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Pre-Norm vs Post-Norm in Transformers</div>
+            <div class="subtitle">Where to place LayerNorm matters for training stability</div>
+        </div>
+        <div class="content-grid">
+            <div class="card postnorm">
+                <div class="card-header">
+                    <div>
+                        <span class="card-title">Post-Norm</span>
+                        <div class="card-subtitle">Original Transformer (Vaswani 2017)</div>
+                    </div>
+                </div>
+                <div class="flow-box">
+                    x <span class="flow-arrow">→</span> Attention <span class="flow-arrow">→</span> Add <span class="flow-arrow">→</span> <span class="flow-norm">Norm</span> <span class="flow-arrow">→</span> FFN <span class="flow-arrow">→</span> Add <span class="flow-arrow">→</span> <span class="flow-norm">Norm</span><br><br>
+                    <span style="color:#666">Residual: output = Norm(x + Sublayer(x))</span>
+                </div>
+                <div class="feature-item"><span class="feature-icon">•</span><span>Normalization after residual addition</span></div>
+                <div class="feature-item"><span class="feature-icon">•</span><span>Gradients must pass through Norm</span></div>
+                <div class="feature-item"><span class="feature-icon">•</span><span>Requires careful learning rate warmup</span></div>
+                <div class="feature-item"><span class="feature-icon">•</span><span>Training can be unstable for deep models</span></div>
+                <div class="feature-item"><span class="feature-icon">✓</span><span>Slightly better final performance</span></div>
+                <div style="background:#FFF3E0; border-radius:6px; padding:8px; margin-top:auto; font-size:11px;">
+                    <strong>Used in:</strong> BERT, Original Transformer
+                </div>
+            </div>
+            <div class="card prenorm">
+                <div class="card-header">
+                    <div>
+                        <span class="card-title">Pre-Norm</span>
+                        <div class="card-subtitle">GPT-2, Modern LLMs</div>
+                    </div>
+                </div>
+                <div class="flow-box">
+                    x <span class="flow-arrow">→</span> <span class="flow-norm">Norm</span> <span class="flow-arrow">→</span> Attention <span class="flow-arrow">→</span> Add <span class="flow-arrow">→</span> <span class="flow-norm">Norm</span> <span class="flow-arrow">→</span> FFN <span class="flow-arrow">→</span> Add<br><br>
+                    <span style="color:#666">Residual: output = x + Sublayer(Norm(x))</span>
+                </div>
+                <div class="feature-item"><span class="feature-icon">✓</span><span>Normalization before sublayer</span></div>
+                <div class="feature-item"><span class="feature-icon">✓</span><span>Clean gradient path through residuals</span></div>
+                <div class="feature-item"><span class="feature-icon">✓</span><span>Less warmup needed</span></div>
+                <div class="feature-item"><span class="feature-icon">✓</span><span>Stable training for very deep models</span></div>
+                <div class="feature-item"><span class="feature-icon">•</span><span>May need final LayerNorm</span></div>
+                <div style="background:#E8F5E9; border-radius:6px; padding:8px; margin-top:auto; font-size:11px;">
+                    <strong>Used in:</strong> GPT-2/3/4, LLaMA, most modern LLMs
+                </div>
+            </div>
+        </div>
+        <div class="bottom-section">
+            <div class="compare-box">
+                <div class="compare-title">Comparison</div>
+                <table class="comparison-table">
+                    <tr><th>Aspect</th><th>Post-Norm</th><th>Pre-Norm</th></tr>
+                    <tr><td>Training Stability</td><td>Unstable (deep)</td><td class="highlight-green">Stable</td></tr>
+                    <tr><td>Warmup Required</td><td>Essential</td><td class="highlight-green">Less needed</td></tr>
+                    <tr><td>Final Performance</td><td class="highlight-orange">Slightly better</td><td>Slightly lower</td></tr>
+                    <tr><td>Training Speed</td><td>Slower</td><td class="highlight-green">Faster</td></tr>
+                </table>
+            </div>
+            <div class="recommend-box">
+                <div class="recommend-title">Practical Recommendation</div>
+                <div class="recommend-content">
+                    • <strong>Deep models (>12 layers):</strong> Use Pre-Norm<br>
+                    • <strong>Stable training priority:</strong> Use Pre-Norm<br>
+                    • <strong>Maximum performance:</strong> Post-Norm + careful tuning<br>
+                    • <strong>Modern default:</strong> Pre-Norm + RMSNorm
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

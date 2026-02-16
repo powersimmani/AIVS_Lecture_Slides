@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ConvNeXt - Modern CNN</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 24px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #1E64C8; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card.changes { border-color: #4CAF50; }
+        .card.results { border-color: #FF9800; }
+        .card-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+        .changes .card-title { color: #4CAF50; }
+        .results .card-title { color: #FF9800; }
+        .change-item { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid #e0e0e0; }
+        .change-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .change-num { width: 20px; height: 20px; background: #4CAF50; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 10px; flex-shrink: 0; }
+        .change-content { flex: 1; }
+        .change-title { font-size: 12px; font-weight: 700; color: #2E7D32; margin-bottom: 2px; }
+        .change-desc { font-size: 11px; color: #333; line-height: 1.3; }
+        .change-detail { font-size: 10px; color: #666; font-style: italic; }
+        .idea-box { background: #E8F5E9; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .idea-content { font-size: 12px; color: #333; line-height: 1.5; text-align: center; }
+        .comparison-table { width: 100%; font-size: 11px; border-collapse: collapse; margin-bottom: 10px; }
+        .comparison-table th { background: #FF9800; color: white; padding: 5px; text-align: center; }
+        .comparison-table td { padding: 5px; text-align: center; border-bottom: 1px solid #e0e0e0; }
+        .highlight { background: #E8F5E9; font-weight: 600; }
+        .block-diagram { background: #f8f8f8; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .block-title { font-size: 12px; font-weight: 700; color: #E65100; margin-bottom: 8px; text-align: center; }
+        .block-content { display: flex; justify-content: space-around; font-size: 10px; text-align: center; }
+        .block-item { background: white; border: 2px solid #FF9800; border-radius: 6px; padding: 8px; width: 45%; }
+        .block-name { font-weight: 700; color: #E65100; margin-bottom: 4px; }
+        .takeaway-box { background: #E3F2FD; border-radius: 8px; padding: 10px; margin-top: auto; }
+        .takeaway-title { font-size: 12px; font-weight: 700; color: #1565C0; margin-bottom: 4px; }
+        .takeaway-content { font-size: 11px; color: #333; line-height: 1.4; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">ConvNeXt: A ConvNet for the 2020s</div>
+            <div class="subtitle">Modernizing ResNet with Transformer design choices (Meta, 2022)</div>
+        </div>
+        <div class="content-grid">
+            <div class="card changes">
+                <div class="card-title">Key Modifications: ResNet → ConvNeXt</div>
+                <div class="change-item">
+                    <span class="change-num">1</span>
+                    <div class="change-content">
+                        <div class="change-title">Macro Design</div>
+                        <div class="change-desc">Stage ratio (3,4,6,3) → (3,3,9,3)</div>
+                        <div class="change-detail">Stem: 7×7 conv → 4×4 conv, stride 4 (patchify)</div>
+                    </div>
+                </div>
+                <div class="change-item">
+                    <span class="change-num">2</span>
+                    <div class="change-content">
+                        <div class="change-title">ResNeXt-ify</div>
+                        <div class="change-desc">Use depthwise separable convolution</div>
+                        <div class="change-detail">Width: 64 → 96 channels</div>
+                    </div>
+                </div>
+                <div class="change-item">
+                    <span class="change-num">3</span>
+                    <div class="change-content">
+                        <div class="change-title">Inverted Bottleneck</div>
+                        <div class="change-desc">Expand → Depthwise → Compress</div>
+                        <div class="change-detail">Like MobileNet v2 / Transformer FFN</div>
+                    </div>
+                </div>
+                <div class="change-item">
+                    <span class="change-num">4</span>
+                    <div class="change-content">
+                        <div class="change-title">Large Kernel</div>
+                        <div class="change-desc">3×3 → 7×7 depthwise conv</div>
+                        <div class="change-detail">Mimics ViT's large receptive field</div>
+                    </div>
+                </div>
+                <div class="change-item">
+                    <span class="change-num">5</span>
+                    <div class="change-content">
+                        <div class="change-title">Micro Design</div>
+                        <div class="change-desc">GELU activation, LayerNorm (not BN)</div>
+                        <div class="change-detail">Fewer normalization layers</div>
+                    </div>
+                </div>
+            </div>
+            <div class="card results">
+                <div class="card-title">Results & Comparison</div>
+                <div class="idea-box">
+                    <div class="idea-content">
+                        <strong>Message:</strong> Pure CNNs can compete with Transformers<br>when modernized with similar design principles!
+                    </div>
+                </div>
+                <table class="comparison-table">
+                    <tr><th>Model</th><th>ImageNet Acc</th><th>Params</th><th>FLOPs</th></tr>
+                    <tr><td>ResNet-50</td><td>76.1%</td><td>25M</td><td>4.1G</td></tr>
+                    <tr><td>Swin-T</td><td>81.3%</td><td>28M</td><td>4.5G</td></tr>
+                    <tr><td class="highlight">ConvNeXt-T</td><td class="highlight">82.1%</td><td>28M</td><td>4.5G</td></tr>
+                    <tr><td>ViT-B/16</td><td>81.8%</td><td>86M</td><td>17.6G</td></tr>
+                    <tr><td class="highlight">ConvNeXt-B</td><td class="highlight">83.8%</td><td>89M</td><td>15.4G</td></tr>
+                </table>
+                <div class="block-diagram">
+                    <div class="block-title">ConvNeXt Block</div>
+                    <div class="block-content">
+                        <div class="block-item">
+                            <div class="block-name">ResNet Block</div>
+                            1×1 → 3×3 → 1×1<br>BN, ReLU
+                        </div>
+                        <div class="block-item">
+                            <div class="block-name">ConvNeXt Block</div>
+                            7×7 DW → 1×1 → 1×1<br>LN, GELU
+                        </div>
+                    </div>
+                </div>
+                <div class="takeaway-box">
+                    <div class="takeaway-title">Key Takeaways</div>
+                    <div class="takeaway-content">
+                        • CNNs aren't outdated - just needed modernization<br>
+                        • Simpler training than ViT (no special augmentation)<br>
+                        • Great for downstream tasks (detection, segmentation)<br>
+                        • Best of both worlds: CNN efficiency + modern designs
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

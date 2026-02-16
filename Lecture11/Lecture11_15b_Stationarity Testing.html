@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stationarity Testing</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 14px; }
+        .main-title { font-size: 24px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #1E64C8; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card.concept { border-color: #9C27B0; }
+        .card.tests { border-color: #4CAF50; }
+        .card-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+        .concept .card-title { color: #9C27B0; }
+        .tests .card-title { color: #4CAF50; }
+        .definition-box { background: #F3E5F5; border-radius: 8px; padding: 12px; margin-bottom: 10px; }
+        .definition-title { font-size: 13px; font-weight: 700; color: #7B1FA2; margin-bottom: 6px; }
+        .definition-content { font-size: 12px; color: #333; line-height: 1.5; }
+        .property-item { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: #333; margin-bottom: 6px; line-height: 1.4; }
+        .property-icon { font-weight: bold; flex-shrink: 0; color: #9C27B0; }
+        .test-box { background: #E8F5E9; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .test-title { font-size: 13px; font-weight: 700; color: #2E7D32; margin-bottom: 6px; }
+        .test-content { font-size: 11px; color: #333; line-height: 1.4; }
+        .hypothesis-box { background: #f8f8f8; border-radius: 6px; padding: 8px; margin-top: 6px; font-size: 11px; }
+        .transform-box { background: #FFF3E0; border-radius: 8px; padding: 10px; margin-top: auto; }
+        .transform-title { font-size: 12px; font-weight: 700; color: #E65100; margin-bottom: 6px; }
+        .transform-item { font-size: 11px; color: #333; margin-bottom: 4px; }
+        .code-box { background: #2d2d2d; border-radius: 8px; padding: 10px; margin-top: 10px; }
+        .code-content { font-family: 'Courier New', monospace; font-size: 10px; color: #d4d4d4; line-height: 1.4; }
+        .code-comment { color: #6a9955; }
+        .code-number { color: #b5cea8; }
+        .bottom-note { background: #E3F2FD; border: 2px solid #1E64C8; border-radius: 10px; padding: 10px; margin-top: 12px; }
+        .note-content { font-size: 12px; color: #333; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Stationarity: Foundation of Time Series Analysis</div>
+            <div class="subtitle">Why stationarity matters and how to test for it</div>
+        </div>
+        <div class="content-grid">
+            <div class="card concept">
+                <div class="card-title">What is Stationarity?</div>
+                <div class="definition-box">
+                    <div class="definition-title">Definition</div>
+                    <div class="definition-content">
+                        A time series is <strong>stationary</strong> if its statistical properties (mean, variance, autocorrelation) do not change over time.
+                    </div>
+                </div>
+                <div class="property-item"><span class="property-icon">1</span><span><strong>Constant Mean:</strong> E[Y_t] = μ for all t</span></div>
+                <div class="property-item"><span class="property-icon">2</span><span><strong>Constant Variance:</strong> Var(Y_t) = σ² for all t</span></div>
+                <div class="property-item"><span class="property-icon">3</span><span><strong>Autocovariance:</strong> Cov(Y_t, Y_{t+k}) depends only on k, not t</span></div>
+                <div class="transform-box">
+                    <div class="transform-title">Making Non-Stationary → Stationary</div>
+                    <div class="transform-item"><strong>1. Differencing:</strong> y'_t = y_t - y_{t-1}</div>
+                    <div class="transform-item"><strong>2. Log Transform:</strong> log(y_t) for growing variance</div>
+                    <div class="transform-item"><strong>3. Seasonal Diff:</strong> y_t - y_{t-s} (s = period)</div>
+                    <div class="transform-item"><strong>4. Detrending:</strong> Remove trend component</div>
+                </div>
+            </div>
+            <div class="card tests">
+                <div class="card-title">Statistical Tests</div>
+                <div class="test-box">
+                    <div class="test-title">ADF Test (Augmented Dickey-Fuller)</div>
+                    <div class="test-content">
+                        Most common test for unit root (non-stationarity)
+                    </div>
+                    <div class="hypothesis-box">
+                        <strong>H₀:</strong> Series has unit root (non-stationary)<br>
+                        <strong>H₁:</strong> Series is stationary<br>
+                        <strong>Interpret:</strong> p < 0.05 → Reject H₀ → Stationary
+                    </div>
+                </div>
+                <div class="test-box">
+                    <div class="test-title">KPSS Test</div>
+                    <div class="test-content">
+                        Complementary test with opposite null hypothesis
+                    </div>
+                    <div class="hypothesis-box">
+                        <strong>H₀:</strong> Series is stationary<br>
+                        <strong>H₁:</strong> Series has unit root<br>
+                        <strong>Interpret:</strong> p > 0.05 → Fail to reject H₀ → Stationary
+                    </div>
+                </div>
+                <div class="code-box">
+                    <div class="code-content">
+                        <span class="code-comment"># ADF Test</span><br>
+                        from statsmodels.tsa.stattools import adfuller<br>
+                        result = adfuller(series)<br>
+                        print(f'ADF Stat: {result[<span class="code-number">0</span>]:.4f}')<br>
+                        print(f'p-value: {result[<span class="code-number">1</span>]:.4f}')<br><br>
+                        <span class="code-comment"># KPSS Test</span><br>
+                        from statsmodels.tsa.stattools import kpss<br>
+                        stat, p, lags, crit = kpss(series)
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bottom-note">
+            <div class="note-content">
+                <strong>Why it matters:</strong> ARIMA and many statistical methods require stationarity. Deep learning methods (RNN, LSTM) are more robust but still benefit from stationary data.
+            </div>
+        </div>
+    </div>
+</body>
+</html>

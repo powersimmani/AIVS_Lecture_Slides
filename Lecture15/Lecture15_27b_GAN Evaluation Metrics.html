@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GAN Evaluation Metrics</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 24px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #1E64C8; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card.is-card { border-color: #2196F3; }
+        .card.fid-card { border-color: #FF9800; }
+        .card-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+        .is-card .card-title { color: #2196F3; }
+        .fid-card .card-title { color: #FF9800; }
+        .formula-box { background: #f8f8f8; border-radius: 8px; padding: 12px; margin-bottom: 10px; text-align: center; }
+        .formula-main { font-size: 13px; font-weight: 600; color: #333; font-family: 'Times New Roman', serif; margin-bottom: 6px; }
+        .formula-note { font-size: 10px; color: #666; }
+        .explain-box { background: #E3F2FD; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .explain-box.orange { background: #FFF3E0; }
+        .explain-content { font-size: 11px; color: #333; line-height: 1.5; }
+        .pros-cons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+        .pros { background: #E8F5E9; border-radius: 6px; padding: 8px; }
+        .cons { background: #FFEBEE; border-radius: 6px; padding: 8px; }
+        .pros-title { font-size: 11px; font-weight: 700; color: #2E7D32; margin-bottom: 4px; }
+        .cons-title { font-size: 11px; font-weight: 700; color: #C62828; margin-bottom: 4px; }
+        .item { font-size: 10px; color: #333; margin-bottom: 2px; }
+        .comparison-table { width: 100%; font-size: 10px; border-collapse: collapse; margin-top: auto; }
+        .comparison-table th { background: #1E64C8; color: white; padding: 5px; text-align: center; }
+        .comparison-table td { padding: 5px; text-align: center; border-bottom: 1px solid #e0e0e0; }
+        .highlight { background: #E8F5E9; font-weight: 600; }
+        .tip-box { background: #F3E5F5; border-radius: 8px; padding: 10px; margin-top: auto; }
+        .tip-title { font-size: 11px; font-weight: 700; color: #7B1FA2; margin-bottom: 4px; }
+        .tip-content { font-size: 10px; color: #333; line-height: 1.4; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">GAN Evaluation Metrics: IS and FID</div>
+            <div class="subtitle">Quantitative metrics for generative model quality</div>
+        </div>
+        <div class="content-grid">
+            <div class="card is-card">
+                <div class="card-title">Inception Score (IS)</div>
+                <div class="formula-box">
+                    <div class="formula-main">IS = exp(E<sub>x</sub>[KL(p(y|x) || p(y))])</div>
+                    <div class="formula-note">Higher is better (max ~1000 for ImageNet)</div>
+                </div>
+                <div class="explain-box">
+                    <div class="explain-content">
+                        <strong>p(y|x):</strong> Class distribution for single image (should be sharp/confident)<br>
+                        <strong>p(y):</strong> Marginal class distribution (should be uniform/diverse)<br><br>
+                        <strong>High IS =</strong> Quality (sharp predictions) + Diversity (all classes)
+                    </div>
+                </div>
+                <div class="pros-cons">
+                    <div class="pros">
+                        <div class="pros-title">Pros</div>
+                        <div class="item">+ Fast to compute</div>
+                        <div class="item">+ Captures quality & diversity</div>
+                        <div class="item">+ Well-established</div>
+                    </div>
+                    <div class="cons">
+                        <div class="cons-title">Cons</div>
+                        <div class="item">- Doesn't compare to real</div>
+                        <div class="item">- ImageNet-biased</div>
+                        <div class="item">- Ignores intra-class modes</div>
+                    </div>
+                </div>
+                <div class="tip-box">
+                    <div class="tip-title">Typical Values</div>
+                    <div class="tip-content">
+                        ImageNet Real: ~250 | Good GAN: >50 | Poor GAN: <20
+                    </div>
+                </div>
+            </div>
+            <div class="card fid-card">
+                <div class="card-title">Frechet Inception Distance (FID)</div>
+                <div class="formula-box">
+                    <div class="formula-main">FID = ||mu_r - mu_g||^2 + Tr(Sigma_r + Sigma_g - 2(Sigma_r * Sigma_g)^0.5)</div>
+                    <div class="formula-note">Lower is better (0 = identical distributions)</div>
+                </div>
+                <div class="explain-box orange">
+                    <div class="explain-content">
+                        <strong>mu_r, mu_g:</strong> Mean of Inception features (real vs generated)<br>
+                        <strong>Sigma:</strong> Covariance of Inception features<br><br>
+                        <strong>Measures:</strong> Distance between real and generated distributions in feature space
+                    </div>
+                </div>
+                <div class="pros-cons">
+                    <div class="pros">
+                        <div class="pros-title">Pros</div>
+                        <div class="item">+ Compares to real data</div>
+                        <div class="item">+ More reliable than IS</div>
+                        <div class="item">+ Standard benchmark</div>
+                    </div>
+                    <div class="cons">
+                        <div class="cons-title">Cons</div>
+                        <div class="item">- Needs many samples</div>
+                        <div class="item">- Computationally heavier</div>
+                        <div class="item">- Inception v3 dependency</div>
+                    </div>
+                </div>
+                <div class="tip-box">
+                    <div class="tip-title">Typical FID Values</div>
+                    <div class="tip-content">
+                        CIFAR-10: ~3-10 (SOTA) | ImageNet: ~5-20 (SOTA) | Poor: >50
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table class="comparison-table" style="margin-top: 12px;">
+            <tr><th>Metric</th><th>Measures</th><th>Direction</th><th>Primary Use</th><th>Samples Needed</th></tr>
+            <tr><td>IS</td><td>Quality + Diversity</td><td>Higher better</td><td>Quick benchmark</td><td>~5K-50K</td></tr>
+            <tr class="highlight"><td>FID</td><td>Distribution distance</td><td>Lower better</td><td>Main benchmark</td><td>~10K-50K</td></tr>
+            <tr><td>Precision</td><td>Quality only</td><td>Higher better</td><td>Fidelity check</td><td>~10K</td></tr>
+            <tr><td>Recall</td><td>Diversity only</td><td>Higher better</td><td>Coverage check</td><td>~10K</td></tr>
+        </table>
+    </div>
+</body>
+</html>

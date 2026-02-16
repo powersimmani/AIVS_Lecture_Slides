@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Score Matching Theory</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 24px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #1E64C8; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card.score { border-color: #2196F3; }
+        .card.sde { border-color: #FF9800; }
+        .card-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+        .score .card-title { color: #2196F3; }
+        .sde .card-title { color: #FF9800; }
+        .concept-box { background: #E3F2FD; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .concept-title { font-size: 12px; font-weight: 700; color: #1565C0; margin-bottom: 6px; }
+        .concept-content { font-size: 11px; color: #333; line-height: 1.5; }
+        .formula-box { background: #f8f8f8; border-radius: 8px; padding: 12px; margin-bottom: 10px; text-align: center; }
+        .formula-main { font-family: 'Times New Roman', serif; font-size: 14px; font-weight: 600; color: #333; margin-bottom: 6px; }
+        .formula-note { font-size: 10px; color: #666; }
+        .relation-box { background: #E8F5E9; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .relation-title { font-size: 12px; font-weight: 700; color: #2E7D32; margin-bottom: 6px; }
+        .relation-content { font-size: 11px; color: #333; line-height: 1.5; }
+        .sde-box { background: #FFF3E0; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .sde-title { font-size: 12px; font-weight: 700; color: #E65100; margin-bottom: 6px; }
+        .sde-formula { font-family: 'Times New Roman', serif; font-size: 12px; color: #333; margin-bottom: 4px; }
+        .insight-box { background: #F3E5F5; border-radius: 8px; padding: 10px; margin-top: auto; }
+        .insight-title { font-size: 12px; font-weight: 700; color: #7B1FA2; margin-bottom: 6px; }
+        .insight-content { font-size: 11px; color: #333; line-height: 1.4; }
+        .unification-table { width: 100%; font-size: 10px; border-collapse: collapse; margin-top: auto; }
+        .unification-table th { background: #FF9800; color: white; padding: 5px; text-align: center; }
+        .unification-table td { padding: 5px; text-align: center; border-bottom: 1px solid #e0e0e0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Score Matching and Score-Based Models</div>
+            <div class="subtitle">Alternative perspective on diffusion models (Song et al., 2020)</div>
+        </div>
+        <div class="content-grid">
+            <div class="card score">
+                <div class="card-title">Score Function</div>
+                <div class="formula-box">
+                    <div class="formula-main">s(x) = nabla<sub>x</sub> log p(x)</div>
+                    <div class="formula-note">Gradient of log probability density</div>
+                </div>
+                <div class="concept-box">
+                    <div class="concept-title">Intuition</div>
+                    <div class="concept-content">
+                        <strong>Score function</strong> points toward high-density regions.<br><br>
+                        Following the score = moving toward likely samples.<br><br>
+                        No need to know normalization constant Z!
+                    </div>
+                </div>
+                <div class="concept-box">
+                    <div class="concept-title">Denoising Score Matching</div>
+                    <div class="concept-content">
+                        <strong>Problem:</strong> Can't compute true score directly.<br><br>
+                        <strong>Solution:</strong> Add noise, then learn to denoise.<br>
+                        Optimal denoiser points toward clean data!
+                    </div>
+                </div>
+                <div class="relation-box">
+                    <div class="relation-title">Key Relationship</div>
+                    <div class="relation-content">
+                        <strong>epsilon<sub>theta</sub>(x<sub>t</sub>, t) ~ -sqrt(1-alpha_bar_t) * s<sub>theta</sub>(x<sub>t</sub>, t)</strong><br><br>
+                        Predicting noise = negative score direction<br>
+                        The two formulations are equivalent!
+                    </div>
+                </div>
+            </div>
+            <div class="card sde">
+                <div class="card-title">SDE Framework</div>
+                <div class="sde-box">
+                    <div class="sde-title">Forward SDE (Noising)</div>
+                    <div class="sde-formula">dx = f(x,t)dt + g(t)dw</div>
+                    <div class="formula-note">f: drift, g: diffusion coefficient, w: Brownian motion</div>
+                </div>
+                <div class="sde-box">
+                    <div class="sde-title">Reverse SDE (Denoising)</div>
+                    <div class="sde-formula">dx = [f - g<sup>2</sup>nabla<sub>x</sub>log p<sub>t</sub>(x)]dt + g dw_bar</div>
+                    <div class="formula-note">Requires knowing the score function!</div>
+                </div>
+                <div class="concept-box">
+                    <div class="concept-title">DDPM as SDE</div>
+                    <div class="concept-content">
+                        DDPM is a discretization of VP-SDE:<br>
+                        • VP = Variance Preserving<br>
+                        • VE = Variance Exploding (NCSN)<br><br>
+                        Both are special cases of the same framework.
+                    </div>
+                </div>
+                <table class="unification-table">
+                    <tr><th>View</th><th>Learns</th><th>Samples by</th></tr>
+                    <tr><td>DDPM</td><td>epsilon (noise)</td><td>Iterative denoising</td></tr>
+                    <tr><td>Score-based</td><td>nabla log p</td><td>Langevin dynamics</td></tr>
+                    <tr><td>SDE</td><td>Score function</td><td>Reverse SDE</td></tr>
+                </table>
+                <div class="insight-box">
+                    <div class="insight-title">Unified View</div>
+                    <div class="insight-content">
+                        All three perspectives describe the SAME model!<br>
+                        Different formulations, same underlying process.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

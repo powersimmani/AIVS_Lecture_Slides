@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flash Attention</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 50vh 0;
+        }
+
+        .container {
+            width: 960px;
+            height: 540px;
+            padding: 28px 40px;
+            background: white;
+        }
+
+        .title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .concept-box {
+            background: #f0f5fc;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px 20px;
+            margin-bottom: 14px;
+            text-align: center;
+        }
+
+        .concept-text {
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .concept-highlight {
+            color: #1E64C8;
+            font-weight: 700;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 14px;
+        }
+
+        .problem-box {
+            background: #fff8f8;
+            border: 2.5px solid #e57373;
+            border-radius: 10px;
+            padding: 14px 16px;
+        }
+
+        .solution-box {
+            background: #f0fff0;
+            border: 2.5px solid #4CAF50;
+            border-radius: 10px;
+            padding: 14px 16px;
+        }
+
+        .box-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .box-icon {
+            font-size: 20px;
+        }
+
+        .box-title {
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .problem-box .box-title {
+            color: #e57373;
+        }
+
+        .solution-box .box-title {
+            color: #4CAF50;
+        }
+
+        .box-content {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .box-content .bullet {
+            margin-bottom: 4px;
+            padding-left: 12px;
+            position: relative;
+        }
+
+        .box-content .bullet::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #1E64C8;
+            font-weight: bold;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .benefit-card {
+            background: white;
+            border: 2.5px solid #1E64C8;
+            border-radius: 10px;
+            padding: 12px 10px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(30, 100, 200, 0.25);
+            background: #f8fbff;
+        }
+
+        .benefit-icon {
+            font-size: 24px;
+            margin-bottom: 6px;
+        }
+
+        .benefit-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+
+        .benefit-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+        }
+
+        .code-section {
+            background: #2d2d2d;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 14px;
+        }
+
+        .code-title {
+            color: #9cdcfe;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .code-content {
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #d4d4d4;
+            line-height: 1.5;
+        }
+
+        .code-keyword {
+            color: #569cd6;
+        }
+
+        .code-string {
+            color: #ce9178;
+        }
+
+        .code-comment {
+            color: #6a9955;
+        }
+
+        .code-function {
+            color: #dcdcaa;
+        }
+
+        .info-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .info-box {
+            background: #f8fbff;
+            border-left: 4px solid #1E64C8;
+            border-radius: 6px;
+            padding: 10px 12px;
+        }
+
+        .info-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+
+        .info-content {
+            font-size: 13px;
+            color: #333;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Flash Attention - Memory-Efficient Attention</div>
+
+        <div class="concept-box">
+            <span class="concept-text">Flash Attention: </span>
+            <span class="concept-highlight">IO-aware</span>
+            <span class="concept-text"> exact attention algorithm that reduces memory from </span>
+            <span class="concept-highlight">O(N²)</span>
+            <span class="concept-text"> to </span>
+            <span class="concept-highlight">O(N)</span>
+        </div>
+
+        <div class="main-content">
+            <div class="problem-box">
+                <div class="box-header">
+                    <span class="box-icon">⚠️</span>
+                    <span class="box-title">Standard Attention Problem</span>
+                </div>
+                <div class="box-content">
+                    <div class="bullet">Full N×N attention matrix in HBM</div>
+                    <div class="bullet">Memory: O(N²) for sequence length N</div>
+                    <div class="bullet">Memory bandwidth bottleneck</div>
+                    <div class="bullet">Limits context length (OOM)</div>
+                </div>
+            </div>
+
+            <div class="solution-box">
+                <div class="box-header">
+                    <span class="box-icon">✓</span>
+                    <span class="box-title">Flash Attention Solution</span>
+                </div>
+                <div class="box-content">
+                    <div class="bullet">Tiled computation in SRAM</div>
+                    <div class="bullet">Never materialize full matrix</div>
+                    <div class="bullet">Online softmax algorithm</div>
+                    <div class="bullet">Recomputation in backward pass</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="benefits-grid">
+            <div class="benefit-card">
+                <div class="benefit-icon">💾</div>
+                <div class="benefit-title">Memory</div>
+                <div class="benefit-value">5-20x less</div>
+            </div>
+
+            <div class="benefit-card">
+                <div class="benefit-icon">⚡</div>
+                <div class="benefit-title">Speed</div>
+                <div class="benefit-value">2-4x faster</div>
+            </div>
+
+            <div class="benefit-card">
+                <div class="benefit-icon">📏</div>
+                <div class="benefit-title">Context</div>
+                <div class="benefit-value">Longer seq</div>
+            </div>
+
+            <div class="benefit-card">
+                <div class="benefit-icon">🎯</div>
+                <div class="benefit-title">Accuracy</div>
+                <div class="benefit-value">Exact same</div>
+            </div>
+        </div>
+
+        <div class="code-section">
+            <div class="code-title"># PyTorch 2.0+ (built-in) / xformers / flash-attn</div>
+            <div class="code-content">
+                <span class="code-keyword">from</span> torch.nn.functional <span class="code-keyword">import</span> <span class="code-function">scaled_dot_product_attention</span>  <span class="code-comment"># Auto uses Flash</span><br>
+                <span class="code-keyword">with</span> torch.backends.cuda.sdp_kernel(enable_flash=<span class="code-keyword">True</span>): attn_out = <span class="code-function">scaled_dot_product_attention</span>(q, k, v)
+            </div>
+        </div>
+
+        <div class="info-row">
+            <div class="info-box">
+                <div class="info-title">Flash Attention 2</div>
+                <div class="info-content">
+                    Better parallelism, 2x faster than v1, supports GQA/MQA
+                </div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-title">Hardware Requirement</div>
+                <div class="info-content">
+                    NVIDIA Ampere+ (A100, H100, RTX 30/40 series)
+                </div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-title">Used By</div>
+                <div class="info-content">
+                    GPT-4, LLaMA 2/3, Mistral, most modern LLMs
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
