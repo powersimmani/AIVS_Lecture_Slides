@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temporal Convolutional Networks (TCN)</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 24px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #1E64C8; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card.concept { border-color: #FF5722; }
+        .card.compare { border-color: #4CAF50; }
+        .card-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+        .concept .card-title { color: #FF5722; }
+        .compare .card-title { color: #4CAF50; }
+        .idea-box { background: #FBE9E7; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .idea-content { font-size: 12px; color: #333; line-height: 1.5; }
+        .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+        .feature-box { background: #f8f8f8; border-radius: 6px; padding: 8px; text-align: center; }
+        .feature-title { font-size: 11px; font-weight: 700; color: #E64A19; margin-bottom: 4px; }
+        .feature-desc { font-size: 10px; color: #333; }
+        .key-item { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: #333; margin-bottom: 6px; line-height: 1.4; }
+        .key-icon { font-weight: bold; flex-shrink: 0; color: #FF5722; }
+        .comparison-table { width: 100%; font-size: 11px; border-collapse: collapse; margin-bottom: 10px; }
+        .comparison-table th { background: #4CAF50; color: white; padding: 5px; text-align: center; }
+        .comparison-table td { padding: 5px; text-align: center; border-bottom: 1px solid #e0e0e0; }
+        .highlight { background: #E8F5E9; font-weight: 600; }
+        .highlight-orange { background: #FBE9E7; }
+        .dilated-diagram { background: #E8F5E9; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .diagram-title { font-size: 12px; font-weight: 700; color: #2E7D32; margin-bottom: 8px; text-align: center; }
+        .diagram-content { font-family: 'Courier New', monospace; font-size: 10px; line-height: 1.6; text-align: center; color: #333; }
+        .use-case-box { background: #E3F2FD; border-radius: 8px; padding: 10px; margin-top: auto; }
+        .use-title { font-size: 12px; font-weight: 700; color: #1565C0; margin-bottom: 6px; }
+        .use-item { font-size: 11px; color: #333; margin-bottom: 3px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Temporal Convolutional Networks (TCN)</div>
+            <div class="subtitle">CNN-based alternative to RNN for sequence modeling</div>
+        </div>
+        <div class="content-grid">
+            <div class="card concept">
+                <div class="card-title">Core Concepts</div>
+                <div class="idea-box">
+                    <div class="idea-content">
+                        <strong>Key Idea:</strong> Use 1D convolutions with two special properties:<br>
+                        1. <strong>Causal:</strong> Output at time t depends only on inputs at time ≤ t<br>
+                        2. <strong>Dilated:</strong> Exponentially increasing receptive field
+                    </div>
+                </div>
+                <div class="feature-grid">
+                    <div class="feature-box">
+                        <div class="feature-title">Causal Convolution</div>
+                        <div class="feature-desc">No future leakage<br>Padding on left only</div>
+                    </div>
+                    <div class="feature-box">
+                        <div class="feature-title">Dilated Convolution</div>
+                        <div class="feature-desc">Skip connections in filter<br>Dilation: 1, 2, 4, 8, ...</div>
+                    </div>
+                    <div class="feature-box">
+                        <div class="feature-title">Residual Connections</div>
+                        <div class="feature-desc">Enable deep networks<br>Stable gradients</div>
+                    </div>
+                    <div class="feature-box">
+                        <div class="feature-title">Same Output Length</div>
+                        <div class="feature-desc">Input size = Output size<br>Sequence-to-sequence</div>
+                    </div>
+                </div>
+                <div class="key-item"><span class="key-icon">✓</span><span><strong>Receptive field:</strong> Grows exponentially with depth</span></div>
+                <div class="key-item"><span class="key-icon">✓</span><span><strong>Formula:</strong> RF = 1 + Σ(kernel-1) × dilation</span></div>
+                <div class="key-item"><span class="key-icon">✓</span><span><strong>Memory:</strong> O(1) vs O(n) for RNN</span></div>
+            </div>
+            <div class="card compare">
+                <div class="card-title">TCN vs RNN/LSTM</div>
+                <table class="comparison-table">
+                    <tr><th>Aspect</th><th>RNN/LSTM</th><th>TCN</th></tr>
+                    <tr><td>Processing</td><td>Sequential</td><td class="highlight">Parallel</td></tr>
+                    <tr><td>Training Speed</td><td>Slow</td><td class="highlight">Fast</td></tr>
+                    <tr><td>Long Dependencies</td><td>Difficult</td><td class="highlight">Dilated Conv</td></tr>
+                    <tr><td>Gradient Flow</td><td class="highlight-orange">Vanishing</td><td class="highlight">Stable (ResNet)</td></tr>
+                    <tr><td>Memory (inference)</td><td>O(n)</td><td class="highlight">O(1)</td></tr>
+                    <tr><td>Variable Length</td><td class="highlight-orange">Native</td><td>Needs handling</td></tr>
+                </table>
+                <div class="dilated-diagram">
+                    <div class="diagram-title">Dilated Convolution Stack</div>
+                    <div class="diagram-content">
+                        Output: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[o]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← d=4<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↗&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↖<br>
+                        Hidden: &nbsp;&nbsp;[h]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[h]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← d=2<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↗&nbsp;↖&nbsp;&nbsp;&nbsp;↗&nbsp;↖<br>
+                        Input: &nbsp;[x][x][x][x][x][x][x]&nbsp;&nbsp;← d=1
+                    </div>
+                </div>
+                <div class="use-case-box">
+                    <div class="use-title">When to Use TCN</div>
+                    <div class="use-item">• Audio/speech processing (WaveNet)</div>
+                    <div class="use-item">• Time series forecasting</div>
+                    <div class="use-item">• When parallelization matters</div>
+                    <div class="use-item">• Fixed-length sequence tasks</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

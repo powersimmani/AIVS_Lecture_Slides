@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GAN Inversion</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 24px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .left-col { display: flex; flex-direction: column; gap: 10px; }
+        .concept-box { background: #E3F2FD; border: 2px solid #1565C0; border-radius: 10px; padding: 12px; }
+        .concept-title { font-size: 14px; font-weight: 700; color: #1565C0; margin-bottom: 8px; }
+        .concept-content { font-size: 12px; color: #333; line-height: 1.5; }
+        .method-card { background: white; border: 2px solid #9C27B0; border-radius: 10px; padding: 10px; }
+        .method-title { font-size: 13px; font-weight: 700; color: #7B1FA2; margin-bottom: 6px; }
+        .method-content { font-size: 11px; color: #333; line-height: 1.4; }
+        .formula-box { background: #f8f8f8; border-radius: 6px; padding: 8px; margin-top: 6px; text-align: center; }
+        .formula-text { font-family: 'Times New Roman', serif; font-size: 12px; color: #333; }
+        .right-col { display: flex; flex-direction: column; gap: 10px; }
+        .comparison-table { width: 100%; font-size: 10px; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; }
+        .comparison-table th { background: #9C27B0; color: white; padding: 6px; text-align: center; }
+        .comparison-table td { padding: 6px; text-align: center; border-bottom: 1px solid #e0e0e0; }
+        .highlight { background: #F3E5F5; font-weight: 600; }
+        .app-box { background: #E8F5E9; border: 2px solid #4CAF50; border-radius: 10px; padding: 12px; }
+        .app-title { font-size: 13px; font-weight: 700; color: #2E7D32; margin-bottom: 8px; }
+        .app-item { font-size: 11px; color: #333; margin-bottom: 4px; line-height: 1.4; }
+        .challenge-box { background: #FFF3E0; border: 2px solid #FF9800; border-radius: 10px; padding: 12px; margin-top: auto; }
+        .challenge-title { font-size: 12px; font-weight: 700; color: #E65100; margin-bottom: 6px; }
+        .challenge-item { font-size: 11px; color: #333; margin-bottom: 3px; }
+        .code-box { background: #2d2d2d; border-radius: 8px; padding: 10px; }
+        .code-content { font-family: 'Courier New', monospace; font-size: 9px; color: #d4d4d4; line-height: 1.4; }
+        .code-comment { color: #6a9955; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">GAN Inversion: From Images to Latent Codes</div>
+            <div class="subtitle">Enabling real image editing with pre-trained GANs</div>
+        </div>
+        <div class="content-grid">
+            <div class="left-col">
+                <div class="concept-box">
+                    <div class="concept-title">What is GAN Inversion?</div>
+                    <div class="concept-content">
+                        <strong>Goal:</strong> Find latent code w such that G(w) = x (real image)<br><br>
+                        <strong>Why?</strong> Pre-trained GAN can only generate from random z. Inversion allows editing REAL images by manipulating their latent codes.
+                    </div>
+                </div>
+                <div class="method-card">
+                    <div class="method-title">1. Optimization-based</div>
+                    <div class="method-content">
+                        Directly optimize latent code to reconstruct image.<br>
+                        Slow but accurate. Per-image optimization.
+                    </div>
+                    <div class="formula-box">
+                        <div class="formula-text">w* = argmin ||G(w) - x||<sub>2</sub> + lambda * ||w - w_avg||<sub>2</sub></div>
+                    </div>
+                </div>
+                <div class="method-card">
+                    <div class="method-title">2. Encoder-based</div>
+                    <div class="method-content">
+                        Train encoder E: x -> w (single forward pass).<br>
+                        Fast but less accurate. Examples: pSp, e4e
+                    </div>
+                    <div class="formula-box">
+                        <div class="formula-text">w = E(x) where E is trained to invert G</div>
+                    </div>
+                </div>
+                <div class="method-card">
+                    <div class="method-title">3. Hybrid</div>
+                    <div class="method-content">
+                        Encoder initialization + optimization refinement.<br>
+                        Best of both worlds. Used in practice.
+                    </div>
+                </div>
+            </div>
+            <div class="right-col">
+                <table class="comparison-table">
+                    <tr><th>Method</th><th>Speed</th><th>Accuracy</th><th>Editability</th></tr>
+                    <tr><td>Optimization</td><td>Slow (mins)</td><td>High</td><td>Medium</td></tr>
+                    <tr><td>Encoder</td><td>Fast (ms)</td><td>Medium</td><td>High</td></tr>
+                    <tr class="highlight"><td>Hybrid</td><td>Medium (sec)</td><td>High</td><td>High</td></tr>
+                </table>
+                <div class="app-box">
+                    <div class="app-title">Applications</div>
+                    <div class="app-item"><strong>Face Editing:</strong> Age, expression, pose, lighting</div>
+                    <div class="app-item"><strong>Style Transfer:</strong> Apply artistic styles to photos</div>
+                    <div class="app-item"><strong>Restoration:</strong> Super-resolution, inpainting</div>
+                    <div class="app-item"><strong>Morphing:</strong> Interpolate between two faces</div>
+                    <div class="app-item"><strong>Attribute Manipulation:</strong> Add/remove glasses, hair color</div>
+                </div>
+                <div class="code-box">
+                    <div class="code-content">
+                        <span class="code-comment"># Simple optimization-based inversion</span><br>
+                        w = torch.randn(1, 512, requires_grad=True)<br>
+                        optimizer = Adam([w], lr=0.1)<br><br>
+                        for step in range(1000):<br>
+                        &nbsp;&nbsp;generated = G.synthesis(w)<br>
+                        &nbsp;&nbsp;loss = mse_loss(generated, target_image)<br>
+                        &nbsp;&nbsp;loss += 0.01 * (w - w_avg).pow(2).mean()<br>
+                        &nbsp;&nbsp;loss.backward()<br>
+                        &nbsp;&nbsp;optimizer.step()
+                    </div>
+                </div>
+                <div class="challenge-box">
+                    <div class="challenge-title">Key Challenges</div>
+                    <div class="challenge-item">• Reconstruction-Editability tradeoff</div>
+                    <div class="challenge-item">• Out-of-distribution images</div>
+                    <div class="challenge-item">• Preserving identity during edits</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

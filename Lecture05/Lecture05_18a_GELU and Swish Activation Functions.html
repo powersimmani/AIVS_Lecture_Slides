@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GELU and Swish Activation Functions</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 14px; }
+        .main-title { font-size: 24px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .func-card { background: white; border: 2.5px solid #1E64C8; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .func-card.gelu { border-color: #9C27B0; }
+        .func-card.swish { border-color: #FF9800; }
+        .func-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 2px solid #e0e0e0; }
+        .func-name { font-size: 20px; font-weight: 700; }
+        .gelu .func-name { color: #9C27B0; }
+        .swish .func-name { color: #FF9800; }
+        .func-badge { padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+        .gelu .func-badge { background: #F3E5F5; color: #7B1FA2; }
+        .swish .func-badge { background: #FFF3E0; color: #E65100; }
+        .formula-box { background: #f8f8f8; border-radius: 8px; padding: 12px; margin-bottom: 10px; text-align: center; }
+        .formula-main { font-size: 16px; font-weight: 600; color: #333; font-family: 'Times New Roman', serif; margin-bottom: 6px; }
+        .formula-approx { font-size: 12px; color: #666; font-family: 'Courier New', monospace; }
+        .feature-list { flex: 1; }
+        .feature-item { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: #333; margin-bottom: 6px; line-height: 1.4; }
+        .feature-icon { font-weight: bold; flex-shrink: 0; }
+        .gelu .feature-icon { color: #9C27B0; }
+        .swish .feature-icon { color: #FF9800; }
+        .usage-box { border-radius: 6px; padding: 8px 10px; font-size: 12px; margin-top: auto; }
+        .gelu .usage-box { background: #F3E5F5; color: #7B1FA2; }
+        .swish .usage-box { background: #FFF3E0; color: #E65100; }
+        .bottom-section { display: grid; grid-template-columns: 1.5fr 1fr; gap: 16px; margin-top: 14px; }
+        .comparison-table { width: 100%; font-size: 11px; border-collapse: collapse; }
+        .comparison-table th { background: #1E64C8; color: white; padding: 6px; text-align: center; }
+        .comparison-table td { padding: 6px; text-align: center; border-bottom: 1px solid #e0e0e0; }
+        .code-box { background: #2d2d2d; border-radius: 8px; padding: 12px; }
+        .code-title { color: #9cdcfe; font-size: 12px; margin-bottom: 8px; }
+        .code-content { font-family: 'Courier New', monospace; font-size: 11px; color: #d4d4d4; line-height: 1.5; }
+        .code-keyword { color: #569cd6; }
+        .code-comment { color: #6a9955; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Modern Activation Functions: GELU & Swish</div>
+            <div class="subtitle">Standard choices for Transformers and efficient architectures</div>
+        </div>
+        <div class="content-grid">
+            <div class="func-card gelu">
+                <div class="func-header">
+                    <span class="func-name">GELU</span>
+                    <span class="func-badge">Transformer Standard</span>
+                </div>
+                <div class="formula-box">
+                    <div class="formula-main">GELU(x) = x · Φ(x)</div>
+                    <div class="formula-approx">≈ 0.5x(1 + tanh[√(2/π)(x + 0.044715x³)])</div>
+                </div>
+                <div class="feature-list">
+                    <div class="feature-item"><span class="feature-icon">✓</span><span>Φ(x) = CDF of standard normal</span></div>
+                    <div class="feature-item"><span class="feature-icon">✓</span><span>Smooth approximation to ReLU</span></div>
+                    <div class="feature-item"><span class="feature-icon">✓</span><span>Non-monotonic (unlike ReLU)</span></div>
+                    <div class="feature-item"><span class="feature-icon">✓</span><span>Stochastic regularization effect</span></div>
+                    <div class="feature-item"><span class="feature-icon">✓</span><span>Hendrycks & Gimpel (2016)</span></div>
+                </div>
+                <div class="usage-box"><strong>Used in:</strong> BERT, GPT, ViT, RoBERTa, T5</div>
+            </div>
+            <div class="func-card swish">
+                <div class="func-header">
+                    <span class="func-name">Swish / SiLU</span>
+                    <span class="func-badge">Auto-discovered</span>
+                </div>
+                <div class="formula-box">
+                    <div class="formula-main">Swish(x) = x · σ(βx)</div>
+                    <div class="formula-approx">SiLU(x) = x · σ(x) when β=1</div>
+                </div>
+                <div class="feature-list">
+                    <div class="feature-item"><span class="feature-icon">✓</span><span>Google Brain automated search (2017)</span></div>
+                    <div class="feature-item"><span class="feature-icon">✓</span><span>Self-gated (x gates itself)</span></div>
+                    <div class="feature-item"><span class="feature-icon">✓</span><span>β can be learnable parameter</span></div>
+                    <div class="feature-item"><span class="feature-icon">✓</span><span>Better gradient flow in deep nets</span></div>
+                    <div class="feature-item"><span class="feature-icon">✓</span><span>Ramachandran et al. (2017)</span></div>
+                </div>
+                <div class="usage-box"><strong>Used in:</strong> EfficientNet, MobileNetV3, Mish variant</div>
+            </div>
+        </div>
+        <div class="bottom-section">
+            <table class="comparison-table">
+                <tr><th>Activation</th><th>Transformers</th><th>CNNs</th><th>Smooth</th><th>Zero-centered</th></tr>
+                <tr><td>ReLU</td><td>△</td><td>✓</td><td>✗</td><td>✗</td></tr>
+                <tr><td style="color:#9C27B0;font-weight:600">GELU</td><td>✓✓</td><td>△</td><td>✓</td><td>△</td></tr>
+                <tr><td style="color:#FF9800;font-weight:600">Swish/SiLU</td><td>✓</td><td>✓</td><td>✓</td><td>△</td></tr>
+                <tr><td>Tanh</td><td>△</td><td>△</td><td>✓</td><td>✓</td></tr>
+            </table>
+            <div class="code-box">
+                <div class="code-title"># PyTorch</div>
+                <div class="code-content">
+                    nn.GELU()  <span class="code-comment"># PyTorch 1.4+</span><br>
+                    nn.SiLU()  <span class="code-comment"># PyTorch 1.7+</span><br><br>
+                    <span class="code-comment"># In model</span><br>
+                    <span class="code-keyword">self</span>.act = nn.GELU()
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tokenization in PLMs</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 24px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .method-col { display: flex; flex-direction: column; gap: 10px; }
+        .method-card { background: white; border: 2px solid #1E64C8; border-radius: 10px; padding: 10px; }
+        .method-card.bpe { border-color: #2196F3; }
+        .method-card.wordpiece { border-color: #FF9800; }
+        .method-card.sentencepiece { border-color: #4CAF50; }
+        .method-title { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+        .bpe .method-title { color: #2196F3; }
+        .wordpiece .method-title { color: #FF9800; }
+        .sentencepiece .method-title { color: #4CAF50; }
+        .method-content { font-size: 11px; color: #333; line-height: 1.4; }
+        .example-box { background: #f8f8f8; border-radius: 6px; padding: 6px; margin-top: 6px; font-family: 'Courier New', monospace; font-size: 10px; }
+        .right-col { display: flex; flex-direction: column; gap: 10px; }
+        .compare-card { background: white; border: 2.5px solid #1E64C8; border-radius: 12px; padding: 12px; }
+        .compare-title { font-size: 15px; font-weight: 700; color: #1E64C8; margin-bottom: 8px; text-align: center; }
+        .comparison-table { width: 100%; font-size: 10px; border-collapse: collapse; }
+        .comparison-table th { background: #1E64C8; color: white; padding: 5px; text-align: center; }
+        .comparison-table td { padding: 5px; text-align: center; border-bottom: 1px solid #e0e0e0; }
+        .efficiency-card { background: #FFF3E0; border: 2px solid #FF9800; border-radius: 10px; padding: 12px; }
+        .eff-title { font-size: 13px; font-weight: 700; color: #E65100; margin-bottom: 8px; }
+        .eff-content { font-size: 11px; color: #333; line-height: 1.4; }
+        .tip-box { background: #E3F2FD; border-radius: 8px; padding: 10px; margin-top: auto; }
+        .tip-title { font-size: 12px; font-weight: 700; color: #1565C0; margin-bottom: 4px; }
+        .tip-content { font-size: 11px; color: #333; line-height: 1.4; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Tokenization in Pre-trained Language Models</div>
+            <div class="subtitle">Subword tokenization: Balancing vocabulary size and coverage</div>
+        </div>
+        <div class="content-grid">
+            <div class="method-col">
+                <div class="method-card bpe">
+                    <div class="method-title">BPE (Byte Pair Encoding)</div>
+                    <div class="method-content">
+                        <strong>Used by:</strong> GPT-2, GPT-3, GPT-4, RoBERTa<br>
+                        <strong>How:</strong> Iteratively merge most frequent pairs<br>
+                        <strong>Pros:</strong> Simple, deterministic
+                    </div>
+                    <div class="example-box">
+                        "lowest" → ["low", "est"]<br>
+                        "lower" → ["low", "er"]
+                    </div>
+                </div>
+                <div class="method-card wordpiece">
+                    <div class="method-title">WordPiece</div>
+                    <div class="method-content">
+                        <strong>Used by:</strong> BERT, DistilBERT, ELECTRA<br>
+                        <strong>How:</strong> Maximize likelihood, not frequency<br>
+                        <strong>Marker:</strong> "##" prefix for subwords
+                    </div>
+                    <div class="example-box">
+                        "playing" → ["play", "##ing"]<br>
+                        "unhappy" → ["un", "##happy"]
+                    </div>
+                </div>
+                <div class="method-card sentencepiece">
+                    <div class="method-title">SentencePiece</div>
+                    <div class="method-content">
+                        <strong>Used by:</strong> T5, LLaMA, ALBERT, XLNet<br>
+                        <strong>How:</strong> Language-independent, raw text input<br>
+                        <strong>Supports:</strong> BPE or Unigram algorithms
+                    </div>
+                    <div class="example-box">
+                        "▁Hello▁world" (▁ = space)<br>
+                        "한국어도▁잘▁처리" (Korean OK)
+                    </div>
+                </div>
+            </div>
+            <div class="right-col">
+                <div class="compare-card">
+                    <div class="compare-title">Model Tokenizer Comparison</div>
+                    <table class="comparison-table">
+                        <tr><th>Model</th><th>Tokenizer</th><th>Vocab Size</th></tr>
+                        <tr><td>BERT</td><td>WordPiece</td><td>30,522</td></tr>
+                        <tr><td>GPT-2</td><td>BPE</td><td>50,257</td></tr>
+                        <tr><td>GPT-4</td><td>tiktoken</td><td>~100,000</td></tr>
+                        <tr><td>LLaMA</td><td>SentencePiece</td><td>32,000</td></tr>
+                        <tr><td>T5</td><td>SentencePiece</td><td>32,000</td></tr>
+                        <tr><td>Claude</td><td>BPE variant</td><td>~100,000</td></tr>
+                    </table>
+                </div>
+                <div class="efficiency-card">
+                    <div class="eff-title">Token Efficiency Varies by Language</div>
+                    <div class="eff-content">
+                        Same text, different token counts:<br><br>
+                        <strong>English:</strong> "Hello world" → 2 tokens<br>
+                        <strong>Korean:</strong> "안녕하세요" → 3-5 tokens<br>
+                        <strong>Chinese:</strong> "你好世界" → 4 tokens<br><br>
+                        <em>Non-English languages often 2-3× more tokens!</em>
+                    </div>
+                </div>
+                <div class="tip-box">
+                    <div class="tip-title">Practical Tip</div>
+                    <div class="tip-content">
+                        Larger vocab = shorter sequences but larger embedding table.<br>
+                        Modern trend: Bigger vocab (~100K) for efficiency.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

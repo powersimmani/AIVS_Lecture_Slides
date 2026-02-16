@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Copy Mechanism</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 26px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #1E64C8; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card.implementation { border-color: #4CAF50; }
+        .card-title { font-size: 16px; font-weight: 700; color: #1E64C8; margin-bottom: 10px; }
+        .card.implementation .card-title { color: #4CAF50; }
+        .concept-box { background: #E3F2FD; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .concept-title { font-size: 12px; font-weight: 700; color: #1565C0; margin-bottom: 6px; }
+        .concept-content { font-size: 11px; color: #333; line-height: 1.5; }
+        .example-box { background: #FFF3E0; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .example-title { font-size: 12px; font-weight: 700; color: #E65100; margin-bottom: 6px; }
+        .example-content { font-size: 11px; color: #333; line-height: 1.5; }
+        .visual-box { background: #f8f8f8; border-radius: 8px; padding: 10px; margin-bottom: 10px; text-align: center; }
+        .formula-box { background: #E8F5E9; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .formula-title { font-size: 12px; font-weight: 700; color: #2E7D32; margin-bottom: 6px; }
+        .formula-content { font-family: 'Courier New', monospace; font-size: 10px; color: #333; line-height: 1.5; }
+        .usecase-box { background: #F3E5F5; border-radius: 8px; padding: 10px; margin-top: auto; }
+        .usecase-title { font-size: 12px; font-weight: 700; color: #7B1FA2; margin-bottom: 6px; }
+        .usecase-item { font-size: 11px; color: #333; margin-bottom: 3px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Copy Mechanism (Pointer Networks)</div>
+            <div class="subtitle">Copying tokens directly from input to output</div>
+        </div>
+        <div class="content-grid">
+            <div class="card">
+                <div class="card-title">Concept</div>
+                <div class="concept-box">
+                    <div class="concept-title">The Problem: Rare & OOV Words</div>
+                    <div class="concept-content">
+                        Standard seq2seq generates from fixed vocabulary.<br>
+                        Names, numbers, rare words -> [UNK] or wrong output<br><br>
+                        <strong>Solution:</strong> Let the model <em>copy</em> words from input!
+                    </div>
+                </div>
+                <div class="example-box">
+                    <div class="example-title">Example: Summarization</div>
+                    <div class="example-content">
+                        <strong>Input:</strong> "Dr. <u>Srinivasan Venkataraman</u> published a paper on..."<br>
+                        <strong>Without copy:</strong> "Dr. [UNK] published..."<br>
+                        <strong>With copy:</strong> "Dr. <u>Srinivasan Venkataraman</u> published..." ✓
+                    </div>
+                </div>
+                <div class="visual-box">
+                    <svg viewBox="0 0 280 90" style="width: 100%; height: 85px;">
+                        <!-- Input sequence -->
+                        <rect x="10" y="10" width="120" height="25" fill="#BBDEFB" stroke="#2196F3" rx="3"/>
+                        <text x="70" y="26" text-anchor="middle" font-size="8">Input: "John went to Paris"</text>
+                        <!-- Decoder -->
+                        <rect x="150" y="30" width="50" height="30" fill="#C8E6C9" stroke="#4CAF50" rx="3"/>
+                        <text x="175" y="48" text-anchor="middle" font-size="7">Decoder</text>
+                        <!-- Generate path -->
+                        <path d="M200,45 L230,35" stroke="#FF9800" marker-end="url(#arr)"/>
+                        <rect x="235" y="25" width="35" height="15" fill="#FFE0B2" stroke="#FF9800" rx="2"/>
+                        <text x="252" y="35" text-anchor="middle" font-size="6">Generate</text>
+                        <!-- Copy path -->
+                        <path d="M70,35 Q110,60 150,45" stroke="#9C27B0" stroke-dasharray="3,2" fill="none" marker-end="url(#arr)"/>
+                        <text x="110" y="75" text-anchor="middle" font-size="7" fill="#7B1FA2">Copy "Paris"</text>
+                        <!-- p_gen indicator -->
+                        <text x="210" y="70" text-anchor="middle" font-size="7" fill="#666">p_gen: generate or copy?</text>
+                        <defs><marker id="arr" markerWidth="4" markerHeight="4" refX="3" refY="2" orient="auto"><path d="M0,0 L4,2 L0,4 Z" fill="#666"/></marker></defs>
+                    </svg>
+                </div>
+            </div>
+            <div class="card implementation">
+                <div class="card-title">Implementation</div>
+                <div class="formula-box">
+                    <div class="formula-title">Pointer-Generator Network (See et al., 2017)</div>
+                    <div class="formula-content">
+                        <span style="color: #666;"># Generation probability</span><br>
+                        p_gen = sigmoid(w_h*h + w_s*s + w_x*x + b)<br><br>
+                        <span style="color: #666;"># Final distribution</span><br>
+                        P(w) = p_gen * P_vocab(w) + (1-p_gen) * sum_i a_i<br>
+                        <span style="color: #666;"># where a_i = attention on input token i</span>
+                    </div>
+                </div>
+                <div class="concept-box">
+                    <div class="concept-title">Key Components</div>
+                    <div class="concept-content">
+                        <strong>1. Generation probability (p_gen):</strong><br>
+                        Learned gate deciding copy vs generate<br><br>
+                        <strong>2. Attention distribution:</strong><br>
+                        Where to copy from in the input<br><br>
+                        <strong>3. Extended vocabulary:</strong><br>
+                        Vocab + input tokens (for OOV handling)
+                    </div>
+                </div>
+                <div class="usecase-box">
+                    <div class="usecase-title">Applications</div>
+                    <div class="usecase-item">- Text summarization (copying key phrases)</div>
+                    <div class="usecase-item">- Question answering (extractive + abstractive)</div>
+                    <div class="usecase-item">- Code generation (copying variable names)</div>
+                    <div class="usecase-item">- Dialogue (copying entities from context)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

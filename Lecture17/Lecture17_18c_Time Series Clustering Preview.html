@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Series Clustering Preview</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 26px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #FF9800; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card.methods { border-color: #4CAF50; }
+        .card-title { font-size: 16px; font-weight: 700; color: #FF9800; margin-bottom: 10px; }
+        .card.methods .card-title { color: #4CAF50; }
+        .problem-box { background: #FFF3E0; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .problem-title { font-size: 12px; font-weight: 700; color: #E65100; margin-bottom: 6px; }
+        .problem-content { font-size: 11px; color: #333; line-height: 1.5; }
+        .visual-box { background: #f8f8f8; border-radius: 8px; padding: 10px; margin-bottom: 10px; text-align: center; }
+        .method-box { background: #E8F5E9; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .method-title { font-size: 12px; font-weight: 700; color: #2E7D32; margin-bottom: 6px; }
+        .method-content { font-size: 11px; color: #333; line-height: 1.5; }
+        .compare-table { width: 100%; font-size: 10px; border-collapse: collapse; margin-bottom: 10px; }
+        .compare-table th { background: #4CAF50; color: white; padding: 5px; }
+        .compare-table td { padding: 5px; text-align: center; border-bottom: 1px solid #e0e0e0; }
+        .note-box { background: #E3F2FD; border-radius: 8px; padding: 10px; margin-top: auto; }
+        .note-title { font-size: 12px; font-weight: 700; color: #1565C0; margin-bottom: 6px; }
+        .note-content { font-size: 11px; color: #333; line-height: 1.4; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Time Series Clustering (Preview)</div>
+            <div class="subtitle">Challenges and approaches for temporal data - Detailed in Lecture 18</div>
+        </div>
+        <div class="content-grid">
+            <div class="card">
+                <div class="card-title">The Challenge</div>
+                <div class="problem-box">
+                    <div class="problem-title">Why Standard Distances Fail</div>
+                    <div class="problem-content">
+                        <strong>Euclidean distance</strong> assumes point-to-point alignment.<br><br>
+                        Time series often have:<br>
+                        - Different lengths<br>
+                        - Phase shifts (same pattern, different timing)<br>
+                        - Speed variations (same pattern, different duration)
+                    </div>
+                </div>
+                <div class="visual-box">
+                    <svg viewBox="0 0 280 90" style="width: 100%; height: 85px;">
+                        <!-- Time series 1 -->
+                        <polyline points="20,30 40,50 60,20 80,60 100,30" fill="none" stroke="#2196F3" stroke-width="2"/>
+                        <text x="60" y="75" text-anchor="middle" font-size="8" fill="#2196F3">Series A</text>
+                        <!-- Time series 2 (shifted) -->
+                        <polyline points="140,40 160,50 180,20 200,60 220,30 240,50" fill="none" stroke="#FF9800" stroke-width="2"/>
+                        <text x="190" y="75" text-anchor="middle" font-size="8" fill="#FF9800">Series B (shifted)</text>
+                        <!-- Same pattern indicator -->
+                        <text x="140" y="15" text-anchor="middle" font-size="9" fill="#666">Same pattern, different alignment!</text>
+                    </svg>
+                </div>
+                <div class="problem-box">
+                    <div class="problem-title">Solution: Elastic Distance Measures</div>
+                    <div class="problem-content">
+                        Allow <strong>time axis warping</strong> to align similar patterns.<br>
+                        Find optimal alignment, then measure distance.
+                    </div>
+                </div>
+            </div>
+            <div class="card methods">
+                <div class="card-title">Key Methods</div>
+                <div class="method-box">
+                    <div class="method-title">DTW (Dynamic Time Warping)</div>
+                    <div class="method-content">
+                        - Finds optimal alignment between two sequences<br>
+                        - Allows stretching/compressing time axis<br>
+                        - Complexity: O(n*m) with dynamic programming<br>
+                        - Most widely used for time series similarity
+                    </div>
+                </div>
+                <div class="method-box">
+                    <div class="method-title">K-Shape</div>
+                    <div class="method-content">
+                        - Shape-based distance using cross-correlation<br>
+                        - Much faster than DTW: O(n log n)<br>
+                        - Shift-invariant comparison<br>
+                        - Good for general time series clustering
+                    </div>
+                </div>
+                <table class="compare-table">
+                    <tr><th>Method</th><th>Speed</th><th>Shift Invariant</th><th>Scale Invariant</th></tr>
+                    <tr><td>Euclidean</td><td>O(n)</td><td>No</td><td>No</td></tr>
+                    <tr><td>DTW</td><td>O(n²)</td><td>Yes</td><td>Optional</td></tr>
+                    <tr><td>K-Shape</td><td>O(n log n)</td><td>Yes</td><td>Yes</td></tr>
+                </table>
+                <div class="note-box">
+                    <div class="note-title">Lecture 18 Preview</div>
+                    <div class="note-content">
+                        Detailed coverage of DTW algorithm, K-Shape, subsequence clustering, and hands-on implementation with tslearn library.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

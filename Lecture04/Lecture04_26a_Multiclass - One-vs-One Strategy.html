@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>One-vs-One Strategy</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #FFFFFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 14px; }
+        .main-title { font-size: 26px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 15px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; flex: 1; }
+        .card { background: white; border: 2px solid #1E64C8; border-radius: 10px; padding: 14px; }
+        .card-title { font-size: 16px; font-weight: 700; color: #1E64C8; margin-bottom: 10px; text-align: center; }
+        .method-box { background: #F8FBFF; border-radius: 8px; padding: 12px; margin-bottom: 10px; }
+        .method-title { font-size: 14px; font-weight: 700; color: #1E64C8; margin-bottom: 8px; }
+        .classifier-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        .classifier-item { background: #E3F2FD; padding: 8px; border-radius: 6px; text-align: center; font-size: 12px; color: #1565C0; font-weight: 600; }
+        .formula-box { background: #FFF9E6; border: 2px solid #FFC107; border-radius: 8px; padding: 12px; text-align: center; margin-bottom: 10px; }
+        .formula { font-size: 18px; font-weight: 700; color: #F57C00; font-family: 'Times New Roman', serif; }
+        .formula-note { font-size: 12px; color: #666; margin-top: 6px; }
+        .voting-box { background: #E8F5E9; border-radius: 8px; padding: 12px; }
+        .vote-item { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #c8e6c9; font-size: 13px; }
+        .vote-item:last-child { border-bottom: none; }
+        .comparison-table { width: 100%; font-size: 12px; border-collapse: collapse; }
+        .comparison-table th { background: #1E64C8; color: white; padding: 8px; text-align: center; }
+        .comparison-table td { padding: 8px; text-align: center; border-bottom: 1px solid #e0e0e0; }
+        .highlight { background: #E8F5E9; }
+        .code-box { background: #2d2d2d; border-radius: 8px; padding: 12px; margin-top: 10px; }
+        .code-content { font-family: 'Courier New', monospace; font-size: 11px; color: #d4d4d4; line-height: 1.5; }
+        .code-keyword { color: #569cd6; }
+        .code-comment { color: #6a9955; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">One-vs-One (OvO) Strategy</div>
+            <div class="subtitle">Alternative multiclass classification approach using pairwise classifiers</div>
+        </div>
+        <div class="content-grid">
+            <div>
+                <div class="card">
+                    <div class="card-title">OvO Method</div>
+                    <div class="method-box">
+                        <div class="method-title">For K classes, train K(K-1)/2 binary classifiers</div>
+                        <div class="classifier-grid">
+                            <div class="classifier-item">A vs B</div>
+                            <div class="classifier-item">A vs C</div>
+                            <div class="classifier-item">B vs C</div>
+                        </div>
+                    </div>
+                    <div class="formula-box">
+                        <div class="formula"># Classifiers = K(K-1)/2</div>
+                        <div class="formula-note">For K=10: 45 classifiers | For K=100: 4,950 classifiers</div>
+                    </div>
+                    <div class="voting-box">
+                        <div class="method-title" style="color: #2E7D32;">Prediction: Voting</div>
+                        <div class="vote-item"><span>A vs B → A wins</span><span>A: +1</span></div>
+                        <div class="vote-item"><span>A vs C → A wins</span><span>A: +1</span></div>
+                        <div class="vote-item"><span>B vs C → C wins</span><span>C: +1</span></div>
+                        <div class="vote-item" style="font-weight: 700; color: #1E64C8;"><span>Final</span><span>Class A (2 votes)</span></div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="card">
+                    <div class="card-title">OvR vs OvO Comparison</div>
+                    <table class="comparison-table">
+                        <tr><th>Property</th><th>OvR</th><th>OvO</th></tr>
+                        <tr><td># Classifiers</td><td>K</td><td class="highlight">K(K-1)/2</td></tr>
+                        <tr><td>Training data per clf</td><td>All samples</td><td class="highlight">2 classes only</td></tr>
+                        <tr><td>Class imbalance</td><td>Severe</td><td class="highlight">Less severe</td></tr>
+                        <tr><td>Memory (training)</td><td class="highlight">Lower</td><td>Higher</td></tr>
+                        <tr><td>SVM preference</td><td>Less common</td><td class="highlight">Preferred</td></tr>
+                        <tr><td>sklearn default</td><td class="highlight">LogisticReg</td><td>SVC</td></tr>
+                    </table>
+                    <div class="code-box">
+                        <div class="code-content">
+                            <span class="code-comment"># OvR (One-vs-Rest)</span><br>
+                            LogisticRegression(multi_class=<span class="code-keyword">'ovr'</span>)<br><br>
+                            <span class="code-comment"># OvO (One-vs-One)</span><br>
+                            <span class="code-keyword">from</span> sklearn.multiclass <span class="code-keyword">import</span> OneVsOneClassifier<br>
+                            OneVsOneClassifier(LogisticRegression())
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Domain Adaptation Overview</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 26px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .main-content { display: flex; gap: 16px; flex: 1; }
+        .left-panel { flex: 1.2; display: flex; flex-direction: column; gap: 12px; }
+        .right-panel { flex: 0.8; display: flex; flex-direction: column; gap: 12px; }
+        .card { background: white; border: 2.5px solid #1E64C8; border-radius: 12px; padding: 12px; }
+        .card-title { font-size: 14px; font-weight: 700; color: #1E64C8; margin-bottom: 8px; }
+        .visual-container { background: #f8f8f8; border-radius: 8px; padding: 10px; text-align: center; }
+        .method-box { background: #E8F5E9; border-radius: 8px; padding: 10px; margin-bottom: 8px; }
+        .method-title { font-size: 12px; font-weight: 700; color: #2E7D32; margin-bottom: 4px; }
+        .method-desc { font-size: 10px; color: #333; line-height: 1.4; }
+        .example-box { background: #FFF3E0; border-radius: 8px; padding: 10px; }
+        .example-title { font-size: 12px; font-weight: 700; color: #E65100; margin-bottom: 6px; }
+        .example-item { font-size: 10px; color: #333; margin-bottom: 3px; }
+        .approach-table { width: 100%; font-size: 9px; border-collapse: collapse; }
+        .approach-table th { background: #1E64C8; color: white; padding: 5px; }
+        .approach-table td { padding: 5px; border-bottom: 1px solid #e0e0e0; vertical-align: top; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Domain Adaptation</div>
+            <div class="subtitle">Transferring knowledge across different data distributions</div>
+        </div>
+        <div class="main-content">
+            <div class="left-panel">
+                <div class="card">
+                    <div class="card-title">The Problem: Domain Shift</div>
+                    <div class="visual-container">
+                        <svg viewBox="0 0 350 100" style="width: 100%; height: 90px;">
+                            <!-- Source domain -->
+                            <ellipse cx="70" cy="50" rx="50" ry="35" fill="#BBDEFB" stroke="#2196F3" stroke-width="2"/>
+                            <text x="70" y="45" text-anchor="middle" font-size="9" fill="#1565C0">Source</text>
+                            <text x="70" y="58" text-anchor="middle" font-size="8" fill="#333">Labeled</text>
+                            <!-- Arrow -->
+                            <path d="M130,50 L165,50" stroke="#666" stroke-width="2" marker-end="url(#arr)"/>
+                            <text x="147" y="42" text-anchor="middle" font-size="7" fill="#666">Train</text>
+                            <!-- Model -->
+                            <rect x="170" y="35" width="45" height="30" rx="4" fill="#FFF3E0" stroke="#FF9800" stroke-width="2"/>
+                            <text x="192" y="53" text-anchor="middle" font-size="8" fill="#E65100">Model</text>
+                            <!-- Arrow -->
+                            <path d="M220,50 L255,50" stroke="#666" stroke-width="2" marker-end="url(#arr)"/>
+                            <text x="237" y="42" text-anchor="middle" font-size="7" fill="#666">Test</text>
+                            <!-- Target domain -->
+                            <ellipse cx="310" cy="50" rx="50" ry="35" fill="#FFCDD2" stroke="#F44336" stroke-width="2"/>
+                            <text x="310" y="45" text-anchor="middle" font-size="9" fill="#C62828">Target</text>
+                            <text x="310" y="58" text-anchor="middle" font-size="8" fill="#333">Different!</text>
+                            <defs><marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#666"/></marker></defs>
+                        </svg>
+                    </div>
+                </div>
+                <div class="card" style="flex: 1;">
+                    <div class="card-title">Main Approaches</div>
+                    <table class="approach-table">
+                        <tr><th>Approach</th><th>Idea</th><th>Example</th></tr>
+                        <tr><td><strong>Discrepancy-based</strong></td><td>Minimize distribution distance (MMD, CORAL)</td><td>Align feature statistics</td></tr>
+                        <tr><td><strong>Adversarial</strong></td><td>Domain discriminator + feature extractor</td><td>DANN, ADDA</td></tr>
+                        <tr><td><strong>Reconstruction</strong></td><td>Shared encoder learns domain-invariant features</td><td>DSN, DRCN</td></tr>
+                        <tr><td><strong>Self-training</strong></td><td>Pseudo-labels on target domain</td><td>Noisy Student</td></tr>
+                    </table>
+                </div>
+            </div>
+            <div class="right-panel">
+                <div class="card">
+                    <div class="card-title">Popular Methods</div>
+                    <div class="method-box">
+                        <div class="method-title">DANN (Domain-Adversarial NN)</div>
+                        <div class="method-desc">Gradient reversal layer makes features domain-invariant while maintaining task performance.</div>
+                    </div>
+                    <div class="method-box">
+                        <div class="method-title">CORAL (Correlation Alignment)</div>
+                        <div class="method-desc">Align second-order statistics (covariance) of source and target features.</div>
+                    </div>
+                    <div class="method-box">
+                        <div class="method-title">MMD (Maximum Mean Discrepancy)</div>
+                        <div class="method-desc">Kernel-based distance metric between distributions in RKHS.</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="example-box">
+                        <div class="example-title">Real-World Examples</div>
+                        <div class="example-item">- Synthetic to real images (sim2real)</div>
+                        <div class="example-item">- Product photos to user photos</div>
+                        <div class="example-item">- Lab audio to noisy environment</div>
+                        <div class="example-item">- Clean text to social media text</div>
+                        <div class="example-item">- Day images to night images</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

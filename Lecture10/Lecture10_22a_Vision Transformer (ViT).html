@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vision Transformer (ViT)</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 24px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 16px; flex: 1; }
+        .left-section { display: flex; flex-direction: column; gap: 10px; }
+        .card { background: white; border: 2.5px solid #1E64C8; border-radius: 12px; padding: 12px; }
+        .card.idea { border-color: #9C27B0; }
+        .card.arch { border-color: #4CAF50; }
+        .card.compare { border-color: #FF9800; }
+        .card-title { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+        .idea .card-title { color: #9C27B0; }
+        .arch .card-title { color: #4CAF50; }
+        .compare .card-title { color: #FF9800; }
+        .step-list { display: flex; flex-direction: column; gap: 6px; }
+        .step-item { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+        .step-num { width: 22px; height: 22px; background: #4CAF50; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 11px; flex-shrink: 0; }
+        .step-text { color: #333; line-height: 1.4; }
+        .formula-box { background: #f8f8f8; border-radius: 8px; padding: 10px; margin-top: 8px; text-align: center; }
+        .formula-main { font-size: 13px; font-weight: 600; color: #333; font-family: 'Times New Roman', serif; }
+        .formula-note { font-size: 10px; color: #666; margin-top: 4px; }
+        .comparison-table { width: 100%; font-size: 11px; border-collapse: collapse; }
+        .comparison-table th { background: #FF9800; color: white; padding: 5px; text-align: center; }
+        .comparison-table td { padding: 5px; text-align: center; border-bottom: 1px solid #e0e0e0; }
+        .highlight { background: #E8F5E9; font-weight: 600; }
+        .highlight-orange { background: #FFF3E0; font-weight: 600; }
+        .idea-box { background: #F3E5F5; border-radius: 8px; padding: 10px; }
+        .idea-content { font-size: 12px; color: #333; line-height: 1.5; }
+        .right-section { display: flex; flex-direction: column; gap: 10px; }
+        .arch-diagram { background: #E8F5E9; border-radius: 8px; padding: 10px; text-align: center; font-size: 11px; line-height: 1.8; }
+        .arch-block { background: white; border: 2px solid #4CAF50; border-radius: 6px; padding: 6px; margin: 4px 0; }
+        .model-box { background: #E3F2FD; border-radius: 8px; padding: 10px; }
+        .model-title { font-size: 12px; font-weight: 700; color: #1565C0; margin-bottom: 6px; }
+        .model-item { font-size: 11px; color: #333; margin-bottom: 3px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Vision Transformer (ViT)</div>
+            <div class="subtitle">An Image is Worth 16x16 Words (Google, 2020)</div>
+        </div>
+        <div class="content-grid">
+            <div class="left-section">
+                <div class="card idea">
+                    <div class="card-title">Core Idea</div>
+                    <div class="idea-box">
+                        <div class="idea-content">
+                            Treat image patches as "tokens" and apply standard Transformer encoder directly to images. No convolution needed!
+                        </div>
+                    </div>
+                    <div class="formula-box">
+                        <div class="formula-main">Image: H×W×C → Patches: N×(P²·C)</div>
+                        <div class="formula-note">N = H·W/P² patches, typically P=16</div>
+                    </div>
+                </div>
+                <div class="card arch">
+                    <div class="card-title">Architecture Steps</div>
+                    <div class="step-list">
+                        <div class="step-item"><span class="step-num">1</span><span class="step-text">Split image into 16×16 patches</span></div>
+                        <div class="step-item"><span class="step-num">2</span><span class="step-text">Flatten & linear projection → patch embeddings</span></div>
+                        <div class="step-item"><span class="step-num">3</span><span class="step-text">Add learnable [CLS] token + position embeddings</span></div>
+                        <div class="step-item"><span class="step-num">4</span><span class="step-text">Pass through Transformer encoder blocks</span></div>
+                        <div class="step-item"><span class="step-num">5</span><span class="step-text">[CLS] token → MLP head for classification</span></div>
+                    </div>
+                </div>
+                <div class="card compare">
+                    <div class="card-title">CNN vs ViT</div>
+                    <table class="comparison-table">
+                        <tr><th>Aspect</th><th>CNN</th><th>ViT</th></tr>
+                        <tr><td>Inductive Bias</td><td class="highlight-orange">Strong (locality)</td><td>Weak</td></tr>
+                        <tr><td>Data Requirement</td><td class="highlight-orange">Less</td><td>More (JFT-300M+)</td></tr>
+                        <tr><td>Scalability</td><td>Limited</td><td class="highlight">Excellent</td></tr>
+                        <tr><td>Global Context</td><td>Late layers only</td><td class="highlight">Every layer</td></tr>
+                    </table>
+                </div>
+            </div>
+            <div class="right-section">
+                <div class="arch-diagram">
+                    <div style="font-weight:700; color:#2E7D32; margin-bottom:6px;">ViT Architecture</div>
+                    <div style="background:#FFE082; border-radius:4px; padding:4px;">Input Image (224×224)</div>
+                    <div style="color:#666;">↓ Split into patches</div>
+                    <div class="arch-block">Patch Embeddings + Position Embeddings<br><small>[CLS] + P₁ + P₂ + ... + Pₙ</small></div>
+                    <div style="color:#666;">↓</div>
+                    <div class="arch-block">Transformer Encoder × L<br><small>Multi-Head Attention + MLP</small></div>
+                    <div style="color:#666;">↓ [CLS] token</div>
+                    <div style="background:#81C784; border-radius:4px; padding:4px;">MLP Head → Classes</div>
+                </div>
+                <div class="model-box">
+                    <div class="model-title">ViT Variants</div>
+                    <div class="model-item">• <strong>ViT-B/16:</strong> Base, 16×16 patches, 86M params</div>
+                    <div class="model-item">• <strong>ViT-L/16:</strong> Large, 307M params</div>
+                    <div class="model-item">• <strong>ViT-H/14:</strong> Huge, 632M params</div>
+                    <div class="model-item">• <strong>DeiT:</strong> Data-efficient ViT (ImageNet only)</div>
+                    <div class="model-item">• <strong>Swin:</strong> Hierarchical ViT with shifted windows</div>
+                </div>
+                <div style="background:#FFF3E0; border-radius:8px; padding:10px;">
+                    <div style="font-size:12px; font-weight:700; color:#E65100; margin-bottom:4px;">Key Insight</div>
+                    <div style="font-size:11px; color:#333; line-height:1.4;">
+                        ViT shows that Transformers can match or exceed CNNs given enough data. This sparked the modern trend of unified architectures across vision and language.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

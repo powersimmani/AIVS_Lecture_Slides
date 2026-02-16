@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noise Schedules Comparison</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 26px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #1E64C8; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card-title { font-size: 16px; font-weight: 700; color: #1E64C8; margin-bottom: 10px; }
+        .schedule-box { background: #f8f8f8; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .schedule-title { font-size: 12px; font-weight: 700; margin-bottom: 6px; }
+        .schedule-content { font-size: 11px; color: #333; line-height: 1.5; }
+        .formula { font-family: 'Courier New', monospace; font-size: 10px; background: #e8e8e8; padding: 4px 8px; border-radius: 4px; display: inline-block; margin: 4px 0; }
+        .visual-box { background: #E3F2FD; border-radius: 8px; padding: 10px; margin-bottom: 10px; text-align: center; }
+        .comparison-table { width: 100%; font-size: 10px; border-collapse: collapse; margin-top: auto; }
+        .comparison-table th { background: #1E64C8; color: white; padding: 5px; }
+        .comparison-table td { padding: 5px; text-align: center; border-bottom: 1px solid #e0e0e0; }
+        .linear { color: #2196F3; }
+        .cosine { color: #4CAF50; }
+        .sigmoid { color: #FF9800; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Diffusion Noise Schedules</div>
+            <div class="subtitle">How noise is added during the forward process</div>
+        </div>
+        <div class="content-grid">
+            <div class="card">
+                <div class="card-title">Schedule Types</div>
+                <div class="schedule-box">
+                    <div class="schedule-title linear">Linear Schedule (DDPM)</div>
+                    <div class="schedule-content">
+                        <div class="formula">beta_t = beta_1 + (t-1)/(T-1) * (beta_T - beta_1)</div>
+                        Simple linear interpolation from beta_1 to beta_T<br>
+                        Typical: beta_1=1e-4, beta_T=0.02
+                    </div>
+                </div>
+                <div class="schedule-box">
+                    <div class="schedule-title cosine">Cosine Schedule (Improved DDPM)</div>
+                    <div class="schedule-content">
+                        <div class="formula">alpha_bar_t = cos((t/T + s)/(1+s) * pi/2)^2</div>
+                        Slower noise addition at start and end<br>
+                        Better for high-resolution images
+                    </div>
+                </div>
+                <div class="schedule-box">
+                    <div class="schedule-title sigmoid">Sigmoid Schedule</div>
+                    <div class="schedule-content">
+                        <div class="formula">beta_t = sigmoid(a + (b-a)*t/T)</div>
+                        S-shaped curve, customizable steepness<br>
+                        Used in some Stable Diffusion variants
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">Visual Comparison</div>
+                <div class="visual-box">
+                    <svg viewBox="0 0 260 120" style="width: 100%; height: 110px;">
+                        <!-- Axes -->
+                        <line x1="30" y1="100" x2="250" y2="100" stroke="#ccc" stroke-width="1"/>
+                        <line x1="30" y1="100" x2="30" y2="10" stroke="#ccc" stroke-width="1"/>
+                        <text x="140" y="115" text-anchor="middle" font-size="8" fill="#666">Timestep t</text>
+                        <text x="15" y="55" font-size="8" fill="#666" transform="rotate(-90, 15, 55)">Noise Level</text>
+                        <!-- Linear (blue) -->
+                        <polyline points="30,95 80,80 140,55 200,30 250,15" fill="none" stroke="#2196F3" stroke-width="2"/>
+                        <!-- Cosine (green) -->
+                        <path d="M30,95 Q80,93 120,80 Q160,55 200,30 Q230,18 250,15" fill="none" stroke="#4CAF50" stroke-width="2"/>
+                        <!-- Sigmoid (orange) -->
+                        <path d="M30,95 Q60,94 100,90 Q140,70 180,35 Q220,18 250,15" fill="none" stroke="#FF9800" stroke-width="2"/>
+                        <!-- Legend -->
+                        <line x1="160" y1="25" x2="175" y2="25" stroke="#2196F3" stroke-width="2"/>
+                        <text x="180" y="28" font-size="7" fill="#2196F3">Linear</text>
+                        <line x1="160" y1="38" x2="175" y2="38" stroke="#4CAF50" stroke-width="2"/>
+                        <text x="180" y="41" font-size="7" fill="#4CAF50">Cosine</text>
+                        <line x1="160" y1="51" x2="175" y2="51" stroke="#FF9800" stroke-width="2"/>
+                        <text x="180" y="54" font-size="7" fill="#FF9800">Sigmoid</text>
+                    </svg>
+                </div>
+                <table class="comparison-table">
+                    <tr><th>Schedule</th><th>Start</th><th>Middle</th><th>End</th><th>Best For</th></tr>
+                    <tr><td class="linear">Linear</td><td>Fast</td><td>Steady</td><td>Fast</td><td>64x64 images</td></tr>
+                    <tr><td class="cosine">Cosine</td><td>Slow</td><td>Fast</td><td>Slow</td><td>High-res, detail</td></tr>
+                    <tr><td class="sigmoid">Sigmoid</td><td>Slow</td><td>Very Fast</td><td>Slow</td><td>Customizable</td></tr>
+                </table>
+                <div class="schedule-box" style="margin-top: 10px; background: #FFF3E0;">
+                    <div class="schedule-title" style="color: #E65100;">Key Insight</div>
+                    <div class="schedule-content">
+                        Cosine schedule preserves more information longer, especially important for fine details in high-resolution generation.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

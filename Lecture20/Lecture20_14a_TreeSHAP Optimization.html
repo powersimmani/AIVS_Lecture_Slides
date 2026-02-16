@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TreeSHAP Optimization</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 24px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #1E64C8; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card.algorithm { border-color: #FF9800; }
+        .card.practice { border-color: #4CAF50; }
+        .card-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+        .algorithm .card-title { color: #FF9800; }
+        .practice .card-title { color: #4CAF50; }
+        .concept-box { background: #FFF3E0; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .concept-title { font-size: 12px; font-weight: 700; color: #E65100; margin-bottom: 6px; }
+        .concept-content { font-size: 11px; color: #333; line-height: 1.5; }
+        .complexity-table { width: 100%; font-size: 10px; border-collapse: collapse; margin-bottom: 10px; }
+        .complexity-table th { background: #FF9800; color: white; padding: 5px; text-align: center; }
+        .complexity-table td { padding: 5px; text-align: center; border-bottom: 1px solid #e0e0e0; }
+        .highlight { background: #FFF3E0; font-weight: 600; }
+        .option-box { background: #E8F5E9; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .option-title { font-size: 12px; font-weight: 700; color: #2E7D32; margin-bottom: 6px; }
+        .option-item { font-size: 11px; color: #333; margin-bottom: 6px; line-height: 1.4; }
+        .code-box { background: #2d2d2d; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .code-content { font-family: 'Courier New', monospace; font-size: 9px; color: #d4d4d4; line-height: 1.4; }
+        .code-comment { color: #6a9955; }
+        .code-string { color: #ce9178; }
+        .warning-box { background: #FFEBEE; border-radius: 8px; padding: 10px; margin-top: auto; }
+        .warning-title { font-size: 12px; font-weight: 700; color: #C62828; margin-bottom: 6px; }
+        .warning-content { font-size: 11px; color: #333; line-height: 1.4; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">TreeSHAP: Fast SHAP for Tree Models</div>
+            <div class="subtitle">Efficient exact computation of Shapley values (Lundberg et al., 2020)</div>
+        </div>
+        <div class="content-grid">
+            <div class="card algorithm">
+                <div class="card-title">Algorithm & Complexity</div>
+                <div class="concept-box">
+                    <div class="concept-title">Key Innovation</div>
+                    <div class="concept-content">
+                        Exploits tree structure to compute exact SHAP values efficiently.<br><br>
+                        <strong>Idea:</strong> Track feature subsets through all tree paths using dynamic programming instead of exponential enumeration.
+                    </div>
+                </div>
+                <table class="complexity-table">
+                    <tr><th>Method</th><th>Complexity</th><th>Time (100 features)</th></tr>
+                    <tr><td>Exact Shapley</td><td>O(2<sup>m</sup>)</td><td>Years</td></tr>
+                    <tr><td>KernelSHAP</td><td>O(2<sup>m</sup>) approx</td><td>Minutes-Hours</td></tr>
+                    <tr class="highlight"><td>TreeSHAP</td><td>O(TLD<sup>2</sup>)</td><td>Seconds</td></tr>
+                </table>
+                <div class="concept-box">
+                    <div class="concept-title">Complexity Breakdown</div>
+                    <div class="concept-content">
+                        <strong>T:</strong> Number of trees<br>
+                        <strong>L:</strong> Maximum leaves per tree<br>
+                        <strong>D:</strong> Maximum depth<br><br>
+                        Polynomial in model size, NOT exponential in features!
+                    </div>
+                </div>
+                <div class="warning-box">
+                    <div class="warning-title">Supported Models</div>
+                    <div class="warning-content">
+                        • XGBoost, LightGBM, CatBoost<br>
+                        • sklearn: RandomForest, GradientBoosting, ExtraTrees<br>
+                        • Any tree-based model with accessible structure
+                    </div>
+                </div>
+            </div>
+            <div class="card practice">
+                <div class="card-title">Practical Usage</div>
+                <div class="option-box">
+                    <div class="option-title">feature_perturbation Options</div>
+                    <div class="option-item">
+                        <strong>"tree_path_dependent" (default):</strong><br>
+                        Fast, uses tree paths. May include feature correlations in attributions. Best for: speed, general use.
+                    </div>
+                    <div class="option-item">
+                        <strong>"interventional":</strong><br>
+                        Causal interpretation, requires background data. Removes correlation effects. Best for: causal questions.
+                    </div>
+                </div>
+                <div class="code-box">
+                    <div class="code-content">
+                        <span class="code-comment"># Basic TreeSHAP usage</span><br>
+                        import shap<br><br>
+                        <span class="code-comment"># For XGBoost/LightGBM/CatBoost</span><br>
+                        explainer = shap.TreeExplainer(model)<br>
+                        shap_values = explainer.shap_values(X_test)<br><br>
+                        <span class="code-comment"># Interventional (causal) interpretation</span><br>
+                        explainer = shap.TreeExplainer(<br>
+                        &nbsp;&nbsp;model,<br>
+                        &nbsp;&nbsp;data=X_background,  <span class="code-comment"># ~100-1000 samples</span><br>
+                        &nbsp;&nbsp;feature_perturbation=<span class="code-string">"interventional"</span><br>
+                        )<br><br>
+                        <span class="code-comment"># Visualizations</span><br>
+                        shap.summary_plot(shap_values, X_test)  <span class="code-comment"># global</span><br>
+                        shap.waterfall_plot(shap_values[0])     <span class="code-comment"># local</span><br>
+                        shap.dependence_plot(<span class="code-string">"feature"</span>, shap_values, X)
+                    </div>
+                </div>
+                <div class="option-box">
+                    <div class="option-title">Performance Tips</div>
+                    <div class="option-item">• Use TreeExplainer (not KernelExplainer) for trees</div>
+                    <div class="option-item">• For large datasets: sample background data</div>
+                    <div class="option-item">• Batch processing: compute many at once</div>
+                    <div class="option-item">• Memory: shap_values can be large arrays</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

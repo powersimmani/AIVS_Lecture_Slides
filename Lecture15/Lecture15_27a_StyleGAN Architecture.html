@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StyleGAN Architecture</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 24px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #1E64C8; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card.versions { border-color: #9C27B0; }
+        .card.features { border-color: #4CAF50; }
+        .card-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+        .versions .card-title { color: #9C27B0; }
+        .features .card-title { color: #4CAF50; }
+        .version-box { background: #F3E5F5; border-radius: 8px; padding: 8px; margin-bottom: 8px; }
+        .version-name { font-size: 12px; font-weight: 700; color: #7B1FA2; margin-bottom: 4px; }
+        .version-content { font-size: 11px; color: #333; line-height: 1.4; }
+        .formula-box { background: #FFF3E0; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .formula-title { font-size: 12px; font-weight: 700; color: #E65100; margin-bottom: 6px; }
+        .formula-content { font-size: 12px; font-family: 'Times New Roman', serif; text-align: center; }
+        .latent-box { background: #E8F5E9; border-radius: 8px; padding: 10px; margin-bottom: 8px; }
+        .latent-title { font-size: 12px; font-weight: 700; color: #2E7D32; margin-bottom: 6px; }
+        .latent-item { font-size: 11px; color: #333; margin-bottom: 3px; line-height: 1.4; }
+        .application-box { background: #E3F2FD; border-radius: 8px; padding: 10px; margin-top: auto; }
+        .app-title { font-size: 12px; font-weight: 700; color: #1565C0; margin-bottom: 6px; }
+        .app-item { font-size: 11px; color: #333; margin-bottom: 3px; }
+        .arch-flow { background: #f8f8f8; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .arch-title { font-size: 12px; font-weight: 700; color: #1E64C8; margin-bottom: 6px; }
+        .arch-content { font-family: 'Courier New', monospace; font-size: 10px; color: #333; line-height: 1.5; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">StyleGAN: Style-Based Generator Architecture</div>
+            <div class="subtitle">High-resolution image synthesis (Karras et al., 2018-2021)</div>
+        </div>
+        <div class="content-grid">
+            <div class="card versions">
+                <div class="card-title">StyleGAN Evolution</div>
+                <div class="version-box">
+                    <div class="version-name">StyleGAN v1 (2018)</div>
+                    <div class="version-content">
+                        <strong>Mapping Network:</strong> z -> w (8-layer MLP)<br>
+                        <strong>AdaIN:</strong> Adaptive Instance Normalization<br>
+                        <strong>Progressive Growing:</strong> 4x4 -> 1024x1024
+                    </div>
+                </div>
+                <div class="version-box">
+                    <div class="version-name">StyleGAN v2 (2019)</div>
+                    <div class="version-content">
+                        <strong>Weight Demodulation:</strong> Replaces AdaIN<br>
+                        <strong>Path Length Regularization:</strong> Smoother latent<br>
+                        <strong>No Progressive:</strong> Single-scale training
+                    </div>
+                </div>
+                <div class="version-box">
+                    <div class="version-name">StyleGAN v3 (2021)</div>
+                    <div class="version-content">
+                        <strong>Alias-free:</strong> Translation equivariance<br>
+                        <strong>Continuous signals:</strong> Better video/animation
+                    </div>
+                </div>
+                <div class="arch-flow">
+                    <div class="arch-title">Architecture Flow</div>
+                    <div class="arch-content">
+                        z ~ N(0,I) -> [Mapping Network] -> w<br>
+                        w -> [Affine] -> style (gamma, beta)<br>
+                        Constant 4x4 -> [Synthesis Network] -> Image
+                    </div>
+                </div>
+            </div>
+            <div class="card features">
+                <div class="card-title">Key Features</div>
+                <div class="formula-box">
+                    <div class="formula-title">Style Injection (AdaIN)</div>
+                    <div class="formula-content">y = gamma(w) * normalize(x) + beta(w)</div>
+                </div>
+                <div class="latent-box">
+                    <div class="latent-title">Latent Spaces</div>
+                    <div class="latent-item"><strong>Z space:</strong> Initial random vector (entangled)</div>
+                    <div class="latent-item"><strong>W space:</strong> After mapping network (disentangled)</div>
+                    <div class="latent-item"><strong>W+ space:</strong> Different w per layer (most control)</div>
+                    <div class="latent-item"><strong>S space:</strong> Style parameters (gamma, beta)</div>
+                </div>
+                <div class="latent-box">
+                    <div class="latent-title">Style Mixing</div>
+                    <div class="latent-item">• Coarse styles (4-8px): Pose, face shape</div>
+                    <div class="latent-item">• Middle styles (16-32px): Facial features</div>
+                    <div class="latent-item">• Fine styles (64-1024px): Color, texture</div>
+                </div>
+                <div class="application-box">
+                    <div class="app-title">Applications</div>
+                    <div class="app-item">• Face generation (thispersondoesnotexist.com)</div>
+                    <div class="app-item">• Image editing via latent manipulation</div>
+                    <div class="app-item">• Domain-specific generation (cars, churches)</div>
+                    <div class="app-item">• Deepfakes & face swapping</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

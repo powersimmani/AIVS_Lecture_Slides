@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PReLU - Parametric ReLU</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 15px; }
+        .main-title { font-size: 28px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px; flex: 1; }
+        .left-panel { display: flex; flex-direction: column; gap: 12px; }
+        .card { background: white; border: 2.5px solid #1E64C8; border-radius: 12px; padding: 14px; }
+        .card-title { font-size: 15px; font-weight: 700; color: #1E64C8; margin-bottom: 10px; }
+        .formula-box { background: #E3F2FD; border-radius: 8px; padding: 12px; margin-bottom: 10px; text-align: center; }
+        .formula-main { font-family: 'Times New Roman', serif; font-size: 18px; font-weight: 600; color: #333; margin-bottom: 6px; }
+        .formula-note { font-size: 11px; color: #666; }
+        .comparison-table { width: 100%; font-size: 11px; border-collapse: collapse; }
+        .comparison-table th { background: #1E64C8; color: white; padding: 6px; text-align: left; }
+        .comparison-table td { padding: 6px; border-bottom: 1px solid #e0e0e0; }
+        .highlight { background: #E8F5E9; }
+        .pros-cons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .pros { background: #E8F5E9; border-radius: 8px; padding: 10px; }
+        .cons { background: #FFEBEE; border-radius: 8px; padding: 10px; }
+        .section-title { font-size: 12px; font-weight: 700; margin-bottom: 6px; }
+        .pros .section-title { color: #2E7D32; }
+        .cons .section-title { color: #C62828; }
+        .item { font-size: 11px; color: #333; margin-bottom: 4px; }
+        .code-box { background: #2d2d2d; border-radius: 8px; padding: 10px; }
+        .code-content { font-family: 'Courier New', monospace; font-size: 10px; color: #d4d4d4; line-height: 1.5; }
+        .code-comment { color: #6a9955; }
+        .graph-container { flex: 1; display: flex; align-items: center; justify-content: center; }
+        .graph-container svg { width: 100%; height: 100%; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">PReLU: Parametric ReLU</div>
+            <div class="subtitle">Let the network learn the optimal negative slope</div>
+        </div>
+        <div class="content-grid">
+            <div class="left-panel">
+                <div class="card">
+                    <div class="card-title">Formula & Comparison</div>
+                    <div class="formula-box">
+                        <div class="formula-main">PReLU(x) = max(alpha*x, x)</div>
+                        <div class="formula-note">where alpha is a <strong>learnable</strong> parameter</div>
+                    </div>
+                    <table class="comparison-table">
+                        <tr><th>Variant</th><th>alpha</th><th>Learning</th></tr>
+                        <tr><td>ReLU</td><td>0 (fixed)</td><td>None</td></tr>
+                        <tr><td>Leaky ReLU</td><td>0.01 (fixed)</td><td>None</td></tr>
+                        <tr class="highlight"><td><strong>PReLU</strong></td><td>Initialized ~0.25</td><td><strong>Learned</strong></td></tr>
+                        <tr><td>ELU</td><td>1.0 (fixed)</td><td>None</td></tr>
+                    </table>
+                </div>
+                <div class="card">
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <div class="section-title">Advantages</div>
+                            <div class="item">+ Prevents dying ReLU</div>
+                            <div class="item">+ Learns optimal slope per channel</div>
+                            <div class="item">+ Minimal extra parameters</div>
+                            <div class="item">+ Often better than fixed Leaky</div>
+                        </div>
+                        <div class="cons">
+                            <div class="section-title">Considerations</div>
+                            <div class="item">- Slight overfitting risk (small data)</div>
+                            <div class="item">- Extra computation (minimal)</div>
+                            <div class="item">- Needs proper initialization</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="code-box">
+                    <div class="code-content">
+                        <span class="code-comment"># PyTorch</span><br>
+                        nn.PReLU(num_parameters=1)  <span class="code-comment"># shared alpha</span><br>
+                        nn.PReLU(num_parameters=64) <span class="code-comment"># per-channel</span><br><br>
+                        <span class="code-comment"># TensorFlow/Keras</span><br>
+                        tf.keras.layers.PReLU(alpha_initializer='zeros')
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="display: flex; flex-direction: column;">
+                <div class="card-title">Visual Comparison</div>
+                <div class="graph-container">
+                    <svg viewBox="0 0 200 180">
+                        <!-- Axes -->
+                        <line x1="20" y1="90" x2="180" y2="90" stroke="#ccc" stroke-width="1"/>
+                        <line x1="100" y1="20" x2="100" y2="160" stroke="#ccc" stroke-width="1"/>
+                        <text x="175" y="85" font-size="8" fill="#666">x</text>
+                        <text x="105" y="25" font-size="8" fill="#666">f(x)</text>
+
+                        <!-- ReLU (blue) -->
+                        <polyline points="20,90 100,90 180,10" fill="none" stroke="#2196F3" stroke-width="2"/>
+                        <text x="140" y="35" font-size="8" fill="#2196F3">ReLU</text>
+
+                        <!-- Leaky ReLU (orange) -->
+                        <polyline points="20,98 100,90 180,10" fill="none" stroke="#FF9800" stroke-width="2"/>
+                        <text x="30" y="105" font-size="8" fill="#FF9800">Leaky (0.01)</text>
+
+                        <!-- PReLU (green, steeper negative) -->
+                        <polyline points="20,110 100,90 180,10" fill="none" stroke="#4CAF50" stroke-width="2.5"/>
+                        <text x="30" y="120" font-size="8" fill="#4CAF50">PReLU (learned)</text>
+
+                        <!-- Legend box -->
+                        <rect x="120" y="130" width="70" height="40" fill="#f8f8f8" stroke="#ddd" rx="4"/>
+                        <text x="125" y="143" font-size="7" fill="#333">alpha values:</text>
+                        <text x="125" y="153" font-size="7" fill="#2196F3">ReLU: 0</text>
+                        <text x="125" y="163" font-size="7" fill="#4CAF50">PReLU: ~0.25</text>
+                    </svg>
+                </div>
+                <div style="background: #FFF3E0; border-radius: 8px; padding: 10px; margin-top: auto;">
+                    <div style="font-size: 11px; color: #333; line-height: 1.4;">
+                        <strong>Key insight:</strong> PReLU typically learns alpha between 0.1-0.3, suggesting Leaky ReLU's 0.01 may be too small for many tasks.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

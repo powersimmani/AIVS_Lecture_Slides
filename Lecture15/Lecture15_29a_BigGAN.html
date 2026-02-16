@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BigGAN</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 28px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #FF9800; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card.techniques { border-color: #4CAF50; }
+        .card-title { font-size: 16px; font-weight: 700; color: #FF9800; margin-bottom: 10px; }
+        .card.techniques .card-title { color: #4CAF50; }
+        .key-box { background: #FFF3E0; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .key-title { font-size: 12px; font-weight: 700; color: #E65100; margin-bottom: 6px; }
+        .key-item { font-size: 11px; color: #333; margin-bottom: 4px; line-height: 1.4; }
+        .tech-box { background: #E8F5E9; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .tech-title { font-size: 12px; font-weight: 700; color: #2E7D32; margin-bottom: 6px; }
+        .tech-content { font-size: 11px; color: #333; line-height: 1.5; }
+        .stats-table { width: 100%; font-size: 10px; border-collapse: collapse; margin-bottom: 10px; }
+        .stats-table th { background: #FF9800; color: white; padding: 5px; }
+        .stats-table td { padding: 5px; text-align: center; border-bottom: 1px solid #e0e0e0; }
+        .note-box { background: #E3F2FD; border-radius: 8px; padding: 10px; margin-top: auto; }
+        .note-content { font-size: 11px; color: #333; line-height: 1.4; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">BigGAN: Large Scale GAN Training</div>
+            <div class="subtitle">Scaling GANs for high-fidelity image synthesis (Brock et al., 2019)</div>
+        </div>
+        <div class="content-grid">
+            <div class="card">
+                <div class="card-title">Scale & Results</div>
+                <div class="key-box">
+                    <div class="key-title">Key Achievement</div>
+                    <div class="key-item">First GAN to generate <strong>high-quality 512x512</strong> images across 1000 ImageNet classes</div>
+                    <div class="key-item"><strong>FID: 7.4</strong> (vs previous ~18)</div>
+                    <div class="key-item"><strong>IS: 166.5</strong> (vs previous ~52)</div>
+                </div>
+                <table class="stats-table">
+                    <tr><th>Component</th><th>BigGAN</th><th>Previous GANs</th></tr>
+                    <tr><td>Batch Size</td><td>2048</td><td>64-256</td></tr>
+                    <tr><td>Channels</td><td>96 (ch x 1.5)</td><td>64</td></tr>
+                    <tr><td>Parameters</td><td>~160M</td><td>~20M</td></tr>
+                    <tr><td>Resolution</td><td>512x512</td><td>128x128</td></tr>
+                </table>
+                <div class="key-box">
+                    <div class="key-title">Scaling Findings</div>
+                    <div class="key-item">- <strong>Batch size:</strong> Bigger = better (up to 2048)</div>
+                    <div class="key-item">- <strong>Width:</strong> More channels helps significantly</div>
+                    <div class="key-item">- <strong>Depth:</strong> Diminishing returns</div>
+                </div>
+            </div>
+            <div class="card techniques">
+                <div class="card-title">Key Techniques</div>
+                <div class="tech-box">
+                    <div class="tech-title">1. Class-Conditional BatchNorm</div>
+                    <div class="tech-content">
+                        Inject class embedding into BN parameters:<br>
+                        gamma, beta = Linear(class_embedding)<br>
+                        Different normalization per class!
+                    </div>
+                </div>
+                <div class="tech-box">
+                    <div class="tech-title">2. Skip-z (Hierarchical Latent)</div>
+                    <div class="tech-content">
+                        Split latent z and inject at multiple resolutions.<br>
+                        More control over different detail levels.
+                    </div>
+                </div>
+                <div class="tech-box">
+                    <div class="tech-title">3. Orthogonal Regularization</div>
+                    <div class="tech-content">
+                        Encourage orthogonal weight matrices:<br>
+                        L_ortho = ||W<sup>T</sup>W - I||<sub>F</sub><br>
+                        Prevents mode collapse.
+                    </div>
+                </div>
+                <div class="tech-box">
+                    <div class="tech-title">4. Truncation Trick</div>
+                    <div class="tech-content">
+                        Sample z from truncated normal (|z| < threshold).<br>
+                        Trade diversity for quality at inference.
+                    </div>
+                </div>
+                <div class="note-box">
+                    <div class="note-content">
+                        <strong>Legacy:</strong> BigGAN techniques (class-conditional BN, truncation) are now standard in modern image generation models.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

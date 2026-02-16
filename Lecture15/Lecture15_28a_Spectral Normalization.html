@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spectral Normalization</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 26px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #9C27B0; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card.practice { border-color: #4CAF50; }
+        .card-title { font-size: 16px; font-weight: 700; color: #9C27B0; margin-bottom: 10px; }
+        .card.practice .card-title { color: #4CAF50; }
+        .formula-box { background: #F3E5F5; border-radius: 8px; padding: 12px; margin-bottom: 10px; text-align: center; }
+        .formula-main { font-family: 'Times New Roman', serif; font-size: 14px; font-weight: 600; color: #333; margin-bottom: 6px; }
+        .formula-note { font-size: 10px; color: #666; }
+        .concept-box { background: #E3F2FD; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .concept-title { font-size: 12px; font-weight: 700; color: #1565C0; margin-bottom: 6px; }
+        .concept-content { font-size: 11px; color: #333; line-height: 1.5; }
+        .benefit-box { background: #E8F5E9; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .benefit-title { font-size: 12px; font-weight: 700; color: #2E7D32; margin-bottom: 6px; }
+        .benefit-item { font-size: 11px; color: #333; margin-bottom: 4px; }
+        .code-box { background: #2d2d2d; border-radius: 8px; padding: 10px; }
+        .code-content { font-family: 'Courier New', monospace; font-size: 9px; color: #d4d4d4; line-height: 1.4; }
+        .code-comment { color: #6a9955; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Spectral Normalization</div>
+            <div class="subtitle">Stabilizing GAN discriminator training (Miyato et al., 2018)</div>
+        </div>
+        <div class="content-grid">
+            <div class="card">
+                <div class="card-title">Theory</div>
+                <div class="formula-box">
+                    <div class="formula-main">W<sub>SN</sub> = W / sigma(W)</div>
+                    <div class="formula-note">sigma(W) = largest singular value of W</div>
+                </div>
+                <div class="concept-box">
+                    <div class="concept-title">Why Spectral Norm?</div>
+                    <div class="concept-content">
+                        For Wasserstein GAN, discriminator must be <strong>Lipschitz continuous</strong>.<br><br>
+                        <strong>Lipschitz constraint:</strong> ||f(x) - f(y)|| <= K ||x - y||<br><br>
+                        Dividing by spectral norm ensures each layer has Lipschitz constant <= 1.
+                    </div>
+                </div>
+                <div class="concept-box">
+                    <div class="concept-title">Computing Spectral Norm</div>
+                    <div class="concept-content">
+                        Full SVD is expensive. Use <strong>power iteration</strong>:<br><br>
+                        1. Initialize random vector u<br>
+                        2. v = W<sup>T</sup>u / ||W<sup>T</sup>u||<br>
+                        3. u = Wv / ||Wv||<br>
+                        4. sigma ≈ u<sup>T</sup>Wv<br><br>
+                        One iteration per training step is enough!
+                    </div>
+                </div>
+            </div>
+            <div class="card practice">
+                <div class="card-title">Implementation & Usage</div>
+                <div class="code-box">
+                    <div class="code-content">
+                        <span class="code-comment"># PyTorch built-in</span><br>
+                        from torch.nn.utils import spectral_norm<br><br>
+                        <span class="code-comment"># Apply to layer</span><br>
+                        conv = spectral_norm(nn.Conv2d(64, 128, 3))<br>
+                        linear = spectral_norm(nn.Linear(256, 128))<br><br>
+                        <span class="code-comment"># In discriminator</span><br>
+                        class Discriminator(nn.Module):<br>
+                        &nbsp;&nbsp;def __init__(self):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;super().__init__()<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;self.conv1 = spectral_norm(nn.Conv2d(3, 64, 4, 2, 1))<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;self.conv2 = spectral_norm(nn.Conv2d(64, 128, 4, 2, 1))<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;self.fc = spectral_norm(nn.Linear(128*8*8, 1))
+                    </div>
+                </div>
+                <div class="benefit-box">
+                    <div class="benefit-title">Benefits</div>
+                    <div class="benefit-item">+ More stable GAN training</div>
+                    <div class="benefit-item">+ Works with various GAN losses</div>
+                    <div class="benefit-item">+ No extra hyperparameters (unlike gradient penalty)</div>
+                    <div class="benefit-item">+ Computationally cheap (1 power iteration)</div>
+                    <div class="benefit-item">+ Standard in modern GANs (BigGAN, StyleGAN)</div>
+                </div>
+                <div class="concept-box">
+                    <div class="concept-title">When to Use</div>
+                    <div class="concept-content">
+                        - Almost always in GAN discriminators<br>
+                        - Can help generator too (BigGAN)<br>
+                        - Also useful outside GANs for regularization
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

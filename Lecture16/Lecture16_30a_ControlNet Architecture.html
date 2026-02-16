@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ControlNet Architecture</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 24px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #1E64C8; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card.architecture { border-color: #9C27B0; }
+        .card.conditions { border-color: #4CAF50; }
+        .card-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+        .architecture .card-title { color: #9C27B0; }
+        .conditions .card-title { color: #4CAF50; }
+        .concept-box { background: #F3E5F5; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .concept-title { font-size: 12px; font-weight: 700; color: #7B1FA2; margin-bottom: 6px; }
+        .concept-content { font-size: 11px; color: #333; line-height: 1.5; }
+        .arch-diagram { background: #f8f8f8; border-radius: 8px; padding: 10px; margin-bottom: 10px; font-family: 'Courier New', monospace; font-size: 10px; line-height: 1.5; }
+        .arch-title { font-size: 11px; font-weight: 700; color: #1E64C8; margin-bottom: 6px; font-family: Aptos, sans-serif; }
+        .condition-table { width: 100%; font-size: 10px; border-collapse: collapse; margin-bottom: 10px; }
+        .condition-table th { background: #4CAF50; color: white; padding: 5px; text-align: center; }
+        .condition-table td { padding: 5px; text-align: center; border-bottom: 1px solid #e0e0e0; }
+        .feature-box { background: #E8F5E9; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .feature-title { font-size: 12px; font-weight: 700; color: #2E7D32; margin-bottom: 6px; }
+        .feature-item { font-size: 11px; color: #333; margin-bottom: 4px; }
+        .code-box { background: #2d2d2d; border-radius: 8px; padding: 10px; margin-top: auto; }
+        .code-content { font-family: 'Courier New', monospace; font-size: 9px; color: #d4d4d4; line-height: 1.4; }
+        .code-comment { color: #6a9955; }
+        .code-string { color: #ce9178; }
+        .tip-box { background: #E3F2FD; border-radius: 8px; padding: 10px; margin-top: auto; }
+        .tip-title { font-size: 11px; font-weight: 700; color: #1565C0; margin-bottom: 4px; }
+        .tip-content { font-size: 10px; color: #333; line-height: 1.4; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">ControlNet: Adding Spatial Control to Diffusion</div>
+            <div class="subtitle">Precise control over image generation (Zhang et al., 2023)</div>
+        </div>
+        <div class="content-grid">
+            <div class="card architecture">
+                <div class="card-title">Architecture</div>
+                <div class="concept-box">
+                    <div class="concept-title">Core Idea</div>
+                    <div class="concept-content">
+                        <strong>Freeze</strong> pre-trained Stable Diffusion weights.<br>
+                        <strong>Copy</strong> U-Net encoder as trainable ControlNet.<br>
+                        <strong>Connect</strong> via "zero convolutions" for stable training.
+                    </div>
+                </div>
+                <div class="arch-diagram">
+                    <div class="arch-title">Network Structure</div>
+                    Condition Image (e.g., Canny edge)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;|<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;v<br>
+                    [ControlNet Encoder] -- copy of SD encoder<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;|<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;v (zero conv)<br>
+                    [SD U-Net] -- frozen weights<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;|<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;v<br>
+                    Output = SD_output + ControlNet_output
+                </div>
+                <div class="concept-box">
+                    <div class="concept-title">Zero Convolution</div>
+                    <div class="concept-content">
+                        Conv layer initialized with zeros.<br>
+                        At start: ControlNet adds nothing (preserves SD quality).<br>
+                        During training: Gradually learns to contribute.
+                    </div>
+                </div>
+                <div class="tip-box">
+                    <div class="tip-title">Training Benefit</div>
+                    <div class="tip-content">
+                        • No catastrophic forgetting of SD knowledge<br>
+                        • Fast training (~50K steps on single GPU)<br>
+                        • Can combine multiple ControlNets
+                    </div>
+                </div>
+            </div>
+            <div class="card conditions">
+                <div class="card-title">Supported Conditions</div>
+                <table class="condition-table">
+                    <tr><th>Condition</th><th>Input</th><th>Use Case</th></tr>
+                    <tr><td>Canny</td><td>Edge map</td><td>Preserve outlines</td></tr>
+                    <tr><td>OpenPose</td><td>Skeleton</td><td>Control pose</td></tr>
+                    <tr><td>Depth</td><td>Depth map</td><td>Maintain structure</td></tr>
+                    <tr><td>Segmentation</td><td>Semantic map</td><td>Region control</td></tr>
+                    <tr><td>Scribble</td><td>User sketch</td><td>Rough guidance</td></tr>
+                    <tr><td>Normal</td><td>Normal map</td><td>Surface detail</td></tr>
+                    <tr><td>M-LSD</td><td>Line segments</td><td>Architecture</td></tr>
+                </table>
+                <div class="feature-box">
+                    <div class="feature-title">Key Features</div>
+                    <div class="feature-item">• Works with any SD-based model (SD 1.5, SDXL)</div>
+                    <div class="feature-item">• Multiple controls can be combined</div>
+                    <div class="feature-item">• Adjustable control strength (0-1)</div>
+                    <div class="feature-item">• Compatible with other SD extensions (LoRA)</div>
+                </div>
+                <div class="code-box">
+                    <div class="code-content">
+                        <span class="code-comment"># Using ControlNet with diffusers</span><br>
+                        from diffusers import ControlNetModel, StableDiffusionControlNetPipeline<br><br>
+                        controlnet = ControlNetModel.from_pretrained(<br>
+                        &nbsp;&nbsp;<span class="code-string">"lllyasviel/sd-controlnet-canny"</span><br>
+                        )<br>
+                        pipe = StableDiffusionControlNetPipeline.from_pretrained(<br>
+                        &nbsp;&nbsp;<span class="code-string">"runwayml/stable-diffusion-v1-5"</span>,<br>
+                        &nbsp;&nbsp;controlnet=controlnet<br>
+                        )<br><br>
+                        image = pipe(<span class="code-string">"a cat"</span>, image=canny_image).images[0]
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

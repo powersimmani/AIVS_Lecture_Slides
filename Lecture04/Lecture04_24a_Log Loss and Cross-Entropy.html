@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log Loss and Cross-Entropy</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 15px; }
+        .main-title { font-size: 28px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .main-content { display: flex; flex-direction: column; gap: 12px; flex: 1; }
+        .equivalence-box { background: #E8F5E9; border: 2.5px solid #4CAF50; border-radius: 12px; padding: 16px; text-align: center; }
+        .equiv-title { font-size: 18px; font-weight: 700; color: #2E7D32; margin-bottom: 10px; }
+        .equiv-formula { font-family: 'Times New Roman', serif; font-size: 16px; color: #333; margin-bottom: 8px; }
+        .equiv-note { font-size: 13px; color: #555; }
+        .cards-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; flex: 1; }
+        .card { background: white; border: 2px solid #1E64C8; border-radius: 10px; padding: 12px; display: flex; flex-direction: column; }
+        .card-title { font-size: 13px; font-weight: 700; color: #1E64C8; margin-bottom: 8px; text-align: center; }
+        .card-content { font-size: 11px; color: #333; line-height: 1.5; }
+        .formula-small { font-family: 'Courier New', monospace; font-size: 10px; background: #f5f5f5; padding: 6px; border-radius: 4px; margin: 6px 0; }
+        .framework-box { background: #FFF3E0; border-radius: 8px; padding: 10px; margin-top: auto; }
+        .framework-title { font-size: 12px; font-weight: 700; color: #E65100; margin-bottom: 6px; }
+        .framework-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        .fw-item { font-size: 10px; color: #333; text-align: center; background: white; padding: 6px; border-radius: 4px; }
+        .fw-name { font-weight: 700; color: #1E64C8; }
+        .intuition-box { background: #E3F2FD; border: 2px solid #2196F3; border-radius: 10px; padding: 12px; }
+        .intuition-title { font-size: 13px; font-weight: 700; color: #1565C0; margin-bottom: 8px; }
+        .intuition-content { font-size: 11px; color: #333; line-height: 1.5; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Log Loss = Cross-Entropy = NLL</div>
+            <div class="subtitle">Three names, one loss function</div>
+        </div>
+        <div class="main-content">
+            <div class="equivalence-box">
+                <div class="equiv-title">These Are All The Same!</div>
+                <div class="equiv-formula">L = -1/n * sum[ y*log(p) + (1-y)*log(1-p) ]</div>
+                <div class="equiv-note">Binary Cross-Entropy = Log Loss = Negative Log-Likelihood (for Bernoulli)</div>
+            </div>
+            <div class="cards-row">
+                <div class="card">
+                    <div class="card-title">Cross-Entropy View</div>
+                    <div class="card-content">
+                        From <strong>information theory</strong>:<br><br>
+                        Measures "distance" between true distribution q and predicted distribution p.
+                        <div class="formula-small">H(q, p) = -sum q(x) log p(x)</div>
+                        For binary: q is one-hot (y or 1-y)
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-title">Log Loss View</div>
+                    <div class="card-content">
+                        From <strong>ML evaluation</strong>:<br><br>
+                        Penalizes confident wrong predictions heavily.
+                        <div class="formula-small">If y=1, p=0.01: loss = 4.6<br>If y=1, p=0.99: loss = 0.01</div>
+                        Used in Kaggle, sklearn metrics
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-title">NLL View</div>
+                    <div class="card-content">
+                        From <strong>statistics/MLE</strong>:<br><br>
+                        Maximize likelihood = Minimize negative log-likelihood
+                        <div class="formula-small">-log L(theta) = -log prod P(y|x;theta)</div>
+                        Equivalent under Bernoulli assumption
+                    </div>
+                </div>
+            </div>
+            <div class="intuition-box">
+                <div class="intuition-title">Intuition: Why Log?</div>
+                <div class="intuition-content">
+                    <strong>Without log:</strong> Multiplying many small probabilities -> numerical underflow (0.001 * 0.002 * ... = 0)<br>
+                    <strong>With log:</strong> Sum of logs is numerically stable: log(0.001) + log(0.002) + ... = manageable negative number<br>
+                    <strong>Bonus:</strong> Log heavily penalizes confident mistakes (predicting 0.01 when true label is 1)
+                </div>
+            </div>
+            <div class="framework-box">
+                <div class="framework-title">Framework Names</div>
+                <div class="framework-grid">
+                    <div class="fw-item"><span class="fw-name">scikit-learn</span><br>log_loss()</div>
+                    <div class="fw-item"><span class="fw-name">Keras/TF</span><br>binary_crossentropy</div>
+                    <div class="fw-item"><span class="fw-name">PyTorch</span><br>BCELoss / BCEWithLogitsLoss</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

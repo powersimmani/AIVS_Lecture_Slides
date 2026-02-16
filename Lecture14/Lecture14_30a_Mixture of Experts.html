@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mixture of Experts (MoE)</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 26px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #1E64C8; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card.details { border-color: #4CAF50; }
+        .card-title { font-size: 16px; font-weight: 700; color: #1E64C8; margin-bottom: 10px; }
+        .card.details .card-title { color: #4CAF50; }
+        .concept-box { background: #E3F2FD; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .concept-title { font-size: 12px; font-weight: 700; color: #1565C0; margin-bottom: 6px; }
+        .concept-content { font-size: 11px; color: #333; line-height: 1.5; }
+        .visual-box { background: #f8f8f8; border-radius: 8px; padding: 10px; margin-bottom: 10px; text-align: center; }
+        .formula-box { background: #FFF3E0; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .formula-title { font-size: 12px; font-weight: 700; color: #E65100; margin-bottom: 6px; }
+        .formula-content { font-family: 'Courier New', monospace; font-size: 10px; color: #333; line-height: 1.5; }
+        .model-table { width: 100%; font-size: 9px; border-collapse: collapse; margin-bottom: 10px; }
+        .model-table th { background: #4CAF50; color: white; padding: 5px; }
+        .model-table td { padding: 5px; text-align: center; border-bottom: 1px solid #e0e0e0; }
+        .benefit-box { background: #E8F5E9; border-radius: 8px; padding: 10px; margin-top: auto; }
+        .benefit-title { font-size: 12px; font-weight: 700; color: #2E7D32; margin-bottom: 6px; }
+        .benefit-item { font-size: 11px; color: #333; margin-bottom: 3px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Mixture of Experts (MoE)</div>
+            <div class="subtitle">Scaling parameters without scaling compute</div>
+        </div>
+        <div class="content-grid">
+            <div class="card">
+                <div class="card-title">Architecture</div>
+                <div class="concept-box">
+                    <div class="concept-title">Core Idea</div>
+                    <div class="concept-content">
+                        Replace single FFN with multiple "expert" FFNs.<br>
+                        <strong>Router/Gate</strong> selects top-k experts per token.<br><br>
+                        8 experts, top-2 routing -> 8x params, ~2x compute!
+                    </div>
+                </div>
+                <div class="visual-box">
+                    <svg viewBox="0 0 250 100" style="width: 100%; height: 90px;">
+                        <!-- Input -->
+                        <rect x="10" y="40" width="40" height="20" fill="#BBDEFB" stroke="#2196F3" rx="3"/>
+                        <text x="30" y="53" text-anchor="middle" font-size="7">Token</text>
+                        <!-- Router -->
+                        <path d="M55,50 L75,50" stroke="#666" marker-end="url(#arr)"/>
+                        <rect x="80" y="35" width="35" height="30" fill="#FFE0B2" stroke="#FF9800" rx="3"/>
+                        <text x="97" y="53" text-anchor="middle" font-size="7">Router</text>
+                        <!-- Experts -->
+                        <path d="M120,45 L135,25" stroke="#666"/>
+                        <path d="M120,50 L135,50" stroke="#4CAF50" stroke-width="2"/>
+                        <path d="M120,55 L135,75" stroke="#666"/>
+                        <rect x="140" y="15" width="30" height="15" fill="#E0E0E0" stroke="#9E9E9E" rx="2"/>
+                        <text x="155" y="25" text-anchor="middle" font-size="6">E1</text>
+                        <rect x="140" y="40" width="30" height="15" fill="#C8E6C9" stroke="#4CAF50" rx="2"/>
+                        <text x="155" y="50" text-anchor="middle" font-size="6">E2 ✓</text>
+                        <rect x="140" y="65" width="30" height="15" fill="#E0E0E0" stroke="#9E9E9E" rx="2"/>
+                        <text x="155" y="75" text-anchor="middle" font-size="6">E3</text>
+                        <!-- Output -->
+                        <path d="M175,48 L195,48" stroke="#4CAF50" stroke-width="2" marker-end="url(#arr)"/>
+                        <rect x="200" y="38" width="40" height="20" fill="#C8E6C9" stroke="#4CAF50" rx="3"/>
+                        <text x="220" y="51" text-anchor="middle" font-size="7">Output</text>
+                        <defs><marker id="arr" markerWidth="4" markerHeight="4" refX="3" refY="2" orient="auto"><path d="M0,0 L4,2 L0,4 Z" fill="#666"/></marker></defs>
+                    </svg>
+                </div>
+                <div class="formula-box">
+                    <div class="formula-title">MoE Layer</div>
+                    <div class="formula-content">
+                        G(x) = Softmax(TopK(x · W_g))<br>
+                        y = sum_i G(x)_i · Expert_i(x)<br><br>
+                        <span style="color:#666">Only top-k experts are computed!</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card details">
+                <div class="card-title">Models & Training</div>
+                <table class="model-table">
+                    <tr><th>Model</th><th>Total Params</th><th>Active Params</th><th>Experts</th></tr>
+                    <tr><td>Mixtral 8x7B</td><td>47B</td><td>~13B</td><td>8 (top-2)</td></tr>
+                    <tr><td>GPT-4 (rumored)</td><td>~1.8T</td><td>~200B</td><td>16</td></tr>
+                    <tr><td>Switch Transformer</td><td>1.6T</td><td>~100B</td><td>2048 (top-1)</td></tr>
+                    <tr><td>DeepSeek MoE</td><td>145B</td><td>22B</td><td>64 (top-6)</td></tr>
+                </table>
+                <div class="concept-box">
+                    <div class="concept-title">Training Challenges</div>
+                    <div class="concept-content">
+                        <strong>Load Balancing:</strong> All tokens go to same expert?<br>
+                        -> Add auxiliary loss to balance expert usage<br><br>
+                        <strong>Capacity:</strong> Expert overflow/underflow<br>
+                        -> Token dropping, capacity factor tuning
+                    </div>
+                </div>
+                <div class="benefit-box">
+                    <div class="benefit-title">Benefits</div>
+                    <div class="benefit-item">+ Massive scale without proportional compute</div>
+                    <div class="benefit-item">+ Experts can specialize (languages, domains)</div>
+                    <div class="benefit-item">+ Better efficiency at inference</div>
+                    <div class="benefit-item">- Higher memory (all experts loaded)</div>
+                    <div class="benefit-item">- Training complexity (load balancing)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

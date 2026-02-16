@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prophet - Time Series Forecasting</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 24px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #1E64C8; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card.model { border-color: #1976D2; }
+        .card.usage { border-color: #4CAF50; }
+        .card-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+        .model .card-title { color: #1976D2; }
+        .usage .card-title { color: #4CAF50; }
+        .formula-box { background: #E3F2FD; border-radius: 8px; padding: 12px; margin-bottom: 10px; text-align: center; }
+        .formula-main { font-size: 16px; font-weight: 600; color: #1565C0; font-family: 'Times New Roman', serif; margin-bottom: 8px; }
+        .formula-detail { font-size: 12px; color: #333; line-height: 1.5; text-align: left; }
+        .component-item { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+        .component-symbol { width: 35px; font-weight: 700; font-size: 14px; color: #1565C0; font-family: 'Times New Roman', serif; }
+        .component-desc { font-size: 12px; color: #333; }
+        .feature-item { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: #333; margin-bottom: 5px; line-height: 1.4; }
+        .feature-icon { font-weight: bold; flex-shrink: 0; }
+        .model .feature-icon { color: #1976D2; }
+        .usage .feature-icon { color: #4CAF50; }
+        .code-box { background: #2d2d2d; border-radius: 8px; padding: 12px; margin-bottom: 10px; }
+        .code-content { font-family: 'Courier New', monospace; font-size: 11px; color: #d4d4d4; line-height: 1.5; }
+        .code-comment { color: #6a9955; }
+        .code-string { color: #ce9178; }
+        .pros-cons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: auto; }
+        .pros-box { background: #E8F5E9; border-radius: 8px; padding: 10px; }
+        .cons-box { background: #FFEBEE; border-radius: 8px; padding: 10px; }
+        .box-title { font-size: 12px; font-weight: 700; margin-bottom: 6px; }
+        .pros-box .box-title { color: #2E7D32; }
+        .cons-box .box-title { color: #C62828; }
+        .box-item { font-size: 11px; color: #333; margin-bottom: 3px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Prophet: Time Series Forecasting at Scale</div>
+            <div class="subtitle">Facebook/Meta's decomposition-based forecasting tool (2017)</div>
+        </div>
+        <div class="content-grid">
+            <div class="card model">
+                <div class="card-title">Model Structure</div>
+                <div class="formula-box">
+                    <div class="formula-main">y(t) = g(t) + s(t) + h(t) + ε</div>
+                    <div class="formula-detail">Additive decomposition of time series</div>
+                </div>
+                <div class="component-item">
+                    <span class="component-symbol">g(t)</span>
+                    <span class="component-desc"><strong>Growth:</strong> Linear or logistic trend</span>
+                </div>
+                <div class="component-item">
+                    <span class="component-symbol">s(t)</span>
+                    <span class="component-desc"><strong>Seasonality:</strong> Fourier series (yearly, weekly, daily)</span>
+                </div>
+                <div class="component-item">
+                    <span class="component-symbol">h(t)</span>
+                    <span class="component-desc"><strong>Holidays:</strong> User-specified special events</span>
+                </div>
+                <div class="component-item">
+                    <span class="component-symbol">ε</span>
+                    <span class="component-desc"><strong>Error:</strong> Normally distributed noise</span>
+                </div>
+                <div style="margin-top:10px;">
+                    <div class="feature-item"><span class="feature-icon">✓</span><span>Automatic changepoint detection</span></div>
+                    <div class="feature-item"><span class="feature-icon">✓</span><span>Handles missing data automatically</span></div>
+                    <div class="feature-item"><span class="feature-icon">✓</span><span>Robust to outliers</span></div>
+                    <div class="feature-item"><span class="feature-icon">✓</span><span>Interpretable components</span></div>
+                </div>
+            </div>
+            <div class="card usage">
+                <div class="card-title">Python Usage</div>
+                <div class="code-box">
+                    <div class="code-content">
+                        <span class="code-comment"># pip install prophet</span><br>
+                        from prophet import Prophet<br><br>
+                        <span class="code-comment"># Data must have 'ds' (date) and 'y' (value)</span><br>
+                        df = pd.DataFrame({<br>
+                        &nbsp;&nbsp;<span class="code-string">'ds'</span>: dates,<br>
+                        &nbsp;&nbsp;<span class="code-string">'y'</span>: values<br>
+                        })<br><br>
+                        <span class="code-comment"># Fit model</span><br>
+                        model = Prophet()<br>
+                        model.fit(df)<br><br>
+                        <span class="code-comment"># Make future dataframe</span><br>
+                        future = model.make_future_dataframe(periods=365)<br><br>
+                        <span class="code-comment"># Predict</span><br>
+                        forecast = model.predict(future)<br>
+                        model.plot(forecast)
+                    </div>
+                </div>
+                <div class="pros-cons">
+                    <div class="pros-box">
+                        <div class="box-title">Strengths</div>
+                        <div class="box-item">• Easy to use (no expertise needed)</div>
+                        <div class="box-item">• Fast prototyping</div>
+                        <div class="box-item">• Good baseline model</div>
+                        <div class="box-item">• Interpretable output</div>
+                    </div>
+                    <div class="cons-box">
+                        <div class="box-title">Limitations</div>
+                        <div class="box-item">• Limited for complex patterns</div>
+                        <div class="box-item">• Single time series only</div>
+                        <div class="box-item">• Less accurate than DL</div>
+                        <div class="box-item">• Limited exogenous vars</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

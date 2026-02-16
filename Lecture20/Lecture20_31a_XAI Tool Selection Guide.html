@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XAI Tool Selection Guide</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 10px; }
+        .main-title { font-size: 26px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #9C27B0; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card.libs { border-color: #FF9800; }
+        .card-title { font-size: 16px; font-weight: 700; color: #9C27B0; margin-bottom: 8px; }
+        .card.libs .card-title { color: #FF9800; }
+        .model-table { width: 100%; font-size: 9px; border-collapse: collapse; margin-bottom: 10px; }
+        .model-table th { background: #9C27B0; color: white; padding: 4px; text-align: center; }
+        .model-table td { padding: 4px; text-align: center; border-bottom: 1px solid #e0e0e0; }
+        .model-table td:first-child { text-align: left; font-weight: 600; }
+        .lib-table { width: 100%; font-size: 9px; border-collapse: collapse; margin-bottom: 10px; }
+        .lib-table th { background: #FF9800; color: white; padding: 4px; }
+        .lib-table td { padding: 4px; text-align: center; border-bottom: 1px solid #e0e0e0; }
+        .lib-table td:first-child { text-align: left; font-weight: 600; }
+        .flow-box { background: #f8f8f8; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .flow-title { font-size: 11px; font-weight: 700; color: #1E64C8; margin-bottom: 6px; }
+        .flow-content { font-size: 10px; color: #333; line-height: 1.6; font-family: 'Courier New', monospace; }
+        .note-box { background: #E3F2FD; border-radius: 8px; padding: 8px; margin-top: auto; }
+        .note-content { font-size: 10px; color: #333; line-height: 1.4; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">XAI Tool Selection Guide</div>
+            <div class="subtitle">Choosing the right explanation method for your use case</div>
+        </div>
+        <div class="content-grid">
+            <div class="card">
+                <div class="card-title">By Model Type</div>
+                <table class="model-table">
+                    <tr><th>Model Type</th><th>1st Choice</th><th>2nd Choice</th><th>3rd Choice</th></tr>
+                    <tr><td>Tree Ensemble</td><td>TreeSHAP</td><td>Permutation</td><td>LIME</td></tr>
+                    <tr><td>Deep Neural Net</td><td>DeepSHAP</td><td>IG</td><td>GradCAM</td></tr>
+                    <tr><td>CNN (Image)</td><td>GradCAM</td><td>SHAP Image</td><td>LIME Image</td></tr>
+                    <tr><td>Transformer</td><td>Attention</td><td>IG</td><td>SHAP</td></tr>
+                    <tr><td>Linear/Logistic</td><td>Coefficients</td><td>SHAP</td><td>Permutation</td></tr>
+                    <tr><td>Any (Black-box)</td><td>KernelSHAP</td><td>LIME</td><td>Permutation</td></tr>
+                </table>
+                <div class="flow-box">
+                    <div class="flow-title">Decision Flow: Global Importance</div>
+                    <div class="flow-content">
+Need global feature importance?<br>
+├── Tree model?<br>
+│   └── TreeSHAP Summary Plot<br>
+├── Neural network?<br>
+│   └── Permutation Importance<br>
+└── Other?<br>
+    └── KernelSHAP (sampled)
+                    </div>
+                </div>
+                <div class="flow-box">
+                    <div class="flow-title">Decision Flow: Local Explanation</div>
+                    <div class="flow-content">
+Need individual prediction explanation?<br>
+├── Tabular data?<br>
+│   └── SHAP Waterfall/Force<br>
+├── Image?<br>
+│   └── GradCAM + SHAP Image<br>
+└── Text?<br>
+    └── LIME Text + Attention
+                    </div>
+                </div>
+            </div>
+            <div class="card libs">
+                <div class="card-title">Library Comparison</div>
+                <table class="lib-table">
+                    <tr><th>Library</th><th>Strength</th><th>Model Support</th><th>Best For</th></tr>
+                    <tr><td>shap</td><td>Comprehensive</td><td>Universal</td><td>General XAI</td></tr>
+                    <tr><td>captum</td><td>PyTorch native</td><td>DNN</td><td>Deep learning</td></tr>
+                    <tr><td>lime</td><td>Simple API</td><td>Any</td><td>Quick start</td></tr>
+                    <tr><td>grad-cam</td><td>CAM variants</td><td>CNN</td><td>Vision models</td></tr>
+                    <tr><td>alibi</td><td>Counterfactuals</td><td>Any</td><td>What-if analysis</td></tr>
+                    <tr><td>interpret</td><td>MS supported</td><td>Any</td><td>Enterprise</td></tr>
+                    <tr><td>eli5</td><td>Lightweight</td><td>sklearn/keras</td><td>Debugging</td></tr>
+                </table>
+                <div class="flow-box">
+                    <div class="flow-title">Decision Flow: Debugging/Bias</div>
+                    <div class="flow-content">
+Need to debug or find bias?<br>
+├── Concept-level explanation?<br>
+│   └── TCAV<br>
+├── What-if scenarios?<br>
+│   └── Counterfactuals (alibi)<br>
+└── Feature interactions?<br>
+    └── SHAP Interaction Values
+                    </div>
+                </div>
+                <div class="note-box">
+                    <div class="note-content">
+                        <strong>Quick Start Recommendations:</strong><br>
+                        • <strong>Beginners:</strong> Start with SHAP (most versatile, good docs)<br>
+                        • <strong>PyTorch users:</strong> Captum (native integration)<br>
+                        • <strong>Vision models:</strong> pytorch-grad-cam (CAM variants)<br>
+                        • <strong>Production:</strong> interpret (Microsoft backed, enterprise ready)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

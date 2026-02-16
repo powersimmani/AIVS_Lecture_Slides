@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rotary Position Embedding (RoPE)</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 24px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #1E64C8; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card.concept { border-color: #9C27B0; }
+        .card.compare { border-color: #4CAF50; }
+        .card-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+        .concept .card-title { color: #9C27B0; }
+        .compare .card-title { color: #4CAF50; }
+        .idea-box { background: #F3E5F5; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .idea-content { font-size: 12px; color: #333; line-height: 1.5; }
+        .formula-box { background: #f8f8f8; border-radius: 8px; padding: 10px; margin-bottom: 10px; text-align: center; }
+        .formula-main { font-size: 14px; font-weight: 600; color: #333; font-family: 'Times New Roman', serif; margin-bottom: 6px; }
+        .formula-note { font-size: 11px; color: #666; }
+        .feature-item { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: #333; margin-bottom: 5px; line-height: 1.4; }
+        .feature-icon { font-weight: bold; flex-shrink: 0; color: #9C27B0; }
+        .comparison-table { width: 100%; font-size: 11px; border-collapse: collapse; margin-bottom: 10px; }
+        .comparison-table th { background: #4CAF50; color: white; padding: 5px; text-align: center; }
+        .comparison-table td { padding: 5px; text-align: center; border-bottom: 1px solid #e0e0e0; }
+        .highlight { background: #E8F5E9; font-weight: 600; }
+        .model-box { background: #FFF3E0; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .model-title { font-size: 12px; font-weight: 700; color: #E65100; margin-bottom: 6px; }
+        .model-item { font-size: 11px; color: #333; margin-bottom: 3px; }
+        .key-insight { background: #E3F2FD; border-radius: 8px; padding: 10px; margin-top: auto; }
+        .insight-title { font-size: 12px; font-weight: 700; color: #1565C0; margin-bottom: 4px; }
+        .insight-content { font-size: 11px; color: #333; line-height: 1.4; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Rotary Position Embedding (RoPE)</div>
+            <div class="subtitle">Modern position encoding for LLMs (Su et al., 2021)</div>
+        </div>
+        <div class="content-grid">
+            <div class="card concept">
+                <div class="card-title">Core Concept</div>
+                <div class="idea-box">
+                    <div class="idea-content">
+                        <strong>Key Idea:</strong> Encode absolute position through rotation matrices. When computing attention (dot product), the result naturally captures relative position information.
+                    </div>
+                </div>
+                <div class="formula-box">
+                    <div class="formula-main">RoPE(x<sub>m</sub>) = R<sub>θ,m</sub> × x</div>
+                    <div class="formula-note">R<sub>θ,m</sub> is a rotation matrix for position m</div>
+                </div>
+                <div class="formula-box">
+                    <div class="formula-main" style="font-size:12px;">
+                        R<sub>θ,m</sub> =
+                        <span style="font-size:10px;">
+                        [cos(mθ), -sin(mθ)]<br>
+                        [sin(mθ), &nbsp;cos(mθ)]
+                        </span>
+                    </div>
+                    <div class="formula-note">Applied to pairs of dimensions</div>
+                </div>
+                <div class="feature-item"><span class="feature-icon">✓</span><span>Encodes absolute position</span></div>
+                <div class="feature-item"><span class="feature-icon">✓</span><span>Captures relative position in dot product</span></div>
+                <div class="feature-item"><span class="feature-icon">✓</span><span>No learned parameters</span></div>
+                <div class="feature-item"><span class="feature-icon">✓</span><span>Better length extrapolation than learned PE</span></div>
+            </div>
+            <div class="card compare">
+                <div class="card-title">Comparison with Other Methods</div>
+                <table class="comparison-table">
+                    <tr><th>Method</th><th>Relative Pos</th><th>Extrapolation</th><th>Learned</th></tr>
+                    <tr><td>Sinusoidal</td><td>No</td><td>Limited</td><td>No</td></tr>
+                    <tr><td>Learned PE</td><td>No</td><td>Poor</td><td>Yes</td></tr>
+                    <tr><td class="highlight">RoPE</td><td class="highlight">Yes</td><td>Moderate</td><td>No</td></tr>
+                    <tr><td>ALiBi</td><td class="highlight">Yes</td><td class="highlight">Excellent</td><td>No</td></tr>
+                </table>
+                <div class="model-box">
+                    <div class="model-title">Models Using RoPE</div>
+                    <div class="model-item">• LLaMA, LLaMA 2, LLaMA 3</div>
+                    <div class="model-item">• Mistral, Mixtral</div>
+                    <div class="model-item">• GPT-NeoX, Pythia</div>
+                    <div class="model-item">• Qwen, Yi</div>
+                    <div class="model-item">• PaLM (variant)</div>
+                </div>
+                <div class="key-insight">
+                    <div class="insight-title">Why RoPE Won</div>
+                    <div class="insight-content">
+                        • Simple implementation (just rotate Q and K)<br>
+                        • No additional parameters<br>
+                        • Works well with KV caching<br>
+                        • Became de-facto standard for open LLMs
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

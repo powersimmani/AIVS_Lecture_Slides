@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spectral Clustering</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 26px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #9C27B0; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card.practice { border-color: #4CAF50; }
+        .card-title { font-size: 16px; font-weight: 700; color: #9C27B0; margin-bottom: 10px; }
+        .card.practice .card-title { color: #4CAF50; }
+        .concept-box { background: #F3E5F5; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .concept-title { font-size: 12px; font-weight: 700; color: #7B1FA2; margin-bottom: 6px; }
+        .concept-content { font-size: 11px; color: #333; line-height: 1.5; }
+        .step-box { background: #E3F2FD; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .step-title { font-size: 12px; font-weight: 700; color: #1565C0; margin-bottom: 6px; }
+        .step-item { font-size: 11px; color: #333; margin-bottom: 4px; line-height: 1.4; }
+        .visual-box { background: #f8f8f8; border-radius: 8px; padding: 10px; margin-bottom: 10px; text-align: center; }
+        .pros-cons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+        .pros { background: #E8F5E9; border-radius: 8px; padding: 10px; }
+        .cons { background: #FFEBEE; border-radius: 8px; padding: 10px; }
+        .pros-title { font-size: 11px; font-weight: 700; color: #2E7D32; margin-bottom: 6px; }
+        .cons-title { font-size: 11px; font-weight: 700; color: #C62828; margin-bottom: 6px; }
+        .list-item { font-size: 10px; color: #333; margin-bottom: 3px; }
+        .code-box { background: #2d2d2d; border-radius: 8px; padding: 10px; margin-top: auto; }
+        .code-content { font-family: 'Courier New', monospace; font-size: 9px; color: #d4d4d4; line-height: 1.4; }
+        .code-comment { color: #6a9955; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Spectral Clustering</div>
+            <div class="subtitle">Graph Laplacian-based clustering for non-convex shapes</div>
+        </div>
+        <div class="content-grid">
+            <div class="card">
+                <div class="card-title">Core Concept</div>
+                <div class="concept-box">
+                    <div class="concept-title">Key Idea</div>
+                    <div class="concept-content">
+                        Use <strong>eigenvectors of graph Laplacian</strong> to transform data into a space where clusters are more separable.<br><br>
+                        Can discover <strong>non-convex clusters</strong> that K-Means cannot handle!
+                    </div>
+                </div>
+                <div class="step-box">
+                    <div class="step-title">Algorithm Steps</div>
+                    <div class="step-item"><strong>1.</strong> Build similarity matrix A (e.g., RBF kernel)</div>
+                    <div class="step-item"><strong>2.</strong> Compute degree matrix D (diagonal)</div>
+                    <div class="step-item"><strong>3.</strong> Form Laplacian: L = D - A</div>
+                    <div class="step-item"><strong>4.</strong> Find k smallest eigenvectors of L</div>
+                    <div class="step-item"><strong>5.</strong> Run K-Means on eigenvector space</div>
+                </div>
+                <div class="visual-box">
+                    <svg viewBox="0 0 280 80" style="width: 100%; height: 75px;">
+                        <!-- Two rings that K-Means can't separate -->
+                        <circle cx="70" cy="40" r="25" fill="none" stroke="#2196F3" stroke-width="3"/>
+                        <circle cx="70" cy="40" r="12" fill="none" stroke="#FF9800" stroke-width="3"/>
+                        <text x="70" y="75" text-anchor="middle" font-size="8" fill="#666">Original Data</text>
+                        <!-- Arrow -->
+                        <path d="M110,40 L140,40" stroke="#666" stroke-width="2" marker-end="url(#arr)"/>
+                        <text x="125" y="30" text-anchor="middle" font-size="7" fill="#666">Spectral</text>
+                        <!-- Separated in eigen space -->
+                        <ellipse cx="180" cy="40" rx="20" ry="10" fill="#2196F3" opacity="0.3"/>
+                        <ellipse cx="230" cy="40" rx="20" ry="10" fill="#FF9800" opacity="0.3"/>
+                        <text x="205" y="75" text-anchor="middle" font-size="8" fill="#666">Eigenspace</text>
+                        <defs><marker id="arr" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5 Z" fill="#666"/></marker></defs>
+                    </svg>
+                </div>
+            </div>
+            <div class="card practice">
+                <div class="card-title">Implementation</div>
+                <div class="pros-cons">
+                    <div class="pros">
+                        <div class="pros-title">Advantages</div>
+                        <div class="list-item">+ Handles complex cluster shapes</div>
+                        <div class="list-item">+ Strong theoretical foundation</div>
+                        <div class="list-item">+ No assumption on cluster shape</div>
+                    </div>
+                    <div class="cons">
+                        <div class="cons-title">Disadvantages</div>
+                        <div class="list-item">- O(n³) for eigendecomposition</div>
+                        <div class="list-item">- Requires k (cluster count)</div>
+                        <div class="list-item">- Sensitive to similarity scale</div>
+                    </div>
+                </div>
+                <div class="step-box">
+                    <div class="step-title">Affinity Options</div>
+                    <div class="step-item"><strong>rbf:</strong> exp(-gamma * ||x-y||²) - most common</div>
+                    <div class="step-item"><strong>nearest_neighbors:</strong> k-NN graph based</div>
+                    <div class="step-item"><strong>precomputed:</strong> Custom similarity matrix</div>
+                </div>
+                <div class="code-box">
+                    <div class="code-content">
+                        <span class="code-comment"># Spectral Clustering with scikit-learn</span><br>
+                        from sklearn.cluster import SpectralClustering<br><br>
+                        <span class="code-comment"># RBF affinity (default)</span><br>
+                        sc = SpectralClustering(<br>
+                        &nbsp;&nbsp;n_clusters=3,<br>
+                        &nbsp;&nbsp;affinity='rbf',<br>
+                        &nbsp;&nbsp;gamma=1.0,  <span class="code-comment"># RBF kernel parameter</span><br>
+                        &nbsp;&nbsp;n_neighbors=10  <span class="code-comment"># for kNN affinity</span><br>
+                        )<br>
+                        labels = sc.fit_predict(X)<br><br>
+                        <span class="code-comment"># Good for: concentric circles, moons, etc.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

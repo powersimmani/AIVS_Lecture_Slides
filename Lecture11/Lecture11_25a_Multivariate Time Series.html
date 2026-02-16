@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multivariate Time Series</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 26px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #1E64C8; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card.methods { border-color: #4CAF50; }
+        .card-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; color: #1E64C8; }
+        .card.methods .card-title { color: #4CAF50; }
+        .concept-box { background: #E3F2FD; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .concept-title { font-size: 12px; font-weight: 700; color: #1565C0; margin-bottom: 6px; }
+        .concept-content { font-size: 11px; color: #333; line-height: 1.5; }
+        .visual-box { background: #f8f8f8; border-radius: 8px; padding: 10px; margin-bottom: 10px; text-align: center; }
+        .challenge-box { background: #FFF3E0; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .challenge-title { font-size: 12px; font-weight: 700; color: #E65100; margin-bottom: 6px; }
+        .challenge-item { font-size: 11px; color: #333; margin-bottom: 4px; }
+        .method-box { background: #E8F5E9; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .method-title { font-size: 12px; font-weight: 700; color: #2E7D32; margin-bottom: 6px; }
+        .method-item { font-size: 11px; color: #333; margin-bottom: 4px; line-height: 1.4; }
+        .code-box { background: #2d2d2d; border-radius: 8px; padding: 10px; }
+        .code-content { font-family: 'Courier New', monospace; font-size: 9px; color: #d4d4d4; line-height: 1.4; }
+        .code-comment { color: #6a9955; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Multivariate Time Series Analysis</div>
+            <div class="subtitle">Modeling multiple correlated time-dependent variables</div>
+        </div>
+        <div class="content-grid">
+            <div class="card">
+                <div class="card-title">Concept & Challenges</div>
+                <div class="concept-box">
+                    <div class="concept-title">What is Multivariate TS?</div>
+                    <div class="concept-content">
+                        Multiple variables measured over time, potentially correlated.<br><br>
+                        <strong>Example:</strong> Stock prices (AAPL, GOOGL, MSFT) or<br>
+                        Sensor readings (temperature, humidity, pressure)
+                    </div>
+                </div>
+                <div class="visual-box">
+                    <svg viewBox="0 0 280 80" style="width: 100%; height: 70px;">
+                        <!-- Variable 1 -->
+                        <polyline points="10,40 40,30 70,35 100,25 130,30 160,20 190,25 220,15 250,20" fill="none" stroke="#2196F3" stroke-width="2"/>
+                        <!-- Variable 2 -->
+                        <polyline points="10,50 40,55 70,45 100,50 130,45 160,55 190,50 220,45 250,50" fill="none" stroke="#4CAF50" stroke-width="2"/>
+                        <!-- Variable 3 -->
+                        <polyline points="10,60 40,65 70,70 100,60 130,65 160,60 190,55 220,60 250,55" fill="none" stroke="#FF9800" stroke-width="2"/>
+                        <!-- Legend -->
+                        <line x1="10" y1="75" x2="25" y2="75" stroke="#2196F3" stroke-width="2"/>
+                        <text x="28" y="77" font-size="6">Var1</text>
+                        <line x1="55" y1="75" x2="70" y2="75" stroke="#4CAF50" stroke-width="2"/>
+                        <text x="73" y="77" font-size="6">Var2</text>
+                        <line x1="100" y1="75" x2="115" y2="75" stroke="#FF9800" stroke-width="2"/>
+                        <text x="118" y="77" font-size="6">Var3</text>
+                    </svg>
+                </div>
+                <div class="challenge-box">
+                    <div class="challenge-title">Key Challenges</div>
+                    <div class="challenge-item">- <strong>Dimensionality:</strong> Many variables = complex interactions</div>
+                    <div class="challenge-item">- <strong>Cross-correlation:</strong> Variables affect each other with lags</div>
+                    <div class="challenge-item">- <strong>Missing data:</strong> Different sampling rates</div>
+                    <div class="challenge-item">- <strong>Non-stationarity:</strong> Multiple trends to handle</div>
+                </div>
+            </div>
+            <div class="card methods">
+                <div class="card-title">Methods</div>
+                <div class="method-box">
+                    <div class="method-title">Classical Methods</div>
+                    <div class="method-item"><strong>VAR (Vector Autoregression):</strong> Each variable depends on own + others' lags</div>
+                    <div class="method-item"><strong>VARMA:</strong> VAR + moving average terms</div>
+                    <div class="method-item"><strong>VEC:</strong> For cointegrated series</div>
+                </div>
+                <div class="method-box">
+                    <div class="method-title">Deep Learning Methods</div>
+                    <div class="method-item"><strong>LSTM/GRU:</strong> Input shape (batch, time, features)</div>
+                    <div class="method-item"><strong>Transformer:</strong> Attention across time & variables</div>
+                    <div class="method-item"><strong>TCN:</strong> Dilated convolutions for long dependencies</div>
+                    <div class="method-item"><strong>TFT:</strong> Temporal Fusion Transformer (state-of-art)</div>
+                </div>
+                <div class="code-box">
+                    <div class="code-content">
+                        <span class="code-comment"># LSTM for multivariate TS</span><br>
+                        <span class="code-comment"># Input: (batch, sequence_len, n_features)</span><br>
+                        model = nn.Sequential(<br>
+                        &nbsp;&nbsp;nn.LSTM(input_size=n_features,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hidden_size=64,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;num_layers=2,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;batch_first=True),<br>
+                        &nbsp;&nbsp;nn.Linear(64, n_outputs)<br>
+                        )<br><br>
+                        <span class="code-comment"># statsmodels VAR</span><br>
+                        from statsmodels.tsa.api import VAR<br>
+                        model = VAR(df).fit(maxlags=5)<br>
+                        forecast = model.forecast(df.values[-5:], steps=10)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

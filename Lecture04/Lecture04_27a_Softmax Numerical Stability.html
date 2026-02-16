@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Softmax Numerical Stability</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 15px; }
+        .main-title { font-size: 26px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #1E64C8; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card.problem { border-color: #F44336; }
+        .card.solution { border-color: #4CAF50; }
+        .card-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+        .problem .card-title { color: #F44336; }
+        .solution .card-title { color: #4CAF50; }
+        .formula-box { background: #FFEBEE; border-radius: 8px; padding: 12px; margin-bottom: 10px; text-align: center; }
+        .formula-box.green { background: #E8F5E9; }
+        .formula-main { font-family: 'Times New Roman', serif; font-size: 14px; font-weight: 600; color: #333; margin-bottom: 6px; }
+        .formula-note { font-size: 11px; color: #666; }
+        .example-box { background: #f8f8f8; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .example-title { font-size: 12px; font-weight: 700; color: #1E64C8; margin-bottom: 6px; }
+        .example-content { font-family: 'Courier New', monospace; font-size: 10px; color: #333; line-height: 1.5; }
+        .code-box { background: #2d2d2d; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .code-content { font-family: 'Courier New', monospace; font-size: 10px; color: #d4d4d4; line-height: 1.5; }
+        .code-comment { color: #6a9955; }
+        .code-bad { color: #f44336; }
+        .code-good { color: #4CAF50; }
+        .proof-box { background: #E3F2FD; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .proof-title { font-size: 12px; font-weight: 700; color: #1565C0; margin-bottom: 6px; }
+        .proof-content { font-size: 11px; color: #333; line-height: 1.5; }
+        .note-box { background: #FFF3E0; border-radius: 8px; padding: 10px; margin-top: auto; }
+        .note-title { font-size: 12px; font-weight: 700; color: #E65100; margin-bottom: 6px; }
+        .note-content { font-size: 11px; color: #333; line-height: 1.4; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Softmax Numerical Stability</div>
+            <div class="subtitle">The Log-Sum-Exp Trick</div>
+        </div>
+        <div class="content-grid">
+            <div class="card problem">
+                <div class="card-title">The Overflow Problem</div>
+                <div class="formula-box">
+                    <div class="formula-main">softmax(z)<sub>i</sub> = exp(z<sub>i</sub>) / sum<sub>j</sub> exp(z<sub>j</sub>)</div>
+                </div>
+                <div class="example-box">
+                    <div class="example-title">What Goes Wrong?</div>
+                    <div class="example-content">
+                        z = [1000, 1001, 1002]<br><br>
+                        exp(1000) = 1.97 × 10^434<br>
+                        exp(1002) = 7.31 × 10^435<br><br>
+                        Both exceed float64 max (~1.8 × 10^308)<br>
+                        Result: <span style="color: #F44336;">inf / inf = NaN</span>
+                    </div>
+                </div>
+                <div class="example-box">
+                    <div class="example-title">Underflow Too!</div>
+                    <div class="example-content">
+                        z = [-1000, -999, -998]<br><br>
+                        exp(-1000) ≈ 0 (underflow)<br><br>
+                        Result: <span style="color: #F44336;">0 / 0 = NaN</span>
+                    </div>
+                </div>
+                <div class="code-box">
+                    <div class="code-content">
+                        <span class="code-comment"># Naive implementation (UNSTABLE)</span><br>
+                        <span class="code-bad">def softmax_naive(z):</span><br>
+                        <span class="code-bad">&nbsp;&nbsp;return np.exp(z) / np.sum(np.exp(z))</span><br><br>
+                        <span class="code-comment"># Test</span><br>
+                        softmax_naive([1000, 1001, 1002])<br>
+                        <span class="code-comment"># Output: [nan, nan, nan]</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card solution">
+                <div class="card-title">The Solution: Subtract Max</div>
+                <div class="formula-box green">
+                    <div class="formula-main">softmax(z) = softmax(z - max(z))</div>
+                    <div class="formula-note">Mathematically equivalent, numerically stable!</div>
+                </div>
+                <div class="proof-box">
+                    <div class="proof-title">Why It Works (Proof)</div>
+                    <div class="proof-content">
+                        softmax(z - c)<sub>i</sub> = exp(z<sub>i</sub> - c) / sum exp(z<sub>j</sub> - c)<br>
+                        &nbsp;&nbsp;= exp(z<sub>i</sub>)*exp(-c) / sum exp(z<sub>j</sub>)*exp(-c)<br>
+                        &nbsp;&nbsp;= exp(z<sub>i</sub>) / sum exp(z<sub>j</sub>)<br>
+                        &nbsp;&nbsp;= softmax(z)<sub>i</sub><br><br>
+                        The exp(-c) cancels out! Works for any constant c.
+                    </div>
+                </div>
+                <div class="code-box">
+                    <div class="code-content">
+                        <span class="code-comment"># Stable implementation</span><br>
+                        <span class="code-good">def softmax_stable(z):</span><br>
+                        <span class="code-good">&nbsp;&nbsp;z_shifted = z - np.max(z)</span><br>
+                        <span class="code-good">&nbsp;&nbsp;exp_z = np.exp(z_shifted)</span><br>
+                        <span class="code-good">&nbsp;&nbsp;return exp_z / np.sum(exp_z)</span><br><br>
+                        <span class="code-comment"># Test</span><br>
+                        softmax_stable([1000, 1001, 1002])<br>
+                        <span class="code-comment"># Output: [0.09, 0.24, 0.67] ✓</span>
+                    </div>
+                </div>
+                <div class="note-box">
+                    <div class="note-title">Good News</div>
+                    <div class="note-content">
+                        PyTorch, TensorFlow, JAX all handle this automatically!<br>
+                        Use <code>F.softmax()</code> or <code>tf.nn.softmax()</code> - they're stable.<br>
+                        Only worry if implementing from scratch.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

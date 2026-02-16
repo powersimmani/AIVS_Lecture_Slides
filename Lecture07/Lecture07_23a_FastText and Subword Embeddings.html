@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FastText and Subword Embeddings</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 14px; }
+        .main-title { font-size: 24px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2px solid #1E64C8; border-radius: 10px; padding: 14px; }
+        .card-title { font-size: 16px; font-weight: 700; color: #1E64C8; margin-bottom: 10px; text-align: center; }
+        .idea-box { background: #E3F2FD; border-radius: 8px; padding: 12px; margin-bottom: 10px; }
+        .idea-title { font-size: 14px; font-weight: 700; color: #1565C0; margin-bottom: 6px; }
+        .idea-content { font-size: 13px; color: #333; line-height: 1.5; }
+        .example-box { background: #f8f8f8; border-radius: 8px; padding: 12px; margin-bottom: 10px; }
+        .example-word { font-size: 16px; font-weight: 700; color: #1E64C8; margin-bottom: 8px; }
+        .ngram-list { font-family: 'Courier New', monospace; font-size: 12px; color: #333; }
+        .feature-item { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: #333; margin-bottom: 6px; line-height: 1.4; }
+        .feature-icon { color: #4CAF50; font-weight: bold; flex-shrink: 0; }
+        .comparison-table { width: 100%; font-size: 11px; border-collapse: collapse; margin-top: 8px; }
+        .comparison-table th { background: #1E64C8; color: white; padding: 6px; text-align: center; }
+        .comparison-table td { padding: 6px; text-align: center; border-bottom: 1px solid #e0e0e0; }
+        .highlight { background: #E8F5E9; font-weight: 600; }
+        .code-box { background: #2d2d2d; border-radius: 8px; padding: 12px; margin-top: 10px; }
+        .code-content { font-family: 'Courier New', monospace; font-size: 11px; color: #d4d4d4; line-height: 1.5; }
+        .code-keyword { color: #569cd6; }
+        .code-comment { color: #6a9955; }
+        .bpe-section { margin-top: 12px; }
+        .bpe-card { background: #FFF3E0; border: 2px solid #FF9800; border-radius: 10px; padding: 12px; }
+        .bpe-title { font-size: 14px; font-weight: 700; color: #E65100; margin-bottom: 8px; }
+        .bpe-content { font-size: 12px; color: #333; line-height: 1.5; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">FastText and Subword Embeddings</div>
+            <div class="subtitle">Handling OOV words with character n-grams</div>
+        </div>
+        <div class="content-grid">
+            <div>
+                <div class="card">
+                    <div class="card-title">FastText (Facebook, 2016)</div>
+                    <div class="idea-box">
+                        <div class="idea-title">Core Idea</div>
+                        <div class="idea-content">Represent words as sum of character n-grams.<br>This allows handling OOV (Out-of-Vocabulary) words!</div>
+                    </div>
+                    <div class="example-box">
+                        <div class="example-word">"where" → character 3-grams:</div>
+                        <div class="ngram-list">&lt;wh, whe, her, ere, re&gt;, &lt;where&gt;</div>
+                    </div>
+                    <div class="feature-item"><span class="feature-icon">✓</span><span><strong>OOV handling:</strong> "wherefrom" uses shared n-grams</span></div>
+                    <div class="feature-item"><span class="feature-icon">✓</span><span><strong>Rare words:</strong> Better quality from morphology</span></div>
+                    <div class="feature-item"><span class="feature-icon">✓</span><span><strong>Morphology:</strong> "un-" prefix shares representation</span></div>
+                    <div class="feature-item"><span class="feature-icon">✓</span><span><strong>Multi-lingual:</strong> Great for Korean, Turkish, Finnish</span></div>
+                    <table class="comparison-table">
+                        <tr><th></th><th>Word2Vec</th><th>FastText</th></tr>
+                        <tr><td>OOV words</td><td>Cannot handle</td><td class="highlight">Can handle</td></tr>
+                        <tr><td>Rare words</td><td>Poor quality</td><td class="highlight">Good quality</td></tr>
+                        <tr><td>Training speed</td><td class="highlight">Faster</td><td>Slower</td></tr>
+                        <tr><td>Model size</td><td class="highlight">Smaller</td><td>Larger</td></tr>
+                    </table>
+                </div>
+            </div>
+            <div>
+                <div class="card">
+                    <div class="card-title">Python Implementation</div>
+                    <div class="code-box">
+                        <div class="code-content">
+                            <span class="code-comment"># Gensim FastText</span><br>
+                            <span class="code-keyword">from</span> gensim.models <span class="code-keyword">import</span> FastText<br><br>
+                            model = FastText(<br>
+                            &nbsp;&nbsp;sentences,<br>
+                            &nbsp;&nbsp;vector_size=100,<br>
+                            &nbsp;&nbsp;window=5,<br>
+                            &nbsp;&nbsp;min_count=1,<br>
+                            &nbsp;&nbsp;min_n=3, <span class="code-comment"># min n-gram</span><br>
+                            &nbsp;&nbsp;max_n=6  <span class="code-comment"># max n-gram</span><br>
+                            )<br><br>
+                            <span class="code-comment"># OOV word works!</span><br>
+                            vec = model.wv[<span class="code-keyword">'unseen_word'</span>]
+                        </div>
+                    </div>
+                </div>
+                <div class="bpe-section">
+                    <div class="bpe-card">
+                        <div class="bpe-title">Related: BPE/WordPiece (Transformers)</div>
+                        <div class="bpe-content">
+                            <strong>BPE (Byte Pair Encoding):</strong> GPT, RoBERTa<br>
+                            <strong>WordPiece:</strong> BERT, DistilBERT<br>
+                            <strong>SentencePiece:</strong> T5, ALBERT<br><br>
+                            These are <em>tokenization</em> methods, not embeddings.<br>
+                            They solve OOV by breaking words into subwords.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

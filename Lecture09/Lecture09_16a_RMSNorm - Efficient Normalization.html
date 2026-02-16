@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RMSNorm - Efficient Normalization</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 14px; }
+        .main-title { font-size: 24px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #1E64C8; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card.formula { border-color: #9C27B0; }
+        .card.compare { border-color: #4CAF50; }
+        .card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 2px solid #e0e0e0; }
+        .card-title { font-size: 17px; font-weight: 700; }
+        .formula .card-title { color: #9C27B0; }
+        .compare .card-title { color: #4CAF50; }
+        .formula-box { background: #f8f8f8; border-radius: 8px; padding: 12px; margin-bottom: 10px; text-align: center; }
+        .formula-main { font-size: 16px; font-weight: 600; color: #333; font-family: 'Times New Roman', serif; margin-bottom: 8px; }
+        .formula-note { font-size: 12px; color: #666; }
+        .idea-box { background: #E3F2FD; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .idea-content { font-size: 12px; color: #333; line-height: 1.5; }
+        .comparison-table { width: 100%; font-size: 11px; border-collapse: collapse; margin-bottom: 10px; }
+        .comparison-table th { background: #4CAF50; color: white; padding: 6px; text-align: center; }
+        .comparison-table td { padding: 6px; text-align: center; border-bottom: 1px solid #e0e0e0; }
+        .highlight { background: #E8F5E9; font-weight: 600; }
+        .model-list { background: #FFF3E0; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .model-title { font-size: 12px; font-weight: 700; color: #E65100; margin-bottom: 6px; }
+        .model-item { font-size: 12px; color: #333; margin-bottom: 3px; }
+        .code-box { background: #2d2d2d; border-radius: 6px; padding: 10px; margin-top: auto; }
+        .code-content { font-family: 'Courier New', monospace; font-size: 10px; color: #d4d4d4; line-height: 1.4; }
+        .code-keyword { color: #569cd6; }
+        .code-comment { color: #6a9955; }
+        .code-class { color: #4ec9b0; }
+        .feature-item { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: #333; margin-bottom: 5px; line-height: 1.4; }
+        .feature-icon { font-weight: bold; flex-shrink: 0; color: #9C27B0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">RMSNorm: Root Mean Square Normalization</div>
+            <div class="subtitle">Efficient alternative to LayerNorm, standard in modern LLMs</div>
+        </div>
+        <div class="content-grid">
+            <div class="card formula">
+                <div class="card-header">
+                    <span class="card-title">RMSNorm Formula</span>
+                </div>
+                <div class="formula-box">
+                    <div class="formula-main">x̂ = x / √(mean(x²) + ε)</div>
+                    <div class="formula-main">y = γ × x̂</div>
+                    <div class="formula-note">No mean subtraction, no bias (β) parameter</div>
+                </div>
+                <div class="idea-box">
+                    <div class="idea-content">
+                        <strong>Key Insight:</strong> Mean subtraction in LayerNorm may not be necessary for re-centering. RMSNorm achieves similar performance with less computation.
+                    </div>
+                </div>
+                <div class="feature-item"><span class="feature-icon">✓</span><span>Simpler: Only RMS calculation (no mean)</span></div>
+                <div class="feature-item"><span class="feature-icon">✓</span><span>Fewer parameters: γ only (no β)</span></div>
+                <div class="feature-item"><span class="feature-icon">✓</span><span>~15% faster than LayerNorm</span></div>
+                <div class="code-box">
+                    <div class="code-content">
+                        <span class="code-keyword">class</span> <span class="code-class">RMSNorm</span>(nn.Module):<br>
+                        &nbsp;&nbsp;<span class="code-keyword">def</span> __init__(self, dim, eps=1e-6):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;super().__init__()<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;self.eps = eps<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;self.weight = nn.Parameter(torch.ones(dim))<br><br>
+                        &nbsp;&nbsp;<span class="code-keyword">def</span> forward(self, x):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;rms = torch.rsqrt(x.pow(2).mean(-1, keepdim=True) + self.eps)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">return</span> x * rms * self.weight
+                    </div>
+                </div>
+            </div>
+            <div class="card compare">
+                <div class="card-header">
+                    <span class="card-title">LayerNorm vs RMSNorm</span>
+                </div>
+                <table class="comparison-table">
+                    <tr><th>Aspect</th><th>LayerNorm</th><th>RMSNorm</th></tr>
+                    <tr><td>Mean calculation</td><td>Required</td><td class="highlight">Not needed</td></tr>
+                    <tr><td>Parameters</td><td>γ, β</td><td class="highlight">γ only</td></tr>
+                    <tr><td>Speed</td><td>Baseline</td><td class="highlight">~15% faster</td></tr>
+                    <tr><td>Memory</td><td>Baseline</td><td class="highlight">Slightly less</td></tr>
+                    <tr><td>Performance</td><td>Baseline</td><td>Equivalent</td></tr>
+                </table>
+                <div class="model-list">
+                    <div class="model-title">Models using RMSNorm</div>
+                    <div class="model-item">• LLaMA, LLaMA 2, LLaMA 3</div>
+                    <div class="model-item">• Gemma, Gemini</div>
+                    <div class="model-item">• Mistral, Mixtral</div>
+                    <div class="model-item">• Qwen</div>
+                    <div class="model-item">• Most modern efficient Transformers</div>
+                </div>
+                <div class="idea-box">
+                    <div class="idea-content">
+                        <strong>When to Use:</strong><br>
+                        • Large-scale Transformer training<br>
+                        • Inference optimization needed<br>
+                        • Building LLM-style architectures
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

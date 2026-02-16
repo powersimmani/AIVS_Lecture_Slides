@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DINO and DINOv2</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 24px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #1E64C8; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card.dino { border-color: #FF9800; }
+        .card.dinov2 { border-color: #4CAF50; }
+        .card-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+        .dino .card-title { color: #FF9800; }
+        .dinov2 .card-title { color: #4CAF50; }
+        .concept-box { background: #FFF3E0; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .concept-box.green { background: #E8F5E9; }
+        .concept-title { font-size: 12px; font-weight: 700; color: #E65100; margin-bottom: 6px; }
+        .concept-title.green { color: #2E7D32; }
+        .concept-content { font-size: 11px; color: #333; line-height: 1.5; }
+        .discovery-box { background: #E3F2FD; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .discovery-title { font-size: 12px; font-weight: 700; color: #1565C0; margin-bottom: 6px; }
+        .discovery-content { font-size: 11px; color: #333; line-height: 1.5; }
+        .code-box { background: #2d2d2d; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .code-content { font-family: 'Courier New', monospace; font-size: 9px; color: #d4d4d4; line-height: 1.4; }
+        .code-comment { color: #6a9955; }
+        .code-string { color: #ce9178; }
+        .app-box { background: #F3E5F5; border-radius: 8px; padding: 10px; margin-top: auto; }
+        .app-title { font-size: 12px; font-weight: 700; color: #7B1FA2; margin-bottom: 6px; }
+        .app-item { font-size: 11px; color: #333; margin-bottom: 3px; }
+        .feature-list { font-size: 11px; color: #333; line-height: 1.5; }
+        .feature-item { margin-bottom: 4px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">DINO and DINOv2: Self-Supervised Vision Transformers</div>
+            <div class="subtitle">Emerging properties from self-distillation (Meta AI, 2021-2023)</div>
+        </div>
+        <div class="content-grid">
+            <div class="card dino">
+                <div class="card-title">DINO (2021)</div>
+                <div class="concept-box">
+                    <div class="concept-title">Self-Distillation with No Labels</div>
+                    <div class="concept-content">
+                        <strong>Student-Teacher framework:</strong><br>
+                        • Student: Standard ViT with different augmented views<br>
+                        • Teacher: EMA of student (momentum update)<br>
+                        • Loss: Cross-entropy between student and teacher outputs
+                    </div>
+                </div>
+                <div class="concept-box">
+                    <div class="concept-title">Key Components</div>
+                    <div class="concept-content">
+                        <strong>Centering:</strong> Subtract mean from teacher output (prevents collapse to one class)<br>
+                        <strong>Sharpening:</strong> Low temperature on teacher (makes predictions more confident)
+                    </div>
+                </div>
+                <div class="discovery-box">
+                    <div class="discovery-title">Surprising Discovery</div>
+                    <div class="discovery-content">
+                        Self-supervised ViT attention maps contain semantic segmentation!<br><br>
+                        • [CLS] token attends to object foregrounds<br>
+                        • Trained WITHOUT any labels<br>
+                        • Works across different object categories
+                    </div>
+                </div>
+                <div class="app-box">
+                    <div class="app-title">DINO Applications</div>
+                    <div class="app-item">• Zero-shot segmentation from attention</div>
+                    <div class="app-item">• k-NN classification (no fine-tuning)</div>
+                    <div class="app-item">• Copy detection, image retrieval</div>
+                </div>
+            </div>
+            <div class="card dinov2">
+                <div class="card-title">DINOv2 (2023)</div>
+                <div class="concept-box green">
+                    <div class="concept-title green">Scaled Up DINO</div>
+                    <div class="concept-content">
+                        <strong>Larger model:</strong> ViT-g (1.1B parameters)<br>
+                        <strong>More data:</strong> LVD-142M curated dataset<br>
+                        <strong>Better training:</strong> Combined self-supervised objectives
+                    </div>
+                </div>
+                <div class="discovery-box">
+                    <div class="discovery-title">Improvements over DINO</div>
+                    <div class="feature-list">
+                        <div class="feature-item">• <strong>iBOT objective:</strong> Masked image modeling added</div>
+                        <div class="feature-item">• <strong>SwAV component:</strong> Online clustering</div>
+                        <div class="feature-item">• <strong>Regularization:</strong> KoLeo for uniform features</div>
+                        <div class="feature-item">• <strong>Registers:</strong> Extra tokens for cleaner attention</div>
+                    </div>
+                </div>
+                <div class="code-box">
+                    <div class="code-content">
+                        <span class="code-comment"># Using DINOv2 for feature extraction</span><br>
+                        import torch<br><br>
+                        <span class="code-comment"># Load pre-trained model</span><br>
+                        model = torch.hub.load(<br>
+                        &nbsp;&nbsp;<span class="code-string">'facebookresearch/dinov2'</span>,<br>
+                        &nbsp;&nbsp;<span class="code-string">'dinov2_vitb14'</span>  <span class="code-comment"># or vitl14, vitg14</span><br>
+                        )<br><br>
+                        <span class="code-comment"># Extract features (no training needed)</span><br>
+                        with torch.no_grad():<br>
+                        &nbsp;&nbsp;features = model(images)  <span class="code-comment"># [B, 768]</span>
+                    </div>
+                </div>
+                <div class="app-box">
+                    <div class="app-title">DINOv2 as Universal Backbone</div>
+                    <div class="app-item">• Depth estimation, semantic segmentation</div>
+                    <div class="app-item">• Instance retrieval, video understanding</div>
+                    <div class="app-item">• Frozen features match fine-tuned models!</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

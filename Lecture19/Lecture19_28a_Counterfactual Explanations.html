@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Counterfactual Explanations</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 24px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #1E64C8; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card.concept { border-color: #9C27B0; }
+        .card.implementation { border-color: #4CAF50; }
+        .card-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+        .concept .card-title { color: #9C27B0; }
+        .implementation .card-title { color: #4CAF50; }
+        .idea-box { background: #F3E5F5; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .idea-title { font-size: 12px; font-weight: 700; color: #7B1FA2; margin-bottom: 6px; }
+        .idea-content { font-size: 11px; color: #333; line-height: 1.5; }
+        .example-box { background: #E3F2FD; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .example-title { font-size: 12px; font-weight: 700; color: #1565C0; margin-bottom: 6px; }
+        .example-content { font-size: 11px; color: #333; line-height: 1.5; }
+        .formula-box { background: #f8f8f8; border-radius: 8px; padding: 10px; margin-bottom: 10px; text-align: center; }
+        .formula-main { font-family: 'Times New Roman', serif; font-size: 13px; font-weight: 600; color: #333; margin-bottom: 4px; }
+        .formula-note { font-size: 10px; color: #666; }
+        .property-table { width: 100%; font-size: 10px; border-collapse: collapse; margin-bottom: 10px; }
+        .property-table th { background: #9C27B0; color: white; padding: 5px; text-align: left; }
+        .property-table td { padding: 5px; border-bottom: 1px solid #e0e0e0; }
+        .code-box { background: #2d2d2d; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .code-content { font-family: 'Courier New', monospace; font-size: 9px; color: #d4d4d4; line-height: 1.4; }
+        .code-comment { color: #6a9955; }
+        .code-string { color: #ce9178; }
+        .app-box { background: #E8F5E9; border-radius: 8px; padding: 10px; margin-top: auto; }
+        .app-title { font-size: 12px; font-weight: 700; color: #2E7D32; margin-bottom: 6px; }
+        .app-item { font-size: 11px; color: #333; margin-bottom: 3px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Counterfactual Explanations</div>
+            <div class="subtitle">"What would need to change to get a different outcome?"</div>
+        </div>
+        <div class="content-grid">
+            <div class="card concept">
+                <div class="card-title">Concept</div>
+                <div class="idea-box">
+                    <div class="idea-title">The Question</div>
+                    <div class="idea-content">
+                        Instead of "Why this prediction?"<br>
+                        Ask: <strong>"What minimal change would flip the decision?"</strong><br><br>
+                        Provides actionable feedback to users.
+                    </div>
+                </div>
+                <div class="example-box">
+                    <div class="example-title">Example: Loan Application</div>
+                    <div class="example-content">
+                        <strong>Original:</strong> Loan REJECTED<br>
+                        • Income: $45,000<br>
+                        • Credit Score: 650<br>
+                        • Debt-to-Income: 40%<br><br>
+                        <strong>Counterfactual:</strong> Loan would be APPROVED if:<br>
+                        • Income: $45,000 -> $52,000 (+$7,000)<br>
+                        • Credit Score: 650 -> 680 (+30 points)
+                    </div>
+                </div>
+                <div class="formula-box">
+                    <div class="formula-main">x' = argmin d(x, x') s.t. f(x') = y<sub>desired</sub></div>
+                    <div class="formula-note">Find closest x' that changes the prediction</div>
+                </div>
+                <table class="property-table">
+                    <tr><th>Property</th><th>Description</th></tr>
+                    <tr><td><strong>Sparse</strong></td><td>Change few features as possible</td></tr>
+                    <tr><td><strong>Proximal</strong></td><td>Close to original instance</td></tr>
+                    <tr><td><strong>Feasible</strong></td><td>Realistic, achievable changes</td></tr>
+                    <tr><td><strong>Diverse</strong></td><td>Multiple alternative paths</td></tr>
+                </table>
+            </div>
+            <div class="card implementation">
+                <div class="card-title">Implementation</div>
+                <div class="code-box">
+                    <div class="code-content">
+                        <span class="code-comment"># Using DiCE library</span><br>
+                        <span class="code-comment"># pip install dice-ml</span><br>
+                        import dice_ml<br>
+                        from dice_ml import Dice<br><br>
+                        <span class="code-comment"># Create DiCE explainer</span><br>
+                        data = dice_ml.Data(<br>
+                        &nbsp;&nbsp;dataframe=df,<br>
+                        &nbsp;&nbsp;continuous_features=[<span class="code-string">'income'</span>, <span class="code-string">'age'</span>],<br>
+                        &nbsp;&nbsp;outcome_name=<span class="code-string">'loan_approved'</span><br>
+                        )<br>
+                        model = dice_ml.Model(model=clf, backend=<span class="code-string">'sklearn'</span>)<br>
+                        dice = Dice(data, model)<br><br>
+                        <span class="code-comment"># Generate counterfactuals</span><br>
+                        cf = dice.generate_counterfactuals(<br>
+                        &nbsp;&nbsp;query_instance,<br>
+                        &nbsp;&nbsp;total_CFs=5,  <span class="code-comment"># generate 5 alternatives</span><br>
+                        &nbsp;&nbsp;desired_class=<span class="code-string">"opposite"</span><br>
+                        )<br>
+                        cf.visualize_as_dataframe()
+                    </div>
+                </div>
+                <div class="example-box">
+                    <div class="example-title">Constraints</div>
+                    <div class="example-content">
+                        <strong>Immutable features:</strong> Can't change age, race<br>
+                        <strong>Directional:</strong> Age can only increase<br>
+                        <strong>Range limits:</strong> Income within realistic bounds<br>
+                        <strong>Causal:</strong> Respect feature dependencies
+                    </div>
+                </div>
+                <div class="app-box">
+                    <div class="app-title">Use Cases</div>
+                    <div class="app-item">• <strong>Finance:</strong> "How to get loan approved"</div>
+                    <div class="app-item">• <strong>Healthcare:</strong> "What lifestyle changes reduce risk"</div>
+                    <div class="app-item">• <strong>HR:</strong> "What skills would help promotion"</div>
+                    <div class="app-item">• <strong>GDPR:</strong> Satisfies "right to explanation"</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

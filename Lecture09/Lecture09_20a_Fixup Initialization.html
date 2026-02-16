@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fixup Initialization</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 26px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #1E64C8; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card.concept { border-color: #9C27B0; }
+        .card.practice { border-color: #4CAF50; }
+        .card-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+        .concept .card-title { color: #9C27B0; }
+        .practice .card-title { color: #4CAF50; }
+        .idea-box { background: #F3E5F5; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .idea-title { font-size: 12px; font-weight: 700; color: #7B1FA2; margin-bottom: 6px; }
+        .idea-content { font-size: 11px; color: #333; line-height: 1.5; }
+        .rule-box { background: #f8f8f8; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .rule-title { font-size: 12px; font-weight: 700; color: #1E64C8; margin-bottom: 6px; }
+        .rule-item { font-size: 11px; color: #333; margin-bottom: 4px; line-height: 1.4; }
+        .code-box { background: #2d2d2d; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .code-content { font-family: 'Courier New', monospace; font-size: 9px; color: #d4d4d4; line-height: 1.4; }
+        .code-comment { color: #6a9955; }
+        .benefit-box { background: #E8F5E9; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .benefit-title { font-size: 12px; font-weight: 700; color: #2E7D32; margin-bottom: 6px; }
+        .benefit-item { font-size: 11px; color: #333; margin-bottom: 4px; }
+        .note-box { background: #FFF3E0; border-radius: 8px; padding: 10px; margin-top: auto; }
+        .note-content { font-size: 11px; color: #333; line-height: 1.4; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Fixup Initialization</div>
+            <div class="subtitle">Training deep residual networks without normalization (Zhang et al., 2019)</div>
+        </div>
+        <div class="content-grid">
+            <div class="card concept">
+                <div class="card-title">Core Concept</div>
+                <div class="idea-box">
+                    <div class="idea-title">Key Insight</div>
+                    <div class="idea-content">
+                        BatchNorm isn't strictly necessary for training deep ResNets.<br><br>
+                        <strong>Fixup</strong> = Special initialization + learnable scalars<br>
+                        Achieves same performance without BatchNorm!
+                    </div>
+                </div>
+                <div class="rule-box">
+                    <div class="rule-title">Initialization Rules</div>
+                    <div class="rule-item"><strong>1.</strong> Initialize last layer of each residual branch to 0</div>
+                    <div class="rule-item"><strong>2.</strong> Scale other conv layers by L^(-1/(2m-2))</div>
+                    <div class="rule-item"><strong>3.</strong> Add learnable scalar multipliers (initialized to 1)</div>
+                    <div class="rule-item"><strong>4.</strong> Add learnable biases before each conv</div>
+                </div>
+                <div class="rule-box">
+                    <div class="rule-title">Why It Works</div>
+                    <div class="rule-item">- Zero init: Residual blocks start as identity</div>
+                    <div class="rule-item">- Scaled init: Controls gradient magnitude</div>
+                    <div class="rule-item">- Learnable scalars: Network can adjust during training</div>
+                </div>
+                <div class="benefit-box">
+                    <div class="benefit-title">Benefits</div>
+                    <div class="benefit-item">+ No BatchNorm = no batch dependency</div>
+                    <div class="benefit-item">+ Works with batch size = 1</div>
+                    <div class="benefit-item">+ More memory efficient</div>
+                    <div class="benefit-item">+ Deterministic (no running stats)</div>
+                </div>
+            </div>
+            <div class="card practice">
+                <div class="card-title">Implementation</div>
+                <div class="code-box">
+                    <div class="code-content">
+                        <span class="code-comment"># Fixup Residual Block</span><br>
+                        class FixupResBlock(nn.Module):<br>
+                        &nbsp;&nbsp;def __init__(self, in_ch, out_ch, num_layers):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;super().__init__()<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;self.bias1 = nn.Parameter(torch.zeros(1))<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;self.conv1 = nn.Conv2d(in_ch, out_ch, 3, padding=1)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;self.bias2 = nn.Parameter(torch.zeros(1))<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;self.conv2 = nn.Conv2d(out_ch, out_ch, 3, padding=1)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;self.scale = nn.Parameter(torch.ones(1))<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;self.bias3 = nn.Parameter(torch.zeros(1))<br><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment"># Fixup initialization</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;m = 2  <span class="code-comment"># layers per block</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;L = num_layers<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;nn.init.normal_(self.conv1.weight, std=<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;L**(-1/(2*m-2)) * self.conv1.weight.shape[1]**(-0.5))<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;nn.init.zeros_(self.conv2.weight)  <span class="code-comment"># Last layer = 0</span><br><br>
+                        &nbsp;&nbsp;def forward(self, x):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;out = F.relu(self.conv1(x + self.bias1))<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;out = self.conv2(out + self.bias2) * self.scale<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return F.relu(x + out + self.bias3)
+                    </div>
+                </div>
+                <div class="note-box">
+                    <div class="note-content">
+                        <strong>When to use Fixup:</strong><br>
+                        - Small batch sizes (medical imaging, 3D data)<br>
+                        - Online/streaming learning<br>
+                        - When determinism is required<br>
+                        - Memory-constrained scenarios<br><br>
+                        <strong>Note:</strong> BatchNorm often still preferred when batch size >= 16
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

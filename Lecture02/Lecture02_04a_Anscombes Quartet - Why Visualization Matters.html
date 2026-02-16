@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anscombe's Quartet</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #FFFFFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            padding: 25px 35px;
+        }
+
+        .title-section {
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .main-title {
+            font-size: 26px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: #666666;
+        }
+
+        .content-wrapper {
+            display: flex;
+            gap: 20px;
+            flex: 1;
+        }
+
+        .quartet-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 12px;
+            flex: 1.5;
+        }
+
+        .dataset-card {
+            background: #F8FBFF;
+            border: 2px solid #E0E0E0;
+            border-radius: 10px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dataset-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1E64C8;
+            text-align: center;
+            margin-bottom: 6px;
+        }
+
+        .dataset-visual {
+            flex: 1;
+            background: white;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dataset-visual svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .right-panel {
+            flex: 0.6;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .stats-card {
+            background: #FFF9E6;
+            border: 2px solid #FFC107;
+            border-radius: 10px;
+            padding: 14px;
+        }
+
+        .stats-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #333;
+            padding: 4px 0;
+            border-bottom: 1px solid #f0e0b0;
+        }
+
+        .stat-row:last-child {
+            border-bottom: none;
+        }
+
+        .stat-label {
+            font-weight: 500;
+        }
+
+        .stat-value {
+            font-weight: 700;
+            color: #1E64C8;
+        }
+
+        .lesson-card {
+            background: #E8F5E9;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            padding: 14px;
+            flex: 1;
+        }
+
+        .lesson-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #2E7D32;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .lesson-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 13px;
+            color: #333;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .check-icon {
+            color: #4CAF50;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .warning-box {
+            background: #FFEBEE;
+            border: 2px solid #EF5350;
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .warning-text {
+            font-size: 14px;
+            color: #C62828;
+            font-weight: 600;
+        }
+
+        .regression-line {
+            stroke: #EF5350;
+            stroke-width: 1.5;
+            stroke-dasharray: 4,2;
+        }
+
+        .data-point {
+            fill: #1E64C8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Anscombe's Quartet: Why Visualization Matters</div>
+            <div class="subtitle">Four datasets with identical statistical properties but very different distributions</div>
+        </div>
+
+        <div class="content-wrapper">
+            <div class="quartet-grid">
+                <!-- Dataset I: Linear relationship -->
+                <div class="dataset-card">
+                    <div class="dataset-title">Dataset I - Linear</div>
+                    <div class="dataset-visual">
+                        <svg viewBox="0 0 100 80">
+                            <line x1="10" y1="70" x2="90" y2="70" stroke="#ccc" stroke-width="1"/>
+                            <line x1="10" y1="70" x2="10" y2="10" stroke="#ccc" stroke-width="1"/>
+                            <line x1="10" y1="60" x2="90" y2="20" class="regression-line"/>
+                            <circle cx="20" cy="52" r="3" class="data-point"/>
+                            <circle cx="25" cy="50" r="3" class="data-point"/>
+                            <circle cx="30" cy="47" r="3" class="data-point"/>
+                            <circle cx="40" cy="40" r="3" class="data-point"/>
+                            <circle cx="50" cy="35" r="3" class="data-point"/>
+                            <circle cx="55" cy="32" r="3" class="data-point"/>
+                            <circle cx="60" cy="30" r="3" class="data-point"/>
+                            <circle cx="70" cy="25" r="3" class="data-point"/>
+                            <circle cx="75" cy="23" r="3" class="data-point"/>
+                            <circle cx="80" cy="20" r="3" class="data-point"/>
+                            <circle cx="85" cy="18" r="3" class="data-point"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Dataset II: Nonlinear (curved) -->
+                <div class="dataset-card">
+                    <div class="dataset-title">Dataset II - Nonlinear</div>
+                    <div class="dataset-visual">
+                        <svg viewBox="0 0 100 80">
+                            <line x1="10" y1="70" x2="90" y2="70" stroke="#ccc" stroke-width="1"/>
+                            <line x1="10" y1="70" x2="10" y2="10" stroke="#ccc" stroke-width="1"/>
+                            <line x1="10" y1="60" x2="90" y2="20" class="regression-line"/>
+                            <circle cx="20" cy="55" r="3" class="data-point"/>
+                            <circle cx="25" cy="45" r="3" class="data-point"/>
+                            <circle cx="30" cy="35" r="3" class="data-point"/>
+                            <circle cx="40" cy="25" r="3" class="data-point"/>
+                            <circle cx="50" cy="18" r="3" class="data-point"/>
+                            <circle cx="55" cy="16" r="3" class="data-point"/>
+                            <circle cx="60" cy="18" r="3" class="data-point"/>
+                            <circle cx="70" cy="25" r="3" class="data-point"/>
+                            <circle cx="75" cy="32" r="3" class="data-point"/>
+                            <circle cx="80" cy="40" r="3" class="data-point"/>
+                            <circle cx="85" cy="50" r="3" class="data-point"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Dataset III: Outlier influence -->
+                <div class="dataset-card">
+                    <div class="dataset-title">Dataset III - Outlier</div>
+                    <div class="dataset-visual">
+                        <svg viewBox="0 0 100 80">
+                            <line x1="10" y1="70" x2="90" y2="70" stroke="#ccc" stroke-width="1"/>
+                            <line x1="10" y1="70" x2="10" y2="10" stroke="#ccc" stroke-width="1"/>
+                            <line x1="10" y1="60" x2="90" y2="20" class="regression-line"/>
+                            <circle cx="20" cy="52" r="3" class="data-point"/>
+                            <circle cx="25" cy="48" r="3" class="data-point"/>
+                            <circle cx="30" cy="44" r="3" class="data-point"/>
+                            <circle cx="35" cy="40" r="3" class="data-point"/>
+                            <circle cx="40" cy="36" r="3" class="data-point"/>
+                            <circle cx="45" cy="32" r="3" class="data-point"/>
+                            <circle cx="50" cy="28" r="3" class="data-point"/>
+                            <circle cx="55" cy="24" r="3" class="data-point"/>
+                            <circle cx="60" cy="20" r="3" class="data-point"/>
+                            <circle cx="65" cy="16" r="3" class="data-point"/>
+                            <circle cx="55" cy="55" r="3.5" fill="#EF5350"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Dataset IV: High leverage point -->
+                <div class="dataset-card">
+                    <div class="dataset-title">Dataset IV - Leverage</div>
+                    <div class="dataset-visual">
+                        <svg viewBox="0 0 100 80">
+                            <line x1="10" y1="70" x2="90" y2="70" stroke="#ccc" stroke-width="1"/>
+                            <line x1="10" y1="70" x2="10" y2="10" stroke="#ccc" stroke-width="1"/>
+                            <line x1="10" y1="60" x2="90" y2="20" class="regression-line"/>
+                            <circle cx="25" cy="35" r="3" class="data-point"/>
+                            <circle cx="25" cy="35" r="3" class="data-point"/>
+                            <circle cx="25" cy="35" r="3" class="data-point"/>
+                            <circle cx="25" cy="35" r="3" class="data-point"/>
+                            <circle cx="25" cy="35" r="3" class="data-point"/>
+                            <circle cx="25" cy="35" r="3" class="data-point"/>
+                            <circle cx="25" cy="35" r="3" class="data-point"/>
+                            <circle cx="25" cy="35" r="3" class="data-point"/>
+                            <circle cx="25" cy="35" r="3" class="data-point"/>
+                            <circle cx="25" cy="35" r="3" class="data-point"/>
+                            <circle cx="85" cy="18" r="3.5" fill="#EF5350"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right-panel">
+                <div class="stats-card">
+                    <div class="stats-title">Identical Statistics!</div>
+                    <div class="stat-row">
+                        <span class="stat-label">Mean X</span>
+                        <span class="stat-value">9.0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Mean Y</span>
+                        <span class="stat-value">7.5</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Var X</span>
+                        <span class="stat-value">11.0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Var Y</span>
+                        <span class="stat-value">4.13</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Correlation</span>
+                        <span class="stat-value">0.816</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Regression</span>
+                        <span class="stat-value">y = 3 + 0.5x</span>
+                    </div>
+                </div>
+
+                <div class="lesson-card">
+                    <div class="lesson-title">Key Lessons</div>
+                    <div class="lesson-item">
+                        <span class="check-icon">!</span>
+                        <span>Summary stats can hide patterns</span>
+                    </div>
+                    <div class="lesson-item">
+                        <span class="check-icon">!</span>
+                        <span>Always visualize before modeling</span>
+                    </div>
+                    <div class="lesson-item">
+                        <span class="check-icon">!</span>
+                        <span>Check for outliers & nonlinearity</span>
+                    </div>
+                    <div class="lesson-item">
+                        <span class="check-icon">!</span>
+                        <span>Residual plots reveal issues</span>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <div class="warning-text">"Never trust statistics alone!"</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

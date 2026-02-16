@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scaling Laws</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 26px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #9C27B0; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card.practice { border-color: #4CAF50; }
+        .card-title { font-size: 16px; font-weight: 700; color: #9C27B0; margin-bottom: 10px; }
+        .card.practice .card-title { color: #4CAF50; }
+        .formula-box { background: #F3E5F5; border-radius: 8px; padding: 12px; margin-bottom: 10px; text-align: center; }
+        .formula-main { font-family: 'Times New Roman', serif; font-size: 14px; font-weight: 600; color: #333; margin-bottom: 6px; }
+        .formula-note { font-size: 10px; color: #666; }
+        .insight-box { background: #E3F2FD; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .insight-title { font-size: 12px; font-weight: 700; color: #1565C0; margin-bottom: 6px; }
+        .insight-item { font-size: 11px; color: #333; margin-bottom: 4px; line-height: 1.4; }
+        .chinchilla-box { background: #E8F5E9; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .chinchilla-title { font-size: 12px; font-weight: 700; color: #2E7D32; margin-bottom: 6px; }
+        .chinchilla-content { font-size: 11px; color: #333; line-height: 1.5; }
+        .example-table { width: 100%; font-size: 9px; border-collapse: collapse; margin-bottom: 10px; }
+        .example-table th { background: #4CAF50; color: white; padding: 5px; }
+        .example-table td { padding: 5px; text-anchor: center; border-bottom: 1px solid #e0e0e0; }
+        .note-box { background: #FFF3E0; border-radius: 8px; padding: 10px; margin-top: auto; }
+        .note-content { font-size: 11px; color: #333; line-height: 1.4; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Neural Scaling Laws</div>
+            <div class="subtitle">Predicting model performance from scale (Kaplan et al., Hoffmann et al.)</div>
+        </div>
+        <div class="content-grid">
+            <div class="card">
+                <div class="card-title">Power Law Relationships</div>
+                <div class="formula-box">
+                    <div class="formula-main">L(N) = (N<sub>c</sub> / N)<sup>alpha_N</sup></div>
+                    <div class="formula-note">Loss decreases as power law of parameters N</div>
+                </div>
+                <div class="formula-box">
+                    <div class="formula-main">L(D) = (D<sub>c</sub> / D)<sup>alpha_D</sup></div>
+                    <div class="formula-note">Loss decreases as power law of data D</div>
+                </div>
+                <div class="formula-box">
+                    <div class="formula-main">L(C) = (C<sub>c</sub> / C)<sup>alpha_C</sup></div>
+                    <div class="formula-note">Loss decreases as power law of compute C</div>
+                </div>
+                <div class="insight-box">
+                    <div class="insight-title">Key Insights (Kaplan 2020)</div>
+                    <div class="insight-item">- <strong>Smooth power laws:</strong> No sudden improvements</div>
+                    <div class="insight-item">- <strong>Scale matters most:</strong> Architecture less important</div>
+                    <div class="insight-item">- <strong>Predictable:</strong> Can extrapolate to larger models</div>
+                    <div class="insight-item">- <strong>alpha ~ 0.076:</strong> 10x params -> 45% loss reduction</div>
+                </div>
+            </div>
+            <div class="card practice">
+                <div class="card-title">Chinchilla Optimal Training</div>
+                <div class="chinchilla-box">
+                    <div class="chinchilla-title">Chinchilla (Hoffmann 2022)</div>
+                    <div class="chinchilla-content">
+                        <strong>Key finding:</strong> Most models are undertrained!<br><br>
+                        <strong>Optimal ratio:</strong> Tokens ≈ 20 × Parameters<br><br>
+                        70B model should see ~1.4T tokens<br>
+                        GPT-3 175B saw only 300B tokens (undertrained)
+                    </div>
+                </div>
+                <table class="example-table">
+                    <tr><th>Model</th><th>Params</th><th>Tokens</th><th>Ratio</th><th>Status</th></tr>
+                    <tr><td>GPT-3</td><td>175B</td><td>300B</td><td>1.7x</td><td>Undertrained</td></tr>
+                    <tr><td>Chinchilla</td><td>70B</td><td>1.4T</td><td>20x</td><td>Optimal</td></tr>
+                    <tr><td>LLaMA-2</td><td>70B</td><td>2T</td><td>29x</td><td>Overtrained</td></tr>
+                    <tr><td>Mistral</td><td>7B</td><td>?T</td><td>>100x</td><td>Inference optimized</td></tr>
+                </table>
+                <div class="note-box">
+                    <div class="note-content">
+                        <strong>Modern trend:</strong> Train smaller models longer for inference efficiency.<br>
+                        Compute-optimal != inference-optimal.<br>
+                        LLaMA, Mistral intentionally "overtrained" for deployment.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

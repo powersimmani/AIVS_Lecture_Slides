@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weight Initialization Formulas</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 14px; }
+        .main-title { font-size: 24px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .init-card { background: white; border: 2.5px solid #1E64C8; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .init-card.xavier { border-color: #2196F3; }
+        .init-card.he { border-color: #4CAF50; }
+        .init-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 2px solid #e0e0e0; }
+        .init-name { font-size: 18px; font-weight: 700; }
+        .xavier .init-name { color: #2196F3; }
+        .he .init-name { color: #4CAF50; }
+        .init-year { font-size: 12px; color: #666; }
+        .formula-section { background: #f8f8f8; border-radius: 8px; padding: 12px; margin-bottom: 10px; }
+        .formula-title { font-size: 13px; font-weight: 700; color: #1E64C8; margin-bottom: 8px; }
+        .formula-box { background: white; border-radius: 6px; padding: 10px; margin-bottom: 8px; }
+        .formula-label { font-size: 11px; color: #666; margin-bottom: 4px; }
+        .formula-main { font-size: 14px; font-weight: 600; color: #333; font-family: 'Times New Roman', serif; }
+        .feature-list { flex: 1; }
+        .feature-item { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: #333; margin-bottom: 6px; line-height: 1.4; }
+        .feature-icon { font-weight: bold; flex-shrink: 0; }
+        .xavier .feature-icon { color: #2196F3; }
+        .he .feature-icon { color: #4CAF50; }
+        .usage-box { border-radius: 6px; padding: 10px; font-size: 12px; margin-top: auto; }
+        .xavier .usage-box { background: #E3F2FD; color: #1565C0; }
+        .he .usage-box { background: #E8F5E9; color: #2E7D32; }
+        .bottom-section { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 14px; }
+        .code-box { background: #2d2d2d; border-radius: 8px; padding: 12px; }
+        .code-title { color: #9cdcfe; font-size: 12px; margin-bottom: 8px; }
+        .code-content { font-family: 'Courier New', monospace; font-size: 11px; color: #d4d4d4; line-height: 1.5; }
+        .code-keyword { color: #569cd6; }
+        .code-comment { color: #6a9955; }
+        .tip-box { background: #FFF9E6; border: 2px solid #FFC107; border-radius: 8px; padding: 12px; }
+        .tip-title { font-size: 13px; font-weight: 700; color: #F57C00; margin-bottom: 6px; }
+        .tip-content { font-size: 11px; color: #333; line-height: 1.5; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Weight Initialization: Mathematical Details</div>
+            <div class="subtitle">Proper initialization prevents vanishing/exploding gradients</div>
+        </div>
+        <div class="content-grid">
+            <div class="init-card xavier">
+                <div class="init-header">
+                    <span class="init-name">Xavier / Glorot</span>
+                    <span class="init-year">Glorot & Bengio, 2010</span>
+                </div>
+                <div class="formula-section">
+                    <div class="formula-title">Formulas</div>
+                    <div class="formula-box">
+                        <div class="formula-label">Uniform Distribution:</div>
+                        <div class="formula-main">W ~ U(-√(6/(n_in + n_out)), √(6/(n_in + n_out)))</div>
+                    </div>
+                    <div class="formula-box">
+                        <div class="formula-label">Normal Distribution:</div>
+                        <div class="formula-main">W ~ N(0, 2/(n_in + n_out))</div>
+                    </div>
+                </div>
+                <div class="feature-list">
+                    <div class="feature-item"><span class="feature-icon">✓</span><span>Maintains variance across layers</span></div>
+                    <div class="feature-item"><span class="feature-icon">✓</span><span>Assumes linear activation region</span></div>
+                    <div class="feature-item"><span class="feature-icon">✓</span><span>Considers both forward & backward pass</span></div>
+                </div>
+                <div class="usage-box"><strong>Best for:</strong> Sigmoid, Tanh, Linear activations</div>
+            </div>
+            <div class="init-card he">
+                <div class="init-header">
+                    <span class="init-name">He / Kaiming</span>
+                    <span class="init-year">He et al., 2015</span>
+                </div>
+                <div class="formula-section">
+                    <div class="formula-title">Formulas</div>
+                    <div class="formula-box">
+                        <div class="formula-label">Normal Distribution:</div>
+                        <div class="formula-main">W ~ N(0, 2/n_in)</div>
+                    </div>
+                    <div class="formula-box">
+                        <div class="formula-label">Uniform Distribution:</div>
+                        <div class="formula-main">W ~ U(-√(6/n_in), √(6/n_in))</div>
+                    </div>
+                </div>
+                <div class="feature-list">
+                    <div class="feature-item"><span class="feature-icon">✓</span><span>Accounts for ReLU's asymmetry</span></div>
+                    <div class="feature-item"><span class="feature-icon">✓</span><span>Factor of 2 compensates for dead neurons</span></div>
+                    <div class="feature-item"><span class="feature-icon">✓</span><span>fan_in (default) or fan_out mode</span></div>
+                </div>
+                <div class="usage-box"><strong>Best for:</strong> ReLU, Leaky ReLU, ELU, GELU</div>
+            </div>
+        </div>
+        <div class="bottom-section">
+            <div class="code-box">
+                <div class="code-title"># PyTorch Initialization</div>
+                <div class="code-content">
+                    <span class="code-comment"># Xavier/Glorot</span><br>
+                    nn.init.xavier_uniform_(layer.weight)<br>
+                    nn.init.xavier_normal_(layer.weight)<br><br>
+                    <span class="code-comment"># He/Kaiming</span><br>
+                    nn.init.kaiming_uniform_(layer.weight, nonlinearity=<span class="code-keyword">'relu'</span>)<br>
+                    nn.init.kaiming_normal_(layer.weight, nonlinearity=<span class="code-keyword">'relu'</span>)
+                </div>
+            </div>
+            <div class="tip-box">
+                <div class="tip-title">Practical Guidelines</div>
+                <div class="tip-content">
+                    • <strong>ReLU/variants:</strong> Always use He initialization<br>
+                    • <strong>Tanh/Sigmoid:</strong> Use Xavier initialization<br>
+                    • <strong>Transformers:</strong> Often use scaled normal (0.02)<br>
+                    • <strong>Biases:</strong> Usually initialize to 0
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

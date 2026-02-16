@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Visualization Libraries</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 15px; }
+        .main-title { font-size: 28px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #1E64C8; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card.declarative { border-color: #9C27B0; }
+        .card.interactive { border-color: #FF9800; }
+        .card.ecosystem { border-color: #4CAF50; }
+        .card.comparison { border-color: #2196F3; }
+        .card-title { font-size: 15px; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .declarative .card-title { color: #9C27B0; }
+        .interactive .card-title { color: #FF9800; }
+        .ecosystem .card-title { color: #4CAF50; }
+        .comparison .card-title { color: #2196F3; }
+        .lib-box { background: #f8f8f8; border-radius: 8px; padding: 10px; margin-bottom: 8px; }
+        .lib-name { font-size: 13px; font-weight: 700; color: #333; margin-bottom: 4px; }
+        .lib-desc { font-size: 11px; color: #555; line-height: 1.4; }
+        .code-snippet { background: #2d2d2d; border-radius: 6px; padding: 8px; margin-top: 6px; }
+        .code-text { font-family: 'Courier New', monospace; font-size: 9px; color: #d4d4d4; }
+        .comparison-table { width: 100%; font-size: 10px; border-collapse: collapse; }
+        .comparison-table th { background: #2196F3; color: white; padding: 6px; text-align: left; }
+        .comparison-table td { padding: 5px; border-bottom: 1px solid #e0e0e0; }
+        .check { color: #4CAF50; font-weight: bold; }
+        .partial { color: #FF9800; }
+        .eco-item { font-size: 11px; color: #333; margin-bottom: 6px; line-height: 1.4; }
+        .eco-item strong { color: #2E7D32; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Modern Visualization Libraries</div>
+            <div class="subtitle">Beyond Matplotlib: Declarative, Interactive, and Large-Scale Visualization</div>
+        </div>
+        <div class="content-grid">
+            <div class="card declarative">
+                <div class="card-title">Declarative Visualization</div>
+                <div class="lib-box">
+                    <div class="lib-name">Altair</div>
+                    <div class="lib-desc">Vega-Lite based, concise grammar syntax. Excellent Jupyter integration.</div>
+                    <div class="code-snippet">
+                        <div class="code-text">alt.Chart(df).mark_point().encode(<br>&nbsp;&nbsp;x='x:Q', y='y:Q', color='category:N'<br>)</div>
+                    </div>
+                </div>
+                <div class="lib-box">
+                    <div class="lib-name">Plotly Express</div>
+                    <div class="lib-desc">High-level interface for Plotly. One-liner interactive charts.</div>
+                    <div class="code-snippet">
+                        <div class="code-text">px.scatter(df, x='x', y='y', color='cat',<br>&nbsp;&nbsp;hover_data=['name'], trendline='ols')</div>
+                    </div>
+                </div>
+            </div>
+            <div class="card interactive">
+                <div class="card-title">Interactive & Web</div>
+                <div class="lib-box">
+                    <div class="lib-name">Bokeh</div>
+                    <div class="lib-desc">Large dataset handling. Easy web app embedding. Streaming support.</div>
+                </div>
+                <div class="lib-box">
+                    <div class="lib-name">HoloViews</div>
+                    <div class="lib-desc">High-level API for exploratory analysis. Automatic visualization selection.</div>
+                </div>
+                <div class="lib-box">
+                    <div class="lib-name">Plotly Dash</div>
+                    <div class="lib-desc">Full dashboard framework. React-based, production-ready.</div>
+                </div>
+            </div>
+            <div class="card ecosystem">
+                <div class="card-title">PyViz Ecosystem</div>
+                <div class="eco-item"><strong>HoloViews:</strong> Declarative data structures</div>
+                <div class="eco-item"><strong>Panel:</strong> Dashboard & app building</div>
+                <div class="eco-item"><strong>hvPlot:</strong> High-level plotting API</div>
+                <div class="eco-item"><strong>Datashader:</strong> Big data rasterization (billions of points)</div>
+                <div class="eco-item"><strong>GeoViews:</strong> Geographic visualization</div>
+                <div class="lib-box" style="margin-top: 8px; background: #E8F5E9;">
+                    <div class="lib-desc"><strong>Use case:</strong> When you need to visualize millions of data points without browser crash</div>
+                </div>
+            </div>
+            <div class="card comparison">
+                <div class="card-title">Quick Comparison</div>
+                <table class="comparison-table">
+                    <tr><th>Library</th><th>Interactive</th><th>Big Data</th><th>Learning</th></tr>
+                    <tr><td>Matplotlib</td><td class="partial">~</td><td class="partial">~</td><td class="check">Easy</td></tr>
+                    <tr><td>Seaborn</td><td class="partial">~</td><td class="partial">~</td><td class="check">Easy</td></tr>
+                    <tr><td>Plotly</td><td class="check">Yes</td><td class="partial">~</td><td>Medium</td></tr>
+                    <tr><td>Altair</td><td class="check">Yes</td><td class="partial">~</td><td class="check">Easy</td></tr>
+                    <tr><td>Bokeh</td><td class="check">Yes</td><td class="check">Yes</td><td>Medium</td></tr>
+                    <tr><td>Datashader</td><td class="check">Yes</td><td class="check">Yes</td><td>Hard</td></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

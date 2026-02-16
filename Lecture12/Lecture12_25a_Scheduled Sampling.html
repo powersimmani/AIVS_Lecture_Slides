@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scheduled Sampling</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 26px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #F44336; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card.solution { border-color: #4CAF50; }
+        .card-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+        .card:first-child .card-title { color: #F44336; }
+        .card.solution .card-title { color: #4CAF50; }
+        .problem-box { background: #FFEBEE; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .problem-title { font-size: 12px; font-weight: 700; color: #C62828; margin-bottom: 6px; }
+        .problem-content { font-size: 11px; color: #333; line-height: 1.5; }
+        .visual-box { background: #f8f8f8; border-radius: 8px; padding: 10px; margin-bottom: 10px; text-align: center; }
+        .visual-title { font-size: 11px; font-weight: 700; color: #1E64C8; margin-bottom: 6px; }
+        .schedule-box { background: #E8F5E9; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .schedule-title { font-size: 12px; font-weight: 700; color: #2E7D32; margin-bottom: 6px; }
+        .schedule-item { font-size: 11px; color: #333; margin-bottom: 4px; line-height: 1.4; }
+        .code-box { background: #2d2d2d; border-radius: 8px; padding: 10px; }
+        .code-content { font-family: 'Courier New', monospace; font-size: 9px; color: #d4d4d4; line-height: 1.4; }
+        .code-comment { color: #6a9955; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Scheduled Sampling</div>
+            <div class="subtitle">Bridging the train-test gap in seq2seq models (Bengio et al., 2015)</div>
+        </div>
+        <div class="content-grid">
+            <div class="card">
+                <div class="card-title">The Exposure Bias Problem</div>
+                <div class="problem-box">
+                    <div class="problem-title">Training vs Inference Mismatch</div>
+                    <div class="problem-content">
+                        <strong>Training:</strong> Decoder sees ground-truth tokens<br>
+                        <strong>Inference:</strong> Decoder sees its own predictions<br><br>
+                        One error -> cascading failures!
+                    </div>
+                </div>
+                <div class="visual-box">
+                    <div class="visual-title">Teacher Forcing (Training)</div>
+                    <svg viewBox="0 0 280 50" style="width: 100%; height: 45px;">
+                        <rect x="10" y="15" width="50" height="20" fill="#C8E6C9" stroke="#4CAF50" rx="3"/>
+                        <text x="35" y="28" text-anchor="middle" font-size="7" fill="#2E7D32">Ground Truth</text>
+                        <path d="M65,25 L85,25" stroke="#666" marker-end="url(#arr)"/>
+                        <rect x="90" y="15" width="40" height="20" fill="#BBDEFB" stroke="#2196F3" rx="3"/>
+                        <text x="110" y="28" text-anchor="middle" font-size="7">Decoder</text>
+                        <path d="M135,25 L155,25" stroke="#666" marker-end="url(#arr)"/>
+                        <rect x="160" y="15" width="40" height="20" fill="#FFE0B2" stroke="#FF9800" rx="3"/>
+                        <text x="180" y="28" text-anchor="middle" font-size="7">Output</text>
+                        <defs><marker id="arr" markerWidth="4" markerHeight="4" refX="3" refY="2" orient="auto"><path d="M0,0 L4,2 L0,4 Z" fill="#666"/></marker></defs>
+                    </svg>
+                </div>
+                <div class="visual-box">
+                    <div class="visual-title">Autoregressive (Inference)</div>
+                    <svg viewBox="0 0 280 50" style="width: 100%; height: 45px;">
+                        <rect x="10" y="15" width="50" height="20" fill="#FFCDD2" stroke="#F44336" rx="3"/>
+                        <text x="35" y="28" text-anchor="middle" font-size="7" fill="#C62828">Own Prediction</text>
+                        <path d="M65,25 L85,25" stroke="#666" marker-end="url(#arr)"/>
+                        <rect x="90" y="15" width="40" height="20" fill="#BBDEFB" stroke="#2196F3" rx="3"/>
+                        <text x="110" y="28" text-anchor="middle" font-size="7">Decoder</text>
+                        <path d="M135,25 L155,25" stroke="#666" marker-end="url(#arr)"/>
+                        <rect x="160" y="15" width="40" height="20" fill="#FFE0B2" stroke="#FF9800" rx="3"/>
+                        <text x="180" y="28" text-anchor="middle" font-size="7">Output</text>
+                        <path d="M180,40 Q180,50 90,50 Q10,50 35,35" stroke="#F44336" stroke-dasharray="3,2" fill="none" marker-end="url(#arr)"/>
+                    </svg>
+                </div>
+                <div class="problem-box">
+                    <div class="problem-title">Consequences</div>
+                    <div class="problem-content">
+                        - Never learns to recover from mistakes<br>
+                        - Errors compound during generation<br>
+                        - Poor long-sequence performance
+                    </div>
+                </div>
+            </div>
+            <div class="card solution">
+                <div class="card-title">Scheduled Sampling Solution</div>
+                <div class="schedule-box">
+                    <div class="schedule-title">Core Idea</div>
+                    <div class="schedule-item">Gradually transition from teacher forcing to self-generated tokens during training.</div>
+                    <div class="schedule-item"><br>At each step, with probability eps:</div>
+                    <div class="schedule-item">- Use ground truth (teacher forcing)</div>
+                    <div class="schedule-item">- Use model's prediction (free running)</div>
+                </div>
+                <div class="schedule-box">
+                    <div class="schedule-title">Scheduling Strategies</div>
+                    <div class="schedule-item"><strong>Linear:</strong> eps = max(min_eps, 1 - k*epoch)</div>
+                    <div class="schedule-item"><strong>Exponential:</strong> eps = k^epoch</div>
+                    <div class="schedule-item"><strong>Inverse Sigmoid:</strong> eps = k/(k + exp(epoch/k))</div>
+                </div>
+                <div class="code-box">
+                    <div class="code-content">
+                        <span class="code-comment"># Scheduled sampling in decoder</span><br>
+                        def decode_step(prev_token, hidden, eps, target):<br>
+                        &nbsp;&nbsp;use_teacher = random.random() < eps<br>
+                        &nbsp;&nbsp;input_token = target if use_teacher else prev_token<br>
+                        &nbsp;&nbsp;output, hidden = decoder(input_token, hidden)<br>
+                        &nbsp;&nbsp;return output, hidden<br><br>
+                        <span class="code-comment"># Schedule: linear decay</span><br>
+                        eps = max(0.1, 1.0 - 0.01 * epoch)<br><br>
+                        <span class="code-comment"># Training loop</span><br>
+                        for t in range(seq_len):<br>
+                        &nbsp;&nbsp;output, hidden = decode_step(<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;pred_token, hidden, eps, target[t]<br>
+                        &nbsp;&nbsp;)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

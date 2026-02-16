@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RandAugment and AutoAugment</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 24px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; flex: 1; }
+        .card { background: white; border: 2.5px solid #1E64C8; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; }
+        .card.auto { border-color: #9C27B0; }
+        .card.rand { border-color: #4CAF50; }
+        .card.trivial { border-color: #FF9800; }
+        .card-header { margin-bottom: 8px; padding-bottom: 6px; border-bottom: 2px solid #e0e0e0; }
+        .card-title { font-size: 15px; font-weight: 700; }
+        .auto .card-title { color: #9C27B0; }
+        .rand .card-title { color: #4CAF50; }
+        .trivial .card-title { color: #FF9800; }
+        .card-year { font-size: 10px; color: #666; }
+        .idea-box { border-radius: 6px; padding: 8px; margin-bottom: 8px; font-size: 11px; line-height: 1.4; }
+        .auto .idea-box { background: #F3E5F5; color: #333; }
+        .rand .idea-box { background: #E8F5E9; color: #333; }
+        .trivial .idea-box { background: #FFF3E0; color: #333; }
+        .param-box { background: #f8f8f8; border-radius: 6px; padding: 8px; margin-bottom: 8px; text-align: center; }
+        .param-title { font-size: 10px; font-weight: 700; color: #666; margin-bottom: 4px; }
+        .param-value { font-size: 12px; font-weight: 600; color: #333; }
+        .feature-item { display: flex; align-items: flex-start; gap: 6px; font-size: 11px; color: #333; margin-bottom: 4px; line-height: 1.3; }
+        .feature-icon { font-weight: bold; flex-shrink: 0; }
+        .auto .feature-icon { color: #9C27B0; }
+        .rand .feature-icon { color: #4CAF50; }
+        .trivial .feature-icon { color: #FF9800; }
+        .bottom-section { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 10px; }
+        .compare-box { background: #E3F2FD; border: 2px solid #1E64C8; border-radius: 10px; padding: 10px; }
+        .compare-title { font-size: 13px; font-weight: 700; color: #1565C0; margin-bottom: 6px; text-align: center; }
+        .comparison-table { width: 100%; font-size: 10px; border-collapse: collapse; }
+        .comparison-table th { background: #1E64C8; color: white; padding: 4px; text-align: center; }
+        .comparison-table td { padding: 4px; text-align: center; border-bottom: 1px solid #e0e0e0; }
+        .highlight { background: #E8F5E9; font-weight: 600; }
+        .code-box { background: #2d2d2d; border-radius: 8px; padding: 10px; }
+        .code-title { color: #9cdcfe; font-size: 11px; margin-bottom: 6px; }
+        .code-content { font-family: 'Courier New', monospace; font-size: 10px; color: #d4d4d4; line-height: 1.4; }
+        .code-comment { color: #6a9955; }
+        .code-number { color: #b5cea8; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Automated Data Augmentation</div>
+            <div class="subtitle">Learning optimal augmentation policies automatically</div>
+        </div>
+        <div class="content-grid">
+            <div class="card auto">
+                <div class="card-header">
+                    <div class="card-title">AutoAugment</div>
+                    <div class="card-year">Google, 2018</div>
+                </div>
+                <div class="idea-box">
+                    <strong>Idea:</strong> Use reinforcement learning to search for optimal augmentation policy on target dataset.
+                </div>
+                <div class="param-box">
+                    <div class="param-title">Search Space</div>
+                    <div class="param-value">16 operations, 10 magnitudes, 11 probabilities</div>
+                </div>
+                <div class="feature-item"><span class="feature-icon">✓</span><span>Best accuracy (dataset-specific)</span></div>
+                <div class="feature-item"><span class="feature-icon">•</span><span>15,000 GPU hours search</span></div>
+                <div class="feature-item"><span class="feature-icon">•</span><span>Reuse policies possible</span></div>
+                <div class="feature-item"><span class="feature-icon">•</span><span>ImageNet policy transferable</span></div>
+            </div>
+            <div class="card rand">
+                <div class="card-header">
+                    <div class="card-title">RandAugment</div>
+                    <div class="card-year">Google, 2020</div>
+                </div>
+                <div class="idea-box">
+                    <strong>Idea:</strong> Random selection is as good as learned policy! Just tune N (ops) and M (magnitude).
+                </div>
+                <div class="param-box">
+                    <div class="param-title">Hyperparameters</div>
+                    <div class="param-value">N = 2, M = 9 (common default)</div>
+                </div>
+                <div class="feature-item"><span class="feature-icon">✓</span><span>No search required</span></div>
+                <div class="feature-item"><span class="feature-icon">✓</span><span>2 hyperparams only</span></div>
+                <div class="feature-item"><span class="feature-icon">✓</span><span>AutoAugment-level accuracy</span></div>
+                <div class="feature-item"><span class="feature-icon">✓</span><span>Works across datasets</span></div>
+            </div>
+            <div class="card trivial">
+                <div class="card-header">
+                    <div class="card-title">TrivialAugment</div>
+                    <div class="card-year">2021</div>
+                </div>
+                <div class="idea-box">
+                    <strong>Idea:</strong> Even simpler - apply one random operation with random magnitude per image.
+                </div>
+                <div class="param-box">
+                    <div class="param-title">Hyperparameters</div>
+                    <div class="param-value">None! (or just M)</div>
+                </div>
+                <div class="feature-item"><span class="feature-icon">✓</span><span>Simplest approach</span></div>
+                <div class="feature-item"><span class="feature-icon">✓</span><span>Zero tuning needed</span></div>
+                <div class="feature-item"><span class="feature-icon">✓</span><span>SOTA performance</span></div>
+                <div class="feature-item"><span class="feature-icon">✓</span><span>Most robust</span></div>
+            </div>
+        </div>
+        <div class="bottom-section">
+            <div class="compare-box">
+                <div class="compare-title">Comparison</div>
+                <table class="comparison-table">
+                    <tr><th>Method</th><th>Hyperparams</th><th>Search Cost</th><th>ImageNet Acc</th></tr>
+                    <tr><td>AutoAugment</td><td>Policy</td><td>15k GPU-hrs</td><td>77.6%</td></tr>
+                    <tr><td>RandAugment</td><td>N, M</td><td class="highlight">None</td><td>77.6%</td></tr>
+                    <tr><td>TrivialAugment</td><td class="highlight">0-1</td><td class="highlight">None</td><td class="highlight">77.8%</td></tr>
+                </table>
+            </div>
+            <div class="code-box">
+                <div class="code-title"># PyTorch Implementation</div>
+                <div class="code-content">
+                    <span class="code-comment"># RandAugment</span><br>
+                    from torchvision.transforms import RandAugment<br>
+                    transform = RandAugment(num_ops=<span class="code-number">2</span>, magnitude=<span class="code-number">9</span>)<br><br>
+                    <span class="code-comment"># TrivialAugment</span><br>
+                    from torchvision.transforms import TrivialAugmentWide<br>
+                    transform = TrivialAugmentWide()
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

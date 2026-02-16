@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDP and ICE Implementation</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 26px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #2196F3; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card.ice { border-color: #FF9800; }
+        .card-title { font-size: 16px; font-weight: 700; color: #1565C0; margin-bottom: 10px; }
+        .card.ice .card-title { color: #FF9800; }
+        .code-box { background: #2d2d2d; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .code-content { font-family: 'Courier New', monospace; font-size: 9px; color: #d4d4d4; line-height: 1.4; }
+        .code-comment { color: #6a9955; }
+        .concept-box { background: #E3F2FD; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .concept-title { font-size: 12px; font-weight: 700; color: #1565C0; margin-bottom: 6px; }
+        .concept-content { font-size: 11px; color: #333; line-height: 1.5; }
+        .interpret-box { background: #FFF3E0; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .interpret-title { font-size: 12px; font-weight: 700; color: #E65100; margin-bottom: 6px; }
+        .interpret-content { font-size: 11px; color: #333; line-height: 1.5; }
+        .visual-box { background: #f8f8f8; border-radius: 8px; padding: 10px; margin-bottom: 10px; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">PDP & ICE Implementation</div>
+            <div class="subtitle">Practical code for Partial Dependence and Individual Conditional Expectation plots</div>
+        </div>
+        <div class="content-grid">
+            <div class="card">
+                <div class="card-title">Partial Dependence Plot (PDP)</div>
+                <div class="concept-box">
+                    <div class="concept-title">What It Shows</div>
+                    <div class="concept-content">
+                        <strong>Average marginal effect</strong> of a feature on prediction<br>
+                        Averages out all other features → shows main effect
+                    </div>
+                </div>
+                <div class="code-box">
+                    <div class="code-content">
+                        <span class="code-comment"># Basic PDP with sklearn</span><br>
+                        from sklearn.inspection import PartialDependenceDisplay<br><br>
+                        <span class="code-comment"># Single feature PDP</span><br>
+                        fig, ax = plt.subplots(figsize=(8, 5))<br>
+                        PartialDependenceDisplay.from_estimator(<br>
+                        &nbsp;&nbsp;model, X_train,<br>
+                        &nbsp;&nbsp;features=['age', 'income'],  <span class="code-comment"># features to plot</span><br>
+                        &nbsp;&nbsp;kind='average',  <span class="code-comment"># PDP (average)</span><br>
+                        &nbsp;&nbsp;ax=ax<br>
+                        )<br>
+                        plt.tight_layout()<br><br>
+                        <span class="code-comment"># 2D PDP (interaction)</span><br>
+                        PartialDependenceDisplay.from_estimator(<br>
+                        &nbsp;&nbsp;model, X_train,<br>
+                        &nbsp;&nbsp;features=[('age', 'income')],  <span class="code-comment"># 2D tuple</span><br>
+                        &nbsp;&nbsp;kind='average'<br>
+                        )
+                    </div>
+                </div>
+                <div class="interpret-box">
+                    <div class="interpret-title">Interpretation</div>
+                    <div class="interpret-content">
+                        <strong>Rising line:</strong> Feature increase → higher prediction<br>
+                        <strong>Falling line:</strong> Feature increase → lower prediction<br>
+                        <strong>Flat line:</strong> Feature has little effect<br>
+                        <strong>2D heatmap:</strong> Shows interaction between two features
+                    </div>
+                </div>
+            </div>
+            <div class="card ice">
+                <div class="card-title">ICE (Individual Conditional Expectation)</div>
+                <div class="concept-box">
+                    <div class="concept-title">What It Shows</div>
+                    <div class="concept-content">
+                        <strong>One line per instance</strong> showing how that instance's prediction changes<br>
+                        Reveals heterogeneous effects that PDP averages out
+                    </div>
+                </div>
+                <div class="code-box">
+                    <div class="code-content">
+                        <span class="code-comment"># ICE plots with sklearn</span><br>
+                        PartialDependenceDisplay.from_estimator(<br>
+                        &nbsp;&nbsp;model, X_train,<br>
+                        &nbsp;&nbsp;features=['age'],<br>
+                        &nbsp;&nbsp;kind='individual',  <span class="code-comment"># ICE</span><br>
+                        &nbsp;&nbsp;subsample=50,  <span class="code-comment"># show 50 lines</span><br>
+                        &nbsp;&nbsp;ax=ax<br>
+                        )<br><br>
+                        <span class="code-comment"># Combined: ICE + PDP overlay</span><br>
+                        PartialDependenceDisplay.from_estimator(<br>
+                        &nbsp;&nbsp;model, X_train,<br>
+                        &nbsp;&nbsp;features=['age'],<br>
+                        &nbsp;&nbsp;kind='both',  <span class="code-comment"># ICE + PDP</span><br>
+                        &nbsp;&nbsp;subsample=30,<br>
+                        &nbsp;&nbsp;centered=True  <span class="code-comment"># c-ICE (centered)</span><br>
+                        )
+                    </div>
+                </div>
+                <div class="visual-box">
+                    <svg viewBox="0 0 260 70" style="width: 100%; height: 65px;">
+                        <!-- ICE lines (individual) -->
+                        <polyline points="20,50 60,45 100,35 140,30 180,25" fill="none" stroke="#FF9800" stroke-width="1" opacity="0.4"/>
+                        <polyline points="20,55 60,50 100,55 140,45 180,40" fill="none" stroke="#FF9800" stroke-width="1" opacity="0.4"/>
+                        <polyline points="20,40 60,35 100,25 140,20 180,15" fill="none" stroke="#FF9800" stroke-width="1" opacity="0.4"/>
+                        <polyline points="20,60 60,55 100,45 140,50 180,45" fill="none" stroke="#FF9800" stroke-width="1" opacity="0.4"/>
+                        <!-- PDP (average) -->
+                        <polyline points="20,50 60,45 100,40 140,35 180,30" fill="none" stroke="#2196F3" stroke-width="3"/>
+                        <!-- Labels -->
+                        <text x="200" y="18" font-size="8" fill="#FF9800">ICE</text>
+                        <text x="200" y="33" font-size="8" fill="#2196F3">PDP</text>
+                        <text x="100" y="68" text-anchor="middle" font-size="8" fill="#666">Feature Value</text>
+                    </svg>
+                </div>
+                <div class="interpret-box">
+                    <div class="interpret-title">Key Insight</div>
+                    <div class="interpret-content">
+                        <strong>Parallel ICE lines:</strong> Homogeneous effect (PDP is representative)<br>
+                        <strong>Crossing ICE lines:</strong> Heterogeneous/interaction effects exist!
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

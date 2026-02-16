@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Condition Number and Numerical Stability</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 15px; }
+        .main-title { font-size: 26px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #1E64C8; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card.concept { border-color: #9C27B0; }
+        .card.solution { border-color: #4CAF50; }
+        .card-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+        .concept .card-title { color: #9C27B0; }
+        .solution .card-title { color: #4CAF50; }
+        .formula-box { background: #F3E5F5; border-radius: 8px; padding: 12px; margin-bottom: 10px; text-align: center; }
+        .formula-main { font-family: 'Times New Roman', serif; font-size: 16px; font-weight: 600; color: #333; margin-bottom: 6px; }
+        .formula-note { font-size: 11px; color: #666; }
+        .interpret-box { background: #f8f8f8; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .interpret-title { font-size: 12px; font-weight: 700; color: #1E64C8; margin-bottom: 6px; }
+        .interpret-item { font-size: 11px; color: #333; margin-bottom: 4px; line-height: 1.4; }
+        .warning-box { background: #FFEBEE; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .warning-title { font-size: 12px; font-weight: 700; color: #C62828; margin-bottom: 6px; }
+        .warning-content { font-size: 11px; color: #333; line-height: 1.4; }
+        .solution-box { background: #E8F5E9; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .solution-title { font-size: 12px; font-weight: 700; color: #2E7D32; margin-bottom: 6px; }
+        .solution-item { font-size: 11px; color: #333; margin-bottom: 4px; }
+        .code-box { background: #2d2d2d; border-radius: 8px; padding: 10px; }
+        .code-content { font-family: 'Courier New', monospace; font-size: 10px; color: #d4d4d4; line-height: 1.5; }
+        .code-comment { color: #6a9955; }
+        .table-box { width: 100%; font-size: 11px; border-collapse: collapse; margin-bottom: 10px; }
+        .table-box th { background: #9C27B0; color: white; padding: 6px; text-align: center; }
+        .table-box td { padding: 6px; text-align: center; border-bottom: 1px solid #e0e0e0; }
+        .good { color: #4CAF50; font-weight: 600; }
+        .bad { color: #F44336; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Condition Number & Numerical Stability</div>
+            <div class="subtitle">Why Normal Equation can fail and how to fix it</div>
+        </div>
+        <div class="content-grid">
+            <div class="card concept">
+                <div class="card-title">Condition Number</div>
+                <div class="formula-box">
+                    <div class="formula-main">kappa(A) = ||A|| * ||A<sup>-1</sup>|| = sigma<sub>max</sub> / sigma<sub>min</sub></div>
+                    <div class="formula-note">Ratio of largest to smallest singular value</div>
+                </div>
+                <table class="table-box">
+                    <tr><th>kappa Value</th><th>Condition</th><th>Interpretation</th></tr>
+                    <tr><td class="good">kappa ~ 1</td><td class="good">Well-conditioned</td><td>Stable computation</td></tr>
+                    <tr><td>kappa ~ 10<sup>3</sup></td><td>Moderate</td><td>Some precision loss</td></tr>
+                    <tr><td class="bad">kappa >> 10<sup>6</sup></td><td class="bad">Ill-conditioned</td><td>Unstable results</td></tr>
+                    <tr><td class="bad">kappa = infinity</td><td class="bad">Singular</td><td>No solution</td></tr>
+                </table>
+                <div class="warning-box">
+                    <div class="warning-title">Precision Loss Rule</div>
+                    <div class="warning-content">
+                        If kappa ~ 10<sup>k</sup>, expect to lose approximately <strong>k digits</strong> of precision.<br><br>
+                        Example: kappa = 10<sup>8</sup> with float64 (16 digits) -> only ~8 digits reliable
+                    </div>
+                </div>
+                <div class="interpret-box">
+                    <div class="interpret-title">When Does This Happen?</div>
+                    <div class="interpret-item">- Multicollinear features (correlated columns)</div>
+                    <div class="interpret-item">- Features with very different scales</div>
+                    <div class="interpret-item">- More features than samples (p > n)</div>
+                </div>
+            </div>
+            <div class="card solution">
+                <div class="card-title">Solutions</div>
+                <div class="solution-box">
+                    <div class="solution-title">1. Feature Scaling (Standardization)</div>
+                    <div class="solution-item">Center and scale features to unit variance</div>
+                    <div class="solution-item">Dramatically reduces condition number</div>
+                </div>
+                <div class="solution-box">
+                    <div class="solution-title">2. Ridge Regression (L2 Regularization)</div>
+                    <div class="solution-item">Add lambda*I to X<sup>T</sup>X before inverting</div>
+                    <div class="solution-item">(X<sup>T</sup>X + lambda*I)<sup>-1</sup> is always invertible</div>
+                </div>
+                <div class="solution-box">
+                    <div class="solution-title">3. SVD-based Pseudo-inverse</div>
+                    <div class="solution-item">Use np.linalg.lstsq() instead of normal equation</div>
+                    <div class="solution-item">Handles rank-deficient matrices gracefully</div>
+                </div>
+                <div class="code-box">
+                    <div class="code-content">
+                        <span class="code-comment"># Check condition number</span><br>
+                        import numpy as np<br><br>
+                        cond = np.linalg.cond(X.T @ X)<br>
+                        print(f"Condition number: {cond:.2e}")<br><br>
+                        <span class="code-comment"># If cond > 1e10, use regularization</span><br>
+                        from sklearn.linear_model import Ridge<br>
+                        model = Ridge(alpha=1.0).fit(X, y)<br><br>
+                        <span class="code-comment"># Or use SVD-based solver</span><br>
+                        w, residuals, rank, s = np.linalg.lstsq(X, y)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pre-LayerNorm vs Post-LayerNorm</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 26px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #FF9800; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card.pre { border-color: #4CAF50; }
+        .card-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+        .card:first-child .card-title { color: #FF9800; }
+        .card.pre .card-title { color: #4CAF50; }
+        .visual-box { background: #f8f8f8; border-radius: 8px; padding: 10px; margin-bottom: 10px; text-align: center; }
+        .visual-title { font-size: 11px; font-weight: 700; color: #1E64C8; margin-bottom: 6px; }
+        .formula-box { background: #FFF3E0; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .formula-box.green { background: #E8F5E9; }
+        .formula-content { font-family: 'Courier New', monospace; font-size: 10px; color: #333; line-height: 1.5; }
+        .property-box { background: #E3F2FD; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .property-title { font-size: 12px; font-weight: 700; color: #1565C0; margin-bottom: 6px; }
+        .property-item { font-size: 11px; color: #333; margin-bottom: 4px; line-height: 1.4; }
+        .comparison-table { width: 100%; font-size: 10px; border-collapse: collapse; margin-top: auto; }
+        .comparison-table th { background: #1E64C8; color: white; padding: 5px; }
+        .comparison-table td { padding: 5px; text-align: center; border-bottom: 1px solid #e0e0e0; }
+        .good { color: #4CAF50; font-weight: 600; }
+        .neutral { color: #FF9800; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Pre-LayerNorm vs Post-LayerNorm</div>
+            <div class="subtitle">Where to place normalization in Transformer blocks</div>
+        </div>
+        <div class="content-grid">
+            <div class="card">
+                <div class="card-title">Post-LayerNorm (Original)</div>
+                <div class="visual-box">
+                    <svg viewBox="0 0 180 100" style="width: 100%; height: 90px;">
+                        <rect x="60" y="5" width="60" height="18" fill="#BBDEFB" stroke="#2196F3" rx="3"/>
+                        <text x="90" y="17" text-anchor="middle" font-size="7">Input x</text>
+                        <path d="M90,23 L90,30" stroke="#666"/>
+                        <rect x="60" y="32" width="60" height="18" fill="#C8E6C9" stroke="#4CAF50" rx="3"/>
+                        <text x="90" y="44" text-anchor="middle" font-size="7">Attention/FFN</text>
+                        <path d="M90,50 L90,55" stroke="#666"/>
+                        <text x="90" y="62" text-anchor="middle" font-size="7">+ (residual)</text>
+                        <path d="M90,65 L90,72" stroke="#666"/>
+                        <rect x="60" y="74" width="60" height="18" fill="#FFE0B2" stroke="#FF9800" rx="3"/>
+                        <text x="90" y="86" text-anchor="middle" font-size="7">LayerNorm</text>
+                        <!-- Residual connection -->
+                        <path d="M40,14 L40,60 L60,60" stroke="#9C27B0" stroke-dasharray="3,2" fill="none"/>
+                    </svg>
+                </div>
+                <div class="formula-box">
+                    <div class="formula-content">
+                        h = LayerNorm(x + Attention(x))<br>
+                        out = LayerNorm(h + FFN(h))
+                    </div>
+                </div>
+                <div class="property-box">
+                    <div class="property-title">Characteristics</div>
+                    <div class="property-item">- Original Transformer (Vaswani 2017)</div>
+                    <div class="property-item">- Needs learning rate warmup</div>
+                    <div class="property-item">- Training can be unstable for deep models</div>
+                    <div class="property-item">- Better final performance (sometimes)</div>
+                </div>
+            </div>
+            <div class="card pre">
+                <div class="card-title">Pre-LayerNorm (Modern)</div>
+                <div class="visual-box">
+                    <svg viewBox="0 0 180 100" style="width: 100%; height: 90px;">
+                        <rect x="60" y="5" width="60" height="18" fill="#BBDEFB" stroke="#2196F3" rx="3"/>
+                        <text x="90" y="17" text-anchor="middle" font-size="7">Input x</text>
+                        <path d="M90,23 L90,30" stroke="#666"/>
+                        <rect x="60" y="32" width="60" height="18" fill="#FFE0B2" stroke="#FF9800" rx="3"/>
+                        <text x="90" y="44" text-anchor="middle" font-size="7">LayerNorm</text>
+                        <path d="M90,50 L90,57" stroke="#666"/>
+                        <rect x="60" y="59" width="60" height="18" fill="#C8E6C9" stroke="#4CAF50" rx="3"/>
+                        <text x="90" y="71" text-anchor="middle" font-size="7">Attention/FFN</text>
+                        <path d="M90,77 L90,82" stroke="#666"/>
+                        <text x="90" y="92" text-anchor="middle" font-size="7">+ (residual)</text>
+                        <!-- Residual connection -->
+                        <path d="M40,14 L40,88 L60,88" stroke="#9C27B0" stroke-dasharray="3,2" fill="none"/>
+                    </svg>
+                </div>
+                <div class="formula-box green">
+                    <div class="formula-content">
+                        h = x + Attention(LayerNorm(x))<br>
+                        out = h + FFN(LayerNorm(h))
+                    </div>
+                </div>
+                <div class="property-box">
+                    <div class="property-title">Characteristics</div>
+                    <div class="property-item">- GPT-2, GPT-3, LLaMA, etc.</div>
+                    <div class="property-item">- No warmup needed (stable from start)</div>
+                    <div class="property-item">- Easier to train very deep models</div>
+                    <div class="property-item">- Direct gradient path through residual</div>
+                </div>
+            </div>
+        </div>
+        <table class="comparison-table">
+            <tr><th>Aspect</th><th>Post-LN (Original)</th><th>Pre-LN (Modern)</th></tr>
+            <tr><td>Training Stability</td><td class="neutral">Needs warmup</td><td class="good">Stable</td></tr>
+            <tr><td>Deep Models (>24L)</td><td class="neutral">Difficult</td><td class="good">Easy</td></tr>
+            <tr><td>Final Performance</td><td class="good">Sometimes better</td><td>Comparable</td></tr>
+            <tr><td>Used In</td><td>BERT, Original Transformer</td><td>GPT-2/3/4, LLaMA, Mistral</td></tr>
+        </table>
+    </div>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adversarial Training</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 26px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #F44336; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card.defense { border-color: #4CAF50; }
+        .card-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+        .card:first-child .card-title { color: #F44336; }
+        .card.defense .card-title { color: #4CAF50; }
+        .attack-box { background: #FFEBEE; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .attack-title { font-size: 12px; font-weight: 700; color: #C62828; margin-bottom: 6px; }
+        .attack-content { font-size: 11px; color: #333; line-height: 1.5; }
+        .formula-box { background: #f8f8f8; border-radius: 8px; padding: 10px; margin-bottom: 10px; text-align: center; }
+        .formula-main { font-family: 'Courier New', monospace; font-size: 12px; color: #333; margin-bottom: 4px; }
+        .formula-note { font-size: 10px; color: #666; }
+        .defense-box { background: #E8F5E9; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .defense-title { font-size: 12px; font-weight: 700; color: #2E7D32; margin-bottom: 6px; }
+        .defense-item { font-size: 11px; color: #333; margin-bottom: 4px; line-height: 1.4; }
+        .code-box { background: #2d2d2d; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .code-content { font-family: 'Courier New', monospace; font-size: 9px; color: #d4d4d4; line-height: 1.4; }
+        .code-comment { color: #6a9955; }
+        .note-box { background: #FFF3E0; border-radius: 8px; padding: 10px; margin-top: auto; }
+        .note-title { font-size: 12px; font-weight: 700; color: #E65100; margin-bottom: 6px; }
+        .note-content { font-size: 11px; color: #333; line-height: 1.4; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Adversarial Training</div>
+            <div class="subtitle">Training models robust to adversarial perturbations</div>
+        </div>
+        <div class="content-grid">
+            <div class="card">
+                <div class="card-title">Adversarial Examples</div>
+                <div class="attack-box">
+                    <div class="attack-title">What Are They?</div>
+                    <div class="attack-content">
+                        Small, carefully crafted perturbations to inputs that cause misclassification.<br><br>
+                        x_adv = x + epsilon * sign(grad_x L(f(x), y))<br><br>
+                        Human-imperceptible changes -> model fails!
+                    </div>
+                </div>
+                <div class="formula-box">
+                    <div class="formula-main">FGSM Attack</div>
+                    <div class="formula-main">x_adv = x + eps * sign(grad_x L(x, y))</div>
+                    <div class="formula-note">One-step attack in gradient direction</div>
+                </div>
+                <div class="formula-box">
+                    <div class="formula-main">PGD Attack (Stronger)</div>
+                    <div class="formula-main">x^(t+1) = Proj(x^t + alpha * sign(grad L))</div>
+                    <div class="formula-note">Iterative attack with projection to epsilon-ball</div>
+                </div>
+                <div class="attack-box">
+                    <div class="attack-title">Why It Matters</div>
+                    <div class="attack-content">
+                        - Security-critical applications (self-driving, medical)<br>
+                        - Reveals model weaknesses<br>
+                        - Standard models extremely vulnerable
+                    </div>
+                </div>
+            </div>
+            <div class="card defense">
+                <div class="card-title">Adversarial Training Defense</div>
+                <div class="defense-box">
+                    <div class="defense-title">Core Idea</div>
+                    <div class="defense-item">Train on adversarial examples!</div>
+                    <div class="defense-item">min_theta E[max_delta L(f_theta(x + delta), y)]</div>
+                    <div class="defense-item">Find worst perturbation, then minimize loss on it</div>
+                </div>
+                <div class="code-box">
+                    <div class="code-content">
+                        <span class="code-comment"># PGD Adversarial Training</span><br>
+                        def pgd_attack(model, x, y, eps=8/255, alpha=2/255, iters=10):<br>
+                        &nbsp;&nbsp;x_adv = x.clone().detach() + torch.randn_like(x)*eps<br>
+                        &nbsp;&nbsp;for _ in range(iters):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;x_adv.requires_grad = True<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;loss = F.cross_entropy(model(x_adv), y)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;grad = torch.autograd.grad(loss, x_adv)[0]<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;x_adv = x_adv + alpha * grad.sign()<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;x_adv = torch.clamp(x_adv, x-eps, x+eps)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;x_adv = x_adv.detach()<br>
+                        &nbsp;&nbsp;return x_adv<br><br>
+                        <span class="code-comment"># Training loop</span><br>
+                        for x, y in loader:<br>
+                        &nbsp;&nbsp;x_adv = pgd_attack(model, x, y)<br>
+                        &nbsp;&nbsp;loss = F.cross_entropy(model(x_adv), y)<br>
+                        &nbsp;&nbsp;loss.backward(); optimizer.step()
+                    </div>
+                </div>
+                <div class="note-box">
+                    <div class="note-title">Trade-offs</div>
+                    <div class="note-content">
+                        + Significantly more robust to attacks<br>
+                        - Clean accuracy drops 2-5%<br>
+                        - Training 3-10x slower (attack generation)<br>
+                        - Needs careful epsilon selection
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

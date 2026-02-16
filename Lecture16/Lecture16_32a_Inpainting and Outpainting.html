@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inpainting and Outpainting</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 26px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #FF9800; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card.outpaint { border-color: #4CAF50; }
+        .card-title { font-size: 16px; font-weight: 700; color: #FF9800; margin-bottom: 10px; }
+        .card.outpaint .card-title { color: #4CAF50; }
+        .visual-box { background: #f8f8f8; border-radius: 8px; padding: 10px; margin-bottom: 10px; text-align: center; }
+        .visual-title { font-size: 11px; font-weight: 700; color: #1E64C8; margin-bottom: 6px; }
+        .method-box { background: #FFF3E0; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .method-box.green { background: #E8F5E9; }
+        .method-title { font-size: 12px; font-weight: 700; color: #E65100; margin-bottom: 6px; }
+        .method-box.green .method-title { color: #2E7D32; }
+        .method-content { font-size: 11px; color: #333; line-height: 1.5; }
+        .usecase-box { background: #E3F2FD; border-radius: 8px; padding: 10px; margin-top: auto; }
+        .usecase-title { font-size: 12px; font-weight: 700; color: #1565C0; margin-bottom: 6px; }
+        .usecase-item { font-size: 11px; color: #333; margin-bottom: 3px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Inpainting & Outpainting</div>
+            <div class="subtitle">Filling missing regions and extending images with diffusion models</div>
+        </div>
+        <div class="content-grid">
+            <div class="card">
+                <div class="card-title">Inpainting</div>
+                <div class="visual-box">
+                    <svg viewBox="0 0 200 70" style="width: 100%; height: 65px;">
+                        <!-- Original with hole -->
+                        <rect x="10" y="10" width="50" height="50" fill="#BBDEFB" stroke="#2196F3" rx="3"/>
+                        <rect x="25" y="25" width="20" height="20" fill="white" stroke="#F44336" stroke-dasharray="2,2"/>
+                        <text x="35" y="36" text-anchor="middle" font-size="6" fill="#F44336">?</text>
+                        <text x="35" y="68" text-anchor="middle" font-size="7">Masked</text>
+                        <!-- Arrow -->
+                        <path d="M70,35 L90,35" stroke="#666" stroke-width="2" marker-end="url(#arr)"/>
+                        <!-- Filled -->
+                        <rect x="100" y="10" width="50" height="50" fill="#BBDEFB" stroke="#2196F3" rx="3"/>
+                        <rect x="115" y="25" width="20" height="20" fill="#C8E6C9" stroke="#4CAF50"/>
+                        <text x="125" y="68" text-anchor="middle" font-size="7">Filled</text>
+                        <defs><marker id="arr" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5 Z" fill="#666"/></marker></defs>
+                    </svg>
+                </div>
+                <div class="method-box">
+                    <div class="method-title">How It Works</div>
+                    <div class="method-content">
+                        1. Mask region to fill<br>
+                        2. During diffusion: keep known pixels fixed<br>
+                        3. Only denoise masked region<br>
+                        4. Result: Coherent fill matching context
+                    </div>
+                </div>
+                <div class="method-box">
+                    <div class="method-title">Techniques</div>
+                    <div class="method-content">
+                        <strong>RePaint:</strong> Resample at each step<br>
+                        <strong>Blended Diffusion:</strong> Gradual blending<br>
+                        <strong>Fine-tuned:</strong> Train with mask conditioning
+                    </div>
+                </div>
+                <div class="usecase-box">
+                    <div class="usecase-title">Applications</div>
+                    <div class="usecase-item">- Object removal</div>
+                    <div class="usecase-item">- Image restoration</div>
+                    <div class="usecase-item">- Content replacement</div>
+                </div>
+            </div>
+            <div class="card outpaint">
+                <div class="card-title">Outpainting</div>
+                <div class="visual-box">
+                    <svg viewBox="0 0 200 70" style="width: 100%; height: 65px;">
+                        <!-- Small original -->
+                        <rect x="30" y="20" width="30" height="30" fill="#BBDEFB" stroke="#2196F3" rx="2"/>
+                        <text x="45" y="68" text-anchor="middle" font-size="7">Original</text>
+                        <!-- Arrow -->
+                        <path d="M70,35 L90,35" stroke="#666" stroke-width="2" marker-end="url(#arr)"/>
+                        <!-- Extended -->
+                        <rect x="100" y="5" width="60" height="60" fill="#C8E6C9" stroke="#4CAF50" rx="3"/>
+                        <rect x="115" y="20" width="30" height="30" fill="#BBDEFB" stroke="#2196F3" rx="2"/>
+                        <text x="130" y="68" text-anchor="middle" font-size="7">Extended</text>
+                    </svg>
+                </div>
+                <div class="method-box green">
+                    <div class="method-title">How It Works</div>
+                    <div class="method-content">
+                        1. Place original image in larger canvas<br>
+                        2. Treat outer region as "masked"<br>
+                        3. Generate content extending from edges<br>
+                        4. Seamlessly expands the scene
+                    </div>
+                </div>
+                <div class="method-box green">
+                    <div class="method-title">Challenges</div>
+                    <div class="method-content">
+                        - Maintaining global coherence<br>
+                        - Consistent lighting/perspective<br>
+                        - Avoiding repetitive patterns<br>
+                        - Edge artifacts
+                    </div>
+                </div>
+                <div class="usecase-box">
+                    <div class="usecase-title">Applications</div>
+                    <div class="usecase-item">- Extending photos (landscapes, rooms)</div>
+                    <div class="usecase-item">- Creating panoramas</div>
+                    <div class="usecase-item">- Aspect ratio conversion</div>
+                    <div class="usecase-item">- "Uncropping" images</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

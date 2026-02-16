@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Label Smoothing and Gradient Clipping</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 14px; }
+        .main-title { font-size: 24px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #1E64C8; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card.smoothing { border-color: #9C27B0; }
+        .card.clipping { border-color: #FF9800; }
+        .card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 2px solid #e0e0e0; }
+        .card-title { font-size: 17px; font-weight: 700; }
+        .smoothing .card-title { color: #9C27B0; }
+        .clipping .card-title { color: #FF9800; }
+        .problem-box { border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .smoothing .problem-box { background: #F3E5F5; }
+        .clipping .problem-box { background: #FFF3E0; }
+        .problem-title { font-size: 12px; font-weight: 700; margin-bottom: 4px; }
+        .smoothing .problem-title { color: #7B1FA2; }
+        .clipping .problem-title { color: #E65100; }
+        .problem-content { font-size: 12px; color: #333; line-height: 1.4; }
+        .formula-box { background: #f8f8f8; border-radius: 8px; padding: 10px; margin-bottom: 10px; text-align: center; }
+        .formula-main { font-size: 14px; font-weight: 600; color: #333; font-family: 'Times New Roman', serif; }
+        .formula-note { font-size: 11px; color: #666; margin-top: 4px; }
+        .example-box { background: #E8F5E9; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .example-title { font-size: 12px; font-weight: 700; color: #2E7D32; margin-bottom: 6px; }
+        .example-content { font-size: 12px; color: #333; font-family: 'Courier New', monospace; }
+        .feature-item { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: #333; margin-bottom: 5px; line-height: 1.4; }
+        .feature-icon { font-weight: bold; flex-shrink: 0; }
+        .smoothing .feature-icon { color: #9C27B0; }
+        .clipping .feature-icon { color: #FF9800; }
+        .code-box { background: #2d2d2d; border-radius: 6px; padding: 10px; margin-top: auto; }
+        .code-content { font-family: 'Courier New', monospace; font-size: 10px; color: #d4d4d4; line-height: 1.4; }
+        .code-keyword { color: #569cd6; }
+        .code-comment { color: #6a9955; }
+        .code-number { color: #b5cea8; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Training Techniques: Label Smoothing & Gradient Clipping</div>
+            <div class="subtitle">Essential techniques for stable and robust training</div>
+        </div>
+        <div class="content-grid">
+            <div class="card smoothing">
+                <div class="card-header">
+                    <span class="card-title">Label Smoothing</span>
+                </div>
+                <div class="problem-box">
+                    <div class="problem-title">Problem: Overconfidence</div>
+                    <div class="problem-content">One-hot labels push model to predict extreme probabilities (0.99), hurting generalization and calibration.</div>
+                </div>
+                <div class="formula-box">
+                    <div class="formula-main">y_smooth = (1 - ε) × y_onehot + ε / K</div>
+                    <div class="formula-note">ε = smoothing factor (typically 0.1), K = num classes</div>
+                </div>
+                <div class="example-box">
+                    <div class="example-title">Example (ε=0.1, K=5)</div>
+                    <div class="example-content">
+                        Before: [0, 0, 1, 0, 0]<br>
+                        After:  [0.02, 0.02, 0.9, 0.02, 0.02]
+                    </div>
+                </div>
+                <div class="feature-item"><span class="feature-icon">✓</span><span>Prevents overconfident predictions</span></div>
+                <div class="feature-item"><span class="feature-icon">✓</span><span>Improves model calibration</span></div>
+                <div class="feature-item"><span class="feature-icon">✓</span><span>Standard in Transformers, ViT</span></div>
+                <div class="code-box">
+                    <div class="code-content">
+                        <span class="code-comment"># PyTorch</span><br>
+                        criterion = nn.CrossEntropyLoss(<br>
+                        &nbsp;&nbsp;label_smoothing=<span class="code-number">0.1</span><br>
+                        )
+                    </div>
+                </div>
+            </div>
+            <div class="card clipping">
+                <div class="card-header">
+                    <span class="card-title">Gradient Clipping</span>
+                </div>
+                <div class="problem-box">
+                    <div class="problem-title">Problem: Exploding Gradients</div>
+                    <div class="problem-content">Large gradients cause unstable training, NaN values. Common in RNNs, Transformers, deep networks.</div>
+                </div>
+                <div class="formula-box">
+                    <div class="formula-main">Clip by Norm: g = g × (max_norm / ||g||)</div>
+                    <div class="formula-note">Only if ||g|| > max_norm (typically 1.0)</div>
+                </div>
+                <div class="example-box">
+                    <div class="example-title">Two Methods</div>
+                    <div class="example-content">
+                        1. Clip by value: clamp each grad<br>
+                        2. Clip by norm: scale gradient vector
+                    </div>
+                </div>
+                <div class="feature-item"><span class="feature-icon">✓</span><span>Prevents NaN and training instability</span></div>
+                <div class="feature-item"><span class="feature-icon">✓</span><span>Essential for RNN, LSTM, Transformer</span></div>
+                <div class="feature-item"><span class="feature-icon">✓</span><span>max_norm=1.0 is common default</span></div>
+                <div class="code-box">
+                    <div class="code-content">
+                        <span class="code-comment"># PyTorch</span><br>
+                        loss.backward()<br>
+                        torch.nn.utils.clip_grad_norm_(<br>
+                        &nbsp;&nbsp;model.parameters(),<br>
+                        &nbsp;&nbsp;max_norm=<span class="code-number">1.0</span><br>
+                        )<br>
+                        optimizer.step()
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

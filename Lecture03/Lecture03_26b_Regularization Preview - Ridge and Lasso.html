@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regularization Preview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #FFFFFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            padding: 25px 35px;
+        }
+
+        .title-section {
+            text-align: center;
+            margin-bottom: 14px;
+        }
+
+        .main-title {
+            font-size: 26px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+
+        .subtitle {
+            font-size: 15px;
+            color: #666666;
+        }
+
+        .problem-box {
+            background: #FFEBEE;
+            border: 2px solid #EF5350;
+            border-radius: 10px;
+            padding: 12px 18px;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .problem-icon {
+            font-size: 24px;
+        }
+
+        .problem-text {
+            font-size: 15px;
+            color: #333;
+        }
+
+        .problem-highlight {
+            font-weight: 700;
+            color: #C62828;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            flex: 1;
+        }
+
+        .method-card {
+            background: white;
+            border: 2.5px solid #1E64C8;
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .method-card.ridge {
+            border-color: #2196F3;
+        }
+
+        .method-card.lasso {
+            border-color: #FF9800;
+        }
+
+        .method-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .method-name {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .ridge .method-name { color: #2196F3; }
+        .lasso .method-name { color: #FF9800; }
+
+        .method-badge {
+            background: #e0e0e0;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .ridge .method-badge { background: #E3F2FD; color: #1565C0; }
+        .lasso .method-badge { background: #FFF3E0; color: #E65100; }
+
+        .formula-box {
+            background: #f8f8f8;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .formula-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 6px;
+        }
+
+        .formula-main {
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+            font-family: 'Times New Roman', serif;
+        }
+
+        .closed-form {
+            background: #E8F5E9;
+            border-radius: 6px;
+            padding: 8px;
+            margin-top: 8px;
+        }
+
+        .closed-label {
+            font-size: 11px;
+            color: #2E7D32;
+            margin-bottom: 4px;
+        }
+
+        .closed-formula {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1B5E20;
+            font-family: 'Times New Roman', serif;
+        }
+
+        .feature-list {
+            flex: 1;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 13px;
+            color: #333;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .feature-icon {
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .ridge .feature-icon { color: #2196F3; }
+        .lasso .feature-icon { color: #FF9800; }
+
+        .bayesian-link {
+            background: #F3E5F5;
+            border-radius: 6px;
+            padding: 8px 10px;
+            font-size: 12px;
+            color: #7B1FA2;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        .bottom-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            margin-top: 14px;
+        }
+
+        .info-box {
+            background: #F8FBFF;
+            border-left: 4px solid #1E64C8;
+            border-radius: 6px;
+            padding: 10px 12px;
+        }
+
+        .info-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+
+        .info-content {
+            font-size: 12px;
+            color: #333;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Regularization Preview: Ridge & Lasso</div>
+            <div class="subtitle">Preventing overfitting by constraining model complexity</div>
+        </div>
+
+        <div class="problem-box">
+            <span class="problem-icon">⚠️</span>
+            <span class="problem-text">
+                <span class="problem-highlight">Problem:</span> OLS can overfit, especially with many features or multicollinearity.
+                <span class="problem-highlight">Solution:</span> Add penalty term to shrink coefficients.
+            </span>
+        </div>
+
+        <div class="content-grid">
+            <div class="method-card ridge">
+                <div class="method-header">
+                    <span class="method-name">Ridge Regression</span>
+                    <span class="method-badge">L2 Penalty</span>
+                </div>
+
+                <div class="formula-box">
+                    <div class="formula-label">Objective Function</div>
+                    <div class="formula-main">min ||y - Xβ||² + λ||β||₂²</div>
+                    <div class="closed-form">
+                        <div class="closed-label">Closed-form solution:</div>
+                        <div class="closed-formula">β = (X<sup>T</sup>X + λI)<sup>-1</sup>X<sup>T</sup>y</div>
+                    </div>
+                </div>
+
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Shrinks coefficients toward zero</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Never exactly zero (keeps all features)</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Handles multicollinearity (λI makes invertible)</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Numerical stability guaranteed</span>
+                    </div>
+                </div>
+
+                <div class="bayesian-link">
+                    Bayesian view: MAP with <strong>Gaussian prior</strong> on β
+                </div>
+            </div>
+
+            <div class="method-card lasso">
+                <div class="method-header">
+                    <span class="method-name">Lasso Regression</span>
+                    <span class="method-badge">L1 Penalty</span>
+                </div>
+
+                <div class="formula-box">
+                    <div class="formula-label">Objective Function</div>
+                    <div class="formula-main">min ||y - Xβ||² + λ||β||₁</div>
+                    <div class="closed-form" style="background: #FFF3E0;">
+                        <div class="closed-label" style="color: #E65100;">No closed-form solution:</div>
+                        <div class="closed-formula" style="color: #BF360C;">Requires iterative optimization</div>
+                    </div>
+                </div>
+
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Produces <strong>sparse</strong> solutions</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Automatic feature selection (β → 0)</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Interpretable models</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Good for high-dimensional data</span>
+                    </div>
+                </div>
+
+                <div class="bayesian-link" style="background: #FFF8E1; color: #F57C00;">
+                    Bayesian view: MAP with <strong>Laplace prior</strong> on β
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-row">
+            <div class="info-box">
+                <div class="info-title">λ (Lambda)</div>
+                <div class="info-content">
+                    λ = 0 → OLS<br>
+                    λ → ∞ → β → 0<br>
+                    Choose via cross-validation
+                </div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-title">Elastic Net</div>
+                <div class="info-content">
+                    Combines L1 + L2<br>
+                    λ₁||β||₁ + λ₂||β||₂²<br>
+                    Best of both worlds
+                </div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-title">Detailed in Lecture 09</div>
+                <div class="info-content">
+                    Regularization paths<br>
+                    Cross-validation<br>
+                    Bias-variance tradeoff
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

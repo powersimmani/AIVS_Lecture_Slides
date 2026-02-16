@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVD - Singular Value Decomposition</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #FFFFFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            padding: 25px 35px;
+        }
+
+        .title-section {
+            text-align: center;
+            margin-bottom: 14px;
+        }
+
+        .main-title {
+            font-size: 26px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+
+        .subtitle {
+            font-size: 15px;
+            color: #666666;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 20px;
+            flex: 1;
+        }
+
+        .left-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .formula-card {
+            background: #F8FBFF;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px;
+            text-align: center;
+        }
+
+        .formula-main {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            font-family: 'Times New Roman', serif;
+        }
+
+        .formula-detail {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            font-size: 13px;
+            color: #333;
+        }
+
+        .detail-item {
+            background: white;
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .detail-label {
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+
+        .comparison-card {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 10px;
+            padding: 12px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .comparison-table {
+            width: 100%;
+            font-size: 12px;
+            border-collapse: collapse;
+        }
+
+        .comparison-table th {
+            background: #1E64C8;
+            color: white;
+            padding: 6px 8px;
+            text-align: left;
+        }
+
+        .comparison-table td {
+            padding: 6px 8px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: #f8f8f8;
+        }
+
+        .right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .app-card {
+            background: #E8F5E9;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            padding: 14px;
+        }
+
+        .app-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #2E7D32;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .app-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 13px;
+            color: #333;
+            margin-bottom: 6px;
+            line-height: 1.4;
+        }
+
+        .app-icon {
+            color: #4CAF50;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .property-card {
+            background: #FFF9E6;
+            border: 2px solid #FFC107;
+            border-radius: 10px;
+            padding: 14px;
+        }
+
+        .property-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #F57C00;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .property-item {
+            font-size: 13px;
+            color: #333;
+            margin-bottom: 6px;
+            padding-left: 16px;
+            position: relative;
+            line-height: 1.4;
+        }
+
+        .property-item::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #F57C00;
+            font-weight: bold;
+        }
+
+        .code-card {
+            background: #2d2d2d;
+            border-radius: 8px;
+            padding: 12px;
+        }
+
+        .code-title {
+            color: #9cdcfe;
+            font-size: 12px;
+            margin-bottom: 6px;
+        }
+
+        .code-content {
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            color: #d4d4d4;
+            line-height: 1.4;
+        }
+
+        .code-keyword { color: #569cd6; }
+        .code-function { color: #dcdcaa; }
+        .code-comment { color: #6a9955; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Singular Value Decomposition (SVD)</div>
+            <div class="subtitle">Factorization for any m×n matrix - The Swiss Army Knife of Linear Algebra</div>
+        </div>
+
+        <div class="content-grid">
+            <div class="left-panel">
+                <div class="formula-card">
+                    <div class="formula-main">A = UΣV<sup>T</sup></div>
+                    <div class="formula-detail">
+                        <div class="detail-item">
+                            <div class="detail-label">U (m×m)</div>
+                            <div>Left singular vectors<br>Orthogonal: UU<sup>T</sup>=I</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Σ (m×n)</div>
+                            <div>Singular values<br>σ₁ ≥ σ₂ ≥ ... ≥ 0</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">V (n×n)</div>
+                            <div>Right singular vectors<br>Orthogonal: VV<sup>T</sup>=I</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comparison-card">
+                    <div class="card-title">Eigendecomposition vs SVD</div>
+                    <table class="comparison-table">
+                        <tr>
+                            <th>Property</th>
+                            <th>Eigendecomposition</th>
+                            <th>SVD</th>
+                        </tr>
+                        <tr>
+                            <td>Matrix type</td>
+                            <td>Square only</td>
+                            <td>Any m×n matrix</td>
+                        </tr>
+                        <tr>
+                            <td>Form</td>
+                            <td>A = QΛQ⁻¹</td>
+                            <td>A = UΣVᵀ</td>
+                        </tr>
+                        <tr>
+                            <td>Values</td>
+                            <td>Eigenvalues (can be negative)</td>
+                            <td>Singular values (always ≥ 0)</td>
+                        </tr>
+                        <tr>
+                            <td>Existence</td>
+                            <td>Not always</td>
+                            <td>Always exists</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="code-card">
+                    <div class="code-title"># NumPy SVD</div>
+                    <div class="code-content">
+                        <span class="code-keyword">import</span> numpy <span class="code-keyword">as</span> np<br>
+                        U, s, Vt = np.linalg.<span class="code-function">svd</span>(A)  <span class="code-comment"># s is 1D array</span><br>
+                        A_approx = U[:,:k] @ np.<span class="code-function">diag</span>(s[:k]) @ Vt[:k,:]  <span class="code-comment"># rank-k approx</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right-panel">
+                <div class="app-card">
+                    <div class="app-title">ML Applications</div>
+                    <div class="app-item">
+                        <span class="app-icon">▸</span>
+                        <span><strong>Low-rank approximation:</strong> Compress matrices by keeping top k singular values</span>
+                    </div>
+                    <div class="app-item">
+                        <span class="app-icon">▸</span>
+                        <span><strong>Pseudo-inverse:</strong> A⁺ = VΣ⁺Uᵀ (for least squares)</span>
+                    </div>
+                    <div class="app-item">
+                        <span class="app-icon">▸</span>
+                        <span><strong>Recommender systems:</strong> Matrix factorization (Netflix Prize)</span>
+                    </div>
+                    <div class="app-item">
+                        <span class="app-icon">▸</span>
+                        <span><strong>LSA:</strong> Latent Semantic Analysis for NLP</span>
+                    </div>
+                    <div class="app-item">
+                        <span class="app-icon">▸</span>
+                        <span><strong>Image compression:</strong> Keep top singular values</span>
+                    </div>
+                    <div class="app-item">
+                        <span class="app-icon">▸</span>
+                        <span><strong>Noise reduction:</strong> Truncate small singular values</span>
+                    </div>
+                </div>
+
+                <div class="property-card">
+                    <div class="property-title">Key Properties</div>
+                    <div class="property-item">rank(A) = number of non-zero σᵢ</div>
+                    <div class="property-item">||A||₂ = σ₁ (spectral norm)</div>
+                    <div class="property-item">||A||_F = √(Σσᵢ²) (Frobenius norm)</div>
+                    <div class="property-item">Condition number: κ = σ₁/σₙ</div>
+                    <div class="property-item">σᵢ² = eigenvalues of AᵀA</div>
+                    <div class="property-item">Best rank-k approximation: Eckart-Young theorem</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

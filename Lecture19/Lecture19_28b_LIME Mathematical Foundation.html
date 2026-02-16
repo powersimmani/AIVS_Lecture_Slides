@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LIME Mathematical Foundation</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 24px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #1E64C8; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card.math { border-color: #9C27B0; }
+        .card.intuition { border-color: #4CAF50; }
+        .card-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+        .math .card-title { color: #9C27B0; }
+        .intuition .card-title { color: #4CAF50; }
+        .formula-box { background: #F3E5F5; border-radius: 8px; padding: 12px; margin-bottom: 10px; text-align: center; }
+        .formula-main { font-family: 'Times New Roman', serif; font-size: 14px; font-weight: 600; color: #333; margin-bottom: 6px; }
+        .formula-note { font-size: 10px; color: #666; text-align: left; line-height: 1.4; }
+        .component-box { background: #f8f8f8; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .component-title { font-size: 12px; font-weight: 700; color: #1E64C8; margin-bottom: 6px; }
+        .component-item { font-size: 11px; color: #333; margin-bottom: 4px; line-height: 1.4; }
+        .step-box { background: #E8F5E9; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .step-title { font-size: 12px; font-weight: 700; color: #2E7D32; margin-bottom: 6px; }
+        .step-content { font-size: 11px; color: #333; line-height: 1.5; }
+        .example-box { background: #E3F2FD; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .example-title { font-size: 12px; font-weight: 700; color: #1565C0; margin-bottom: 6px; }
+        .example-content { font-family: 'Courier New', monospace; font-size: 10px; color: #333; line-height: 1.5; }
+        .limitation-box { background: #FFEBEE; border-radius: 8px; padding: 10px; margin-top: auto; }
+        .limitation-title { font-size: 12px; font-weight: 700; color: #C62828; margin-bottom: 6px; }
+        .limitation-item { font-size: 11px; color: #333; margin-bottom: 3px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">LIME: Mathematical Foundation</div>
+            <div class="subtitle">Local Interpretable Model-agnostic Explanations (Ribeiro et al., 2016)</div>
+        </div>
+        <div class="content-grid">
+            <div class="card math">
+                <div class="card-title">Mathematical Formulation</div>
+                <div class="formula-box">
+                    <div class="formula-main">xi(x) = argmin<sub>g in G</sub> L(f, g, pi<sub>x</sub>) + Omega(g)</div>
+                    <div class="formula-note">
+                        <strong>xi(x):</strong> Explanation for instance x<br>
+                        <strong>f:</strong> Original black-box model<br>
+                        <strong>g:</strong> Interpretable model (linear)<br>
+                        <strong>G:</strong> Class of interpretable models<br>
+                        <strong>L:</strong> Locality-aware loss<br>
+                        <strong>pi_x:</strong> Proximity measure to x<br>
+                        <strong>Omega(g):</strong> Complexity penalty
+                    </div>
+                </div>
+                <div class="component-box">
+                    <div class="component-title">Loss Function</div>
+                    <div class="component-item">
+                        <strong>L(f, g, pi_x) = sum_z pi_x(z) * (f(z) - g(z'))^2</strong><br>
+                        Weighted squared error between f and g on perturbed samples
+                    </div>
+                </div>
+                <div class="component-box">
+                    <div class="component-title">Proximity Kernel</div>
+                    <div class="component-item">
+                        <strong>pi_x(z) = exp(-D(x,z)^2 / sigma^2)</strong><br>
+                        Samples closer to x have higher weight<br>
+                        sigma = kernel width (hyperparameter)
+                    </div>
+                </div>
+                <div class="component-box">
+                    <div class="component-title">Interpretable Model</div>
+                    <div class="component-item">
+                        <strong>g(z') = w_0 + sum_i w_i * z'_i</strong><br>
+                        z': Binary interpretable representation<br>
+                        w_i: Feature importance weights
+                    </div>
+                </div>
+            </div>
+            <div class="card intuition">
+                <div class="card-title">Intuition & Process</div>
+                <div class="step-box">
+                    <div class="step-title">LIME Algorithm Steps</div>
+                    <div class="step-content">
+                        1. <strong>Perturb:</strong> Generate samples around x<br>
+                        2. <strong>Predict:</strong> Get black-box predictions for samples<br>
+                        3. <strong>Weight:</strong> Assign weights by proximity to x<br>
+                        4. <strong>Fit:</strong> Train weighted linear model<br>
+                        5. <strong>Extract:</strong> Coefficients = feature importance
+                    </div>
+                </div>
+                <div class="example-box">
+                    <div class="example-title">Text LIME Example</div>
+                    <div class="example-content">
+                        Original: "This movie is wonderful!"<br>
+                        z' = [1, 1, 1, 1] -> Positive (0.95)<br><br>
+                        Perturbed: "This movie is ___!"<br>
+                        z' = [1, 1, 1, 0] -> Positive (0.60)<br><br>
+                        Perturbed: "This ___ is wonderful!"<br>
+                        z' = [1, 0, 1, 1] -> Positive (0.88)<br><br>
+                        Result: "wonderful" most important
+                    </div>
+                </div>
+                <div class="limitation-box">
+                    <div class="limitation-title">Known Limitations</div>
+                    <div class="limitation-item">• <strong>Instability:</strong> Different runs can give different explanations</div>
+                    <div class="limitation-item">• <strong>Kernel width:</strong> Sensitive to sigma parameter</div>
+                    <div class="limitation-item">• <strong>Sampling:</strong> Random perturbations may miss important regions</div>
+                    <div class="limitation-item">• <strong>Independence:</strong> Assumes features are independent</div>
+                    <div class="limitation-item">• <strong>Fidelity:</strong> Linear model may not capture local behavior</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

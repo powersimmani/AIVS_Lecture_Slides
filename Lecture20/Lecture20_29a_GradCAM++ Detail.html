@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grad-CAM++ Detail</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 26px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #9C27B0; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card.impl { border-color: #4CAF50; }
+        .card-title { font-size: 16px; font-weight: 700; color: #9C27B0; margin-bottom: 10px; }
+        .card.impl .card-title { color: #4CAF50; }
+        .formula-box { background: #F3E5F5; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .formula-title { font-size: 12px; font-weight: 700; color: #7B1FA2; margin-bottom: 6px; }
+        .formula-content { font-size: 11px; color: #333; line-height: 1.6; }
+        .formula-main { font-family: 'Times New Roman', serif; font-size: 12px; color: #333; background: #f0e6f5; padding: 6px; border-radius: 4px; margin: 6px 0; }
+        .improve-box { background: #E3F2FD; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .improve-title { font-size: 12px; font-weight: 700; color: #1565C0; margin-bottom: 6px; }
+        .improve-content { font-size: 11px; color: #333; line-height: 1.5; }
+        .compare-table { width: 100%; font-size: 10px; border-collapse: collapse; margin-bottom: 10px; }
+        .compare-table th { background: #4CAF50; color: white; padding: 5px; }
+        .compare-table td { padding: 5px; text-align: center; border-bottom: 1px solid #e0e0e0; }
+        .code-box { background: #2d2d2d; border-radius: 8px; padding: 10px; margin-top: auto; }
+        .code-content { font-family: 'Courier New', monospace; font-size: 9px; color: #d4d4d4; line-height: 1.4; }
+        .code-comment { color: #6a9955; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Grad-CAM++ Detail</div>
+            <div class="subtitle">Improved gradient-weighted class activation mapping</div>
+        </div>
+        <div class="content-grid">
+            <div class="card">
+                <div class="card-title">Mathematical Formulation</div>
+                <div class="improve-box">
+                    <div class="improve-title">Grad-CAM Limitation</div>
+                    <div class="improve-content">
+                        - Struggles with <strong>multiple objects</strong> of same class<br>
+                        - May highlight only partial object regions<br>
+                        - Weights based on simple gradient average
+                    </div>
+                </div>
+                <div class="formula-box">
+                    <div class="formula-title">Grad-CAM++ Weight Formula</div>
+                    <div class="formula-content">
+                        Uses <strong>higher-order gradients</strong> for better weighting:
+                        <div class="formula-main">
+                            α<sup>c</sup><sub>k</sub> = Σ<sub>i,j</sub> w<sup>abc</sup><sub>k</sub> · ReLU(∂y<sup>c</sup>/∂A<sup>k</sup><sub>ij</sub>)
+                        </div>
+                        Where w<sup>abc</sup> involves 2nd and 3rd order derivatives:
+                        <div class="formula-main">
+                            w<sup>abc</sup><sub>k</sub> = (∂²y<sup>c</sup>/∂A<sup>k</sup><sub>ij</sub>)² / [2(∂²y<sup>c</sup>/∂A<sup>k</sup><sub>ij</sub>)² + Σ A<sup>k</sup>(∂³y<sup>c</sup>/∂A<sup>k</sup><sub>ij</sub>)³]
+                        </div>
+                    </div>
+                </div>
+                <div class="formula-box">
+                    <div class="formula-title">Key Intuition</div>
+                    <div class="formula-content">
+                        <strong>Positive gradients</strong> get weighted more heavily<br>
+                        Second/third derivatives capture <strong>importance of importance</strong><br>
+                        Better localization for multiple instances
+                    </div>
+                </div>
+            </div>
+            <div class="card impl">
+                <div class="card-title">Comparison & Implementation</div>
+                <table class="compare-table">
+                    <tr><th>Aspect</th><th>Grad-CAM</th><th>Grad-CAM++</th></tr>
+                    <tr><td>Multiple Objects</td><td>Poor</td><td>Good</td></tr>
+                    <tr><td>Partial Highlight</td><td>Common</td><td>Less common</td></tr>
+                    <tr><td>Computation</td><td>1st derivative</td><td>1st, 2nd, 3rd</td></tr>
+                    <tr><td>Speed</td><td>Fast</td><td>Moderate</td></tr>
+                    <tr><td>Complexity</td><td>Simple</td><td>Complex</td></tr>
+                </table>
+                <div class="improve-box">
+                    <div class="improve-title">When to Use Grad-CAM++</div>
+                    <div class="improve-content">
+                        - Multiple instances of same class in image<br>
+                        - Need complete object coverage<br>
+                        - Object localization tasks<br>
+                        - Grad-CAM shows incomplete highlights
+                    </div>
+                </div>
+                <div class="code-box">
+                    <div class="code-content">
+                        <span class="code-comment"># Using pytorch-grad-cam library</span><br>
+                        <span class="code-comment"># pip install grad-cam</span><br><br>
+                        from pytorch_grad_cam import GradCAMPlusPlus<br>
+                        from pytorch_grad_cam.utils.image import show_cam_on_image<br><br>
+                        <span class="code-comment"># Initialize</span><br>
+                        target_layer = model.layer4[-1]  <span class="code-comment"># Last conv layer</span><br>
+                        cam = GradCAMPlusPlus(model=model, <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;target_layers=[target_layer])<br><br>
+                        <span class="code-comment"># Generate heatmap</span><br>
+                        grayscale_cam = cam(input_tensor=img_tensor,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;targets=None)  <span class="code-comment"># None = top class</span><br><br>
+                        <span class="code-comment"># Visualize</span><br>
+                        visualization = show_cam_on_image(rgb_img, <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;grayscale_cam[0], use_rgb=True)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

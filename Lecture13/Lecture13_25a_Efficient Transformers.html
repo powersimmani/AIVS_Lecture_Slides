@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Efficient Transformers</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 26px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #F44336; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card.methods { border-color: #4CAF50; }
+        .card-title { font-size: 15px; font-weight: 700; margin-bottom: 10px; }
+        .card:first-child .card-title { color: #F44336; }
+        .card.methods .card-title { color: #4CAF50; }
+        .problem-box { background: #FFEBEE; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .problem-title { font-size: 12px; font-weight: 700; color: #C62828; margin-bottom: 6px; }
+        .problem-content { font-size: 11px; color: #333; line-height: 1.5; }
+        .method-table { width: 100%; font-size: 9px; border-collapse: collapse; }
+        .method-table th { background: #4CAF50; color: white; padding: 5px; text-align: left; }
+        .method-table td { padding: 5px; border-bottom: 1px solid #e0e0e0; vertical-align: top; }
+        .complexity { font-family: 'Courier New', monospace; font-size: 8px; background: #f5f5f5; padding: 2px 4px; border-radius: 2px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Efficient Transformer Variants</div>
+            <div class="subtitle">Reducing O(n²) attention complexity for long sequences</div>
+        </div>
+        <div class="content-grid">
+            <div class="card">
+                <div class="card-title">The Quadratic Problem</div>
+                <div class="problem-box">
+                    <div class="problem-title">Standard Self-Attention</div>
+                    <div class="problem-content">
+                        Attention = softmax(QK<sup>T</sup>/sqrt(d))V<br><br>
+                        QK<sup>T</sup> is <span class="complexity">O(n² × d)</span><br><br>
+                        n = 1000 -> 1M operations<br>
+                        n = 10000 -> 100M operations<br>
+                        n = 100000 -> 10B operations!
+                    </div>
+                </div>
+                <div class="problem-box">
+                    <div class="problem-title">Memory Issues</div>
+                    <div class="problem-content">
+                        Attention matrix: n × n floats<br>
+                        n = 16K, fp16 -> 512MB per layer!<br><br>
+                        GPT-4 context: 128K tokens...<br>
+                        Standard attention infeasible.
+                    </div>
+                </div>
+            </div>
+            <div class="card methods">
+                <div class="card-title">Efficient Attention Methods</div>
+                <table class="method-table">
+                    <tr><th>Method</th><th>Approach</th><th>Complexity</th><th>Trade-off</th></tr>
+                    <tr>
+                        <td><strong>Sparse Attention</strong><br>(Longformer, BigBird)</td>
+                        <td>Local window + global tokens</td>
+                        <td><span class="complexity">O(n × w)</span></td>
+                        <td>Fixed patterns</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Linear Attention</strong><br>(Performer, Linear Trans.)</td>
+                        <td>Kernel approximation of softmax</td>
+                        <td><span class="complexity">O(n × d²)</span></td>
+                        <td>Approximation error</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Low-Rank</strong><br>(Linformer)</td>
+                        <td>Project K,V to lower dim</td>
+                        <td><span class="complexity">O(n × k)</span></td>
+                        <td>Info loss</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Chunked</strong><br>(Reformer)</td>
+                        <td>LSH hashing for similar queries</td>
+                        <td><span class="complexity">O(n log n)</span></td>
+                        <td>Randomness</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Flash Attention</strong></td>
+                        <td>IO-aware, tiled computation</td>
+                        <td><span class="complexity">O(n²)</span> but fast!</td>
+                        <td>Exact, memory efficient</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Mamba/SSM</strong></td>
+                        <td>Replace attention with state space</td>
+                        <td><span class="complexity">O(n)</span></td>
+                        <td>Different architecture</td>
+                    </tr>
+                </table>
+                <div style="background: #E3F2FD; border-radius: 8px; padding: 10px; margin-top: 10px;">
+                    <div style="font-size: 11px; color: #333; line-height: 1.4;">
+                        <strong>Flash Attention (2022)</strong> is currently most practical:<br>
+                        - Exact attention (no approximation)<br>
+                        - 2-4x faster than standard<br>
+                        - 5-20x less memory<br>
+                        - Built into PyTorch 2.0+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

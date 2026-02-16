@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ELBO Derivation for Diffusion</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 24px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #1E64C8; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card.derivation { border-color: #9C27B0; }
+        .card.simple { border-color: #4CAF50; }
+        .card-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+        .derivation .card-title { color: #9C27B0; }
+        .simple .card-title { color: #4CAF50; }
+        .step-box { background: #F3E5F5; border-radius: 8px; padding: 10px; margin-bottom: 8px; }
+        .step-title { font-size: 11px; font-weight: 700; color: #7B1FA2; margin-bottom: 4px; }
+        .formula-content { font-family: 'Times New Roman', serif; font-size: 12px; color: #333; text-align: center; line-height: 1.6; }
+        .formula-note { font-size: 10px; color: #666; margin-top: 4px; }
+        .decompose-box { background: #f8f8f8; border-radius: 8px; padding: 10px; margin-bottom: 8px; }
+        .decompose-title { font-size: 11px; font-weight: 700; color: #1E64C8; margin-bottom: 6px; }
+        .term-item { font-size: 11px; color: #333; margin-bottom: 6px; line-height: 1.4; }
+        .term-label { font-weight: 700; color: #9C27B0; }
+        .simple-box { background: #E8F5E9; border-radius: 8px; padding: 12px; margin-bottom: 10px; }
+        .simple-formula { font-family: 'Times New Roman', serif; font-size: 14px; font-weight: 600; color: #2E7D32; text-align: center; margin-bottom: 6px; }
+        .simple-note { font-size: 11px; color: #333; text-align: center; }
+        .insight-box { background: #E3F2FD; border-radius: 8px; padding: 10px; margin-bottom: 8px; }
+        .insight-title { font-size: 12px; font-weight: 700; color: #1565C0; margin-bottom: 6px; }
+        .insight-content { font-size: 11px; color: #333; line-height: 1.5; }
+        .connection-box { background: #FFF3E0; border-radius: 8px; padding: 10px; margin-top: auto; }
+        .connection-title { font-size: 12px; font-weight: 700; color: #E65100; margin-bottom: 6px; }
+        .connection-content { font-size: 11px; color: #333; line-height: 1.4; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">ELBO Derivation for Diffusion Models</div>
+            <div class="subtitle">Evidence Lower Bound: The theoretical foundation</div>
+        </div>
+        <div class="content-grid">
+            <div class="card derivation">
+                <div class="card-title">Full ELBO Derivation</div>
+                <div class="step-box">
+                    <div class="step-title">Step 1: Objective</div>
+                    <div class="formula-content">
+                        Maximize log p(x<sub>0</sub>)
+                    </div>
+                </div>
+                <div class="step-box">
+                    <div class="step-title">Step 2: Variational Bound</div>
+                    <div class="formula-content">
+                        log p(x<sub>0</sub>) >= E<sub>q</sub>[log p(x<sub>0:T</sub>) / q(x<sub>1:T</sub>|x<sub>0</sub>)]
+                    </div>
+                    <div class="formula-note">Jensen's inequality application</div>
+                </div>
+                <div class="decompose-box">
+                    <div class="decompose-title">Step 3: Decomposition</div>
+                    <div class="term-item">
+                        <span class="term-label">L = L<sub>0</sub> + L<sub>1</sub> + ... + L<sub>T-1</sub> + L<sub>T</sub></span>
+                    </div>
+                    <div class="term-item">
+                        <span class="term-label">L<sub>T</sub>:</span> D<sub>KL</sub>(q(x<sub>T</sub>|x<sub>0</sub>) || p(x<sub>T</sub>)) <br>
+                        <span style="color:#666; font-size:10px;">Constant (prior matching)</span>
+                    </div>
+                    <div class="term-item">
+                        <span class="term-label">L<sub>t</sub>:</span> D<sub>KL</sub>(q(x<sub>t</sub>|x<sub>t+1</sub>,x<sub>0</sub>) || p<sub>theta</sub>(x<sub>t</sub>|x<sub>t+1</sub>))<br>
+                        <span style="color:#666; font-size:10px;">Denoising matching (t = 1,...,T-1)</span>
+                    </div>
+                    <div class="term-item">
+                        <span class="term-label">L<sub>0</sub>:</span> -log p<sub>theta</sub>(x<sub>0</sub>|x<sub>1</sub>)<br>
+                        <span style="color:#666; font-size:10px;">Reconstruction term</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card simple">
+                <div class="card-title">Simplified Loss</div>
+                <div class="simple-box">
+                    <div class="simple-formula">L<sub>simple</sub> = E<sub>t,epsilon</sub>[||epsilon - epsilon<sub>theta</sub>(x<sub>t</sub>, t)||<sup>2</sup>]</div>
+                    <div class="simple-note">Simple MSE loss predicting noise!</div>
+                </div>
+                <div class="insight-box">
+                    <div class="insight-title">Why This Works</div>
+                    <div class="insight-content">
+                        <strong>Key insight:</strong> The KL divergence between Gaussians simplifies to MSE between means.<br><br>
+                        <strong>Parameterization:</strong> Instead of predicting x<sub>0</sub> or x<sub>t-1</sub>, predict the noise epsilon that was added.<br><br>
+                        <strong>Benefit:</strong> Uniform weighting across timesteps works better empirically.
+                    </div>
+                </div>
+                <div class="insight-box">
+                    <div class="insight-title">Training Algorithm</div>
+                    <div class="insight-content">
+                        1. Sample x<sub>0</sub> ~ data<br>
+                        2. Sample t ~ Uniform(1, T)<br>
+                        3. Sample epsilon ~ N(0, I)<br>
+                        4. Compute x<sub>t</sub> = sqrt(alpha_bar_t) * x<sub>0</sub> + sqrt(1-alpha_bar_t) * epsilon<br>
+                        5. Gradient descent on ||epsilon - epsilon<sub>theta</sub>(x<sub>t</sub>, t)||<sup>2</sup>
+                    </div>
+                </div>
+                <div class="connection-box">
+                    <div class="connection-title">Connection to VAE</div>
+                    <div class="connection-content">
+                        • Both use ELBO framework<br>
+                        • Diffusion = hierarchical VAE with T layers<br>
+                        • Fixed encoder (forward process) vs learned encoder (VAE)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

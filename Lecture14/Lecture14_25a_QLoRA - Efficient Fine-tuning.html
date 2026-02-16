@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QLoRA - Efficient Fine-tuning</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 24px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #1E64C8; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card.concept { border-color: #9C27B0; }
+        .card.usage { border-color: #4CAF50; }
+        .card-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+        .concept .card-title { color: #9C27B0; }
+        .usage .card-title { color: #4CAF50; }
+        .idea-box { background: #F3E5F5; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .idea-content { font-size: 12px; color: #333; line-height: 1.5; }
+        .component-box { background: #f8f8f8; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .component-title { font-size: 12px; font-weight: 700; color: #7B1FA2; margin-bottom: 6px; }
+        .component-item { display: flex; align-items: flex-start; gap: 8px; font-size: 11px; color: #333; margin-bottom: 4px; }
+        .component-num { width: 18px; height: 18px; background: #9C27B0; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex-shrink: 0; }
+        .comparison-table { width: 100%; font-size: 11px; border-collapse: collapse; margin-bottom: 10px; }
+        .comparison-table th { background: #4CAF50; color: white; padding: 5px; text-align: center; }
+        .comparison-table td { padding: 5px; text-align: center; border-bottom: 1px solid #e0e0e0; }
+        .highlight { background: #E8F5E9; font-weight: 600; }
+        .code-box { background: #2d2d2d; border-radius: 8px; padding: 10px; margin-top: auto; }
+        .code-content { font-family: 'Courier New', monospace; font-size: 9px; color: #d4d4d4; line-height: 1.4; }
+        .code-comment { color: #6a9955; }
+        .code-string { color: #ce9178; }
+        .key-point { background: #E8F5E9; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .key-title { font-size: 12px; font-weight: 700; color: #2E7D32; margin-bottom: 4px; }
+        .key-content { font-size: 11px; color: #333; line-height: 1.4; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">QLoRA: Quantized Low-Rank Adaptation</div>
+            <div class="subtitle">Fine-tune 65B models on a single GPU (Dettmers et al., 2023)</div>
+        </div>
+        <div class="content-grid">
+            <div class="card concept">
+                <div class="card-title">Key Innovations</div>
+                <div class="idea-box">
+                    <div class="idea-content">
+                        <strong>Core Idea:</strong> Combine 4-bit quantization with LoRA adapters. Base model stays in 4-bit, adapters train in 16-bit.
+                    </div>
+                </div>
+                <div class="component-box">
+                    <div class="component-title">Three Components</div>
+                    <div class="component-item">
+                        <span class="component-num">1</span>
+                        <span><strong>NF4 (4-bit NormalFloat):</strong> Optimal quantization for normally distributed weights</span>
+                    </div>
+                    <div class="component-item">
+                        <span class="component-num">2</span>
+                        <span><strong>Double Quantization:</strong> Quantize the quantization constants too (saves 0.5 bits/param)</span>
+                    </div>
+                    <div class="component-item">
+                        <span class="component-num">3</span>
+                        <span><strong>Paged Optimizers:</strong> Offload optimizer states to CPU when needed</span>
+                    </div>
+                </div>
+                <table class="comparison-table">
+                    <tr><th>Method</th><th>Memory (65B)</th><th>GPUs Needed</th></tr>
+                    <tr><td>Full Fine-tune</td><td>~780 GB</td><td>10× A100</td></tr>
+                    <tr><td>LoRA (FP16)</td><td>~156 GB</td><td>2× A100</td></tr>
+                    <tr><td class="highlight">QLoRA (4-bit)</td><td class="highlight">~48 GB</td><td class="highlight">1× A100</td></tr>
+                </table>
+            </div>
+            <div class="card usage">
+                <div class="card-title">Practical Usage</div>
+                <div class="key-point">
+                    <div class="key-title">Performance</div>
+                    <div class="key-content">
+                        QLoRA matches full fine-tuning performance while using only 3% of the memory!
+                    </div>
+                </div>
+                <div class="code-box">
+                    <div class="code-content">
+                        <span class="code-comment"># pip install bitsandbytes peft transformers</span><br>
+                        from transformers import AutoModelForCausalLM, BitsAndBytesConfig<br>
+                        from peft import LoraConfig, get_peft_model<br><br>
+                        <span class="code-comment"># 4-bit quantization config</span><br>
+                        bnb_config = BitsAndBytesConfig(<br>
+                        &nbsp;&nbsp;load_in_4bit=True,<br>
+                        &nbsp;&nbsp;bnb_4bit_quant_type=<span class="code-string">"nf4"</span>,<br>
+                        &nbsp;&nbsp;bnb_4bit_compute_dtype=torch.bfloat16,<br>
+                        &nbsp;&nbsp;bnb_4bit_use_double_quant=True<br>
+                        )<br><br>
+                        <span class="code-comment"># Load model in 4-bit</span><br>
+                        model = AutoModelForCausalLM.from_pretrained(<br>
+                        &nbsp;&nbsp;<span class="code-string">"meta-llama/Llama-2-7b"</span>,<br>
+                        &nbsp;&nbsp;quantization_config=bnb_config<br>
+                        )<br><br>
+                        <span class="code-comment"># Add LoRA adapters</span><br>
+                        lora_config = LoraConfig(<br>
+                        &nbsp;&nbsp;r=8, lora_alpha=16,<br>
+                        &nbsp;&nbsp;target_modules=[<span class="code-string">"q_proj"</span>, <span class="code-string">"v_proj"</span>]<br>
+                        )<br>
+                        model = get_peft_model(model, lora_config)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

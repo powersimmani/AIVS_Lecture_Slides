@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batch Normalization Preview</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 15px; }
+        .main-title { font-size: 26px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #1E64C8; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card.problem { border-color: #F44336; }
+        .card.solution { border-color: #4CAF50; }
+        .card-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+        .problem .card-title { color: #F44336; }
+        .solution .card-title { color: #4CAF50; }
+        .problem-box { background: #FFEBEE; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .problem-title { font-size: 12px; font-weight: 700; color: #C62828; margin-bottom: 6px; }
+        .problem-content { font-size: 11px; color: #333; line-height: 1.5; }
+        .formula-box { background: #E8F5E9; border-radius: 8px; padding: 12px; margin-bottom: 10px; text-align: center; }
+        .formula-step { font-family: 'Courier New', monospace; font-size: 12px; color: #333; margin-bottom: 6px; text-align: left; }
+        .formula-note { font-size: 10px; color: #666; text-align: left; }
+        .benefit-box { background: #E3F2FD; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .benefit-title { font-size: 12px; font-weight: 700; color: #1565C0; margin-bottom: 6px; }
+        .benefit-item { font-size: 11px; color: #333; margin-bottom: 4px; line-height: 1.4; }
+        .code-box { background: #2d2d2d; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .code-content { font-family: 'Courier New', monospace; font-size: 10px; color: #d4d4d4; line-height: 1.5; }
+        .code-comment { color: #6a9955; }
+        .note-box { background: #FFF3E0; border-radius: 8px; padding: 10px; margin-top: auto; }
+        .note-title { font-size: 12px; font-weight: 700; color: #E65100; margin-bottom: 6px; }
+        .note-content { font-size: 11px; color: #333; line-height: 1.4; }
+        .visual-box { background: #f8f8f8; border-radius: 8px; padding: 10px; margin-bottom: 10px; text-align: center; }
+        .visual-title { font-size: 12px; font-weight: 700; color: #1E64C8; margin-bottom: 8px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Batch Normalization Preview</div>
+            <div class="subtitle">Stabilizing deep network training (Ioffe & Szegedy, 2015)</div>
+        </div>
+        <div class="content-grid">
+            <div class="card problem">
+                <div class="card-title">The Problem: Internal Covariate Shift</div>
+                <div class="problem-box">
+                    <div class="problem-title">What Happens During Training?</div>
+                    <div class="problem-content">
+                        Layer 1 weights update -> Layer 2 input distribution changes<br>
+                        Layer 2 weights update -> Layer 3 input distribution changes<br>
+                        ...<br><br>
+                        Each layer must constantly adapt to shifting inputs!
+                    </div>
+                </div>
+                <div class="visual-box">
+                    <div class="visual-title">Distribution Shift</div>
+                    <svg viewBox="0 0 280 80" style="width: 100%; height: 70px;">
+                        <!-- Epoch 1 distribution -->
+                        <text x="45" y="12" font-size="8" fill="#666" text-anchor="middle">Epoch 1</text>
+                        <ellipse cx="45" cy="45" rx="30" ry="20" fill="#FFCDD2" stroke="#F44336"/>
+                        <!-- Arrow -->
+                        <path d="M80,45 L105,45" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+                        <!-- Epoch 10 distribution (shifted) -->
+                        <text x="140" y="12" font-size="8" fill="#666" text-anchor="middle">Epoch 10</text>
+                        <ellipse cx="145" cy="35" rx="25" ry="25" fill="#C8E6C9" stroke="#4CAF50"/>
+                        <!-- Arrow -->
+                        <path d="M175,40 L200,40" stroke="#666" stroke-width="1.5" marker-end="url(#arrow)"/>
+                        <!-- Epoch 50 distribution (shifted again) -->
+                        <text x="235" y="12" font-size="8" fill="#666" text-anchor="middle">Epoch 50</text>
+                        <ellipse cx="235" cy="50" rx="35" ry="15" fill="#BBDEFB" stroke="#2196F3"/>
+                        <defs>
+                            <marker id="arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                                <path d="M0,0 L6,3 L0,6 Z" fill="#666"/>
+                            </marker>
+                        </defs>
+                    </svg>
+                </div>
+                <div class="problem-box">
+                    <div class="problem-title">Consequences</div>
+                    <div class="problem-content">
+                        - Slower convergence (careful learning rates needed)<br>
+                        - Careful weight initialization required<br>
+                        - Saturated activations (vanishing gradients)<br>
+                        - Training instability in deep networks
+                    </div>
+                </div>
+            </div>
+            <div class="card solution">
+                <div class="card-title">Solution: Normalize Each Layer</div>
+                <div class="formula-box">
+                    <div class="formula-step">1. mu_B = (1/m) * sum(x_i)  <span style="color:#666"># batch mean</span></div>
+                    <div class="formula-step">2. sigma_B² = (1/m) * sum(x_i - mu_B)²  <span style="color:#666"># batch var</span></div>
+                    <div class="formula-step">3. x_hat = (x - mu_B) / sqrt(sigma_B² + eps)</div>
+                    <div class="formula-step">4. y = gamma * x_hat + beta  <span style="color:#666"># scale & shift</span></div>
+                    <div class="formula-note">gamma, beta are <strong>learnable</strong> parameters</div>
+                </div>
+                <div class="benefit-box">
+                    <div class="benefit-title">Key Benefits</div>
+                    <div class="benefit-item">+ <strong>Higher learning rates:</strong> More stable gradients</div>
+                    <div class="benefit-item">+ <strong>Less sensitive to initialization:</strong> Robust training</div>
+                    <div class="benefit-item">+ <strong>Regularization effect:</strong> Slight noise from batch stats</div>
+                    <div class="benefit-item">+ <strong>Enables deeper networks:</strong> Better gradient flow</div>
+                </div>
+                <div class="code-box">
+                    <div class="code-content">
+                        <span class="code-comment"># Typical placement: after linear, before activation</span><br>
+                        x = nn.Linear(256, 128)(x)<br>
+                        x = nn.BatchNorm1d(128)(x)<br>
+                        x = nn.ReLU()(x)
+                    </div>
+                </div>
+                <div class="note-box">
+                    <div class="note-title">Coming Up in Lecture 09</div>
+                    <div class="note-content">
+                        We'll cover BatchNorm in detail, plus alternatives:<br>
+                        LayerNorm, GroupNorm, InstanceNorm, and when to use each.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

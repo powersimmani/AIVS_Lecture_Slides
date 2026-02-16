@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integrated Gradients Deep Dive</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 24px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #1E64C8; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card.theory { border-color: #9C27B0; }
+        .card.practice { border-color: #4CAF50; }
+        .card-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+        .theory .card-title { color: #9C27B0; }
+        .practice .card-title { color: #4CAF50; }
+        .formula-box { background: #F3E5F5; border-radius: 8px; padding: 12px; margin-bottom: 10px; text-align: center; }
+        .formula-main { font-family: 'Times New Roman', serif; font-size: 13px; font-weight: 600; color: #333; margin-bottom: 6px; }
+        .formula-note { font-size: 10px; color: #666; line-height: 1.4; }
+        .axiom-box { background: #E3F2FD; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .axiom-title { font-size: 12px; font-weight: 700; color: #1565C0; margin-bottom: 6px; }
+        .axiom-item { font-size: 11px; color: #333; margin-bottom: 4px; line-height: 1.4; }
+        .baseline-table { width: 100%; font-size: 10px; border-collapse: collapse; margin-bottom: 10px; }
+        .baseline-table th { background: #4CAF50; color: white; padding: 5px; text-align: center; }
+        .baseline-table td { padding: 5px; text-align: center; border-bottom: 1px solid #e0e0e0; }
+        .code-box { background: #2d2d2d; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .code-content { font-family: 'Courier New', monospace; font-size: 9px; color: #d4d4d4; line-height: 1.4; }
+        .code-comment { color: #6a9955; }
+        .comparison-box { background: #FFF3E0; border-radius: 8px; padding: 10px; margin-top: auto; }
+        .comparison-title { font-size: 12px; font-weight: 700; color: #E65100; margin-bottom: 6px; }
+        .comparison-content { font-size: 10px; color: #333; line-height: 1.4; }
+        .key-box { background: #E8F5E9; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .key-title { font-size: 12px; font-weight: 700; color: #2E7D32; margin-bottom: 6px; }
+        .key-content { font-size: 11px; color: #333; line-height: 1.5; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Integrated Gradients: Axiomatic Attribution</div>
+            <div class="subtitle">Principled feature attribution for deep networks (Sundararajan et al., 2017)</div>
+        </div>
+        <div class="content-grid">
+            <div class="card theory">
+                <div class="card-title">Mathematical Foundation</div>
+                <div class="formula-box">
+                    <div class="formula-main">IG<sub>i</sub>(x) = (x<sub>i</sub> - x'<sub>i</sub>) × integral<sub>0</sub><sup>1</sup> (dF/dx<sub>i</sub>)(x' + alpha*(x-x')) d_alpha</div>
+                    <div class="formula-note">
+                        x: input | x': baseline | F: model output | alpha: interpolation parameter
+                    </div>
+                </div>
+                <div class="axiom-box">
+                    <div class="axiom-title">Two Fundamental Axioms</div>
+                    <div class="axiom-item"><strong>1. Sensitivity:</strong> If feature differs from baseline AND affects output, attribution != 0</div>
+                    <div class="axiom-item"><strong>2. Implementation Invariance:</strong> Two functionally equivalent networks get same attributions</div>
+                </div>
+                <div class="key-box">
+                    <div class="key-title">Completeness Property</div>
+                    <div class="key-content">
+                        <strong>sum<sub>i</sub> IG<sub>i</sub>(x) = F(x) - F(x')</strong><br><br>
+                        The attributions sum to the difference between the prediction and the baseline prediction. This ensures all prediction change is accounted for!
+                    </div>
+                </div>
+                <div class="comparison-box">
+                    <div class="comparison-title">Why Not Just Gradients?</div>
+                    <div class="comparison-content">
+                        <strong>Vanilla gradient problems:</strong><br>
+                        • Saturation: gradient = 0 in saturated regions<br>
+                        • Noisy: high-frequency patterns<br>
+                        • No baseline: relative to what?<br><br>
+                        <strong>IG fixes all three!</strong>
+                    </div>
+                </div>
+            </div>
+            <div class="card practice">
+                <div class="card-title">Practical Implementation</div>
+                <table class="baseline-table">
+                    <tr><th>Data Type</th><th>Recommended Baseline</th><th>Why</th></tr>
+                    <tr><td>Images</td><td>Black image (zeros)</td><td>Absence of signal</td></tr>
+                    <tr><td>Text</td><td>[PAD] or [UNK] tokens</td><td>Uninformative</td></tr>
+                    <tr><td>Tabular</td><td>Mean or zeros</td><td>Average/absent</td></tr>
+                    <tr><td>Time series</td><td>Zeros or mean</td><td>No signal</td></tr>
+                </table>
+                <div class="code-box">
+                    <div class="code-content">
+                        <span class="code-comment"># Using Captum library</span><br>
+                        from captum.attr import IntegratedGradients<br><br>
+                        <span class="code-comment"># Initialize</span><br>
+                        ig = IntegratedGradients(model)<br><br>
+                        <span class="code-comment"># Compute attributions</span><br>
+                        attributions = ig.attribute(<br>
+                        &nbsp;&nbsp;inputs=input_tensor,<br>
+                        &nbsp;&nbsp;baselines=baseline_tensor,  <span class="code-comment"># zeros</span><br>
+                        &nbsp;&nbsp;target=class_idx,<br>
+                        &nbsp;&nbsp;n_steps=50  <span class="code-comment"># Riemann approx steps</span><br>
+                        )<br><br>
+                        <span class="code-comment"># For images: sum over channels</span><br>
+                        attr_sum = attributions.sum(dim=1)
+                    </div>
+                </div>
+                <div class="key-box">
+                    <div class="key-title">n_steps Parameter</div>
+                    <div class="key-content">
+                        More steps = better integral approximation<br>
+                        • 20-50: Quick approximation<br>
+                        • 100-300: Good for final results<br>
+                        • Convergence check: increase until stable
+                    </div>
+                </div>
+                <div class="comparison-box">
+                    <div class="comparison-title">IG vs Gradient Methods</div>
+                    <div class="comparison-content">
+                        <strong>Vanilla Gradient:</strong> Noisy, misses saturated regions<br>
+                        <strong>Gradient × Input:</strong> Better, but no axioms<br>
+                        <strong>SmoothGrad:</strong> Averages noise, but expensive<br>
+                        <strong>IG:</strong> Axiomatically justified, clean results
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

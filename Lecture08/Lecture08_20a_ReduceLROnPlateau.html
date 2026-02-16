@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReduceLROnPlateau</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 28px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #1E64C8; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card-title { font-size: 16px; font-weight: 700; color: #1E64C8; margin-bottom: 10px; }
+        .concept-box { background: #E3F2FD; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .concept-title { font-size: 12px; font-weight: 700; color: #1565C0; margin-bottom: 6px; }
+        .concept-content { font-size: 11px; color: #333; line-height: 1.5; }
+        .param-table { width: 100%; font-size: 10px; border-collapse: collapse; margin-bottom: 10px; }
+        .param-table th { background: #1E64C8; color: white; padding: 5px; text-align: left; }
+        .param-table td { padding: 5px; border-bottom: 1px solid #e0e0e0; }
+        .code-box { background: #2d2d2d; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .code-content { font-family: 'Courier New', monospace; font-size: 9.5px; color: #d4d4d4; line-height: 1.45; }
+        .code-comment { color: #6a9955; }
+        .visual-box { background: #f8f8f8; border-radius: 8px; padding: 10px; margin-bottom: 10px; text-align: center; }
+        .tip-box { background: #E8F5E9; border-radius: 8px; padding: 10px; margin-top: auto; }
+        .tip-title { font-size: 12px; font-weight: 700; color: #2E7D32; margin-bottom: 6px; }
+        .tip-item { font-size: 11px; color: #333; margin-bottom: 4px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">ReduceLROnPlateau</div>
+            <div class="subtitle">Adaptive learning rate reduction when metric stops improving</div>
+        </div>
+        <div class="content-grid">
+            <div class="card">
+                <div class="card-title">How It Works</div>
+                <div class="concept-box">
+                    <div class="concept-title">Core Idea</div>
+                    <div class="concept-content">
+                        Monitor a metric (e.g., validation loss).<br>
+                        If no improvement for <strong>patience</strong> epochs,<br>
+                        reduce learning rate by <strong>factor</strong>.
+                    </div>
+                </div>
+                <div class="visual-box">
+                    <svg viewBox="0 0 300 100" style="width: 100%; height: 90px;">
+                        <!-- Loss curve -->
+                        <polyline points="10,80 40,60 70,45 100,35 130,33 160,32 190,31 220,25 250,20 280,18" fill="none" stroke="#2196F3" stroke-width="2"/>
+                        <!-- Plateau region -->
+                        <rect x="100" y="28" width="90" height="12" fill="#FFEB3B" fill-opacity="0.3" stroke="#FFC107" stroke-dasharray="3,2"/>
+                        <text x="145" y="50" text-anchor="middle" font-size="7" fill="#F57F17">Plateau detected</text>
+                        <!-- LR drop point -->
+                        <line x1="190" y1="10" x2="190" y2="45" stroke="#F44336" stroke-width="1.5" stroke-dasharray="3,2"/>
+                        <text x="190" y="8" text-anchor="middle" font-size="7" fill="#C62828">LR reduced</text>
+                        <!-- Axes -->
+                        <text x="5" y="50" font-size="7" fill="#666">Loss</text>
+                        <text x="280" y="95" font-size="7" fill="#666">Epoch</text>
+                    </svg>
+                </div>
+                <table class="param-table">
+                    <tr><th>Parameter</th><th>Default</th><th>Description</th></tr>
+                    <tr><td>mode</td><td>'min'</td><td>'min' for loss, 'max' for accuracy</td></tr>
+                    <tr><td>factor</td><td>0.1</td><td>LR multiplier when reducing</td></tr>
+                    <tr><td>patience</td><td>10</td><td>Epochs to wait before reducing</td></tr>
+                    <tr><td>threshold</td><td>1e-4</td><td>Min change to qualify as improvement</td></tr>
+                    <tr><td>min_lr</td><td>0</td><td>Lower bound on learning rate</td></tr>
+                    <tr><td>cooldown</td><td>0</td><td>Epochs to wait after reduction</td></tr>
+                </table>
+            </div>
+            <div class="card">
+                <div class="card-title">Implementation</div>
+                <div class="code-box">
+                    <div class="code-content">
+                        <span class="code-comment"># PyTorch</span><br>
+                        from torch.optim.lr_scheduler import ReduceLROnPlateau<br><br>
+                        optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)<br>
+                        scheduler = ReduceLROnPlateau(<br>
+                        &nbsp;&nbsp;optimizer,<br>
+                        &nbsp;&nbsp;mode='min',       <span class="code-comment"># minimize val_loss</span><br>
+                        &nbsp;&nbsp;factor=0.5,       <span class="code-comment"># halve LR</span><br>
+                        &nbsp;&nbsp;patience=5,       <span class="code-comment"># wait 5 epochs</span><br>
+                        &nbsp;&nbsp;min_lr=1e-6,      <span class="code-comment"># don't go below</span><br>
+                        &nbsp;&nbsp;verbose=True<br>
+                        )<br><br>
+                        <span class="code-comment"># Training loop</span><br>
+                        for epoch in range(epochs):<br>
+                        &nbsp;&nbsp;train_one_epoch()<br>
+                        &nbsp;&nbsp;val_loss = validate()<br>
+                        &nbsp;&nbsp;scheduler.step(val_loss)  <span class="code-comment"># Pass metric!</span>
+                    </div>
+                </div>
+                <div class="code-box">
+                    <div class="code-content">
+                        <span class="code-comment"># Keras/TensorFlow</span><br>
+                        from tensorflow.keras.callbacks import ReduceLROnPlateau<br><br>
+                        callback = ReduceLROnPlateau(<br>
+                        &nbsp;&nbsp;monitor='val_loss',<br>
+                        &nbsp;&nbsp;factor=0.5,<br>
+                        &nbsp;&nbsp;patience=5,<br>
+                        &nbsp;&nbsp;min_lr=1e-6<br>
+                        )<br>
+                        model.fit(X, y, callbacks=[callback])
+                    </div>
+                </div>
+                <div class="tip-box">
+                    <div class="tip-title">Best Practices</div>
+                    <div class="tip-item">- Monitor validation metric, not training</div>
+                    <div class="tip-item">- patience = 5-10 epochs typically</div>
+                    <div class="tip-item">- factor = 0.5 or 0.1 (halve or 10x reduce)</div>
+                    <div class="tip-item">- Combine with early stopping</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

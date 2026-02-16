@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Surrogate Models</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 24px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #1E64C8; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card.concept { border-color: #FF9800; }
+        .card.practice { border-color: #4CAF50; }
+        .card-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+        .concept .card-title { color: #FF9800; }
+        .practice .card-title { color: #4CAF50; }
+        .idea-box { background: #FFF3E0; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .idea-title { font-size: 12px; font-weight: 700; color: #E65100; margin-bottom: 6px; }
+        .idea-content { font-size: 11px; color: #333; line-height: 1.5; }
+        .process-box { background: #f8f8f8; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .process-title { font-size: 12px; font-weight: 700; color: #1E64C8; margin-bottom: 6px; }
+        .process-step { font-size: 11px; color: #333; margin-bottom: 4px; }
+        .r2-table { width: 100%; font-size: 10px; border-collapse: collapse; margin-bottom: 10px; }
+        .r2-table th { background: #FF9800; color: white; padding: 5px; text-align: center; }
+        .r2-table td { padding: 5px; text-align: center; border-bottom: 1px solid #e0e0e0; }
+        .highlight { background: #FFF3E0; font-weight: 600; }
+        .surrogate-box { background: #E8F5E9; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .surrogate-title { font-size: 12px; font-weight: 700; color: #2E7D32; margin-bottom: 6px; }
+        .surrogate-item { font-size: 11px; color: #333; margin-bottom: 4px; }
+        .code-box { background: #2d2d2d; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .code-content { font-family: 'Courier New', monospace; font-size: 9px; color: #d4d4d4; line-height: 1.4; }
+        .code-comment { color: #6a9955; }
+        .warning-box { background: #FFEBEE; border-radius: 8px; padding: 10px; margin-top: auto; }
+        .warning-title { font-size: 12px; font-weight: 700; color: #C62828; margin-bottom: 6px; }
+        .warning-content { font-size: 11px; color: #333; line-height: 1.4; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Global Surrogate Models</div>
+            <div class="subtitle">Approximating black-box models with interpretable ones</div>
+        </div>
+        <div class="content-grid">
+            <div class="card concept">
+                <div class="card-title">Concept</div>
+                <div class="idea-box">
+                    <div class="idea-title">Core Idea</div>
+                    <div class="idea-content">
+                        Train an interpretable model (g) to mimic the black-box model (f).<br><br>
+                        <strong>Goal:</strong> g(x) ≈ f(x) for all x<br>
+                        <strong>Then:</strong> Interpret g to understand f
+                    </div>
+                </div>
+                <div class="process-box">
+                    <div class="process-title">Training Process</div>
+                    <div class="process-step">1. Get dataset X (training or new data)</div>
+                    <div class="process-step">2. Get black-box predictions: y_hat = f(X)</div>
+                    <div class="process-step">3. Train interpretable model: g.fit(X, y_hat)</div>
+                    <div class="process-step">4. Measure fidelity: R² between f and g</div>
+                    <div class="process-step">5. Interpret g (coefficients, tree rules, etc.)</div>
+                </div>
+                <table class="r2-table">
+                    <tr><th>R² Score</th><th>Interpretation</th><th>Action</th></tr>
+                    <tr class="highlight"><td>> 0.9</td><td>Excellent approximation</td><td>Trust surrogate</td></tr>
+                    <tr><td>0.7 - 0.9</td><td>Good approximation</td><td>Use with caution</td></tr>
+                    <tr><td>< 0.7</td><td>Poor approximation</td><td>Don't trust</td></tr>
+                </table>
+                <div class="warning-box">
+                    <div class="warning-title">Key Limitation</div>
+                    <div class="warning-content">
+                        The surrogate explains itself, not necessarily the black-box!<br>
+                        Always report R² to show how much to trust the explanation.
+                    </div>
+                </div>
+            </div>
+            <div class="card practice">
+                <div class="card-title">Practical Implementation</div>
+                <div class="surrogate-box">
+                    <div class="surrogate-title">Common Surrogate Choices</div>
+                    <div class="surrogate-item"><strong>Decision Tree:</strong> IF-THEN rules, most common</div>
+                    <div class="surrogate-item"><strong>Linear Regression:</strong> Feature coefficients</div>
+                    <div class="surrogate-item"><strong>Logistic Regression:</strong> For classification</div>
+                    <div class="surrogate-item"><strong>GAM:</strong> Non-linear but additive</div>
+                    <div class="surrogate-item"><strong>Rule Lists:</strong> Ordered rules</div>
+                </div>
+                <div class="code-box">
+                    <div class="code-content">
+                        <span class="code-comment"># Global surrogate with Decision Tree</span><br>
+                        from sklearn.tree import DecisionTreeClassifier<br>
+                        from sklearn.metrics import r2_score<br><br>
+                        <span class="code-comment"># Get black-box predictions</span><br>
+                        y_blackbox = black_box_model.predict(X)<br><br>
+                        <span class="code-comment"># Train interpretable surrogate</span><br>
+                        surrogate = DecisionTreeClassifier(<br>
+                        &nbsp;&nbsp;max_depth=5,  <span class="code-comment"># keep interpretable</span><br>
+                        &nbsp;&nbsp;min_samples_leaf=50<br>
+                        )<br>
+                        surrogate.fit(X, y_blackbox)<br><br>
+                        <span class="code-comment"># Check fidelity</span><br>
+                        y_surrogate = surrogate.predict(X)<br>
+                        fidelity = (y_blackbox == y_surrogate).mean()<br>
+                        print(f"Fidelity: {fidelity:.2%}")<br><br>
+                        <span class="code-comment"># Visualize tree</span><br>
+                        from sklearn.tree import plot_tree<br>
+                        plot_tree(surrogate, feature_names=feature_names)
+                    </div>
+                </div>
+                <div class="surrogate-box">
+                    <div class="surrogate-title">When to Use</div>
+                    <div class="surrogate-item">• Need global understanding of model behavior</div>
+                    <div class="surrogate-item">• Stakeholders need simple explanations</div>
+                    <div class="surrogate-item">• Model documentation and auditing</div>
+                    <div class="surrogate-item">• Debugging: find where model behaves unexpectedly</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RLHF Training Process</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 24px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .step-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; flex: 1; }
+        .step-card { background: white; border: 2.5px solid #1E64C8; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; }
+        .step-card.step1 { border-color: #2196F3; }
+        .step-card.step2 { border-color: #FF9800; }
+        .step-card.step3 { border-color: #4CAF50; }
+        .step-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+        .step-num { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; color: white; }
+        .step1 .step-num { background: #2196F3; }
+        .step2 .step-num { background: #FF9800; }
+        .step3 .step-num { background: #4CAF50; }
+        .step-title { font-size: 14px; font-weight: 700; }
+        .step1 .step-title { color: #2196F3; }
+        .step2 .step-title { color: #FF9800; }
+        .step3 .step-title { color: #4CAF50; }
+        .step-box { border-radius: 8px; padding: 10px; margin-bottom: 8px; flex: 1; }
+        .step1 .step-box { background: #E3F2FD; }
+        .step2 .step-box { background: #FFF3E0; }
+        .step3 .step-box { background: #E8F5E9; }
+        .step-content { font-size: 11px; color: #333; line-height: 1.5; }
+        .arrow-box { background: #f8f8f8; border-radius: 6px; padding: 6px; text-align: center; font-size: 10px; color: #666; margin-top: auto; }
+        .bottom-section { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 12px; }
+        .formula-card { background: #F3E5F5; border: 2px solid #9C27B0; border-radius: 10px; padding: 12px; }
+        .formula-title { font-size: 13px; font-weight: 700; color: #7B1FA2; margin-bottom: 6px; text-align: center; }
+        .formula-main { font-size: 13px; font-weight: 600; color: #333; font-family: 'Times New Roman', serif; text-align: center; margin-bottom: 6px; }
+        .formula-note { font-size: 10px; color: #666; text-align: center; }
+        .alternative-card { background: #E8F5E9; border: 2px solid #4CAF50; border-radius: 10px; padding: 12px; }
+        .alt-title { font-size: 13px; font-weight: 700; color: #2E7D32; margin-bottom: 6px; }
+        .alt-content { font-size: 11px; color: #333; line-height: 1.5; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">RLHF: Reinforcement Learning from Human Feedback</div>
+            <div class="subtitle">The three-stage process that created ChatGPT (InstructGPT, 2022)</div>
+        </div>
+        <div class="step-grid">
+            <div class="step-card step1">
+                <div class="step-header">
+                    <span class="step-num">1</span>
+                    <span class="step-title">SFT</span>
+                </div>
+                <div class="step-box">
+                    <div class="step-content">
+                        <strong>Supervised Fine-Tuning</strong><br><br>
+                        • Collect high-quality (prompt, response) pairs<br>
+                        • Human labelers write ideal responses<br>
+                        • Standard next-token prediction training<br>
+                        • Model learns basic instruction following<br><br>
+                        <strong>Data:</strong> ~13K examples (InstructGPT)
+                    </div>
+                </div>
+                <div class="arrow-box">Base LLM → SFT Model</div>
+            </div>
+            <div class="step-card step2">
+                <div class="step-header">
+                    <span class="step-num">2</span>
+                    <span class="step-title">Reward Model</span>
+                </div>
+                <div class="step-box">
+                    <div class="step-content">
+                        <strong>Train Reward Model</strong><br><br>
+                        • Generate multiple responses per prompt<br>
+                        • Humans rank responses: A > B > C > D<br>
+                        • Train model to predict human preferences<br>
+                        • Bradley-Terry model for pairwise ranking<br><br>
+                        <strong>Data:</strong> ~33K comparisons
+                    </div>
+                </div>
+                <div class="arrow-box">Human Preferences → R(x,y)</div>
+            </div>
+            <div class="step-card step3">
+                <div class="step-header">
+                    <span class="step-num">3</span>
+                    <span class="step-title">PPO Training</span>
+                </div>
+                <div class="step-box">
+                    <div class="step-content">
+                        <strong>RL Optimization</strong><br><br>
+                        • Policy model generates response<br>
+                        • Reward model scores it<br>
+                        • PPO updates policy to maximize reward<br>
+                        • KL penalty prevents diverging too far<br><br>
+                        <strong>Key:</strong> Balance reward vs. staying coherent
+                    </div>
+                </div>
+                <div class="arrow-box">SFT Model → RLHF Model</div>
+            </div>
+        </div>
+        <div class="bottom-section">
+            <div class="formula-card">
+                <div class="formula-title">RLHF Objective</div>
+                <div class="formula-main">max E[R(x,y)] - β × KL(π || π<sub>ref</sub>)</div>
+                <div class="formula-note">
+                    R: reward score | β: KL penalty coefficient<br>
+                    π: current policy | π<sub>ref</sub>: SFT model (reference)
+                </div>
+            </div>
+            <div class="alternative-card">
+                <div class="alt-title">Simpler Alternative: DPO</div>
+                <div class="alt-content">
+                    <strong>Direct Preference Optimization (2023):</strong><br>
+                    • Skip reward model training<br>
+                    • Directly optimize policy from preference data<br>
+                    • Simpler, more stable training<br>
+                    • Used in LLaMA 2, Zephyr, many open models
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

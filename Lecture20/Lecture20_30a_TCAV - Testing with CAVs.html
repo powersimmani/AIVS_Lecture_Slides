@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TCAV - Testing with CAVs</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 26px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #FF9800; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card.usage { border-color: #4CAF50; }
+        .card-title { font-size: 16px; font-weight: 700; color: #FF9800; margin-bottom: 10px; }
+        .card.usage .card-title { color: #4CAF50; }
+        .concept-box { background: #FFF3E0; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .concept-title { font-size: 12px; font-weight: 700; color: #E65100; margin-bottom: 6px; }
+        .concept-content { font-size: 11px; color: #333; line-height: 1.5; }
+        .step-box { background: #E3F2FD; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .step-title { font-size: 12px; font-weight: 700; color: #1565C0; margin-bottom: 6px; }
+        .step-content { font-size: 11px; color: #333; line-height: 1.5; }
+        .example-box { background: #E8F5E9; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .example-title { font-size: 12px; font-weight: 700; color: #2E7D32; margin-bottom: 6px; }
+        .example-content { font-size: 11px; color: #333; line-height: 1.5; }
+        .formula-box { background: #f8f8f8; border-radius: 8px; padding: 10px; margin-bottom: 10px; text-align: center; }
+        .formula-main { font-family: 'Times New Roman', serif; font-size: 12px; color: #333; }
+        .formula-note { font-size: 10px; color: #666; margin-top: 4px; }
+        .visual-box { background: #f8f8f8; border-radius: 8px; padding: 10px; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">TCAV: Testing with Concept Activation Vectors</div>
+            <div class="subtitle">Human-interpretable concept-based explanations (Kim et al., 2018)</div>
+        </div>
+        <div class="content-grid">
+            <div class="card">
+                <div class="card-title">Core Idea</div>
+                <div class="concept-box">
+                    <div class="concept-title">The Problem</div>
+                    <div class="concept-content">
+                        Feature importance tells us "pixel 123 is important"<br>
+                        But humans think in <strong>concepts</strong>: "stripes", "color", "texture"<br><br>
+                        <strong>TCAV:</strong> Quantify how important a concept is for predictions
+                    </div>
+                </div>
+                <div class="step-box">
+                    <div class="step-title">CAV (Concept Activation Vector)</div>
+                    <div class="step-content">
+                        <strong>1. Collect concept examples:</strong><br>
+                        &nbsp;&nbsp;- Positive: images WITH the concept (e.g., striped)<br>
+                        &nbsp;&nbsp;- Negative: images WITHOUT the concept (random)<br><br>
+                        <strong>2. Get activations:</strong><br>
+                        &nbsp;&nbsp;- Pass through network, extract layer activations<br><br>
+                        <strong>3. Train linear classifier:</strong><br>
+                        &nbsp;&nbsp;- Separate concept vs non-concept in activation space<br><br>
+                        <strong>4. CAV = Normal vector to decision boundary</strong>
+                    </div>
+                </div>
+                <div class="formula-box">
+                    <div class="formula-main">TCAV<sup>c</sup><sub>k,l</sub> = |{x ∈ X<sub>k</sub> : S<sub>C,k,l</sub>(x) > 0}| / |X<sub>k</sub>|</div>
+                    <div class="formula-note">S = directional derivative in concept direction</div>
+                </div>
+            </div>
+            <div class="card usage">
+                <div class="card-title">Interpretation & Usage</div>
+                <div class="example-box">
+                    <div class="example-title">TCAV Score Interpretation</div>
+                    <div class="example-content">
+                        <strong>TCAV = 1.0:</strong> Concept always positively influences class<br>
+                        <strong>TCAV = 0.5:</strong> Concept has no influence (random)<br>
+                        <strong>TCAV = 0.0:</strong> Concept always negatively influences<br><br>
+                        Statistical significance test against random concepts
+                    </div>
+                </div>
+                <div class="example-box">
+                    <div class="example-title">Example: Zebra Classification</div>
+                    <div class="example-content">
+                        <strong>TCAV("zebra", "stripes") = 0.95</strong><br>
+                        → Stripes strongly influence zebra classification<br><br>
+                        <strong>TCAV("zebra", "spots") = 0.52</strong><br>
+                        → Spots have no significant influence
+                    </div>
+                </div>
+                <div class="concept-box">
+                    <div class="concept-title">Key Applications</div>
+                    <div class="concept-content">
+                        <strong>Bias Detection:</strong><br>
+                        - TCAV("doctor", "male") → check gender bias<br>
+                        - TCAV("criminal", "dark_skin") → check racial bias<br><br>
+                        <strong>Model Debugging:</strong><br>
+                        - Verify model uses expected concepts<br>
+                        - Detect spurious correlations
+                    </div>
+                </div>
+                <div class="visual-box">
+                    <svg viewBox="0 0 260 60" style="width: 100%; height: 55px;">
+                        <!-- Activation space -->
+                        <ellipse cx="80" cy="30" rx="60" ry="25" fill="none" stroke="#ccc" stroke-dasharray="3,2"/>
+                        <!-- Concept positive -->
+                        <circle cx="50" cy="25" r="4" fill="#4CAF50"/>
+                        <circle cx="60" cy="35" r="4" fill="#4CAF50"/>
+                        <circle cx="45" cy="38" r="4" fill="#4CAF50"/>
+                        <!-- Concept negative -->
+                        <circle cx="100" cy="25" r="4" fill="#F44336"/>
+                        <circle cx="110" cy="35" r="4" fill="#F44336"/>
+                        <circle cx="105" cy="20" r="4" fill="#F44336"/>
+                        <!-- CAV arrow -->
+                        <line x1="75" y1="30" x2="145" y2="30" stroke="#1E64C8" stroke-width="2" marker-end="url(#arr)"/>
+                        <text x="160" y="34" font-size="8" fill="#1E64C8">CAV</text>
+                        <!-- Labels -->
+                        <text x="50" y="55" font-size="7" fill="#4CAF50">Concept+</text>
+                        <text x="95" y="55" font-size="7" fill="#F44336">Concept-</text>
+                        <defs><marker id="arr" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5 Z" fill="#1E64C8"/></marker></defs>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

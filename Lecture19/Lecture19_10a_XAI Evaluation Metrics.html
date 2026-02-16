@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XAI Evaluation Metrics</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 26px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #9C27B0; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card.metrics { border-color: #FF9800; }
+        .card-title { font-size: 16px; font-weight: 700; color: #9C27B0; margin-bottom: 10px; }
+        .card.metrics .card-title { color: #FF9800; }
+        .metric-box { background: #F3E5F5; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .metric-title { font-size: 12px; font-weight: 700; color: #7B1FA2; margin-bottom: 6px; }
+        .metric-content { font-size: 11px; color: #333; line-height: 1.5; }
+        .quant-box { background: #FFF3E0; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .quant-title { font-size: 12px; font-weight: 700; color: #E65100; margin-bottom: 6px; }
+        .quant-content { font-size: 11px; color: #333; line-height: 1.5; }
+        .code-box { background: #2d2d2d; border-radius: 8px; padding: 10px; margin-top: auto; }
+        .code-content { font-family: 'Courier New', monospace; font-size: 9px; color: #d4d4d4; line-height: 1.4; }
+        .code-comment { color: #6a9955; }
+        .note-box { background: #E3F2FD; border-radius: 8px; padding: 10px; margin-top: auto; }
+        .note-title { font-size: 12px; font-weight: 700; color: #1565C0; margin-bottom: 6px; }
+        .note-content { font-size: 11px; color: #333; line-height: 1.4; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">XAI Evaluation Metrics</div>
+            <div class="subtitle">How to assess the quality of explanations</div>
+        </div>
+        <div class="content-grid">
+            <div class="card">
+                <div class="card-title">Core Criteria</div>
+                <div class="metric-box">
+                    <div class="metric-title">Faithfulness (Fidelity)</div>
+                    <div class="metric-content">
+                        Does the explanation accurately reflect the model's reasoning?<br><br>
+                        <strong>Measurement:</strong> Deletion/Insertion metrics<br>
+                        - Remove important features → prediction should change<br>
+                        - Insert important features → prediction should improve
+                    </div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Stability (Robustness)</div>
+                    <div class="metric-content">
+                        Do similar inputs get similar explanations?<br><br>
+                        <strong>Measurement:</strong> Max Sensitivity, Lipschitz continuity<br>
+                        - Small input perturbation → small explanation change
+                    </div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Comprehensibility</div>
+                    <div class="metric-content">
+                        Can humans understand the explanation?<br><br>
+                        <strong>Measurement:</strong> User studies, complexity metrics<br>
+                        - Number of features, rule length, visualization clarity
+                    </div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Consistency</div>
+                    <div class="metric-content">
+                        Do different XAI methods agree?<br><br>
+                        <strong>Measurement:</strong> Correlation between methods<br>
+                        - SHAP vs LIME feature rankings agreement
+                    </div>
+                </div>
+            </div>
+            <div class="card metrics">
+                <div class="card-title">Quantitative Metrics</div>
+                <div class="quant-box">
+                    <div class="quant-title">Deletion AUC (Lower = Better)</div>
+                    <div class="quant-content">
+                        1. Rank features by importance<br>
+                        2. Progressively remove top features<br>
+                        3. Measure prediction probability drop<br>
+                        4. AUC of this curve (lower = more faithful)
+                    </div>
+                </div>
+                <div class="quant-box">
+                    <div class="quant-title">Insertion AUC (Higher = Better)</div>
+                    <div class="quant-content">
+                        1. Start with baseline (blank/mean)<br>
+                        2. Progressively insert top features<br>
+                        3. Measure prediction probability rise<br>
+                        4. AUC of this curve (higher = more faithful)
+                    </div>
+                </div>
+                <div class="code-box">
+                    <div class="code-content">
+                        <span class="code-comment"># Deletion metric example</span><br>
+                        def deletion_auc(model, x, explanation, steps=100):<br>
+                        &nbsp;&nbsp;indices = np.argsort(explanation)[::-1]<br>
+                        &nbsp;&nbsp;scores = []<br>
+                        &nbsp;&nbsp;for k in range(0, len(x), len(x)//steps):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;x_del = x.copy()<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;x_del[indices[:k]] = baseline<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;scores.append(model.predict_proba(x_del))<br>
+                        &nbsp;&nbsp;return np.trapz(scores) / len(scores)<br><br>
+                        <span class="code-comment"># Max Sensitivity (stability)</span><br>
+                        def max_sensitivity(explainer, x, n_perturb=100):<br>
+                        &nbsp;&nbsp;base_exp = explainer(x)<br>
+                        &nbsp;&nbsp;max_diff = 0<br>
+                        &nbsp;&nbsp;for _ in range(n_perturb):<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;x_p = x + np.random.normal(0, 0.01, x.shape)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;exp_p = explainer(x_p)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;max_diff = max(max_diff, np.linalg.norm(base_exp - exp_p))<br>
+                        &nbsp;&nbsp;return max_diff
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

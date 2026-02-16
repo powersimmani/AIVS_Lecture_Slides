@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Determining Optimal Cluster Number</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 24px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; flex: 1; }
+        .method-card { background: white; border: 2.5px solid #1E64C8; border-radius: 10px; padding: 12px; display: flex; flex-direction: column; }
+        .method-card.elbow { border-color: #2196F3; }
+        .method-card.silhouette { border-color: #4CAF50; }
+        .method-card.gap { border-color: #FF9800; }
+        .method-card.bic { border-color: #9C27B0; }
+        .method-title { font-size: 13px; font-weight: 700; margin-bottom: 8px; }
+        .elbow .method-title { color: #2196F3; }
+        .silhouette .method-title { color: #4CAF50; }
+        .gap .method-title { color: #FF9800; }
+        .bic .method-title { color: #9C27B0; }
+        .method-content { font-size: 10px; color: #333; line-height: 1.5; flex: 1; }
+        .formula-box { background: #f8f8f8; border-radius: 6px; padding: 6px; margin: 6px 0; font-family: 'Courier New', monospace; font-size: 9px; text-align: center; }
+        .pros { color: #2E7D32; font-size: 9px; margin-top: auto; }
+        .cons { color: #C62828; font-size: 9px; }
+        .bottom-section { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+        .process-box { background: #E3F2FD; border: 2px solid #1565C0; border-radius: 10px; padding: 12px; }
+        .process-title { font-size: 13px; font-weight: 700; color: #1565C0; margin-bottom: 8px; }
+        .process-content { font-size: 11px; color: #333; line-height: 1.5; }
+        .code-box { background: #2d2d2d; border-radius: 10px; padding: 12px; }
+        .code-content { font-family: 'Courier New', monospace; font-size: 9px; color: #d4d4d4; line-height: 1.4; }
+        .code-comment { color: #6a9955; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Determining the Optimal Number of Clusters</div>
+            <div class="subtitle">Multiple methods for choosing k in clustering algorithms</div>
+        </div>
+        <div class="content-grid">
+            <div class="method-card elbow">
+                <div class="method-title">Elbow Method</div>
+                <div class="method-content">
+                    Plot inertia (within-cluster sum of squares) vs k.<br><br>
+                    Look for "elbow" point where improvement slows.
+                    <div class="formula-box">Inertia = sum of squared distances to centroids</div>
+                </div>
+                <div class="pros">+ Fast, intuitive</div>
+                <div class="cons">- Subjective interpretation</div>
+            </div>
+            <div class="method-card silhouette">
+                <div class="method-title">Silhouette</div>
+                <div class="method-content">
+                    Measures cohesion (a) vs separation (b) for each point.
+                    <div class="formula-box">s = (b - a) / max(a, b)<br>Range: -1 to 1</div>
+                    Choose k with highest average silhouette score.
+                </div>
+                <div class="pros">+ Clear interpretation</div>
+                <div class="cons">- Assumes convex clusters</div>
+            </div>
+            <div class="method-card gap">
+                <div class="method-title">Gap Statistic</div>
+                <div class="method-content">
+                    Compares clustering to random uniform distribution.
+                    <div class="formula-box">Gap(k) = E*[log(W_k)] - log(W_k)</div>
+                    Choose smallest k where gap exceeds gap(k+1) - s_{k+1}.
+                </div>
+                <div class="pros">+ Statistically rigorous</div>
+                <div class="cons">- Computationally expensive</div>
+            </div>
+            <div class="method-card bic">
+                <div class="method-title">BIC/AIC (GMM)</div>
+                <div class="method-content">
+                    Model selection criteria with complexity penalty.
+                    <div class="formula-box">BIC = -2*log(L) + k*log(n)<br>AIC = -2*log(L) + 2k</div>
+                    Choose k with lowest BIC/AIC.
+                </div>
+                <div class="pros">+ Theory-grounded</div>
+                <div class="cons">- Only for GMM</div>
+            </div>
+        </div>
+        <div class="bottom-section">
+            <div class="process-box">
+                <div class="process-title">Recommended Process</div>
+                <div class="process-content">
+                    1. <strong>Elbow Method:</strong> Get rough range of k<br>
+                    2. <strong>Silhouette Analysis:</strong> Refine within range<br>
+                    3. <strong>Visual Inspection:</strong> Check cluster separation<br>
+                    4. <strong>Domain Knowledge:</strong> Does k make business sense?<br><br>
+                    <em>No single method is perfect - use multiple!</em>
+                </div>
+            </div>
+            <div class="code-box">
+                <div class="code-content">
+                    <span class="code-comment"># Quick comparison of methods</span><br>
+                    from sklearn.cluster import KMeans<br>
+                    from sklearn.metrics import silhouette_score<br><br>
+                    scores = []<br>
+                    for k in range(2, 11):<br>
+                    &nbsp;&nbsp;km = KMeans(n_clusters=k, random_state=42)<br>
+                    &nbsp;&nbsp;labels = km.fit_predict(X)<br>
+                    &nbsp;&nbsp;scores.append({<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;'k': k,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;'inertia': km.inertia_,  <span class="code-comment"># elbow</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;'silhouette': silhouette_score(X, labels)<br>
+                    &nbsp;&nbsp;})
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

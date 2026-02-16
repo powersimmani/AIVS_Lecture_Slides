@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multicollinearity Diagnosis - VIF</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: #FFFFFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 960px;
+            height: 540px;
+            display: flex;
+            flex-direction: column;
+            padding: 25px 35px;
+        }
+
+        .title-section {
+            text-align: center;
+            margin-bottom: 14px;
+        }
+
+        .main-title {
+            font-size: 26px;
+            font-weight: 600;
+            color: #1E64C8;
+            margin-bottom: 4px;
+        }
+
+        .subtitle {
+            font-size: 15px;
+            color: #666666;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 1fr;
+            gap: 18px;
+            flex: 1;
+        }
+
+        .left-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .problem-card {
+            background: #FFEBEE;
+            border: 2px solid #EF5350;
+            border-radius: 10px;
+            padding: 14px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .problem-card .card-title {
+            color: #C62828;
+        }
+
+        .problem-item {
+            font-size: 13px;
+            color: #333;
+            margin-bottom: 6px;
+            padding-left: 16px;
+            position: relative;
+            line-height: 1.4;
+        }
+
+        .problem-item::before {
+            content: "⚠";
+            position: absolute;
+            left: 0;
+            color: #EF5350;
+        }
+
+        .formula-card {
+            background: #F8FBFF;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px;
+            text-align: center;
+        }
+
+        .formula-card .card-title {
+            color: #1E64C8;
+            justify-content: center;
+        }
+
+        .formula-main {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1E64C8;
+            margin: 12px 0;
+            font-family: 'Times New Roman', serif;
+        }
+
+        .formula-explain {
+            font-size: 13px;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .interpretation-card {
+            background: white;
+            border: 2px solid #1E64C8;
+            border-radius: 10px;
+            padding: 14px;
+        }
+
+        .interpretation-card .card-title {
+            color: #1E64C8;
+        }
+
+        .vif-table {
+            width: 100%;
+            font-size: 13px;
+            border-collapse: collapse;
+            margin-top: 8px;
+        }
+
+        .vif-table th {
+            background: #1E64C8;
+            color: white;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .vif-table td {
+            padding: 8px;
+            text-align: center;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .vif-ok { background: #E8F5E9; color: #2E7D32; }
+        .vif-medium { background: #FFF9E6; color: #F57C00; }
+        .vif-high { background: #FFEBEE; color: #C62828; }
+
+        .right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .solution-card {
+            background: #E8F5E9;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            padding: 14px;
+        }
+
+        .solution-card .card-title {
+            color: #2E7D32;
+        }
+
+        .solution-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 13px;
+            color: #333;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .solution-icon {
+            color: #4CAF50;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .code-card {
+            background: #2d2d2d;
+            border-radius: 10px;
+            padding: 14px;
+            flex: 1;
+        }
+
+        .code-title {
+            color: #9cdcfe;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .code-content {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #d4d4d4;
+            line-height: 1.5;
+        }
+
+        .code-keyword { color: #569cd6; }
+        .code-function { color: #dcdcaa; }
+        .code-comment { color: #6a9955; }
+        .code-string { color: #ce9178; }
+
+        .tip-box {
+            background: #FFF9E6;
+            border: 2px solid #FFC107;
+            border-radius: 10px;
+            padding: 12px;
+        }
+
+        .tip-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #F57C00;
+            margin-bottom: 6px;
+        }
+
+        .tip-content {
+            font-size: 12px;
+            color: #333;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Multicollinearity Diagnosis: VIF</div>
+            <div class="subtitle">Variance Inflation Factor - Detecting correlated predictors</div>
+        </div>
+
+        <div class="content-grid">
+            <div class="left-panel">
+                <div class="problem-card">
+                    <div class="card-title">
+                        <span>⚠️</span>
+                        <span>Multicollinearity Problems</span>
+                    </div>
+                    <div class="problem-item">Coefficient estimates become unstable</div>
+                    <div class="problem-item">Standard errors inflate (wide CIs)</div>
+                    <div class="problem-item">Signs may flip unexpectedly</div>
+                    <div class="problem-item">Individual p-values misleading</div>
+                    <div class="problem-item">(X<sup>T</sup>X)<sup>-1</sup> nearly singular</div>
+                </div>
+
+                <div class="formula-card">
+                    <div class="card-title">
+                        <span>📊</span>
+                        <span>VIF Formula</span>
+                    </div>
+                    <div class="formula-main">VIF<sub>j</sub> = 1 / (1 - R<sup>2</sup><sub>j</sub>)</div>
+                    <div class="formula-explain">
+                        Where R²<sub>j</sub> = R-squared from regressing X<sub>j</sub> on all other predictors<br>
+                        Higher VIF = More collinearity with other features
+                    </div>
+                </div>
+
+                <div class="interpretation-card">
+                    <div class="card-title">
+                        <span>📏</span>
+                        <span>VIF Interpretation Guide</span>
+                    </div>
+                    <table class="vif-table">
+                        <tr>
+                            <th>VIF Value</th>
+                            <th>Interpretation</th>
+                            <th>Action</th>
+                        </tr>
+                        <tr class="vif-ok">
+                            <td>1</td>
+                            <td>No correlation</td>
+                            <td>None needed</td>
+                        </tr>
+                        <tr class="vif-ok">
+                            <td>1 - 5</td>
+                            <td>Moderate</td>
+                            <td>Usually OK</td>
+                        </tr>
+                        <tr class="vif-medium">
+                            <td>5 - 10</td>
+                            <td>High</td>
+                            <td>Caution needed</td>
+                        </tr>
+                        <tr class="vif-high">
+                            <td>> 10</td>
+                            <td>Severe</td>
+                            <td>Action required</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="right-panel">
+                <div class="solution-card">
+                    <div class="card-title">
+                        <span>✓</span>
+                        <span>Solutions</span>
+                    </div>
+                    <div class="solution-item">
+                        <span class="solution-icon">1.</span>
+                        <span><strong>Remove variables:</strong> Drop one of correlated pair</span>
+                    </div>
+                    <div class="solution-item">
+                        <span class="solution-icon">2.</span>
+                        <span><strong>Combine variables:</strong> Create composite score</span>
+                    </div>
+                    <div class="solution-item">
+                        <span class="solution-icon">3.</span>
+                        <span><strong>PCA:</strong> Use principal components instead</span>
+                    </div>
+                    <div class="solution-item">
+                        <span class="solution-icon">4.</span>
+                        <span><strong>Ridge regression:</strong> L2 penalty handles it</span>
+                    </div>
+                    <div class="solution-item">
+                        <span class="solution-icon">5.</span>
+                        <span><strong>Collect more data:</strong> If feasible</span>
+                    </div>
+                </div>
+
+                <div class="code-card">
+                    <div class="code-title"># Python VIF Calculation</div>
+                    <div class="code-content">
+                        <span class="code-keyword">from</span> statsmodels.stats.outliers_influence <span class="code-keyword">import</span> variance_inflation_factor<br>
+                        <span class="code-keyword">import</span> pandas <span class="code-keyword">as</span> pd<br><br>
+                        <span class="code-comment"># Calculate VIF for each feature</span><br>
+                        vif_data = pd.<span class="code-function">DataFrame</span>()<br>
+                        vif_data[<span class="code-string">"Feature"</span>] = X.columns<br>
+                        vif_data[<span class="code-string">"VIF"</span>] = [<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-function">variance_inflation_factor</span>(X.values, i)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">for</span> i <span class="code-keyword">in</span> <span class="code-function">range</span>(<span class="code-function">len</span>(X.columns))<br>
+                        ]<br>
+                        <span class="code-function">print</span>(vif_data.<span class="code-function">sort_values</span>(<span class="code-string">"VIF"</span>, ascending=<span class="code-keyword">False</span>))
+                    </div>
+                </div>
+
+                <div class="tip-box">
+                    <div class="tip-title">Practical Tips</div>
+                    <div class="tip-content">
+                        Check VIF <strong>after</strong> dummy encoding categorical variables.<br>
+                        Always include intercept in X before VIF calculation.<br>
+                        High VIF doesn't affect <strong>prediction</strong>, only interpretation.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

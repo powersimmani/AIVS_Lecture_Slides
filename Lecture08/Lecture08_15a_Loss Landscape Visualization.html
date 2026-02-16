@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loss Landscape Visualization</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 26px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #1E64C8; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card-title { font-size: 15px; font-weight: 700; color: #1E64C8; margin-bottom: 10px; }
+        .visual-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+        .visual-item { background: #f8f8f8; border-radius: 8px; padding: 8px; text-align: center; }
+        .visual-title { font-size: 10px; font-weight: 600; color: #333; margin-bottom: 6px; }
+        .concept-box { background: #E3F2FD; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .concept-title { font-size: 12px; font-weight: 700; color: #1565C0; margin-bottom: 6px; }
+        .concept-content { font-size: 11px; color: #333; line-height: 1.5; }
+        .insight-box { background: #FFF3E0; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .insight-title { font-size: 12px; font-weight: 700; color: #E65100; margin-bottom: 6px; }
+        .insight-item { font-size: 11px; color: #333; margin-bottom: 4px; line-height: 1.4; }
+        .code-box { background: #2d2d2d; border-radius: 8px; padding: 10px; }
+        .code-content { font-family: 'Courier New', monospace; font-size: 9px; color: #d4d4d4; line-height: 1.4; }
+        .code-comment { color: #6a9955; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Loss Landscape Visualization</div>
+            <div class="subtitle">Understanding optimization through loss surface geometry</div>
+        </div>
+        <div class="content-grid">
+            <div class="card">
+                <div class="card-title">Common Loss Landscape Features</div>
+                <div class="visual-grid">
+                    <div class="visual-item">
+                        <div class="visual-title">Convex (Easy)</div>
+                        <svg viewBox="0 0 80 60" style="width: 100%; height: 50px;">
+                            <path d="M10,50 Q40,10 70,50" fill="none" stroke="#4CAF50" stroke-width="2"/>
+                            <circle cx="40" cy="10" r="3" fill="#4CAF50"/>
+                        </svg>
+                    </div>
+                    <div class="visual-item">
+                        <div class="visual-title">Non-convex (Hard)</div>
+                        <svg viewBox="0 0 80 60" style="width: 100%; height: 50px;">
+                            <path d="M10,40 Q20,15 35,35 Q50,55 65,25 Q75,10 80,20" fill="none" stroke="#F44336" stroke-width="2"/>
+                            <circle cx="35" cy="35" r="2" fill="#FF9800"/>
+                            <circle cx="72" cy="15" r="3" fill="#4CAF50"/>
+                        </svg>
+                    </div>
+                    <div class="visual-item">
+                        <div class="visual-title">Saddle Point</div>
+                        <svg viewBox="0 0 80 60" style="width: 100%; height: 50px;">
+                            <path d="M10,30 Q40,50 70,30" fill="none" stroke="#2196F3" stroke-width="2"/>
+                            <path d="M40,10 Q40,30 40,50" fill="none" stroke="#9C27B0" stroke-width="2"/>
+                            <circle cx="40" cy="30" r="3" fill="#FF5722"/>
+                        </svg>
+                    </div>
+                    <div class="visual-item">
+                        <div class="visual-title">Plateau</div>
+                        <svg viewBox="0 0 80 60" style="width: 100%; height: 50px;">
+                            <path d="M10,45 L25,45 Q40,45 55,20 L70,20" fill="none" stroke="#795548" stroke-width="2"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="concept-box">
+                    <div class="concept-title">Why Visualize?</div>
+                    <div class="concept-content">
+                        - Understand why optimizer gets stuck<br>
+                        - Compare architectures (ResNet vs VGG)<br>
+                        - Validate regularization effects (BatchNorm, skip connections)
+                    </div>
+                </div>
+                <div class="insight-box">
+                    <div class="insight-title">Key Insights from Research</div>
+                    <div class="insight-item">- Skip connections make landscape smoother (Li et al., 2018)</div>
+                    <div class="insight-item">- Deeper = more chaotic without residuals</div>
+                    <div class="insight-item">- BatchNorm reduces landscape sharpness</div>
+                    <div class="insight-item">- Wide minima correlate with better generalization</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">Visualization Methods</div>
+                <div class="concept-box">
+                    <div class="concept-title">Filter-wise Normalization (Li et al.)</div>
+                    <div class="concept-content">
+                        1. Take trained weights w*<br>
+                        2. Generate random directions d1, d2<br>
+                        3. Normalize to remove scale effects<br>
+                        4. Plot L(w* + alpha*d1 + beta*d2)
+                    </div>
+                </div>
+                <div class="code-box">
+                    <div class="code-content">
+                        <span class="code-comment"># Using loss-landscapes library</span><br>
+                        import loss_landscapes<br>
+                        import loss_landscapes.metrics as metrics<br><br>
+                        <span class="code-comment"># Define metric</span><br>
+                        metric = metrics.Loss(criterion, X, y)<br><br>
+                        <span class="code-comment"># 1D linear interpolation</span><br>
+                        loss_data = loss_landscapes.linear_interpolation(<br>
+                        &nbsp;&nbsp;model_start, model_end, metric, steps=50<br>
+                        )<br><br>
+                        <span class="code-comment"># 2D random plane</span><br>
+                        loss_data_2d = loss_landscapes.random_plane(<br>
+                        &nbsp;&nbsp;model, metric, distance=1, steps=40,<br>
+                        &nbsp;&nbsp;normalization='filter'<br>
+                        )<br><br>
+                        <span class="code-comment"># Plot</span><br>
+                        plt.contourf(loss_data_2d, levels=50)<br>
+                        plt.colorbar()
+                    </div>
+                </div>
+                <div class="insight-box">
+                    <div class="insight-title">Tools</div>
+                    <div class="insight-item">- <strong>loss-landscapes:</strong> pip install loss-landscapes</div>
+                    <div class="insight-item">- <strong>PyHessian:</strong> Hessian eigenvalue analysis</div>
+                    <div class="insight-item">- <strong>pytorch-gradcam:</strong> Gradient visualization</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

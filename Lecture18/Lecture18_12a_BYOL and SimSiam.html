@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BYOL and SimSiam</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 24px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #1E64C8; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card.byol { border-color: #9C27B0; }
+        .card.simsiam { border-color: #4CAF50; }
+        .card-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+        .byol .card-title { color: #9C27B0; }
+        .simsiam .card-title { color: #4CAF50; }
+        .insight-box { background: #E3F2FD; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .insight-title { font-size: 12px; font-weight: 700; color: #1565C0; margin-bottom: 6px; }
+        .insight-content { font-size: 11px; color: #333; line-height: 1.5; }
+        .arch-box { background: #f8f8f8; border-radius: 8px; padding: 10px; margin-bottom: 10px; font-family: 'Courier New', monospace; font-size: 10px; line-height: 1.5; }
+        .arch-title { font-size: 11px; font-weight: 700; color: #1E64C8; margin-bottom: 6px; font-family: Aptos, sans-serif; }
+        .formula-box { background: #F3E5F5; border-radius: 6px; padding: 8px; margin-bottom: 8px; text-align: center; }
+        .formula-box.green { background: #E8F5E9; }
+        .formula-content { font-family: 'Times New Roman', serif; font-size: 12px; color: #333; }
+        .comparison-table { width: 100%; font-size: 10px; border-collapse: collapse; margin-bottom: 10px; }
+        .comparison-table th { background: #1E64C8; color: white; padding: 5px; text-align: center; }
+        .comparison-table td { padding: 5px; text-align: center; border-bottom: 1px solid #e0e0e0; }
+        .highlight { background: #E8F5E9; font-weight: 600; }
+        .why-box { background: #FFF3E0; border-radius: 8px; padding: 10px; margin-top: auto; }
+        .why-title { font-size: 12px; font-weight: 700; color: #E65100; margin-bottom: 6px; }
+        .why-content { font-size: 11px; color: #333; line-height: 1.4; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">BYOL and SimSiam: Self-Supervised Without Negatives</div>
+            <div class="subtitle">Learning representations without contrastive negatives</div>
+        </div>
+        <div class="content-grid">
+            <div class="card byol">
+                <div class="card-title">BYOL (2020)</div>
+                <div class="insight-box">
+                    <div class="insight-title">Bootstrap Your Own Latent</div>
+                    <div class="insight-content">
+                        No negative samples needed!<br>
+                        Two networks: <strong>Online</strong> (learns) and <strong>Target</strong> (EMA copy)
+                    </div>
+                </div>
+                <div class="arch-box">
+                    <div class="arch-title">Architecture</div>
+                    view_1 -> [Online Encoder] -> [Projector] -> [Predictor] -> p<br>
+                    view_2 -> [Target Encoder] -> [Projector] -----------------> z<br><br>
+                    Loss = ||p - sg(z)||^2  (sg = stop gradient)<br>
+                    Target = EMA(Online): theta_t <- tau*theta_t + (1-tau)*theta_o
+                </div>
+                <div class="formula-box">
+                    <div class="formula-content">EMA update: tau = 0.996 -> 1.0 during training</div>
+                </div>
+                <div class="why-box">
+                    <div class="why-title">Why No Collapse?</div>
+                    <div class="why-content">
+                        • <strong>Predictor asymmetry:</strong> Online has predictor, target doesn't<br>
+                        • <strong>EMA slowdown:</strong> Target changes slowly, provides stable targets<br>
+                        • <strong>Batch normalization:</strong> Implicit regularization
+                    </div>
+                </div>
+            </div>
+            <div class="card simsiam">
+                <div class="card-title">SimSiam (2020)</div>
+                <div class="insight-box">
+                    <div class="insight-title">Simple Siamese Networks</div>
+                    <div class="insight-content">
+                        Even simpler than BYOL!<br>
+                        No EMA, no negative samples, no momentum encoder.
+                    </div>
+                </div>
+                <div class="arch-box">
+                    <div class="arch-title">Architecture</div>
+                    view_1 -> [Encoder] -> [Projector] -> [Predictor] -> p1<br>
+                    view_2 -> [Encoder] -> [Projector] -----------------> z2<br><br>
+                    Loss = ||p1 - sg(z2)||^2 + ||p2 - sg(z1)||^2<br>
+                    (Symmetrized loss, sg = stop gradient)
+                </div>
+                <div class="formula-box green">
+                    <div class="formula-content">Key: Stop-gradient is ESSENTIAL for preventing collapse</div>
+                </div>
+                <div class="why-box">
+                    <div class="why-title">Why Stop-Gradient Works</div>
+                    <div class="why-content">
+                        Hypothesis: Acts like EM algorithm<br>
+                        • E-step: Fix encoder, update predictor<br>
+                        • M-step: Fix target, update encoder<br>
+                        Stop-gradient implements alternating optimization
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table class="comparison-table" style="margin-top: 12px;">
+            <tr><th>Method</th><th>Negative Samples</th><th>Memory Bank</th><th>Momentum Encoder</th><th>ImageNet Top-1</th></tr>
+            <tr><td>SimCLR</td><td>Required (large batch)</td><td>No</td><td>No</td><td>69.3%</td></tr>
+            <tr><td>MoCo v2</td><td>Queue</td><td>Yes</td><td>Yes</td><td>71.1%</td></tr>
+            <tr class="highlight"><td>BYOL</td><td>Not needed</td><td>No</td><td>Yes (EMA)</td><td>74.3%</td></tr>
+            <tr class="highlight"><td>SimSiam</td><td>Not needed</td><td>No</td><td>No</td><td>71.3%</td></tr>
+        </table>
+    </div>
+</body>
+</html>

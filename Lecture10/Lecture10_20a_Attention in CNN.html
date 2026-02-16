@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attention Mechanisms in CNNs</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 26px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; flex: 1; }
+        .card { background: white; border: 2.5px solid #1E64C8; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; }
+        .card.se { border-color: #FF9800; }
+        .card.cbam { border-color: #4CAF50; }
+        .card.eca { border-color: #9C27B0; }
+        .card-title { font-size: 14px; font-weight: 700; margin-bottom: 8px; text-align: center; }
+        .se .card-title { color: #FF9800; }
+        .cbam .card-title { color: #4CAF50; }
+        .eca .card-title { color: #9C27B0; }
+        .step-box { background: #f8f8f8; border-radius: 6px; padding: 8px; margin-bottom: 8px; }
+        .step-title { font-size: 10px; font-weight: 700; color: #1E64C8; margin-bottom: 4px; }
+        .step-content { font-size: 9px; color: #333; line-height: 1.4; }
+        .formula-box { background: #E3F2FD; border-radius: 6px; padding: 8px; margin-bottom: 8px; text-align: center; }
+        .formula-text { font-family: 'Courier New', monospace; font-size: 9px; color: #333; }
+        .visual-box { background: #f8f8f8; border-radius: 6px; padding: 6px; margin-bottom: 8px; text-align: center; }
+        .benefit-box { background: #E8F5E9; border-radius: 6px; padding: 8px; margin-top: auto; }
+        .benefit-item { font-size: 9px; color: #333; margin-bottom: 2px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Attention Mechanisms in CNNs</div>
+            <div class="subtitle">SE, CBAM, and ECA: Enhancing feature representation with attention</div>
+        </div>
+        <div class="content-grid">
+            <div class="card se">
+                <div class="card-title">SE (Squeeze-and-Excitation)</div>
+                <div class="visual-box">
+                    <svg viewBox="0 0 150 70" style="width: 100%; height: 60px;">
+                        <rect x="5" y="25" width="30" height="20" fill="#BBDEFB" stroke="#2196F3" rx="2"/>
+                        <text x="20" y="38" text-anchor="middle" font-size="6">HxWxC</text>
+                        <path d="M40,35 L55,35" stroke="#666" marker-end="url(#arr)"/>
+                        <rect x="60" y="30" width="20" height="10" fill="#C8E6C9" stroke="#4CAF50" rx="2"/>
+                        <text x="70" y="38" text-anchor="middle" font-size="5">GAP</text>
+                        <path d="M85,35 L95,35" stroke="#666" marker-end="url(#arr)"/>
+                        <rect x="100" y="25" width="15" height="20" fill="#FFECB3" stroke="#FFC107" rx="2"/>
+                        <text x="107" y="38" text-anchor="middle" font-size="5">FC</text>
+                        <path d="M120,35 L130,35" stroke="#666" marker-end="url(#arr)"/>
+                        <text x="140" y="38" text-anchor="middle" font-size="6">scale</text>
+                        <defs><marker id="arr" markerWidth="4" markerHeight="4" refX="3" refY="2" orient="auto"><path d="M0,0 L4,2 L0,4 Z" fill="#666"/></marker></defs>
+                    </svg>
+                </div>
+                <div class="step-box">
+                    <div class="step-title">Process</div>
+                    <div class="step-content">
+                        1. <strong>Squeeze:</strong> Global Average Pool<br>
+                        2. <strong>Excitation:</strong> FC->ReLU->FC->Sigmoid<br>
+                        3. <strong>Scale:</strong> Channel-wise multiply
+                    </div>
+                </div>
+                <div class="formula-box">
+                    <div class="formula-text">z = GAP(X)<br>s = sigmoid(FC2(relu(FC1(z))))<br>out = X * s</div>
+                </div>
+                <div class="benefit-box">
+                    <div class="benefit-item">+ Simple plug-in module</div>
+                    <div class="benefit-item">+ Channel attention only</div>
+                    <div class="benefit-item">+ +1% ImageNet accuracy</div>
+                    <div class="benefit-item">- Small computation overhead</div>
+                </div>
+            </div>
+            <div class="card cbam">
+                <div class="card-title">CBAM</div>
+                <div class="visual-box">
+                    <svg viewBox="0 0 150 70" style="width: 100%; height: 60px;">
+                        <rect x="5" y="25" width="25" height="20" fill="#BBDEFB" stroke="#2196F3" rx="2"/>
+                        <text x="17" y="38" text-anchor="middle" font-size="5">Input</text>
+                        <path d="M35,35 L45,35" stroke="#666" marker-end="url(#arr)"/>
+                        <rect x="50" y="20" width="30" height="30" fill="#FFE0B2" stroke="#FF9800" rx="2"/>
+                        <text x="65" y="33" text-anchor="middle" font-size="5">Channel</text>
+                        <text x="65" y="42" text-anchor="middle" font-size="5">Attn</text>
+                        <path d="M85,35 L95,35" stroke="#666" marker-end="url(#arr)"/>
+                        <rect x="100" y="20" width="30" height="30" fill="#C8E6C9" stroke="#4CAF50" rx="2"/>
+                        <text x="115" y="33" text-anchor="middle" font-size="5">Spatial</text>
+                        <text x="115" y="42" text-anchor="middle" font-size="5">Attn</text>
+                        <path d="M135,35 L145,35" stroke="#666" marker-end="url(#arr)"/>
+                    </svg>
+                </div>
+                <div class="step-box">
+                    <div class="step-title">Two-Stage Attention</div>
+                    <div class="step-content">
+                        1. <strong>Channel:</strong> MaxPool + AvgPool -> MLP -> sigmoid<br>
+                        2. <strong>Spatial:</strong> MaxPool + AvgPool (channel) -> Conv -> sigmoid
+                    </div>
+                </div>
+                <div class="formula-box">
+                    <div class="formula-text">Mc = sigmoid(MLP(AvgPool(X)) + MLP(MaxPool(X)))<br>Ms = sigmoid(Conv([AvgPool(X'); MaxPool(X')]))</div>
+                </div>
+                <div class="benefit-box">
+                    <div class="benefit-item">+ Both channel & spatial</div>
+                    <div class="benefit-item">+ More expressive than SE</div>
+                    <div class="benefit-item">+ Works well in detection</div>
+                    <div class="benefit-item">- More parameters than SE</div>
+                </div>
+            </div>
+            <div class="card eca">
+                <div class="card-title">ECA (Efficient Channel)</div>
+                <div class="visual-box">
+                    <svg viewBox="0 0 150 70" style="width: 100%; height: 60px;">
+                        <rect x="10" y="25" width="30" height="20" fill="#BBDEFB" stroke="#2196F3" rx="2"/>
+                        <text x="25" y="38" text-anchor="middle" font-size="6">HxWxC</text>
+                        <path d="M45,35 L60,35" stroke="#666" marker-end="url(#arr)"/>
+                        <rect x="65" y="30" width="20" height="10" fill="#C8E6C9" stroke="#4CAF50" rx="2"/>
+                        <text x="75" y="38" text-anchor="middle" font-size="5">GAP</text>
+                        <path d="M90,35 L105,35" stroke="#666" marker-end="url(#arr)"/>
+                        <rect x="110" y="27" width="25" height="16" fill="#E1BEE7" stroke="#9C27B0" rx="2"/>
+                        <text x="122" y="38" text-anchor="middle" font-size="5">1D Conv</text>
+                    </svg>
+                </div>
+                <div class="step-box">
+                    <div class="step-title">Key Innovation</div>
+                    <div class="step-content">
+                        Replace FC layers with <strong>1D convolution</strong>!<br>
+                        Captures local cross-channel interaction with k neighbors.
+                    </div>
+                </div>
+                <div class="formula-box">
+                    <div class="formula-text">k = |log2(C)/gamma + b|_odd<br>w = sigmoid(Conv1D(GAP(X), k))</div>
+                </div>
+                <div class="benefit-box">
+                    <div class="benefit-item">+ No FC (no dim reduction)</div>
+                    <div class="benefit-item">+ Adaptive kernel size</div>
+                    <div class="benefit-item">+ Minimal parameters</div>
+                    <div class="benefit-item">+ Better than SE often</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

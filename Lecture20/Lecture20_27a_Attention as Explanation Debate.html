@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attention as Explanation: The Debate</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 24px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #1E64C8; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card.against { border-color: #F44336; }
+        .card.for { border-color: #4CAF50; }
+        .card-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+        .against .card-title { color: #F44336; }
+        .for .card-title { color: #4CAF50; }
+        .paper-box { background: #FFEBEE; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .paper-box.green { background: #E8F5E9; }
+        .paper-title { font-size: 11px; font-weight: 700; color: #C62828; margin-bottom: 6px; }
+        .paper-title.green { color: #2E7D32; }
+        .paper-content { font-size: 11px; color: #333; line-height: 1.5; }
+        .finding-box { background: #f8f8f8; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .finding-title { font-size: 12px; font-weight: 700; color: #1E64C8; margin-bottom: 6px; }
+        .finding-item { font-size: 11px; color: #333; margin-bottom: 4px; line-height: 1.4; }
+        .recommendation-box { background: #E3F2FD; border-radius: 8px; padding: 12px; margin-top: auto; }
+        .rec-title { font-size: 13px; font-weight: 700; color: #1565C0; margin-bottom: 8px; text-align: center; }
+        .rec-content { font-size: 11px; color: #333; line-height: 1.5; }
+        .alternative-box { background: #FFF3E0; border-radius: 8px; padding: 10px; margin-top: auto; }
+        .alt-title { font-size: 12px; font-weight: 700; color: #E65100; margin-bottom: 6px; }
+        .alt-item { font-size: 11px; color: #333; margin-bottom: 3px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Attention as Explanation: The Great Debate</div>
+            <div class="subtitle">Is attention faithful to model reasoning? (2019 NLP controversy)</div>
+        </div>
+        <div class="content-grid">
+            <div class="card against">
+                <div class="card-title">"Attention is Not Explanation"</div>
+                <div class="paper-box">
+                    <div class="paper-title">Jain & Wallace (2019)</div>
+                    <div class="paper-content">
+                        Claimed that attention weights do NOT provide faithful explanations of model predictions.
+                    </div>
+                </div>
+                <div class="finding-box">
+                    <div class="finding-title">Key Findings</div>
+                    <div class="finding-item"><strong>1. No correlation:</strong> Attention weights don't correlate with gradient-based importance</div>
+                    <div class="finding-item"><strong>2. Counterfactual attention:</strong> Can permute attention weights and get same prediction</div>
+                    <div class="finding-item"><strong>3. Adversarial attention:</strong> Can train model with random attention that still performs well</div>
+                </div>
+                <div class="finding-box">
+                    <div class="finding-title">Implications</div>
+                    <div class="finding-item">• Attention may just be a "soft pooling" mechanism</div>
+                    <div class="finding-item">• High attention != high importance for output</div>
+                    <div class="finding-item">• Using attention for explanation may mislead users</div>
+                </div>
+            </div>
+            <div class="card for">
+                <div class="card-title">"Attention is Not Not Explanation"</div>
+                <div class="paper-box green">
+                    <div class="paper-title green">Wiegreffe & Pinter (2019)</div>
+                    <div class="paper-content">
+                        Response paper arguing the critique was too strong and attention can still be useful.
+                    </div>
+                </div>
+                <div class="finding-box">
+                    <div class="finding-title">Counter-Arguments</div>
+                    <div class="finding-item"><strong>1. Definition of "explanation":</strong> Multiple valid definitions exist</div>
+                    <div class="finding-item"><strong>2. Existence != typicality:</strong> Adversarial examples don't invalidate normal behavior</div>
+                    <div class="finding-item"><strong>3. Plausibility matters:</strong> Attention can be "plausible" even if not "faithful"</div>
+                </div>
+                <div class="finding-box">
+                    <div class="finding-title">When Attention IS Useful</div>
+                    <div class="finding-item">• As one signal among many (not sole explanation)</div>
+                    <div class="finding-item">• For debugging and exploration</div>
+                    <div class="finding-item">• When combined with other methods</div>
+                </div>
+            </div>
+        </div>
+        <div class="recommendation-box" style="margin-top: 12px;">
+            <div class="rec-title">Practical Recommendations</div>
+            <div class="rec-content" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
+                <div>
+                    <strong style="color: #C62828;">DON'T:</strong><br>
+                    • Use attention as sole explanation<br>
+                    • Claim "model focuses on X"<br>
+                    • Present as ground truth
+                </div>
+                <div>
+                    <strong style="color: #2E7D32;">DO:</strong><br>
+                    • Use with other XAI methods<br>
+                    • Present as "one perspective"<br>
+                    • Validate with gradient methods
+                </div>
+                <div>
+                    <strong style="color: #1565C0;">ALTERNATIVES:</strong><br>
+                    • Attention × Gradient<br>
+                    • Integrated Gradients<br>
+                    • Attribution patching
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

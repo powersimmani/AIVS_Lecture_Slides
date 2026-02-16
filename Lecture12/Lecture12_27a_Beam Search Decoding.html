@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beam Search Decoding</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Aptos, 'Segoe UI', sans-serif; background: #FFFFFF; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { width: 960px; height: 540px; padding: 25px 35px; display: flex; flex-direction: column; }
+        .title-section { text-align: center; margin-bottom: 12px; }
+        .main-title { font-size: 24px; font-weight: 600; color: #1E64C8; margin-bottom: 4px; }
+        .subtitle { font-size: 14px; color: #666; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+        .card { background: white; border: 2.5px solid #1E64C8; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; }
+        .card.concept { border-color: #FF5722; }
+        .card.params { border-color: #4CAF50; }
+        .card-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+        .concept .card-title { color: #FF5722; }
+        .params .card-title { color: #4CAF50; }
+        .problem-box { background: #FFEBEE; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .problem-title { font-size: 12px; font-weight: 700; color: #C62828; margin-bottom: 4px; }
+        .problem-content { font-size: 11px; color: #333; line-height: 1.4; }
+        .solution-box { background: #E8F5E9; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+        .solution-title { font-size: 12px; font-weight: 700; color: #2E7D32; margin-bottom: 4px; }
+        .solution-content { font-size: 11px; color: #333; line-height: 1.4; }
+        .example-box { background: #f8f8f8; border-radius: 8px; padding: 10px; margin-bottom: 10px; font-family: 'Courier New', monospace; font-size: 10px; line-height: 1.5; }
+        .param-item { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid #e0e0e0; }
+        .param-item:last-child { border-bottom: none; }
+        .param-name { font-weight: 700; color: #2E7D32; font-size: 12px; min-width: 100px; }
+        .param-desc { font-size: 11px; color: #333; line-height: 1.4; }
+        .comparison-table { width: 100%; font-size: 11px; border-collapse: collapse; margin-bottom: 10px; }
+        .comparison-table th { background: #4CAF50; color: white; padding: 5px; text-align: center; }
+        .comparison-table td { padding: 5px; text-align: center; border-bottom: 1px solid #e0e0e0; }
+        .code-box { background: #2d2d2d; border-radius: 8px; padding: 10px; margin-top: auto; }
+        .code-content { font-family: 'Courier New', monospace; font-size: 10px; color: #d4d4d4; line-height: 1.4; }
+        .code-comment { color: #6a9955; }
+        .code-number { color: #b5cea8; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title-section">
+            <div class="main-title">Beam Search: Better Decoding Strategy</div>
+            <div class="subtitle">Finding better sequences than greedy decoding</div>
+        </div>
+        <div class="content-grid">
+            <div class="card concept">
+                <div class="card-title">Concept</div>
+                <div class="problem-box">
+                    <div class="problem-title">Problem: Greedy Decoding</div>
+                    <div class="problem-content">
+                        Always picking the highest probability token at each step can miss the globally optimal sequence.
+                    </div>
+                </div>
+                <div class="solution-box">
+                    <div class="solution-title">Solution: Beam Search</div>
+                    <div class="solution-content">
+                        Keep track of k best candidates (beams) at each step. Expand all, keep top-k by cumulative probability.
+                    </div>
+                </div>
+                <div class="example-box">
+                    <strong>Example (beam_width=3):</strong><br><br>
+                    Step 1: "I" → [am(0.4), love(0.3), like(0.2)]<br>
+                    Step 2: Expand each → 9 candidates<br>
+                    &nbsp;&nbsp;→ Keep top 3: "I am", "I love", "I like"<br>
+                    Step 3: Continue until &lt;EOS&gt;<br>
+                    Final: Return highest scoring complete sequence
+                </div>
+                <div style="font-size:11px; color:#333; line-height:1.4;">
+                    <strong>Trade-off:</strong> Larger beam = better quality but slower<br>
+                    <strong>Note:</strong> Beam search is not exhaustive; still approximate
+                </div>
+            </div>
+            <div class="card params">
+                <div class="card-title">Parameters & Settings</div>
+                <div class="param-item">
+                    <span class="param-name">beam_width (k)</span>
+                    <span class="param-desc">Number of candidates to track. Typical: 4-6 for translation, 2-3 for dialogue.</span>
+                </div>
+                <div class="param-item">
+                    <span class="param-name">length_penalty</span>
+                    <span class="param-desc">Adjusts preference for longer/shorter outputs. α > 1 favors longer, α < 1 favors shorter.</span>
+                </div>
+                <div class="param-item">
+                    <span class="param-name">no_repeat_ngram</span>
+                    <span class="param-desc">Prevents repeating n-grams. Helps avoid repetitive text generation.</span>
+                </div>
+                <table class="comparison-table">
+                    <tr><th>Task</th><th>Beam Width</th><th>Length Penalty</th></tr>
+                    <tr><td>Translation</td><td>4-6</td><td>0.6-1.0</td></tr>
+                    <tr><td>Summarization</td><td>4-5</td><td>0.8-1.2</td></tr>
+                    <tr><td>Dialogue</td><td>2-3</td><td>1.0</td></tr>
+                    <tr><td>Code Gen</td><td>1-3</td><td>1.0</td></tr>
+                </table>
+                <div class="code-box">
+                    <div class="code-content">
+                        <span class="code-comment"># Hugging Face Transformers</span><br>
+                        outputs = model.generate(<br>
+                        &nbsp;&nbsp;input_ids,<br>
+                        &nbsp;&nbsp;num_beams=<span class="code-number">5</span>,<br>
+                        &nbsp;&nbsp;length_penalty=<span class="code-number">1.0</span>,<br>
+                        &nbsp;&nbsp;no_repeat_ngram_size=<span class="code-number">2</span>,<br>
+                        &nbsp;&nbsp;early_stopping=True<br>
+                        )
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
