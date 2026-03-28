@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introduction to Machine Learning - AI Podcast</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Aptos, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #7B2D8E 0%, #9B4DCA 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            background: white;
+            border-radius: 20px;
+            padding: 50px 60px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            margin: 40px auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 3px solid #7B2D8E;
+        }
+
+        .main-title {
+            font-size: 42px;
+            font-weight: 700;
+            color: #7B2D8E;
+            margin-bottom: 15px;
+        }
+
+        .subtitle {
+            font-size: 20px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 30px;
+            color: #7B2D8E;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #9B4DCA;
+        }
+
+        .info-section {
+            background: #f9f4fc;
+            border-left: 4px solid #7B2D8E;
+            border-radius: 8px;
+            padding: 20px 25px;
+            margin-bottom: 40px;
+        }
+
+        .info-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #7B2D8E;
+            margin-bottom: 8px;
+        }
+
+        .info-text {
+            font-size: 15px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #7B2D8E;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .podcast-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .podcast-card {
+            background: white;
+            border: 3px solid #7B2D8E;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .podcast-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(123, 45, 142, 0.2);
+            background: #fdfaff;
+        }
+
+        .podcast-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .podcast-icon {
+            font-size: 28px;
+            margin-right: 12px;
+        }
+
+        .podcast-number {
+            font-size: 20px;
+            font-weight: 700;
+            color: #7B2D8E;
+        }
+
+        .podcast-title {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.4;
+            margin-bottom: 15px;
+            min-height: 40px;
+        }
+
+        .parts-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding-top: 12px;
+            border-top: 1px solid #e0d0e8;
+        }
+
+        .part-link {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 12px;
+            background: #f3e8f7;
+            border-radius: 20px;
+            text-decoration: none;
+            color: #7B2D8E;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .part-link:hover {
+            background: #7B2D8E;
+            color: white;
+        }
+
+        .part-link.missing {
+            background: #ffe6e6;
+            color: #cc0000;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .part-link.missing::after {
+            content: " (TBA)";
+            font-size: 11px;
+        }
+
+        .note-section {
+            background: #fff4e6;
+            border: 2px solid #7B2D8E;
+            border-radius: 10px;
+            padding: 20px 25px;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .note-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #7B2D8E;
+            margin-bottom: 10px;
+        }
+
+        .note-text {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 25px;
+            }
+
+            .main-title {
+                font-size: 28px;
+            }
+
+            .podcast-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">← Back to Main Page</a>
+
+        <div class="header">
+            <div class="main-title">AI-Generated Lecture Podcasts</div>
+            <div class="subtitle">NotebookLM Audio Summaries</div>
+        </div>
+
+        <div class="info-section">
+            <div class="info-title">About These Podcasts</div>
+            <div class="info-text">
+                These audio summaries were generated using Google NotebookLM, providing an alternative way to review lecture content.
+                Each lecture is divided into multiple parts for easier listening. Click on any part to listen via Google Drive.
+            </div>
+        </div>
+
+        <div class="section-title">Lecture Podcasts</div>
+
+        <div class="podcast-grid">
+            <!-- Lecture 01 -->
+            <div class="podcast-card">
+                <div class="podcast-header">
+                    <span class="podcast-icon">🎙️</span>
+                    <span class="podcast-number">Lecture 01</span>
+                </div>
+                <div class="podcast-title">Computer Structure, Networks, and ML</div>
+                <div class="parts-container">
+                    <a href="https://drive.google.com/file/d/1TBatNRF4IZUlrLQNunwYNOxnJgkkrBc8/view?usp=sharing" class="part-link" target="_blank">Part 1</a>
+                    <a href="https://drive.google.com/file/d/1aUSWsEIb0OJ6gTpFYO-hb3uQRhWXmsRZ/view?usp=sharing" class="part-link" target="_blank">Part 2</a>
+                    <a href="https://drive.google.com/file/d/13csZHPjkpQwAtHgz-p9_woFM0Lhl-y6d/view?usp=sharing" class="part-link" target="_blank">Part 3</a>
+                </div>
+            </div>
+
+            <!-- Lecture 02 -->
+            <div class="podcast-card">
+                <div class="podcast-header">
+                    <span class="podcast-icon">🎙️</span>
+                    <span class="podcast-number">Lecture 02</span>
+                </div>
+                <div class="podcast-title">Data Visualization</div>
+                <div class="parts-container">
+                    <a href="https://drive.google.com/file/d/1xfXJG9ASbNxgndkmFvePX_tsvOogNwxI/view?usp=sharing" class="part-link" target="_blank">Part 1</a>
+                    <a href="https://drive.google.com/file/d/1G9nL1jaaSemahoWl1OsnWF7gYoXZRkWE/view?usp=sharing" class="part-link" target="_blank">Part 2</a>
+                    <a href="https://drive.google.com/file/d/1uBBMQJ-OFrfmrT1qWXTMxfNJSEpvgdaq/view?usp=sharing" class="part-link" target="_blank">Part 3</a>
+                </div>
+            </div>
+
+            <!-- Lecture 03 -->
+            <div class="podcast-card">
+                <div class="podcast-header">
+                    <span class="podcast-icon">🎙️</span>
+                    <span class="podcast-number">Lecture 03</span>
+                </div>
+                <div class="podcast-title">From Set Theory to Linear Regression</div>
+                <div class="parts-container">
+                    <span class="part-link missing">Part 1</span>
+                    <a href="https://drive.google.com/file/d/1PsIPD6t261nCOjGQlszU8CQ1lru-7L8t/view?usp=sharing" class="part-link" target="_blank">Part 2</a>
+                    <a href="https://drive.google.com/file/d/1Jk4ubVWJS8kI0327p1k-A1tIZRHh7aqZ/view?usp=sharing" class="part-link" target="_blank">Part 3</a>
+                </div>
+            </div>
+
+            <!-- Lecture 04 -->
+            <div class="podcast-card">
+                <div class="podcast-header">
+                    <span class="podcast-icon">🎙️</span>
+                    <span class="podcast-number">Lecture 04</span>
+                </div>
+                <div class="podcast-title">From Linear to Logistic Regression</div>
+                <div class="parts-container">
+                    <a href="https://drive.google.com/file/d/1hZGeSW_Hk7SWX_9W_Xx8B3Ve8tKCqj0V/view?usp=sharing" class="part-link" target="_blank">Part 1</a>
+                    <a href="https://drive.google.com/file/d/1WmvHBWwRNZ2Aem8ae2h4enTW0kCDVlw3/view?usp=sharing" class="part-link" target="_blank">Part 2</a>
+                    <a href="https://drive.google.com/file/d/1KN9h4gfGGS6_Pnsi2LovYaBZ8A5zuc_t/view?usp=sharing" class="part-link" target="_blank">Part 3</a>
+                </div>
+            </div>
+
+            <!-- Lecture 05 -->
+            <div class="podcast-card">
+                <div class="podcast-header">
+                    <span class="podcast-icon">🎙️</span>
+                    <span class="podcast-number">Lecture 05</span>
+                </div>
+                <div class="podcast-title">From Logistic Regression to Multi-layer Perceptrons</div>
+                <div class="parts-container">
+                    <a href="https://drive.google.com/file/d/1iiX-ITK_mtDBdw68toDoq15xX4geYe0b/view?usp=sharing" class="part-link" target="_blank">Part 1</a>
+                    <a href="https://drive.google.com/file/d/1OgxZ3TlTdtvdf04fMKjXgYZMgWSvyz0V/view?usp=sharing" class="part-link" target="_blank">Part 2</a>
+                    <a href="https://drive.google.com/file/d/1aeeDG6ybe1CGfMqtNuzhOpXBLO4QxZIs/view?usp=sharing" class="part-link" target="_blank">Part 3</a>
+                </div>
+            </div>
+
+            <!-- Lecture 06 -->
+            <div class="podcast-card">
+                <div class="podcast-header">
+                    <span class="podcast-icon">🎙️</span>
+                    <span class="podcast-number">Lecture 06</span>
+                </div>
+                <div class="podcast-title">Supervised Learning Evaluation</div>
+                <div class="parts-container">
+                    <a href="https://drive.google.com/file/d/1DQ4oC_N9Z3Zw49gyk-eO7UbjQAcUPYID/view?usp=sharing" class="part-link" target="_blank">Part 1</a>
+                    <a href="https://drive.google.com/file/d/1zyXuV3Ue6-rNlhrLScFA6wXt-mlDd-dh/view?usp=sharing" class="part-link" target="_blank">Part 2</a>
+                    <a href="https://drive.google.com/file/d/1YAs-I7gudJpMuvSARk95DyMGpAfi22fh/view?usp=sharing" class="part-link" target="_blank">Part 3</a>
+                    <a href="https://drive.google.com/file/d/1B9bfq5SQBnVv4zWEtx06SYkI-BdNnQxM/view?usp=sharing" class="part-link" target="_blank">Part 4</a>
+                </div>
+            </div>
+
+            <!-- Lecture 07 -->
+            <div class="podcast-card">
+                <div class="podcast-header">
+                    <span class="podcast-icon">🎙️</span>
+                    <span class="podcast-number">Lecture 07</span>
+                </div>
+                <div class="podcast-title">Data Modality and Feature Extraction</div>
+                <div class="parts-container">
+                    <a href="https://drive.google.com/file/d/1He2DNMbhtxyXpNadnvfEsIfsZHR-6z4x/view?usp=sharing" class="part-link" target="_blank">Part 1</a>
+                    <a href="https://drive.google.com/file/d/1IOkQv8iMUqnz4zLfQy37H0W89RDB7H4c/view?usp=sharing" class="part-link" target="_blank">Part 2</a>
+                    <a href="https://drive.google.com/file/d/1zkLMT6uUyTJru7ND7QC4mTe0JL6MYz8f/view?usp=sharing" class="part-link" target="_blank">Part 3</a>
+                </div>
+            </div>
+
+            <!-- Lecture 08 -->
+            <div class="podcast-card">
+                <div class="podcast-header">
+                    <span class="podcast-icon">🎙️</span>
+                    <span class="podcast-number">Lecture 08</span>
+                </div>
+                <div class="podcast-title">Loss, Optimization, and Scheduling</div>
+                <div class="parts-container">
+                    <a href="https://drive.google.com/file/d/1G8DZuxuLvYbfHP96_qoc2vFZlfwnmcv7/view?usp=sharing" class="part-link" target="_blank">Part 1</a>
+                    <a href="https://drive.google.com/file/d/1iaj4tQDx9Eh-clV6Zm89Q4t2FVlHQcvn/view?usp=sharing" class="part-link" target="_blank">Part 2</a>
+                    <a href="https://drive.google.com/file/d/1H5FmOPUCDEuDbeRYOh4q_1vgOAS0Q0yC/view?usp=sharing" class="part-link" target="_blank">Part 3</a>
+                </div>
+            </div>
+
+            <!-- Lecture 09 -->
+            <div class="podcast-card">
+                <div class="podcast-header">
+                    <span class="podcast-icon">🎙️</span>
+                    <span class="podcast-number">Lecture 09</span>
+                </div>
+                <div class="podcast-title">Initialization and Normalization</div>
+                <div class="parts-container">
+                    <a href="https://drive.google.com/file/d/1efa2O7xP5XZaZoyqYWlifr97TBykrJBj/view?usp=sharing" class="part-link" target="_blank">Part 1</a>
+                    <a href="https://drive.google.com/file/d/1tP0TYpA2PmhIMGZA4K3MSXMGP7vRFK3B/view?usp=sharing" class="part-link" target="_blank">Part 2</a>
+                    <a href="https://drive.google.com/file/d/12Yd_eGCKEXBteo1uW0_6UaAezV2iTW_S/view?usp=sharing" class="part-link" target="_blank">Part 3</a>
+                </div>
+            </div>
+
+            <!-- Lecture 10 -->
+            <div class="podcast-card">
+                <div class="podcast-header">
+                    <span class="podcast-icon">🎙️</span>
+                    <span class="podcast-number">Lecture 10</span>
+                </div>
+                <div class="podcast-title">Deep Learning</div>
+                <div class="parts-container">
+                    <a href="https://drive.google.com/file/d/1KMVj1ihTfomdFtHdDxMvdEv_955VsRBY/view?usp=sharing" class="part-link" target="_blank">Part 1</a>
+                    <a href="https://drive.google.com/file/d/1QeP9BPQGq1vHwhlkAacpYejPA3U9sQcP/view?usp=sharing" class="part-link" target="_blank">Part 2</a>
+                    <a href="https://drive.google.com/file/d/14ziC8mtVC5x46MX2SIjTPVMlPvvyoMSI/view?usp=sharing" class="part-link" target="_blank">Part 3</a>
+                </div>
+            </div>
+
+            <!-- Lecture 11 -->
+            <div class="podcast-card">
+                <div class="podcast-header">
+                    <span class="podcast-icon">🎙️</span>
+                    <span class="podcast-number">Lecture 11</span>
+                </div>
+                <div class="podcast-title">Sequence Models</div>
+                <div class="parts-container">
+                    <a href="https://drive.google.com/file/d/1OOaC4f4ZzpgO4douGLqOMll7Z3ku__-q/view?usp=sharing" class="part-link" target="_blank">Part 1</a>
+                    <a href="https://drive.google.com/file/d/1UJ68MN1v-Wlv43frIoIkEIS4KrISsq4v/view?usp=sharing" class="part-link" target="_blank">Part 2</a>
+                    <a href="https://drive.google.com/file/d/1wexFft17-SefjSIE2ZurTLVem7Mn4LB8/view?usp=sharing" class="part-link" target="_blank">Part 3</a>
+                    <a href="https://drive.google.com/file/d/1lx1dgYYRVVa7tqAa_fz3M40_hePqGhgu/view?usp=sharing" class="part-link" target="_blank">Part 4</a>
+                    <a href="https://drive.google.com/file/d/1zVg639hkUIGQ-yOGxn2xtMQYgXacv8-a/view?usp=sharing" class="part-link" target="_blank">Part 5</a>
+                </div>
+            </div>
+
+            <!-- Lecture 12 -->
+            <div class="podcast-card">
+                <div class="podcast-header">
+                    <span class="podcast-icon">🎙️</span>
+                    <span class="podcast-number">Lecture 12</span>
+                </div>
+                <div class="podcast-title">Advanced Sequence Models</div>
+                <div class="parts-container">
+                    <a href="https://drive.google.com/file/d/1pcETR2ZJoT39ADPpOckVR7p8IMP9R5Ll/view?usp=sharing" class="part-link" target="_blank">Part 1</a>
+                    <a href="https://drive.google.com/file/d/1NnHtuAIJ6e_x7OE0mv2-8kCsEyue6e6L/view?usp=sharing" class="part-link" target="_blank">Part 2</a>
+                    <a href="https://drive.google.com/file/d/1K4cqr1TB1JpG1oVNYPp3PHOSKmRGzC_Z/view?usp=sharing" class="part-link" target="_blank">Part 3</a>
+                    <a href="https://drive.google.com/file/d/1RAXIZMqKD0zSC2W9xQswISCjhdRFdynR/view?usp=sharing" class="part-link" target="_blank">Part 4</a>
+                    <a href="https://drive.google.com/file/d/1IQ30h3EnRkHjMleH-ljK36cTR5xHtSbr/view?usp=sharing" class="part-link" target="_blank">Part 5</a>
+                    <a href="https://drive.google.com/file/d/18xBC9GQNtUWU23QMUnIaJSm8skjYJRIU/view?usp=sharing" class="part-link" target="_blank">Part 6</a>
+                    <a href="https://drive.google.com/file/d/1GWAMu05tPhLhMEIb72jNOEfK681-omqd/view?usp=sharing" class="part-link" target="_blank">Part 7</a>
+                </div>
+            </div>
+
+            <!-- Lecture 13 -->
+            <div class="podcast-card">
+                <div class="podcast-header">
+                    <span class="podcast-icon">🎙️</span>
+                    <span class="podcast-number">Lecture 13</span>
+                </div>
+                <div class="podcast-title">Transformer Architecture</div>
+                <div class="parts-container">
+                    <a href="https://drive.google.com/file/d/1tkyxKrhHo7lCStLJNOj86BBICDjLOwwE/view?usp=sharing" class="part-link" target="_blank">Part 1</a>
+                    <a href="https://drive.google.com/file/d/1KOAg3hrIe2xhxboVbSLAJ3dOxKHtmXxD/view?usp=sharing" class="part-link" target="_blank">Part 2</a>
+                    <a href="https://drive.google.com/file/d/1hukiQKa0tTP2YlKDP4NUJrkrcx5rP5Jq/view?usp=sharing" class="part-link" target="_blank">Part 3</a>
+                    <a href="https://drive.google.com/file/d/1Go38umEvAEPfar-0TcWvg_FEnJVQyuB7/view?usp=sharing" class="part-link" target="_blank">Part 4</a>
+                    <a href="https://drive.google.com/file/d/1zo_GYeCSPJ-qUJJi-GIItyVR2ZxCeMr2/view?usp=sharing" class="part-link" target="_blank">Part 5</a>
+                    <a href="https://drive.google.com/file/d/11T2XVLTDCn9LHZrBgFYGbazjE9KodIzC/view?usp=sharing" class="part-link" target="_blank">Part 6</a>
+                    <a href="https://drive.google.com/file/d/13wJ7eOg0ZUGo29WP9BpBityA_kjqTjA1/view?usp=sharing" class="part-link" target="_blank">Part 7</a>
+                </div>
+            </div>
+
+            <!-- Lecture 14 -->
+            <div class="podcast-card">
+                <div class="podcast-header">
+                    <span class="podcast-icon">🎙️</span>
+                    <span class="podcast-number">Lecture 14</span>
+                </div>
+                <div class="podcast-title">Pre-trained Language Models and LLM Era</div>
+                <div class="parts-container">
+                    <a href="https://drive.google.com/file/d/1A5XEwn15r5QstlGvIM64PhvwudhquvPq/view?usp=sharing" class="part-link" target="_blank">Part 1</a>
+                    <a href="https://drive.google.com/file/d/1ool-JJtk73lg3AJ9RWnihYSLYIQjN5Gt/view?usp=sharing" class="part-link" target="_blank">Part 2</a>
+                    <a href="https://drive.google.com/file/d/1gGNHH6g3kC_CeWQwr0NsnhYghWW0Lp89/view?usp=sharing" class="part-link" target="_blank">Part 3</a>
+                    <a href="https://drive.google.com/file/d/1DhV8oqcvAaY5Zn-RUYZFc5FRgQXNvSY1/view?usp=sharing" class="part-link" target="_blank">Part 4</a>
+                    <a href="https://drive.google.com/file/d/1k6Ni_aQ33x92v5LUQT_iUI8BUVugUleO/view?usp=sharing" class="part-link" target="_blank">Part 5</a>
+                    <a href="https://drive.google.com/file/d/1AHOukr0RroRBA5xfcIwYIcBc52FqyPOS/view?usp=sharing" class="part-link" target="_blank">Part 6</a>
+                    <a href="https://drive.google.com/file/d/1mDQon5PKN1jL1jjDqIqcDvlQX5FymMyB/view?usp=sharing" class="part-link" target="_blank">Part 7</a>
+                    <a href="https://drive.google.com/file/d/13A5mkST_gQC75WJXxNpNkm1SDrNM7_Ou/view?usp=sharing" class="part-link" target="_blank">Part 8</a>
+                    <a href="https://drive.google.com/file/d/1EEb0HA8BV0GVsDv_5Z8w9l-QZT9uu1H0/view?usp=sharing" class="part-link" target="_blank">Part 9</a>
+                </div>
+            </div>
+
+            <!-- Lecture 15 -->
+            <div class="podcast-card">
+                <div class="podcast-header">
+                    <span class="podcast-icon">🎙️</span>
+                    <span class="podcast-number">Lecture 15</span>
+                </div>
+                <div class="podcast-title">Generative Models - GAN</div>
+                <div class="parts-container">
+                    <a href="https://drive.google.com/file/d/1nkEzG1Mqs5xFfL_-QLjqM5nqt_YguJdq/view?usp=sharing" class="part-link" target="_blank">Part 1</a>
+                    <a href="https://drive.google.com/file/d/1t3dBLkK2xgNlE5cVzDdApNXlIoEe8oAe/view?usp=sharing" class="part-link" target="_blank">Part 2</a>
+                    <a href="https://drive.google.com/file/d/1n50bUKegxgxU0-I8phPowpglDj1TDvvp/view?usp=sharing" class="part-link" target="_blank">Part 3</a>
+                    <a href="https://drive.google.com/file/d/1H2bAA7O_6iiXdEqcku54z_w6dmGWCHg0/view?usp=sharing" class="part-link" target="_blank">Part 4</a>
+                    <a href="https://drive.google.com/file/d/1kDuDOyPkSk2hxR1-U_iMpL7W5dArwEKH/view?usp=sharing" class="part-link" target="_blank">Part 5</a>
+                    <a href="https://drive.google.com/file/d/1HqOnkQtebXOMun9VspVlytmP7qZSPW7j/view?usp=sharing" class="part-link" target="_blank">Part 6</a>
+                </div>
+            </div>
+
+            <!-- Lecture 16 -->
+            <div class="podcast-card">
+                <div class="podcast-header">
+                    <span class="podcast-icon">🎙️</span>
+                    <span class="podcast-number">Lecture 16</span>
+                </div>
+                <div class="podcast-title">Generative Models - Diffusion</div>
+                <div class="parts-container">
+                    <a href="https://drive.google.com/file/d/1IkS5ogOM5Jt9KBKvq_ouPfDYzQS2uhVa/view?usp=sharing" class="part-link" target="_blank">Part 1</a>
+                    <a href="https://drive.google.com/file/d/1hHKcmcDOGos3ukZGyE6BdFevhSsfJ8Br/view?usp=sharing" class="part-link" target="_blank">Part 2</a>
+                    <a href="https://drive.google.com/file/d/19Dyh9rpn18rS2Pqu09IOxgyamI90bBNW/view?usp=sharing" class="part-link" target="_blank">Part 3</a>
+                    <a href="https://drive.google.com/file/d/1NyTBuXCXI-7pj9LtAENWk1aV7-uHAGGk/view?usp=sharing" class="part-link" target="_blank">Part 4</a>
+                    <a href="https://drive.google.com/file/d/15QRGnnjWx2yae7dp8W7yXmvv-arDObbs/view?usp=sharing" class="part-link" target="_blank">Part 5</a>
+                    <a href="https://drive.google.com/file/d/1Fma9WnL0WBRz3V0bboKY9HX2gLyFzYG4/view?usp=sharing" class="part-link" target="_blank">Part 6</a>
+                    <a href="https://drive.google.com/file/d/10kYJJrgge_jKfH2yOOUeuCv0cORcRCmC/view?usp=sharing" class="part-link" target="_blank">Part 7</a>
+                </div>
+            </div>
+
+            <!-- Lecture 17 -->
+            <div class="podcast-card">
+                <div class="podcast-header">
+                    <span class="podcast-icon">🎙️</span>
+                    <span class="podcast-number">Lecture 17</span>
+                </div>
+                <div class="podcast-title">Clustering and Unsupervised Learning</div>
+                <div class="parts-container">
+                    <a href="https://drive.google.com/file/d/1j0afuREI8IaktPHhyb6rkvAWo-IY8A-q/view?usp=sharing" class="part-link" target="_blank">Part 1</a>
+                    <a href="https://drive.google.com/file/d/1Sraa-yRD3tS4WfL3X_aNS2qgTR9BFzv0/view?usp=sharing" class="part-link" target="_blank">Part 2</a>
+                    <a href="https://drive.google.com/file/d/1izGayUOwNKFf9X7ntLGTcoIZ1ZRqa5up/view?usp=sharing" class="part-link" target="_blank">Part 3</a>
+                    <a href="https://drive.google.com/file/d/1HjaadNUmGHLGJDobN-Fka04r6X7C4OQI/view?usp=sharing" class="part-link" target="_blank">Part 4</a>
+                </div>
+            </div>
+
+            <!-- Lecture 18 -->
+            <div class="podcast-card">
+                <div class="podcast-header">
+                    <span class="podcast-icon">🎙️</span>
+                    <span class="podcast-number">Lecture 18</span>
+                </div>
+                <div class="podcast-title">Advanced Unsupervised Learning</div>
+                <div class="parts-container">
+                    <a href="https://drive.google.com/file/d/1n0RMCmv5CV2IZAt7DpAYNHkFRjliwiIQ/view?usp=sharing" class="part-link" target="_blank">Part 1</a>
+                    <a href="https://drive.google.com/file/d/13dIrTsDLzXUaUblY3HsnbBj5N4Zw4mT4/view?usp=sharing" class="part-link" target="_blank">Part 2</a>
+                    <a href="https://drive.google.com/file/d/1W6MrmVh0qBRjeRcRuSRGDULb5aVWGHrN/view?usp=sharing" class="part-link" target="_blank">Part 3</a>
+                    <a href="https://drive.google.com/file/d/1tsM-g6K-RHSBuEnIf30olZ1YY1W_qtHe/view?usp=sharing" class="part-link" target="_blank">Part 4</a>
+                </div>
+            </div>
+
+            <!-- Lecture 19 -->
+            <div class="podcast-card">
+                <div class="podcast-header">
+                    <span class="podcast-icon">🎙️</span>
+                    <span class="podcast-number">Lecture 19</span>
+                </div>
+                <div class="podcast-title">Model Explainability - XAI Fundamentals</div>
+                <div class="parts-container">
+                    <a href="https://drive.google.com/file/d/1GmTFkSKPtP2o-_qM5EcYw1_C2_mGxljT/view?usp=sharing" class="part-link" target="_blank">Part 1</a>
+                    <a href="https://drive.google.com/file/d/1ODDSv3qL1WeqFZXI3bafDEsNHRugnFiN/view?usp=sharing" class="part-link" target="_blank">Part 2</a>
+                    <a href="https://drive.google.com/file/d/16Ky3iq4u9e7uMoehpErZzB4wpuzgBNy-/view?usp=sharing" class="part-link" target="_blank">Part 3</a>
+                    <a href="https://drive.google.com/file/d/1PP1h8NuvRdTyAugryxC5qFgHIjXSkp8K/view?usp=sharing" class="part-link" target="_blank">Part 4</a>
+                </div>
+            </div>
+
+            <!-- Lecture 20 -->
+            <div class="podcast-card">
+                <div class="podcast-header">
+                    <span class="podcast-icon">🎙️</span>
+                    <span class="podcast-number">Lecture 20</span>
+                </div>
+                <div class="podcast-title">Model Explainability - SHAP and Deep Learning XAI</div>
+                <div class="parts-container">
+                    <a href="https://drive.google.com/file/d/1gLpEw8J7bOu4j-d0L4_Ln92VZnhMhz7h/view?usp=sharing" class="part-link" target="_blank">Part 1</a>
+                    <a href="https://drive.google.com/file/d/1ideWa9Uy5gMrbvjJqg-0CG9MKIExxB0g/view?usp=sharing" class="part-link" target="_blank">Part 2</a>
+                    <a href="https://drive.google.com/file/d/17UKCl_UWyIMslr7nA0k__0bm4oejoVH-/view?usp=sharing" class="part-link" target="_blank">Part 3</a>
+                    <a href="https://drive.google.com/file/d/1huqhAUOt9_epqo0u4HMfH1Z_6bduv8Xd/view?usp=sharing" class="part-link" target="_blank">Part 4</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="note-section">
+            <div class="note-title">About NotebookLM Podcasts</div>
+            <div class="note-text">
+                These AI-generated audio summaries provide an engaging way to review lecture content.<br>
+                Parts marked in <span style="color: #cc0000; font-weight: 600;">red (TBA)</span> are coming soon.
+            </div>
+        </div>
+    </div>
+</body>
+</html>
